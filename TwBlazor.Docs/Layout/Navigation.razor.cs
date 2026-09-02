@@ -14,7 +14,7 @@ public partial class Navigation : IDisposable
     private Icon themeIcon = Icon.Moon; // NOSONAR - used in Navigation.razor template
 
 #pragma warning disable S1075 // Fixed external documentation link, not environment-specific
-    private static readonly string _apiDocumentationUri = "https://twblazor.github.io/TwBlazor/";
+    private static readonly string _apiDocumentationUri = "https://twblazor.github.io/twblazor/";
 #pragma warning restore S1075
 
     private readonly List<NavigationItem> _navigationItems =
