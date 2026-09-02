@@ -10,12 +10,13 @@
 	<PackageId>TwBlazor</PackageId>
 	<Authors>TwBlazor</Authors>
 	<Company>TwBlazor</Company>
-	<Description>Tailwind CSS components for Blazor</Description>
+	<Description>Professional-grade Tailwind CSS components for modern Blazor development. Ship polished, accessible UI without wrestling with CSS.</Description>
 	<PackageProjectUrl>https://github.com/TwBlazor/TwBlazor</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/TwBlazor/TwBlazor</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageIcon>logo.png</PackageIcon>
 	<PackageTags>blazor;tailwindcss;components;ui</PackageTags>
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -23,6 +24,7 @@
 
   <ItemGroup>
 	<None Include="..\README.md" Pack="true" PackagePath="\" />
+	<None Include="..\images\logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
