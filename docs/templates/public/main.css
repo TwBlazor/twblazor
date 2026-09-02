@@ -1,0 +1,9 @@
+#logo {
+    max-height: 32px;
+    width: auto;
+    margin-right: 10px;
+}
+
+.navbar-brand {
+    margin-right: 45px !important;
+}

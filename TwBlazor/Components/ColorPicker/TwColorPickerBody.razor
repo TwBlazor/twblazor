@@ -1,0 +1,153 @@
+@inherits TwBlazorComponentBase
+@using Microsoft.AspNetCore.Components.Web
+@using TwBlazor.Enums
+
+<div id="@Id" class="@dialogClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    <div class="flex flex-col gap-4">
+        <!-- Color Preview and Mode Switch -->
+        <div class="flex items-center gap-3">
+            <div class="@theme.PreviewSwatch" style="@($"background-color: {@GetCurrentColor()}")"></div>
+            @if (ShowModeSwitch)
+            {
+                <TwButton Type="button"
+                          Class="flex-1 tracking-wide"
+                          OnClick="@HandleModeSwitch"
+                          AriaLabel="Toggle color mode"
+                          Variant="ButtonVariant.Outlined"
+                          Color="Color.Primary"
+                          Dense>
+                    @currentMode.ToString().ToUpper()
+                </TwButton>
+            }
+        </div>
+
+        @* Saturation/Lightness Selector. Treated as a single ARIA slider (rather than split into two
+           separately-focusable elements) to avoid restructuring the mouse-drag square; aria-valuetext
+           communicates both axes, and aria-valuenow tracks saturation as the slider's primary value. *@
+        <div class="@theme.SelectorSquare"
+             style="background: linear-gradient(to right, white, hsl(@hue, 100%, 50%)), linear-gradient(to top, black, transparent);"
+             role="slider"
+             tabindex="0"
+             aria-label="Saturation and lightness"
+             aria-valuemin="0"
+             aria-valuemax="100"
+             aria-valuenow="@((int)Math.Round(saturation * 100))"
+             aria-valuetext="@($"Saturation {(int)Math.Round(saturation * 100)}%, Lightness {(int)Math.Round(lightness * 100)}%")"
+             @onmousedown="OnSelectorMouseDown"
+             @onmousemove="OnSelectorMouseMove"
+             @onmouseup="OnSelectorMouseUp"
+             @onmouseleave="OnSelectorMouseUp"
+             @onkeydown="OnSelectorKeyDown"
+             @ontouchstart="OnSelectorTouchStart"
+             @ontouchmove="OnSelectorTouchMove"
+             @ontouchend="OnSelectorTouchEnd"
+             @ontouchcancel="OnSelectorTouchEnd"
+             @ref="selectorRef">
+            <div class="@theme.SelectorThumb"
+                 style="left: @(saturation * 100)%; top: @((1 - lightness) * 100)%; transform: translate(-50%, -50%);"></div>
+        </div>
+
+        <!-- Hue Slider -->
+        <div class="flex items-center gap-2">
+            <div class="flex-1 relative h-6 flex items-center cursor-pointer touch-none"
+                 role="slider"
+                 tabindex="0"
+                 aria-label="Hue"
+                 aria-valuemin="0"
+                 aria-valuemax="360"
+                 aria-valuenow="@((int)Math.Round(hue))"
+                 aria-valuetext="@($"{(int)Math.Round(hue)} degrees")"
+                 @onmousedown="OnHueMouseDown"
+                 @onmousemove="OnHueMouseMove"
+                 @onmouseup="OnHueMouseUp"
+                 @onmouseleave="OnHueMouseUp"
+                 @onkeydown="OnHueKeyDown"
+                 @ontouchstart="OnHueTouchStart"
+                 @ontouchmove="OnHueTouchMove"
+                 @ontouchend="OnHueTouchEnd"
+                 @ontouchcancel="OnHueTouchEnd"
+                 @ref="hueRef">
+                <div class="@theme.SliderTrack"
+                     style="background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);"></div>
+                <div class="@theme.SliderThumb"
+                     style="left: @((hue / 360.0) * 100)%; transform: translate(-50%, -50%);"></div>
+            </div>
+        </div>
+
+        <!-- Alpha Slider -->
+        @if (ShowAlpha)
+        {
+            <div class="flex items-center gap-2">
+                <span class="@theme.AlphaLabel">Alpha</span>
+                <div class="flex-1 relative h-6 flex items-center cursor-pointer"
+                     role="slider"
+                     tabindex="0"
+                     aria-label="Alpha"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     aria-valuenow="@((int)Math.Round(alpha * 100))"
+                     aria-valuetext="@($"{(int)Math.Round(alpha * 100)}%")"
+                     @onmousedown="OnAlphaMouseDown"
+                     @onmousemove="OnAlphaMouseMove"
+                     @onmouseup="OnAlphaMouseUp"
+                     @onmouseleave="OnAlphaMouseUp"
+                     @onkeydown="OnAlphaKeyDown"
+                     @ontouchstart="OnAlphaTouchStart"
+                     @ontouchmove="OnAlphaTouchMove"
+                     @ontouchend="OnAlphaTouchEnd"
+                     @ontouchcancel="OnAlphaTouchEnd"
+                     @ref="alphaRef">
+                    <div class="@theme.SliderTrack"
+                         style="background-image: linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;">
+                        <div class="w-full h-full" style="background: linear-gradient(to right, transparent, @GetCurrentColorWithoutAlpha());"></div>
+                    </div>
+                    <div class="@theme.SliderThumb"
+                         style="left: @(alpha * 100)%; transform: translate(-50%, -50%);"></div>
+                </div>
+                <span class="@theme.AlphaLabel text-right">@((int)(alpha * 100))%</span>
+            </div>
+        }
+
+        <!-- Color Mode Inputs -->
+        @switch (currentMode)
+        {
+            case ColorMode.Hex:
+                <div class="flex-1">
+                    <TwTextfield Label="HEX" T="string" Variant="@Variant" @onchange="OnHexInputChanged" @oninput="OnHexInputCommitted" Value="@hexInput" Dense Placeholder="#000000" />
+                </div>
+                break;
+            case ColorMode.Rgb:
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <TwTextfield Label="R" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((r) => OnRInputChanged(r.ToString()))" Value="@r" BindEvent="oninput" Dense />
+                    </div>
+                    <div class="flex-1">
+                        <TwTextfield Label="G" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((g) => OnGInputChanged(g.ToString()))" Value="@g" BindEvent="oninput" Dense />
+                    </div>
+                    <div class="flex-1">
+                        <TwTextfield Label="B" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((b) => OnBInputChanged(b.ToString()))" Value="@b" BindEvent="oninput" Dense />
+                    </div>
+                </div>
+                break;
+            case ColorMode.Hsl:
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <TwTextfield Label="H" T="int" InputType="number" min="0" max="360" Variant="@Variant" ValueChanged="@((h) => OnHInputChanged(h.ToString()))" Value="@h" BindEvent="oninput" Dense />
+                    </div>
+                    <div class="flex-1">
+                        <TwTextfield Label="S" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((s) => OnSInputChanged(s.ToString()))" Value="@s" BindEvent="oninput" Dense />
+                    </div>
+                    <div class="flex-1">
+                        <TwTextfield Label="L" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((l) => OnLInputChanged(l.ToString()))" Value="@l" BindEvent="oninput" Dense />
+                    </div>
+                </div>
+                break;
+        }
+
+        <!-- Action Buttons -->
+        <div class="@theme.ActionBar">
+            <TwButton OnClick="OnCancel" Label="Cancel" Color="Color.Primary" Variant="ButtonVariant.Text" Dense />
+            <TwButton OnClick="OnConfirm" Label="Confirm" Color="Color.Primary" Variant="ButtonVariant.Filled" Dense />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Components.DatePicker
+@inherits TwPopoverPickerComponentBase
+
+<TwInputRoot @ref="@InputRoot" RootId="@RootId" RootClass="@classes" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy">
+    <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClass" @attributes="@LabelAttributes" />
+    <div class="relative">
+        <div class="absolute top-0 start-0 h-10.5 flex items-center ps-3 cursor-pointer" role="button" tabindex="@(Disabled ? "-1" : "0")" aria-label="Open date picker" aria-disabled="@(Disabled ? "true" : null)" @onclick="OnIconClickAsync" @onkeydown="OnIconKeyDownAsync">
+            <svg class="text-gray-500 dark:text-gray-400 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z" />
+            </svg>
+        </div>
+
+        <TwTextfield
+            @ref="@trigger"
+            T="string"
+            Id="@Id"
+            InputType="@(UseNativePicker ? NativeInputType : "text")"
+            Disabled="@Disabled"
+            OnFocus="OnFocusAsync"
+            Value="@Value"
+            ValueChanged="@((e) => OnTextValueChanged(e))"
+            ReadOnly="@ReadOnly"
+            Variant="@Variant"
+            Invalid="@Invalid"
+            ErrorMessage="@ErrorMessage"
+            Attributes="@triggerAttributes"
+            Class="@textfieldClasses"
+            Placeholder="@effectivePlaceholder" />
+    </div>
+
+    @if (isFocused)
+    {
+        <div class="@datepickerContainerClasses" role="dialog" aria-label="Choose date" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
+            <div class="w-67">
+                @switch (view)
+                {
+                    case DatePickerView.Year:
+                        <TwDatePickerHeader OnPreviousClick="PreviousDecade" OnNextClick="NextDecade" PreviousLabel="Previous decade" NextLabel="Next decade">
+                            @SelectedDate.ToString("yyyy")
+                        </TwDatePickerHeader>
+                        <TwDatePickerBody Class="@bodyClasses">
+                            <div class="years-of-the-decade mt-2 grid w-full grid-cols-5 justify-items-stretch gap-1">
+                                @foreach (var year in Enumerable.Range(SelectedDate.Year, SelectedDate.Year + 10).Take(10))
+                                {
+                                    var yearDate = new DateTime(year, SelectedDate.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+                                    var isSelectedYear = year == SelectedDate.Year;
+                                    <button type="button" class="@GetButtonClasses("year", isSelectedYear)" aria-pressed="@(isSelectedYear ? "true" : "false")" @onclick="@(() => SelectYear(yearDate))">
+                                        @yearDate.ToString("yyyy")
+                                    </button>
+                                }
+                            </div>
+                        </TwDatePickerBody>
+                        break;
+
+                    case DatePickerView.Month:
+                        <TwDatePickerHeader OnPreviousClick="PreviousYear" OnNextClick="NextYear" OnTitleClick="@(() => SwitchView(DatePickerView.Year))" PreviousLabel="Previous year" NextLabel="Next year">
+                            @SelectedDate.ToString("yyyy")
+                        </TwDatePickerHeader>
+                        <TwDatePickerBody Class="@bodyClasses">
+                            <div class="months-of-the-year mt-2 grid w-full grid-cols-6 justify-items-stretch gap-1">
+                                @foreach (var month in Enumerable.Range(1, 12))
+                                {
+                                    var monthDate = new DateTime(SelectedDate.Year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+                                    var isSelectedMonth = month == SelectedDate.Month;
+                                    <button type="button" class="@GetButtonClasses("month", isSelectedMonth)" aria-pressed="@(isSelectedMonth ? "true" : "false")" @onclick="@(() => SelectMonth(monthDate))">
+                                        @monthDate.ToString("MMM")
+                                    </button>
+                                }
+                            </div>
+                        </TwDatePickerBody>
+                        break;
+
+                    default:
+                        <TwDatePickerHeader OnPreviousClick="PreviousMonth" OnNextClick="NextMonth" OnTitleClick="@(() => SwitchView(DatePickerView.Month))" PreviousLabel="Previous month" NextLabel="Next month">
+                            @SelectedDate.ToString("MMMM yyyy")
+                        </TwDatePickerHeader>
+                        <TwDatePickerBody Class="@bodyClasses">
+                            <TwDatePickerDayView Value="SelectedDate" ValueChanged="SelectDateAsync" />
+                        </TwDatePickerBody>
+                        break;
+                }
+            </div>
+        @if (FocusedChildContent is not null)
+        {
+            @FocusedChildContent
+        }
+    </div>
+    }
+</TwInputRoot>

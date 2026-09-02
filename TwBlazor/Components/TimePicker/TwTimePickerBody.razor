@@ -1,0 +1,65 @@
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@rootClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    <div class="@classes">
+        <div class="@theme.ContentRow">
+            <div class="@theme.Column">
+                <TwIcon OnClick="IncrementHour"
+                        Icon="Icon.Caret_Up_Fill"
+                        Class="@theme.StepButton"
+                        AriaLabel="Increase hour" />
+
+                <div class="@theme.NumberWrapper">
+                    <input id="@($"{Id}-hour")" type="text"
+                           class="@numberInputClasses"
+                           value="@(Is12HourFormat ? SelectedTime.ToString("hh") : SelectedTime.ToString("HH"))"
+                           aria-label="Hours"
+                           @onchange="@((e) => SetHourValue(e.Value?.ToString() ?? string.Empty))">
+                </div>
+
+                <TwIcon OnClick="DecrementHour"
+                        Icon="Icon.Caret_Down_Fill"
+                        Class="@theme.StepButton"
+                        AriaLabel="Decrease hour" />
+            </div>
+
+            <div class="@theme.Separator">:</div>
+
+            <div class="@theme.Column">
+                <TwIcon OnClick="IncrementMinute"
+                        Icon="Icon.Caret_Up_Fill"
+                        Class="@theme.StepButton"
+                        AriaLabel="Increase minute" />
+
+                <div class="@theme.NumberWrapper">
+                    <input id="@($"{Id}-minute")" type="text"
+                           class="@numberInputClasses"
+                           value="@SelectedTime.ToString("mm")"
+                           aria-label="Minutes"
+                           @onchange="@((e) => SetMinuteValue(e.Value?.ToString() ?? string.Empty))">
+                </div>
+
+                <TwIcon OnClick="DecrementMinute"
+                        Icon="Icon.Caret_Down_Fill"
+                        Class="@theme.StepButton"
+                        AriaLabel="Decrease minute" />
+            </div>
+
+            @if (Is12HourFormat)
+            {
+                <div class="@theme.AmPmWrapper">
+                    <TwButton Type="button"
+                              OnClick="ToggleAmPm"
+                              Color="Color.Primary"
+                              Variant="ButtonVariant.Filled"
+                              Class="@theme.AmPmButtonClass"
+                              AriaLabel="Toggle AM/PM"
+                              Dense>
+                        @(SelectedTime.Hour >= 12 ? "PM" : "AM")
+                    </TwButton>
+                </div>
+            }
+        </div>
+    </div>
+</div>

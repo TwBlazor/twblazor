@@ -1,0 +1,83 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+@if (!string.IsNullOrWhiteSpace(Href))
+{
+    <a id="@Id"
+       href="@(Disabled ? null : Href)"
+       target="@Target"
+       rel="@effectiveRel"
+       class="@classes"
+       style="@Style"
+       tabindex="@(Disabled ? "-1" : null)"
+       aria-disabled="@(Disabled ? "true" : null)"
+       @attributes="@Attributes"
+       aria-label="@AriaLabel"
+       aria-labelledby="@AriaLabelledBy">
+        @RenderContent()
+    </a>
+}
+else if (isClickable && !Closable)
+{
+    <button id="@Id"
+            type="button"
+            class="@classes"
+            style="@Style"
+            disabled="@Disabled"
+            @onclick="OnClickAsync"
+            @attributes="@Attributes"
+            aria-label="@AriaLabel"
+            aria-labelledby="@AriaLabelledBy">
+        @RenderContent()
+    </button>
+}
+else
+{
+    <span id="@Id"
+          class="@classes"
+          style="@Style"
+          role="@(isClickable ? "button" : null)"
+          tabindex="@(isClickable && !Disabled ? "0" : null)"
+          aria-disabled="@(isClickable && Disabled ? "true" : null)"
+          @onclick="OnClickAsync"
+          @onkeydown="OnKeyDownAsync"
+          @attributes="@Attributes"
+          aria-label="@AriaLabel"
+          aria-labelledby="@AriaLabelledBy">
+        @RenderContent()
+    </span>
+}
+
+@code {
+    private RenderFragment RenderContent() => __builder =>
+    {
+        if (!string.IsNullOrWhiteSpace(Avatar))
+        {
+            <span class="@GetAvatarClasses()">@Avatar</span>
+        }
+        else if (StartIcon.HasValue)
+        {
+            <TwIcon Icon="@StartIcon.Value" Class="@GetIconSize()" />
+        }
+        
+        if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @Label
+        }
+
+        @if (EndIcon.HasValue)
+        {
+            <TwIcon Icon="@EndIcon.Value" Class="@GetIconSize()" />
+        }
+
+        if (Closable && string.IsNullOrWhiteSpace(Href))
+        {
+            <TwIcon OnClick="OnCloseAsync" AriaLabel="@(string.IsNullOrWhiteSpace(Label) ? "Close" : $"Remove {Label}")" Icon="Icon.X" Class="@theme.CloseButton" Plain />
+        }
+    };
+}

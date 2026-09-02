@@ -1,0 +1,75 @@
+@page "/alert"
+@using TwBlazor.Services
+@inject ITwToastService ToastService
+
+<PageContainer Title="TwAlert">
+    <PageCard Title="Alert">
+        <p>Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.</p>
+        <CodeExample Name="AlertBasic">
+            <TwAlert Id="example-alert" Class="mt-2" Color="Color.Accent">
+                <p>This is an example alert with a <a href="#" class="underline m-0 p-0 inline">link</a>.</p>
+            </TwAlert>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <CodeExample Name="AlertColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                <TwAlert Id="@($"{c.ToString()}-alert")" Class="mt-2" Color="@c" Dense>
+                    @c.ToString()
+                </TwAlert>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Dense Alerts">
+        <p>You can also make alerts dense and take up less space using the <code>Dense</code> property.</p>
+        <CodeExample Name="AlertDense">
+            <div class="grid grid-cols-1 md:grid-cols-2 mb-2 gap-2">
+                <TwAlert Id="dense-alert-1" Class="mt-2" Color="Color.Success" Dense>
+                    This is a dense alert.
+                </TwAlert>
+                <TwAlert Id="dense-alert-2" Class="mt-2" Color="Color.Warning" Dense>
+                    This is another dense alert.
+                </TwAlert>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Alert Icons">
+
+        <p>TwAlert also supports easy icons parameters <code>StartIcon</code> and <code>EndIcon</code>.</p>
+        <CodeExample Name="AlertIcons">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <TwAlert Id="icon-alert-1" Class="mt-2" Color="Color.Primary" Dense StartIcon="Icon.Wallet">
+                    This is a dense alert with a start icon.
+                </TwAlert>
+                <TwAlert Id="icon-alert-2" Class="mt-2" Color="Color.Danger" Dense EndIcon="Icon.Exclamation_Circle">
+                    This is another dense alert with an end icon.
+                </TwAlert>
+                <TwAlert Id="icon-alert-3" Class="mt-2" Color="Color.Info" StartIcon="Icon.Play">
+                    This is an alert with a start icon.
+                </TwAlert>
+                <TwAlert Id="icon-alert-4" Class="mt-2" Color="Color.Warning" EndIcon="Icon.Star">
+                    This is another alert with an end icon.
+                </TwAlert>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Dismissible Alerts">
+        <p>You can also make alerts dismissible by using <code>OnDismiss</code> or the <code>Dismissible</code> property set as true, setting <code>Dismissible</code> to true will show the X button and won't require an event callback.</p>
+        <CodeExample Name="AlertDismissable" CSharpName="AlertDismissHandler">
+            <TwAlert Id="info-alert" StartIcon="Icon.Info_Circle" Class="mt-2" Color="Color.Primary" Dense OnDismiss="@(() => HandleDismiss())">
+                This is a dense alert that is dismissible.
+            </TwAlert>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample AlertDismissHandler
+    private void HandleDismiss() => ToastService.ShowInfo("Alert dismissed!", "You have dismissed the alert.");
+    #endregion
+}

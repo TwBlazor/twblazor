@@ -1,0 +1,74 @@
+@page "/tabs"
+
+<PageContainer Title="TwTabs">
+    <PageCard Title="Basic Tabs">
+        <CodeExample Name="TabsBasic">
+            <TwTabContainer>
+                <TwTab Label="Tab 1">
+                    <p>This is the content of Tab 1.</p>
+                </TwTab>
+                <TwTab Label="Tab 2">
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+            </TwTabContainer>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Container Tab Colors">
+        <CodeExample Name="TabContainerColors">
+            <TwTabContainer TabColor="Color.Accent">
+                <TwTab Label="Tab 1">
+                    <p>Setting the <code>TabColor</code> property on the <code>TwTabContainer</code> will set the colour for all tabs within that container.</p>
+                </TwTab>
+                <TwTab Label="Tab 2">
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+                <TwTab Label="Tab 3">
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+            </TwTabContainer>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Single Tab Colors">
+        <CodeExample Name="TabColors">
+            <TwTabContainer>
+                <TwTab Label="Tab 1" Color="Color.Danger">
+                    <p>Setting the <code>Color</code> property on an individual basis will set the colour for each tab.</p>
+                </TwTab>
+                <TwTab Label="Tab 2" Color="Color.Success">
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+                <TwTab Label="Tab 3" Color="Color.Primary">
+                    <p>This is the content of Tab 3.</p>
+                </TwTab>
+            </TwTabContainer>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Dense Tabs">
+        <CodeExample Name="TabsDense">
+            <TwTabContainer Dense>
+                <TwTab Label="Tab 1">
+                    <p>This is the content of Tab 1.</p>
+                </TwTab>
+                <TwTab Label="Tab 2">
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+            </TwTabContainer>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled Tabs">
+        <CodeExample Name="TabsDisabled">
+            <TwTabContainer Dense>
+                <TwTab Label="Tab 1">
+                    <p>This is the content of Tab 1.</p>
+                </TwTab>
+                <TwTab Label="Disabled" Disabled>
+                    <p>This is the content of Tab 2.</p>
+                </TwTab>
+            </TwTabContainer>
+        </CodeExample>
+    </PageCard>
+</PageContainer>

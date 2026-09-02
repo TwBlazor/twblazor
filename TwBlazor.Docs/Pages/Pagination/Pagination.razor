@@ -1,0 +1,52 @@
+@page "/pagination"
+
+<PageContainer Title="TwPagination">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Bind <code>ActivePage</code> to track the current page as the user clicks between pages. <code>TotalPages</code> controls how many pages are available.</p>
+
+        <CodeExample Name="PaginationBasic" CSharpName="PaginationBasicCode">
+            <TwPagination TotalPages="10" @bind-ActivePage="activePage" AriaLabel="Basic pagination" />
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Page <strong>@activePage</strong> of <strong>10</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Responding to Page Changes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>ActivePageChanged</code> instead of two-way binding when you need to run logic - such as loading new data - whenever the page changes.</p>
+
+        <CodeExample Name="PaginationPageChanged" CSharpName="PaginationPageChangedCode">
+            <TwPagination TotalPages="6" ActivePage="pageChangedActivePage" ActivePageChanged="OnActivePageChanged" AriaLabel="Pagination with change handler" />
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">@pageChangedMessage</p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Page Size Selector">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>ShowPageSize</code> to add an optional "items per page" dropdown alongside the pagination controls. Bind <code>PageSize</code> and customize <code>PageSizeOptions</code> to control the available choices.</p>
+
+        <CodeExample Name="PaginationPageSize" CSharpName="PaginationPageSizeCode">
+            <TwPagination TotalPages="12" @bind-ActivePage="pageSizeActivePage" ShowPageSize="true" @bind-PageSize="pageSize" AriaLabel="Pagination with page size selector" />
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Page <strong>@pageSizeActivePage</strong> of 12, showing <strong>@pageSize</strong> items per page.</p>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample PaginationBasicCode
+    private int activePage = 1;
+    #endregion
+
+    #region CodeExample PaginationPageChangedCode
+    private int pageChangedActivePage = 1;
+    private string pageChangedMessage = "Showing results for page 1.";
+
+    private void OnActivePageChanged(int page)
+    {
+        pageChangedActivePage = page;
+        pageChangedMessage = $"Showing results for page {page}.";
+    }
+    #endregion
+
+    #region CodeExample PaginationPageSizeCode
+    private int pageSizeActivePage = 1;
+    private int pageSize = 10;
+    #endregion
+}

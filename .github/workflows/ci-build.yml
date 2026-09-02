@@ -1,0 +1,13 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      configuration: Release

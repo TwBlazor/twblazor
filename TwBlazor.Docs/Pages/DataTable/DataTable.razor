@@ -1,0 +1,246 @@
+@page "/data-table"
+
+<PageContainer Title="TwDataTable">
+    <PageCard Title="Basic Data Table with Pagination">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">A feature-rich data table with pagination and search functionality.</p>
+
+        <CodeExample Name="DataTablePagination" CSharpName="DataTableProduct">
+            <TwDataTable TItem="Product"
+                         Items="@products"
+                         Pageable
+                         RowsPerPage="5">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                        <th scope="col" class="px-6 py-3">Stock</th>
+                    </tr>
+                </TableHeader>
+                <TableRow Context="product">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">@product.Name</td>
+                    <td class="px-6 py-4">@product.Category</td>
+                    <td class="px-6 py-4">£@product.Price.ToString("N2")</td>
+                    <td class="px-6 py-4">@product.Stock</td>
+                </TableRow>
+            </TwDataTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Searchable Data Table">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Data table with search functionality to filter results.</p>
+
+        <CodeExample Name="DataTableSearchable" CSharpName="DataTableProduct">
+            <TwDataTable TItem="Product"
+                         Items="@products"
+                         Searchable
+                         Pageable
+                         RowsPerPage="10">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                        <th scope="col" class="px-6 py-3">Stock</th>
+                    </tr>
+                </TableHeader>
+                <TableRow Context="product">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">@product.Name</td>
+                    <td class="px-6 py-4">@product.Category</td>
+                    <td class="px-6 py-4">£@product.Price.ToString("N2")</td>
+                    <td class="px-6 py-4">@product.Stock</td>
+                </TableRow>
+                <EmptyContent>
+                    <div class="text-center py-8">
+                        <p class="text-gray-500 dark:text-gray-400">No products found matching your search.</p>
+                    </div>
+                </EmptyContent>
+            </TwDataTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Data Table Without Pagination">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Display all data without pagination controls.</p>
+
+        <CodeExample Name="DataTableWithoutPagination" CSharpName="DataTableUser">
+            <TwDataTable TItem="User"
+                         Items="@users"
+                         Pageable="false"
+                         Searchable
+                         SearchPlaceholder="Search users...">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3">Email</th>
+                        <th scope="col" class="px-6 py-3">Role</th>
+                    </tr>
+                </TableHeader>
+                <TableRow Context="user">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">@user.Name</td>
+                    <td class="px-6 py-4">@user.Email</td>
+                    <td class="px-6 py-4">@user.Role</td>
+                </TableRow>
+            </TwDataTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Row Classes">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Data table with custom row styling based on conditions.</p>
+
+        <CodeExample Name="DataTableCustomClasses" CSharpName="DataTableProduct">
+            <TwDataTable TItem="Product"
+                         Items="@products"
+                         RowsPerPage="5"
+                         Pageable
+                         DefineTableRows>
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                        <th scope="col" class="px-6 py-3">Stock</th>
+                    </tr>
+                </TableHeader>
+                <TableRow Context="product">
+                    @{
+                        var rowClass = product.Stock < 10 ? "bg-red-50 dark:bg-red-900/20" : "";
+                    }
+                    <tr class="@rowClass">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">@product.Name</td>
+                        <td class="px-6 py-4">@product.Category</td>
+                        <td class="px-6 py-4">£@product.Price.ToString("N2")</td>
+                        <td class="px-6 py-4">
+                            @if (product.Stock < 10)
+                            {
+                                <span class="text-red-600 dark:text-red-400 font-semibold">@product.Stock (Low Stock)</span>
+                            }
+                            else
+                            {
+                                <span>@product.Stock</span>
+                            }
+                        </td>
+                    </tr>
+                </TableRow>
+            </TwDataTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Sortable Data Table with Columns">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">
+            Data table with per-column sortability. Click column headers to sort. Some columns are sortable (with icons), others are not.
+        </p>
+
+        <CodeExample Name="DataTableSortableColumns" CSharpName="DataTableProductColumns">
+            <TwDataTable TItem="Product"
+                         Items="@products"
+                         Columns="@productColumns"
+                         Searchable
+                         Pageable
+                         RowsPerPage="10">
+                <EmptyContent>
+                    <div class="text-center py-8">
+                        <p class="text-gray-500 dark:text-gray-400">No products found.</p>
+                    </div>
+                </EmptyContent>
+            </TwDataTable>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    private List<Product> products = new();
+    private List<User> users = new();
+
+    #region CodeExample DataTableProductColumns
+    // Define columns with per-column sortability
+    private readonly List<TwDataTableColumn<Product>> productColumns = new()
+    {
+        new TwDataTableColumn<Product>
+        {
+            Name = "name",
+            Title = "Product Name",
+            PropertySelector = p => p.Name,
+            IsSortable = true,  // Sortable with alpha icons (auto-detected)
+        },
+        new TwDataTableColumn<Product>
+        {
+            Name = "category",
+            Title = "Category",
+            PropertySelector = p => p.Category,
+            IsSortable = false,  // Sortable disabled.
+        },
+        new TwDataTableColumn<Product>
+        {
+            Name = "price",
+            Title = "Price",
+            PropertySelector = p => p.Price,
+            IsSortable = true,  // Sortable with numeric icons (auto-detected from decimal type)
+            CellFormatter = p => $"£{p.Price:N2}"
+        },
+        new TwDataTableColumn<Product>
+        {
+            Name = "stock",
+            Title = "Stock",
+            PropertySelector = p => p.Stock,
+            CellFormatter = p => p.Stock < 10
+                ? $"{p.Stock} (Low Stock)"
+                : p.Stock.ToString(),
+            IsSortable = true
+        }
+    };
+    #endregion
+
+    protected override void OnInitialized()
+    {
+        // Sample product data
+        products = new List<Product>
+        {
+            new Product { Id = 1, Name = "Apple MacBook Pro 17\"", Category = "Laptop", Price = 2999, Stock = 15 },
+            new Product { Id = 2, Name = "Microsoft Surface Pro", Category = "Laptop", Price = 1999, Stock = 8 },
+            new Product { Id = 3, Name = "Magic Mouse 2", Category = "Accessories", Price = 99, Stock = 50 },
+            new Product { Id = 4, Name = "Apple Watch Series 9", Category = "Wearables", Price = 499, Stock = 25 },
+            new Product { Id = 5, Name = "iPad Air", Category = "Tablet", Price = 799, Stock = 5 },
+            new Product { Id = 6, Name = "Samsung Galaxy S24", Category = "Phone", Price = 1199, Stock = 30 },
+            new Product { Id = 7, Name = "Sony WH-1000XM5", Category = "Accessories", Price = 399, Stock = 12 },
+            new Product { Id = 8, Name = "Dell XPS 15", Category = "Laptop", Price = 2199, Stock = 18 },
+            new Product { Id = 9, Name = "Google Pixel 8 Pro", Category = "Phone", Price = 999, Stock = 22 },
+            new Product { Id = 10, Name = "AirPods Pro", Category = "Accessories", Price = 249, Stock = 40 },
+            new Product { Id = 11, Name = "Kindle Paperwhite", Category = "E-Reader", Price = 149, Stock = 35 },
+            new Product { Id = 12, Name = "Nintendo Switch", Category = "Gaming", Price = 299, Stock = 7 },
+            new Product { Id = 13, Name = "PlayStation 5", Category = "Gaming", Price = 499, Stock = 3 },
+            new Product { Id = 14, Name = "Xbox Series X", Category = "Gaming", Price = 499, Stock = 6 },
+            new Product { Id = 15, Name = "Canon EOS R6", Category = "Camera", Price = 2499, Stock = 9 }
+        };
+
+        // Sample user data
+        users = new List<User>
+        {
+            new User { Id = 1, Name = "John Doe", Email = "john@example.com", Role = "Developer" },
+            new User { Id = 2, Name = "Jane Smith", Email = "jane@example.com", Role = "Designer" },
+            new User { Id = 3, Name = "Bob Johnson", Email = "bob@example.com", Role = "Manager" },
+            new User { Id = 4, Name = "Alice Williams", Email = "alice@example.com", Role = "Developer" },
+            new User { Id = 5, Name = "Charlie Brown", Email = "charlie@example.com", Role = "QA Engineer" }
+        };
+    }
+
+    #region CodeExample DataTableProduct
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+    }
+    #endregion
+
+    #region CodeExample DataTableUser
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+    }
+    #endregion
+}

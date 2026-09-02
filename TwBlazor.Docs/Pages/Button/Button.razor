@@ -1,0 +1,150 @@
+@page "/button"
+@using TwBlazor
+@using TwBlazor.Components
+@using TwBlazor.Enums
+
+<PageContainer Title="TwButton">
+    <PageCard Title="Buttons">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">Usage of the button component is simple, you can use it to trigger actions. Below are some common actions:</p>
+
+        <CodeExample Name="ButtonBasic" CSharpName="ButtonBasicCode">
+            <TwButtonGroup>
+                <TwButton AriaLabel="Action button" Label="@($"Clicked {ClickCount} times")" Color="Color.Accent" StartIcon="Icon.Chat_Square_Dots" OnClick="HandleClick" />
+                <TwButton AriaLabel="Submit Type" Label="Submit" Color="Color.Primary" StartIcon="Icon.Mailbox" OnClick="@(() => { /* your action */ })" Type="submit" />
+            </TwButtonGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Icon Buttons">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">The button component can also be used with icons only:</p>
+
+        <CodeExample Name="ButtonIconOnly" CSharpName="ButtonIconOnlyCode">
+            <TwButtonGroup>
+                <TwIcon Icon="@(darkMode ? Icon.Sun : Icon.Moon)" AriaLabel="Set light mode" OnClick="ToggleMode" Color="@(darkMode ? Color.Dark : Color.Light)" ButtonVariant="ButtonVariant.Filled" />
+            </TwButtonGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Buttons Variants & Colors">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">There are multiple different button variants.</p>
+
+        <CodeExample Name="ButtonVariants">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="block mt-4">
+                        <div class="p-3">
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Filled" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Outlined" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Text" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Elevated" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="block mt-4">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Filled" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Outlined" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Text" />
+                            <TwButton Label="@c.ToString()" Color="@c" Class="m-1" Variant="@ButtonVariant.Elevated" />
+                        </div>
+                    </div>
+                }
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Buttons with Icons">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Buttons can include icons at the start or end for better visual communication:
+        </p>
+
+        <CodeExample Name="ButtonIcons">
+            <div class="mb-4">
+                <TwButton Label="Download" StartIcon="Icon.Download" Variant="ButtonVariant.Filled" Color="Color.Primary" Class="m-1" />
+                <TwButton Label="Next" EndIcon="Icon.Arrow_Right" Variant="ButtonVariant.Filled" Color="Color.Success" Class="m-1" />
+                <TwButton Label="Delete" StartIcon="Icon.Trash" Variant="ButtonVariant.Outlined" Color="Color.Danger" Class="m-1" />
+                <TwButton Label="Settings" StartIcon="Icon.Gear" Variant="ButtonVariant.Filled" Color="Color.Primary" Class="m-1" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="All Colors">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Buttons support all color themes from the color palette:
+        </p>
+
+        <CodeExample Name="ButtonColors">
+            @foreach (Color c in (Color[]) Enum.GetValues(typeof(Color)))
+            {
+                <TwButton Label="@c.ToString()" Color="@c" Class="m-1" />
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Button States">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Buttons can be disabled or set to readonly mode:
+        </p>
+
+        <CodeExample Name="ButtonReadonlyDisabled">
+            <div class="mb-4">
+                <TwButton Label="Filled Disabled" Variant="ButtonVariant.Filled" Color="Color.Primary" Disabled Class="m-1" />
+                <TwButton Label="Outlined Disabled" Variant="ButtonVariant.Outlined" Color="Color.Primary" Disabled Class="m-1" />
+                <TwButton Label="Text Disabled" Variant="ButtonVariant.Text" Color="Color.Primary" Disabled Class="m-1" />
+                <TwButton Label="Readonly Button" Color="Color.Success" Readonly Class="m-1" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Basic Button Groups">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">Group related buttons together with consistent spacing.</p>
+
+        <CodeExample Name="ButtonGroup">
+            <TwButtonGroup>
+                <TwButton Label="First" Color="Color.Primary" />
+                <TwButton Label="Second" Color="Color.Primary" />
+                <TwButton Label="Third" Color="Color.Primary" />
+            </TwButtonGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Vertical Button Groups">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">Stack buttons vertically.</p>
+
+        <CodeExample Name="ButtonGroupVertical">
+            <TwButtonGroup Vertical>
+                <TwButton Label="Top" Color="Color.Success" StartIcon="Icon.Arrow_Up" />
+                <TwButton Label="Middle" Color="Color.Success" />
+                <TwButton Label="Bottom" Color="Color.Success" EndIcon="Icon.Arrow_Down" />
+            </TwButtonGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Full Width Button Groups">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">Make buttons fill the container width equally.</p>
+
+        <CodeExample Name="ButtonGroupFullWidth">
+            <TwButtonGroup FullWidth>
+                <TwButton Label="Option 1" Color="Color.Accent" Variant="ButtonVariant.Outlined" />
+                <TwButton Label="Option 2" Color="Color.Accent" Variant="ButtonVariant.Outlined" />
+                <TwButton Label="Option 3" Color="Color.Accent" Variant="ButtonVariant.Outlined" />
+            </TwButtonGroup>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample ButtonBasicCode
+    public int ClickCount { get; set; } = 0;
+    private void HandleClick() => ClickCount++;
+    #endregion
+
+    #region CodeExample ButtonIconOnlyCode
+    private bool darkMode { get; set; }
+    private void ToggleMode() => darkMode = !darkMode;
+    #endregion
+}

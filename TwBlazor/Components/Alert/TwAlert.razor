@@ -1,0 +1,36 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" @attributes="Attributes" class="@classes" style="@Style" role="alert" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    @if (StartIcon is not null)
+    {
+        <TwIcon Icon="@((Icon)StartIcon)" />
+    }
+    <span class="min-w-0 flex-1 wrap-break-word">
+        @if (ChildContent is not null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @Text
+        }
+    </span>
+    @if (EndIcon is not null)
+    {
+        <TwIcon Icon="@((Icon)EndIcon)" Class="ml-auto" />
+    }
+    @if (Dismissible || OnDismiss.HasDelegate)
+    {
+        <button type="button" 
+                id="@($"{Id}-dismiss")" 
+                @onclick="HandleDismiss" 
+                class="@dismissButtonClasses"
+                aria-label="Close">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+        </button>
+    }
+</div>

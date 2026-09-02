@@ -1,0 +1,54 @@
+@page "/textfield"
+@using TwBlazor.Enums
+
+<PageContainer Title="TwTextfield">
+    <PageCard Title="Textfield">
+        <CodeExample Name="TextfieldBasic">
+            <div class="md:flex-col flex-row flex gap-2">
+                <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield"  />
+                <TwTextfield Label="Surname" @bind-Value="Surname" Placeholder="Please enter your surname" AriaLabel="Surname textfield" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Disabled Textfield">
+        <CodeExample Name="TextfieldDisabled">
+            <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Disabled />
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Readonly Textfield">
+        <CodeExample Name="TextfieldReadonly">
+            <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" ReadOnly />
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Outlined Variant">
+        <CodeExample Name="TextfieldOutlined">
+            <div class="md:flex-col flex-row flex gap-2">
+                <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Variant="InputVariant.Outlined" />
+                <TwTextfield Label="Surname" @bind-Value="Surname" Placeholder="Please enter your surname" AriaLabel="Surname textfield" Variant="InputVariant.Outlined" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Filled Variant">
+        <CodeExample Name="TextfieldFilled">
+            <div class="md:flex-col flex-row flex gap-2">
+                <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Variant="InputVariant.Filled" />
+                <TwTextfield Label="Surname" @bind-Value="Surname" Placeholder="Please enter your surname" AriaLabel="Surname textfield" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Different Input Types">
+        <CodeExample Name="TextfieldTypes">
+            <div class="md:flex-col flex-row flex gap-2">
+                <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" InputType="email" />
+                <TwTextfield Label="Password" @bind-Value="Password" Placeholder="Enter password" AriaLabel="Password textfield" InputType="password" />
+            </div>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    public string Forename { get; set; } = string.Empty;
+    public string Surname { get; set; } = string.Empty;
+    public string Email { get; set; } = "readonly@example.com";
+    public string Password { get; set; } = string.Empty;
+}

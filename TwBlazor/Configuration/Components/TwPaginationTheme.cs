@@ -1,0 +1,29 @@
+﻿// Copyright (c) 2025 Jack Shuter @ TwBlazor - twblazor.com
+// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+
+using System.Diagnostics.CodeAnalysis;
+
+namespace TwBlazor.Configuration.Components;
+
+/// <summary>
+/// Theme configuration for the pagination component (<see cref="TwBlazor.Components.TwPagination"/>).
+/// Override any property to customize pagination styles globally.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwPaginationTheme
+{
+    /// <summary>
+    /// Gets or sets the base classes applied to all pagination buttons.
+    /// </summary>
+    public required string Base { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to non-active (unselected) page number buttons.
+    /// </summary>
+    public required string Buttons { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the active (currently selected) page button.
+    /// </summary>
+    public required string ActiveButton { get; set; }
+}

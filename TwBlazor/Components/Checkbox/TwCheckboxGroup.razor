@@ -1,0 +1,34 @@
+@namespace TwBlazor.Components
+@typeparam TValue
+@inherits TwBlazorComponentBase
+
+<fieldset id="@Id"
+          class="@classes"
+          style="@Style"
+          disabled="@Disabled"
+          aria-label="@AriaLabel"
+          @attributes="@Attributes">
+    @if (!string.IsNullOrWhiteSpace(Legend))
+    {
+        <legend class="@legendClasses">@Legend</legend>
+    }
+    @if (Items != null && Items.Any())
+    {
+        <CascadingValue Value="@Name" Name="GroupName" IsFixed="true">
+            @foreach (var item in Items)
+            {
+                <TwCheckbox Label="@item.Label"
+                            Value="@item.IsSelected"
+                            ValueChanged="@(async (bool val) => await HandleItemChanged(item, val))"
+                            Color="@ItemColor"
+                            Disabled="@Disabled" />
+            }
+        </CascadingValue>
+    }
+    else
+    {
+        <CascadingValue Value="@Name" Name="GroupName" IsFixed="true">
+            @ChildContent
+        </CascadingValue>
+    }
+</fieldset>

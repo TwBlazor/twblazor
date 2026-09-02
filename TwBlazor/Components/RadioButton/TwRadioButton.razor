@@ -1,0 +1,27 @@
+﻿@namespace TwBlazor.Components
+@typeparam T
+@inherits TwBlazorInputComponentBase
+
+<TwInputRoot RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
+    <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@labelClasses" @attributes="@LabelAttributes">
+        <input type="radio"
+               id="@Id"
+               name="@effectiveName"
+               value="@Value"
+               checked="@isChecked"
+               @onchange="@HandleChange"
+               class="@classes"
+               disabled="@Disabled"
+               @attributes="@Attributes"
+               aria-readonly="@(ReadOnly ? "true" : null)"
+               aria-invalid="@(Invalid ? "true" : null)"
+               aria-describedby="@errorId"
+               aria-label="@AriaLabel"
+               aria-labelledby="@AriaLabelledBy" />
+        <span class="@radioClasses">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 16 16" fill="currentColor">
+                <circle cx="8" cy="8" r="4"></circle>
+            </svg>
+        </span>
+    </TwInputLabel>
+</TwInputRoot>

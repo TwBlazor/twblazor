@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "TwBlazor/bin/Release/net10.0",
+          "files": [
+            "TwBlazor.dll"
+          ]
+        }
+      ],
+      "dest": "api",
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**",
+          "obj/**",
+          "bin/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern",
+      "docs/templates"
+    ],
+    "globalMetadata": {
+      "_appName": "TwBlazor",
+      "_appTitle": "TwBlazor",
+      "_appLogoPath": "images/logo.svg",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

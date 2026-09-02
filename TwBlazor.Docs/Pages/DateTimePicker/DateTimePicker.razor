@@ -1,0 +1,38 @@
+@page "/datetime-picker"
+
+<PageContainer Title="TwDateTimePicker">
+    <PageCard Title="Basic DateTime Picker">
+        <CodeExample Name="DateTimePickerBasic" CSharpName="DateTimePickerBasicCode">
+            <div class="space-y-4">
+                <p><b>@@bind-SelectedDate (DateTime):</b> @SelectedDateTime.ToShortDateString()</p>
+                <TwDateTimePicker @bind-SelectedDateTime="SelectedDateTime" Label="Select a datetime" Class="mt-3" />
+                <p><b>@@bind-Value (string):</b> @SelectedDateTimeTextValue</p>
+                <TwDateTimePicker @bind-Value="SelectedDateTimeTextValue" Label="Select a datetime" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Input Variants">
+        <p class="mb-4">The DatePicker supports different visual variants for the input field.</p>
+
+        <CodeExample Name="DateTimePickerVariants" CSharpName="DateTimePickerBasicCode">
+            <div class="space-y-4">
+                <TwDateTimePicker Id="default-variant" @bind-SelectedDateTime="SelectedDateTime" Label="Default Variant" Variant="InputVariant.Default" />
+                <TwDateTimePicker Id="outlined-variant" @bind-SelectedDateTime="SelectedDateTime" Label="Outlined Variant" Variant="InputVariant.Outlined" />
+                <TwDateTimePicker Id="filled-variant" @bind-SelectedDateTime="SelectedDateTime" Label="Filled Variant" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Disabled and Readonly DateTime Picker">
+        <CodeExample Name="DateTimePickerReadonlyDisabled" CSharpName="DateTimePickerBasicCode">
+            <TwDateTimePicker @bind-SelectedDateTime="SelectedDateTime" @bind-Value="SelectedDateTimeTextValue" Label="Disabled DateTime Picker" Disabled Class="mt-3" />
+            <TwDateTimePicker @bind-SelectedDateTime="SelectedDateTime" @bind-Value="SelectedDateTimeTextValue" Label="Readonly DateTime Picker" ReadOnly Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample DateTimePickerBasicCode
+    public DateTime SelectedDateTime { get; set; } = DateTime.Now;
+    public string SelectedDateTimeTextValue { get; set; } = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+    #endregion
+}

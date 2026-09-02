@@ -1,0 +1,234 @@
+@page "/table"
+
+<PageContainer Title="TwTable">
+    <PageCard Title="Basic Table">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">A simple table component with customizable styling.</p>
+
+        <CodeExample Name="TableBasic">
+            <TwTable Id="basic-table">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product name</th>
+                        <th scope="col" class="px-6 py-3">Color</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    <tr>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Apple MacBook Pro 17"
+                        </th>
+                        <td class="px-6 py-4">Silver</td>
+                        <td class="px-6 py-4">Laptop</td>
+                        <td class="px-6 py-4">£2999</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Microsoft Surface Pro
+                        </th>
+                        <td class="px-6 py-4">White</td>
+                        <td class="px-6 py-4">Laptop PC</td>
+                        <td class="px-6 py-4">£1999</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Magic Mouse 2
+                        </th>
+                        <td class="px-6 py-4">Black</td>
+                        <td class="px-6 py-4">Accessories</td>
+                        <td class="px-6 py-4">£99</td>
+                    </tr>
+                </TableBody>
+            </TwTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Striped Table">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Table with alternating row colors for better readability.</p>
+
+        <CodeExample Name="TableStriped">
+            <TwTable Id="striped-table" Striped Hoverable>
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3">Email</th>
+                        <th scope="col" class="px-6 py-3">Role</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    <tr>
+                        <td class="px-6 py-4">John Doe</td>
+                        <td class="px-6 py-4">john@example.com</td>
+                        <td class="px-6 py-4">Developer</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Jane Smith</td>
+                        <td class="px-6 py-4">jane@example.com</td>
+                        <td class="px-6 py-4">Designer</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Bob Johnson</td>
+                        <td class="px-6 py-4">bob@example.com</td>
+                        <td class="px-6 py-4">Manager</td>
+                    </tr>
+                </TableBody>
+            </TwTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Hoverable Table">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Table with hover effects on rows.</p>
+
+        <CodeExample Name="TableHoverable">
+            <TwTable Id="hover-table" Hoverable Striped="false">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Task</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">Priority</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    <tr>
+                        <td class="px-6 py-4">Design homepage</td>
+                        <td class="px-6 py-4">In Progress</td>
+                        <td class="px-6 py-4">High</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Write documentation</td>
+                        <td class="px-6 py-4">Completed</td>
+                        <td class="px-6 py-4">Medium</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Fix bugs</td>
+                        <td class="px-6 py-4">Pending</td>
+                        <td class="px-6 py-4">High</td>
+                    </tr>
+                </TableBody>
+            </TwTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Bordered Table">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Table with borders on all cells for a grid view.</p>
+
+        <CodeExample Name="TableBordered">
+            <TwTable Id="bordered-table" Bordered Striped Hoverable>
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Country</th>
+                        <th scope="col" class="px-6 py-3">Capital</th>
+                        <th scope="col" class="px-6 py-3">Population</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    <tr>
+                        <td class="px-6 py-4">United States</td>
+                        <td class="px-6 py-4">Washington, D.C.</td>
+                        <td class="px-6 py-4">331 million</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">United Kingdom</td>
+                        <td class="px-6 py-4">London</td>
+                        <td class="px-6 py-4">67 million</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Germany</td>
+                        <td class="px-6 py-4">Berlin</td>
+                        <td class="px-6 py-4">83 million</td>
+                    </tr>
+                </TableBody>
+            </TwTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Table Without Border">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">Table with no outer border.</p>
+
+        <CodeExample Name="TableNoBorder">
+            <TwTable Id="no-border-table" NoBorder Striped Hoverable>
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Country</th>
+                        <th scope="col" class="px-6 py-3">Capital</th>
+                        <th scope="col" class="px-6 py-3">Population</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    <tr>
+                        <td class="px-6 py-4">United States</td>
+                        <td class="px-6 py-4">Washington, D.C.</td>
+                        <td class="px-6 py-4">331 million</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">United Kingdom</td>
+                        <td class="px-6 py-4">London</td>
+                        <td class="px-6 py-4">67 million</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4">Germany</td>
+                        <td class="px-6 py-4">Berlin</td>
+                        <td class="px-6 py-4">83 million</td>
+                    </tr>
+                </TableBody>
+            </TwTable>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Manual Pagination">
+        <p class="mb-4 text-gray-600 dark:text-gray-400">
+            <code>TwTable</code> has no built-in paging - it just renders whatever rows you give it. Slice your own data and pair it with
+            <code>TwPagination</code> to page through it manually. For an all-in-one paginated, searchable, sortable table, use
+            <a href="/datatable" class="text-blue-600 dark:text-blue-400 hover:underline">TwDataTable</a> instead.
+        </p>
+
+        <CodeExample Name="TableManualPagination" CSharpName="TableManualPaginationCode">
+            <TwTable Id="manual-pagination-table">
+                <TableHeader>
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product name</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                    </tr>
+                </TableHeader>
+                <TableBody>
+                    @foreach (var product in pagedProducts)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">@product.Name</td>
+                            <td class="px-6 py-4">@product.Category</td>
+                            <td class="px-6 py-4">£@product.Price</td>
+                        </tr>
+                    }
+                </TableBody>
+            </TwTable>
+
+            <TwPagination Class="mt-4" TotalPages="totalPages" @bind-ActivePage="activePage" AriaLabel="Product table pagination" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample TableManualPaginationCode
+    private const int pageSize = 3;
+    private int activePage = 1;
+
+    private readonly List<(string Name, string Category, int Price)> products = new()
+    {
+        ("Apple MacBook Pro 17\"", "Laptop", 2999),
+        ("Microsoft Surface Pro", "Laptop", 1999),
+        ("Magic Mouse 2", "Accessories", 99),
+        ("Apple Watch Series 9", "Wearables", 499),
+        ("iPad Air", "Tablet", 799),
+        ("Samsung Galaxy S24", "Phone", 1199),
+        ("Sony WH-1000XM5", "Accessories", 399),
+        ("AirPods Pro", "Accessories", 249),
+    };
+
+    private int totalPages => (int)Math.Ceiling(products.Count / (double)pageSize);
+
+    private IEnumerable<(string Name, string Category, int Price)> pagedProducts =>
+        products.Skip((activePage - 1) * pageSize).Take(pageSize);
+    #endregion
+}

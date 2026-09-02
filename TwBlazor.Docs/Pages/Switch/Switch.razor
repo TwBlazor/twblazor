@@ -1,0 +1,108 @@
+@page "/switch"
+
+<PageContainer Title="TwSwitch">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A toggle switch for binary on/off state, bound with <code>@@bind-Value</code>.</p>
+
+        <CodeExample Name="SwitchBasic" CSharpName="SwitchBasicCode">
+            <TwSwitch @bind-Value="notificationsEnabled" Label="Notifications" LabelClass="ms-2" AriaLabel="Toggle notifications" />
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Notifications are <strong>@(notificationsEnabled ? "on" : "off")</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to give a switch meaning at a glance - here each toggle drives an independent, bound setting.</p>
+        <CodeExample Name="SwitchColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="block mt-4">
+                        <div class="p-3">
+                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" LabelClass="ms-2 mt-2" AriaLabel="@($"{@c.ToString()} switch")" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="block mt-4">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" LabelClass="@(c == Color.Light ? "mt-2 text-white dark:text-white" : "mt-2 text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} switch")" />
+                        </div>
+                    </div>
+                }
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled & Readonly">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><code>Disabled</code> dims and locks the switch; <code>ReadOnly</code> keeps its state and color but blocks changes.</p>
+
+        <CodeExample Name="SwitchReadonlyDisabled" CSharpName="SwitchReadonlyDisabledCode">
+            <div class="space-y-3">
+                <TwSwitch @bind-Value="disabledValue" Label="Disabled Switch" Disabled Color="Color.Primary" LabelClass="ms-2" AriaLabel="Disabled switch" />
+                <TwSwitch @bind-Value="readonlyValue" Label="Readonly Switch" ReadOnly Color="Color.Primary" LabelClass="ms-2" AriaLabel="Readonly switch" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Settings Panel">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A practical example - each switch binds to its own field, and a summary below reflects the combined state.</p>
+
+        <CodeExample Name="SwitchSettingsPanel" CSharpName="SwitchSettingsPanelCode">
+            <div class="space-y-3">
+                <TwSwitch @bind-Value="emailNotifications" Label="Email notifications" LabelClass="ms-2" AriaLabel="Toggle email notifications" />
+                <TwSwitch @bind-Value="smsNotifications" Label="SMS notifications" LabelClass="ms-2" AriaLabel="Toggle SMS notifications" />
+                <TwSwitch @bind-Value="marketingEmails" Label="Marketing emails" LabelClass="ms-2" AriaLabel="Toggle marketing emails" />
+            </div>
+
+            <div class="mt-4 p-3 rounded border border-gray-200 dark:border-gray-600">
+                <p class="text-sm text-gray-600 dark:text-gray-400">Active settings:</p>
+                @if (activeSettings.Count > 0)
+                {
+                    <ul class="mt-1 text-sm list-disc list-inside">
+                        @foreach (var setting in activeSettings)
+                        {
+                            <li>@setting</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">None enabled</p>
+                }
+            </div>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample SwitchBasicCode
+    private bool notificationsEnabled = true;
+    #endregion
+
+    private bool exampleSwitch = true;
+
+    #region CodeExample SwitchReadonlyDisabledCode
+    private bool disabledValue = false;
+    private bool readonlyValue = true;
+    #endregion     
+
+    #region CodeExample SwitchSettingsPanelCode
+    private bool emailNotifications = true;
+    private bool smsNotifications = false;
+    private bool marketingEmails = false;
+
+    private List<string> activeSettings
+    {
+        get
+        {
+            var settings = new List<string>();
+            if (emailNotifications) settings.Add("Email notifications");
+            if (smsNotifications) settings.Add("SMS notifications");
+            if (marketingEmails) settings.Add("Marketing emails");
+            return settings;
+        }
+    }
+    #endregion
+}

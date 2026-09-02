@@ -1,0 +1,86 @@
+@page "/slider"
+
+<PageContainer Title="TwSlider">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A drop-in replacement for <code>&lt;input type="range"&gt;</code> with a fully custom, themeable track and thumb.</p>
+
+        <CodeExample Name="SliderBasic" CSharpName="SliderBasicCode">
+            <TwSlider T="int" Id="volume-slider" Min="0" Max="100" Step="1" Label="Volume" @bind-Value="volumeValue" AriaLabel="Volume slider" />
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Current Volume: <strong>@volumeValue%</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to give a slider meaning at a glance - here it signals status rather than just decoration.</p>
+
+        <CodeExample Name="SliderColors" CSharpName="SliderColorsCode">
+            <div class="space-y-6">
+                <div>
+                    <TwSlider T="int" Id="battery-slider" Min="0" Max="100" Step="1" Label="Battery" Color="Color.Success" @bind-Value="batteryValue" AriaLabel="Battery level slider" />
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">@batteryValue% remaining</p>
+                </div>
+
+                <div>
+                    <TwSlider T="int" Id="cpu-slider" Min="0" Max="100" Step="1" Label="CPU Usage" Color="Color.Danger" @bind-Value="cpuValue" AriaLabel="CPU usage slider" />
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">@cpuValue% load</p>
+                </div>
+
+                <div>
+                    <TwSlider T="int" Id="signal-slider" Min="0" Max="5" Step="1" Label="Signal Strength" Color="Color.Accent" @bind-Value="signalValue" AriaLabel="Signal strength slider" />
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">@signalValue / 5 bars</p>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Precision & Range">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Any comparable numeric type works via <code>T</code> - use decimals with a fractional <code>Step</code> for fine control, or negative <code>Min</code> values for ranges that cross zero.</p>
+
+        <CodeExample Name="SliderPrecisionRange" CSharpName="SliderPrecisionRangeCode">
+            <div class="space-y-6">
+                <div>
+                    <TwSlider T="decimal" Id="price-slider" Min="0m" Max="100m" Step="0.5m" Label="Price" @bind-Value="priceValue" AriaLabel="Price slider" />
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Selected Price: <strong>$@priceValue.ToString("F2")</strong></p>
+                </div>
+
+                <div>
+                    <TwSlider T="int" Id="temperature-slider" Min="-20" Max="40" Step="1" Label="Temperature" Color="Color.Accent" @bind-Value="temperatureValue" AriaLabel="Temperature slider" />
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Set to: <strong>@temperatureValue&deg;C</strong></p>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled & Readonly">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><code>Disabled</code> dims and locks the slider; <code>ReadOnly</code> keeps its color but blocks changes.</p>
+
+        <CodeExample Name="SliderDisabledReadonly" CSharpName="SliderDisabledReadonlyCode">
+            <div class="space-y-6">
+                <TwSlider T="int" Id="disabled-slider" Min="0" Max="100" Step="1" Label="Disabled" @bind-Value="disabledValue" Disabled AriaLabel="Disabled slider" />
+                <TwSlider T="int" Id="readonly-slider" Min="0" Max="100" Step="1" Label="Readonly" Color="Color.Danger" @bind-Value="readonlyValue" ReadOnly AriaLabel="Readonly slider" />
+            </div>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample SliderBasicCode
+    private int volumeValue = 50;
+    #endregion
+
+    #region CodeExample SliderColorsCode
+    private int batteryValue = 82;
+    private int cpuValue = 34;
+    private int signalValue = 4;
+    #endregion
+
+    #region CodeExample SliderPrecisionRangeCode
+    private decimal priceValue = 25.50m;
+    private int temperatureValue = 20;
+    #endregion
+
+    #region CodeExample SliderDisabledReadonlyCode
+    private int disabledValue = 40;
+    private int readonlyValue = 70;
+    #endregion
+}

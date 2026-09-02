@@ -1,0 +1,19 @@
+﻿@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+@if (ChildContent != null)
+{
+    <label id="@(string.IsNullOrEmpty(Id) ? null : Id)" for="@For" class="@classes" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+        @ChildContent
+        @if (!string.IsNullOrWhiteSpace(Label))
+        {
+            @Label
+        }
+    </label>
+}
+else
+{
+    <label id="@(string.IsNullOrEmpty(Id) ? null : Id)" for="@For" class="@classes" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+        @Label
+    </label>
+}

@@ -1,0 +1,50 @@
+@inherits TwBlazorComponentBase
+
+<table class="datepicker-grid w-full border-collapse" role="grid" aria-label="@Value.ToString("MMMM yyyy")" @ref="gridRef" @onkeydown="OnGridKeyDown">
+    <thead>
+        <tr role="row">
+            @foreach (var (abbreviation, fullName) in weekdayHeaders)
+            {
+                <th scope="col" role="columnheader" class="p-0"><span class="@dayHeaderClasses"><abbr title="@fullName" class="no-underline">@abbreviation</abbr></span></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var week in GetWeekRows())
+        {
+            <tr role="row">
+                @foreach (var cell in week)
+                {
+                    <td class="p-0.5" role="gridcell">
+                        @if (cell is null)
+                        {
+                            <span aria-hidden="true"></span>
+                        }
+                        else if (!cell.Value.IsCurrentMonth)
+                        {
+                            <span class="day prev w-full h-9 flex items-center justify-center cursor-default rounded-lg text-sm text-gray-400 dark:text-gray-600">
+                                @cell.Value.DayNumber
+                            </span>
+                        }
+                        else
+                        {
+                            var thisDate = new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified);
+                            var isSelected = cell.Value.DayNumber == Value.Day;
+                            var today = Value.Kind == DateTimeKind.Utc ? DateTime.UtcNow.Date : DateTime.Today;
+                            var isToday = thisDate.Date == today;
+                            <button type="button" class="@GetButtonClasses(isSelected, isToday)"
+                                    tabindex="@(cell.Value.DayNumber == focusedDay ? "0" : "-1")"
+                                    aria-label="@GetDayAriaLabel(thisDate, isSelected)"
+                                    aria-pressed="@(isSelected ? "true" : "false")"
+                                    aria-current="@(isToday ? "date" : null)"
+                                    @ref="GetDayCellRef(cell.Value.DayNumber).Element"
+                                    @onclick="@(() => SelectDateAsync(new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, Value.Hour, Value.Minute, Value.Second, Value.Kind)))">
+                                @cell.Value.DayNumber
+                            </button>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

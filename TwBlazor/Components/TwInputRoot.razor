@@ -1,0 +1,9 @@
+﻿<CascadingValue Value="this" IsFixed="true">
+    <div id="@(string.IsNullOrEmpty(RootId) ? null : RootId)" class="@RootClass" style="@RootStyle" @attributes="@RootAttributes" @ref="@RootRef" aria-label="@RootAriaLabel" aria-labelledby="@RootAriaLabelledBy">
+        @ChildContent
+        @if (!string.IsNullOrWhiteSpace(RootErrorMessage))
+        {
+            <p id="@RootErrorId" class="mt-1 text-xs text-red-600 dark:text-red-400" role="alert">@RootErrorMessage</p>
+        }
+    </div>
+</CascadingValue>

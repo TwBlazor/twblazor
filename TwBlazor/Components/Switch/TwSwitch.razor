@@ -1,0 +1,26 @@
+﻿@namespace TwBlazor.Components
+@typeparam T
+@inherits TwBlazorInputComponentBase
+
+<TwInputRoot RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
+    <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@labelClasses" @attributes="@LabelAttributes">
+        <span class="relative inline-block w-10 h-6">
+            <input type="checkbox"
+                   id="@Id"
+                   name="@Name"
+                   value="@Value"
+                   checked="@isChecked"
+                   @onchange="@HandleChange"
+                   class="@classes"
+                   disabled="@Disabled"
+                   @attributes="@Attributes"
+                   aria-readonly="@(ReadOnly ? "true" : null)"
+                   aria-invalid="@(Invalid ? "true" : null)"
+                   aria-describedby="@errorId"
+                   aria-label="@AriaLabel"
+                   aria-labelledby="@AriaLabelledBy" />
+            <span class="@trackClasses"></span>
+            <span class="@theme.Switch"></span>
+        </span>
+    </TwInputLabel>
+</TwInputRoot>

@@ -1,0 +1,47 @@
+@page "/time-picker"
+
+<PageContainer Title="TwTimePicker">
+    <PageCard Title="Basic Time Picker">
+        <CodeExample Name="TimePickerBasic" CSharpName="TimePickerBasicCode">
+            <div class="space-y-4">
+                <p><b>@@bind-SelectedTime (TimeOnly):</b> @SelectedTime.ToString()</p>
+                <TwTimePicker Id="basic-timepicker" @bind-SelectedTime="SelectedTime" @bind-Value="SelectedTimeTextValue" Label="Select a time" Class="mt-3" />
+                <p><b>@@bind-Value (string):</b> @SelectedTimeTextValue</p>
+                <TwTimePicker Id="basic-timepicker-string" @bind-Value="SelectedTimeTextValue" Label="Select a time" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Input Variants">
+        <p class="mb-4">The DatePicker supports different visual variants for the input field.</p>
+
+        <CodeExample Name="TimePickerVariants" CSharpName="TimePickerBasicCode">
+            <div class="space-y-4">
+                <TwTimePicker Id="default-variant" @bind-SelectedTime="SelectedTime" Label="Default Variant" Variant="InputVariant.Default" />
+                <TwTimePicker Id="outlined-variant" @bind-SelectedTime="SelectedTime" Label="Outlined Variant" Variant="InputVariant.Outlined" />
+                <TwTimePicker Id="filled-variant" @bind-SelectedTime="SelectedTime" Label="Filled Variant" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="12hr Time Picker">
+        <CodeExample Name="TimePicker12Hr" CSharpName="TimePickerBasicCode">
+            <p><b>@@bind-SelectedTime (TimeOnly):</b> @SelectedTime.ToString()</p>
+            <TwTimePicker Id="basic-12hr-timepicker" @bind-SelectedTime="SelectedTime" Label="Select a time" Class="mt-3" Is12HourFormat />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled and Readonly Time Picker">
+        <CodeExample Name="TimePickerReadonlyDisabled">
+            <TwTimePicker Id="disabled-timepicker" @bind-SelectedTime="SelectedTime" Label="Disabled Time Picker" Disabled Class="mt-3" />
+            <TwTimePicker Id="readonly-timepicker" @bind-SelectedTime="SelectedTime" Label="Readonly Time Picker" ReadOnly Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample TimePickerBasicCode
+    public TimeOnly SelectedTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+    public string SelectedTimeTextValue { get; set; } = TimeOnly.FromDateTime(DateTime.Now).ToString("HH:mm");
+    #endregion
+}

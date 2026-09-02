@@ -1,0 +1,69 @@
+@page "/icon"
+@using TwBlazor
+@using TwBlazor.Components
+@using TwBlazor.Enums
+@using TwBlazor.Extensions
+
+<PageContainer Title="TwIcon">
+    <PageCard Title="Icons">
+        Use JIcon to display any Bootstrap icon.
+        <CodeExample Name="IconBasic">
+            <div class="d-flex gap-3 align-items-center mb-3">
+                <TwIcon Icon="Icon.Heart_Fill" Class="text-4xl p-1 text-red-600 hover:text-red-400" OnClick="LikeIconClicked" RootClass="inline-block" />
+                <TwIcon Icon="Icon.Star_Fill" Class="text-4xl p-1 text-blue-600" />
+                <TwIcon Icon="Icon.Check_Circle_Fill" Class="text-2xl p-1 text-pink-600" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Icon Size">
+        You can control icon sizes using <a href="https://tailwindcss.com/docs/font-size" target="_blank">Tailwind CSS font size</a> classes or passing in your owm.
+        <CodeExample Name="IconSize">
+            <div class="d-flex gap-3 align-items-center mb-3">
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-xs" />
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-lg" />
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-xl" />
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-2xl" />
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-3xl" />
+                <TwIcon Icon="Icon.Gear_Fill" Class="text-4xl" />
+            </div>
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Icon Library">
+        <p>Browse through all available Bootstrap icons. Click on any icon to copy its enum value.</p>
+
+        <div class="my-3">
+            <TwTextfield Id="search" Label="Search icons" Placeholder="Search icons..." BindEvent="oninput" @bind-Value="searchTerm" />
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-4 mt-3">
+            @foreach (var icon in filteredIcons.Take(displayCount))
+            {
+                <TwCard @onclick="() => CopyToClipboard(icon)" Class="text-center hover:text-gray-400 cursor-pointer">
+                    @if (copiedIcon == icon)
+                    {
+                        <TwIcon Icon="Icon.Check" Class="text-2xl block" />
+                        <small class="mt-2 text-xs text-center">Copied enum value</small>
+                    }
+                    else
+                    {
+                        <TwIcon Icon="icon" Class="text-2xl block" />
+                        <small class="mt-2 text-xs text-center">@icon.ToString()</small>
+                    }
+                </TwCard>
+            }
+        </div>
+
+        @if (filteredIcons.Count() > displayCount)
+        {
+            <div class="text-center mt-4">
+                <TwButton OnClick="LoadMoreIcons" EndIcon="@Icon.Plus" Variant="ButtonVariant.Filled" Color="Color.Primary">Load more</TwButton>
+            </div>
+        }
+
+        @if (!filteredIcons.Any())
+        {
+            <p class="text-center text-muted mt-4">No icons found matching "@searchTerm"</p>
+        }
+    </PageCard>
+</PageContainer>

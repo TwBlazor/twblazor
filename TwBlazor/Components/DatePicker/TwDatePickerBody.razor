@@ -1,0 +1,14 @@
+﻿@using TwBlazor.Utilities
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="datepicker-body flex" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    <div class="@classes">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string classes => new ClassBuilder(Class).AddClass("w-full").Build();
+}

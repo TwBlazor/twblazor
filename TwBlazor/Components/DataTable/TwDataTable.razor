@@ -1,0 +1,144 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@typeparam TItem
+@inherits TwBlazorComponentBase
+
+<div class="@rootClasses">
+    @* Search *@
+    @if (Searchable)
+    {
+        <div class="flex justify-end mb-4">
+            <div class="w-full md:w-1/2">
+                <TwTextfield T="string" 
+                    Id="@($"{Id}-search")"
+                    Class="w-full" 
+                    Label="@SearchLabel" 
+                    Placeholder="@SearchPlaceholder" 
+                    ValueChanged="@OnSearchAsync" />
+            </div>
+        </div>
+    }
+
+    @* Announces sort state changes to assistive technology *@
+    <span class="sr-only" aria-live="polite">@sortStatusMessage</span>
+
+    @* Table *@
+    <TwTable Id="@Id"
+             Striped="@Striped"
+             Hoverable="@Hoverable"
+             Bordered="@Bordered"
+             HeaderClass="@HeaderClass"
+             BodyClass="@BodyClass"
+             Class="@TableClass"
+             Attributes="@TableAttributes"
+             AriaLabel="@AriaLabel"
+             AriaLabelledBy="@AriaLabelledBy"
+             Caption="@Caption"
+             CaptionVisible="@CaptionVisible">
+        <TableHeader>
+            @if (Columns != null && Columns.Any())
+            {
+                @* Auto-generated headers from Columns *@
+                <tr class="@headerRowClasses">
+                    @foreach (var column in Columns)
+                    {
+                        <th scope="col" class="@($"px-6 py-3 {column.HeaderClass}")" aria-sort="@(column.IsSortable ? GetAriaSort(column.Name) : null)">
+                            <div class="flex items-center gap-2">
+                                <span>@column.Title</span>
+                                @if (column.IsSortable)
+                                {
+                                    <TwIcon Icon="GetSortIcon(column.Name)" Class="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 ml-auto" OnClick="() => ToggleSort(column.Name)" AriaLabel="@GetSortAriaLabel(column)" />
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            }
+            else if (TableHeader != null)
+            {
+                @* Manual header definition - user provides their own tr *@
+                @TableHeader
+            }
+        </TableHeader>
+        <TableBody>
+            @if (displayedRows != null && displayedRows.Count > 0)
+            {
+                @if (Columns != null && Columns.Any())
+                {
+                    @* Auto-generated rows from Columns *@
+                    @foreach (var row in displayedRows.Where(r => !EqualityComparer<TItem>.Default.Equals(r, default)))
+                    {
+                        <tr class="@RowClass">
+                            @foreach (var column in Columns)
+                            {
+                                <td class="@($"px-6 py-4 wrap-break-word {column.CellClass}")">
+                                    @if (column.CellFormatter != null)
+                                    {
+                                        @column.CellFormatter(row)
+                                    }
+                                    else if (column.PropertySelector != null)
+                                    {
+                                        @column.PropertySelector(row)?.ToString()
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else if (TableRow != null)
+                {
+                    @* Manual row definition *@
+                    var tableRow = TableRow;
+                    @foreach (var row in displayedRows.Where(r => !EqualityComparer<TItem>.Default.Equals(r, default)))
+                    {
+                        @if (DefineTableRows)
+                        {
+                            @tableRow(row)
+                        }
+                        else
+                        {
+                            <tr class="@RowClass">
+                                @tableRow(row)
+                            </tr>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="100" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        @if (EmptyContent != null)
+                        {
+                            @EmptyContent
+                        }
+                        else if (!string.IsNullOrWhiteSpace(currentSearchQuery))
+                        {
+                            @:No results match your search.
+                        }
+                        else
+                        {
+                            @:No data available.
+                        }
+                    </td>
+                </tr>
+            }
+        </TableBody>
+    </TwTable>
+
+    @* Pagination *@
+    @if (Pageable)
+    {
+        <TwPagination Id="@($"{Id}-pagination")"
+            Class="mt-4 w-full justify-between"
+            TotalPages="TotalPages()"
+            ActivePage="currentPage"
+            ActivePageChanged="OnActivePageChanged"
+            ShowPageSize="true"
+            PageSize="RowsPerPage"
+            PageSizeChanged="OnRowsPerPageChangedAsync"
+            PageSizeOptions="RowsPerPageOptions"
+            AriaLabel="Table pagination" />
+    }
+</div>
+

@@ -1,0 +1,62 @@
+﻿@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+@if (!string.IsNullOrWhiteSpace(Href))
+{
+    <TwLink Id="@Id" 
+            Href="@Href" 
+            Target="@Target" 
+            Class="@classes" 
+            Style="@Style"
+            Attributes="@Attributes" 
+            AriaLabel="@AriaLabel"
+            AriaLabelledBy="@AriaLabelledBy">
+        @if (StartIcon.HasValue)
+        {
+            <TwIcon Icon="@StartIcon.Value" Class="text-lg leading-none me-2" />
+        }
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @Label
+        }
+        @if (EndIcon.HasValue)
+        {
+            <TwIcon Icon="@EndIcon.Value" Class="text-lg leading-none ms-2" />
+        }
+    </TwLink>
+}
+else
+{
+    <button type="@Type"
+            id="@Id"
+            @ref="element"
+            @onclick="OnClickAsync"
+            class="@classes"
+            style="@Style"
+            disabled="@Disabled"
+            aria-disabled="@(Readonly && !Disabled ? "true" : null)"
+            @attributes="@Attributes"
+            aria-label="@AriaLabel"
+            aria-labelledby="@AriaLabelledBy">
+        @if (StartIcon.HasValue)
+        {
+            <TwIcon Icon="@StartIcon.Value" Class="text-lg leading-none me-2" />
+        }
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @Label
+        }
+        @if (EndIcon.HasValue)
+        {
+            <TwIcon Icon="@EndIcon.Value" Class="text-lg leading-none ms-2" />
+        }
+    </button>
+}

@@ -1,0 +1,30 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorInputComponentBase
+@typeparam T
+
+<TwInputRoot RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
+    <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClass" @attributes="@LabelAttributes" />
+    <div class="@wrapperClasses">
+        <input type="range"
+               id="@Id"
+               name="@Name"
+               value="@Value"
+               min="@Min"
+               max="@Max"
+               step="@Step"
+               class="@classes"
+               style="opacity:0;"
+               @oninput="@HandleInput"
+               @attributes="@Attributes"
+               aria-label="@AriaLabel"
+               aria-labelledby="@AriaLabelledBy"
+               aria-readonly="@(ReadOnly ? "true" : null)"
+               aria-invalid="@(Invalid ? "true" : null)"
+               aria-describedby="@errorId" />
+        <div class="@trackClasses" aria-hidden="true">
+            <div class="@fillClasses" style="width:@(percentageText)%"></div>
+        </div>
+        <div class="@thumbClasses" style="left:@(percentageText)%" aria-hidden="true"></div>
+        <div class="@bubbleClasses" style="left:@(percentageText)%" aria-hidden="true">@Value</div>
+    </div>
+</TwInputRoot>

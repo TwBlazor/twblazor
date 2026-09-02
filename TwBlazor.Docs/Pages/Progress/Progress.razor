@@ -1,0 +1,85 @@
+@page "/progress"
+
+<PageContainer Title="TwProgress">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A styled wrapper around the native <code>&lt;progress&gt;</code> element - it keeps the built-in <code>progressbar</code> role and automatic <code>aria-valuenow</code>/<code>aria-valuemin</code>/<code>aria-valuemax</code> semantics for free.</p>
+
+        <CodeExample Name="ProgressBasic">
+            <TwProgress T="int" Id="download-progress" Label="Download Progress" Value="40" Max="100" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to give a progress bar meaning at a glance - here it signals status rather than just decoration.</p>
+
+        <CodeExample Name="ProgressColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="block mt-4">
+                        <div class="p-3">
+                            <TwProgress T="int" Id="@($"{c.ToString()}-progress")" Label="@c.ToString()" Value="50" Max="100" Color="c" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="block mt-4">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwProgress T="int" Id="@($"{c.ToString()}-progress")" Label="@c.ToString()" Value="50" Max="100" LabelClass="@(c == Color.Light ? "mt-2 text-white dark:text-white" : "mt-2 text-gray-900 dark:text-gray-900")" Color="c" />
+                        </div>
+                    </div>
+                }
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Sizes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to control the bar's thickness.</p>
+
+        <CodeExample Name="ProgressSizes">
+            <div class="space-y-6">
+                <TwProgress T="int" Id="small-progress" Label="Small" Value="30" Max="100" Size="ProgressSize.Small" Color="Color.Warning" />
+                <TwProgress T="int" Id="medium-progress" Label="Medium" Value="55" Max="100" Size="ProgressSize.Medium" Color="Color.Warning" />
+                <TwProgress T="int" Id="large-progress" Label="Large" Value="80" Max="100" Size="ProgressSize.Large" Color="Color.Warning" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Indeterminate">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>Indeterminate</code> when the completion amount isn't known yet - the <code>value</code> attribute is omitted so it renders (and is announced) as busy rather than "0% done".</p>
+
+        <CodeExample Name="ProgressIndeterminate">
+            <TwProgress T="int" Id="sync-progress" Label="Syncing..." Max="100" Indeterminate />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Interactive">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Drive <code>Value</code> from your own component state - there's no built-in user interaction, so the bar only moves when your code updates it.</p>
+
+        <CodeExample Name="ProgressInteractive" CSharpName="ProgressInteractiveCode">
+            <TwProgress T="int" Id="interactive-progress" Label="Upload Progress" Value="uploadValue" Max="100" />
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">@uploadValue% complete</p>
+            <TwButton Class="mt-3" Color="Color.Primary" Disabled="@(uploadValue >= 100)" OnClick="Advance">
+                Upload next chunk
+            </TwButton>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Disabled</code> to dim a progress bar that's paused or inactive.</p>
+
+        <CodeExample Name="ProgressDisabled">
+            <TwProgress T="int" Id="disabled-progress" Label="Paused" Value="45" Max="100" Disabled />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample ProgressInteractiveCode
+    private int uploadValue = 20;
+
+    private void Advance() => uploadValue = Math.Min(100, uploadValue + 20);
+    #endregion
+}

@@ -1,0 +1,18 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<a id="@Id"
+   href="@Href"
+   target="@Target"
+   rel="@effectiveRel"
+   class="@classes"
+   style="@Style"
+   @attributes="@Attributes"
+   aria-label="@AriaLabel"
+   aria-labelledby="@AriaLabelledBy">
+    @ChildContent
+    @if (Target == "_blank")
+    {
+        <span class="sr-only">(opens in new tab)</span>
+    }
+</a>

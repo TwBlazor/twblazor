@@ -1,0 +1,154 @@
+@page "/select"
+
+<PageContainer Title="TwSelect">
+    <PageCard Title="Basic Select">
+        <CodeExample Name="SelectBasic" CSharpName="SelectBasicCode">
+            <div class="w-full flex flex-row">
+                <div class="flex-col lg:flex-row flex flex-grow gap-4 mb-4">
+                    <TwSelect T="string"
+                              Label="Country"
+                              Values="@countries"
+                              Variant="InputVariant.Default"
+                              @bind-SelectedValue="@selectedCountry"
+                              Placeholder="Select a country..."
+                              AriaLabel="Country select"
+                              RootClass="flex-1"/>
+
+                    <TwSelect T="string"
+                              Label="Country"
+                              Values="@countries"
+                              Variant="InputVariant.Filled"
+                              @bind-SelectedValue="@selectedCountry"
+                              Placeholder="Select a city..."
+                              AriaLabel="City select"
+                              RootClass="flex-1" />
+
+                    <TwSelect T="string"
+                              Label="Country"
+                              Values="@countries"
+                              Variant="InputVariant.Outlined"
+                              @bind-SelectedValue="@selectedCountry"
+                              Placeholder="Select a city..."
+                              AriaLabel="City select"
+                              RootClass="flex-1" />
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(selectedCountry))
+            {
+                <p class="text-sm text-gray-600 dark:text-gray-400 pb-4">Selected Country: <strong>@selectedCountry</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Select with Complex Objects">
+        <CodeExample Name="SelectComplexObjects" CSharpName="SelectComplexObjectsCode">
+            <TwSelect T="Person"
+                      Label="Select Person"
+                      Values="@people"
+                      @bind-SelectedValue="@selectedPerson"
+                      PropertyName="Name"
+                      Placeholder="Choose a person..."
+                      AriaLabel="Person select" />
+
+            @if (selectedPerson != null)
+            {
+                <div class="mt-3 p-3 rounded border border-gray-200 dark:border-gray-600">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Name: <strong>@selectedPerson.Name</strong></p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Email: <strong>@selectedPerson.Email</strong></p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Age: <strong>@selectedPerson.Age</strong></p>
+                </div>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Required Select">
+        <CodeExample Name="SelectRequired">
+            <TwSelect T="string"
+                      Label="Favourite Color"
+                      Values="@colors"
+                      @bind-SelectedValue="@selectedColor"
+                      Required
+                      AriaLabel="Color select" />
+
+            @if (!string.IsNullOrEmpty(selectedColor))
+            {
+                <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Selected Color: <strong>@selectedColor</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled and Readonly Select">
+        <CodeExample Name="SelectReadonlyDisabled">
+            <div class="flex flex-col gap-3">
+                <TwSelect T="string"
+                          Label="Disabled Select"
+                          Values="@countries"
+                          @bind-SelectedValue="@selectedCountry"
+                          Placeholder="Cannot select..."
+                          Disabled
+                          AriaLabel="Disabled select" />
+
+                <TwSelect T="string"
+                          Label="Readonly Select"
+                          Values="@countries"
+                          SelectedValue="@readonlyValue"
+                          Placeholder="Cannot change..."
+                          ReadOnly
+                          AriaLabel="Readonly select" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Select with Numbers">
+        <CodeExample Name="SelectNumeric">
+            <TwSelect T="int"
+                      Label="Quantity"
+                      Values="@quantities"
+                      @bind-SelectedValue="@selectedQuantity"
+                      Placeholder="Select quantity..."
+                      AriaLabel="Quantity select" />
+
+            @if (selectedQuantity > 0)
+            {
+                <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Selected Quantity: <strong>@selectedQuantity</strong></p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Total Price: <strong>$@(selectedQuantity * 10)</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample SelectBasicCode
+    private string selectedCountry = string.Empty;
+    private readonly string[] countries = ["USA", "Canada", "UK", "Germany", "France", "Japan", "Australia"];
+    #endregion
+
+    #region CodeExample SelectComplexObjectsCode
+    private Person? selectedPerson = null;
+
+    private readonly Person[] people =
+    [
+        new Person { Id = 1, Name = "John Doe", Email = "john@example.com", Age = 30 },
+        new Person { Id = 2, Name = "Jane Smith", Email = "jane@example.com", Age = 25 },
+        new Person { Id = 3, Name = "Bob Johnson", Email = "bob@example.com", Age = 35 },
+        new Person { Id = 4, Name = "Alice Williams", Email = "alice@example.com", Age = 28 }
+    ];
+
+    private sealed class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public int Age { get; set; }
+    }
+    #endregion
+
+    private readonly string readonlyValue = "Canada";
+
+    private string selectedColor = string.Empty;
+    private readonly string[] colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange"];
+
+    private int selectedQuantity = 0;
+    private readonly int[] quantities = [1, 2, 3, 4, 5, 10, 15, 20, 25, 50];
+}

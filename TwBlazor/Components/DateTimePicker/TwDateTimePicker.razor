@@ -1,0 +1,41 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Components.DatePicker
+@using TwBlazor.Components.TimePicker
+@inherits TwBlazorTextInputComponentBase
+
+<TwDatePicker 
+    RootId="@RootId"
+    RootClass="@RootClass"
+    RootAttributes="@RootAttributes"
+    Style="@Style"
+    AriaLabel="@AriaLabel"
+    AriaLabelledBy="@AriaLabelledBy"
+    Id="@Id"
+    Format="@format"
+    PreferNativePicker="@PreferNativePicker"
+    NativeInputType="datetime-local"
+    NativeFormat="yyyy-MM-ddTHH:mm"
+    @bind-Value="Value"
+    @bind-SelectedDate="SelectedDateTime"
+    @attributes="@Attributes"
+    Placeholder="@Placeholder" 
+    Class="@Class" 
+    Label="@Label"
+    LabelClass="@LabelClass"
+    LabelId="@LabelId"
+    LabelAttributes="@LabelAttributes"
+    Variant="@Variant"
+    ReadOnly="@ReadOnly"
+    Disabled="@Disabled">
+    <FocusedChildContent>
+        <TwDatePickerBody Class="time">
+            <TwTimePickerBody Id="@Id"
+                              Is12HourFormat="@Is12HourFormat"
+                              SelectedTime="@currentTime"
+                              SelectedTimeChanged="@OnTimePickerChanged" />
+        </TwDatePickerBody>
+    </FocusedChildContent>
+</TwDatePicker>
+
+
+

@@ -1,0 +1,37 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<div class="@rootClasses">
+    <nav id="@Id" aria-label="@(AriaLabel ?? "pagination")" aria-labelledby="@AriaLabelledBy" style="@Style" @attributes="@Attributes">
+        <ul class="flex items-center -space-x-px h-10 text-base">
+            <li>
+                <TwIcon Class="@NavButtonClass(isPreviousDisabled, isFirst: true)" aria-disabled="@(isPreviousDisabled ? "true" : null)" Disabled="@isPreviousDisabled" OnClick="() => OnPageClick(ActivePage - 1)" Icon="Enums.Icon.Chevron_Left" AriaLabel="Previous page" />
+            </li>
+
+            @foreach (var pageNumber in VisiblePages())
+            {
+                <li>
+                    <TwButton Type="button" Class="@IsActivePage(pageNumber)" Plain OnClick="() => OnPageClick(pageNumber)" aria-current="@(pageNumber == ActivePage ? "page" : null)">
+                        <span class="sr-only">page </span>@pageNumber
+                    </TwButton>
+                </li>
+            }
+
+            <li>
+                <TwIcon Class="@NavButtonClass(isNextDisabled, isLast: true)" aria-disabled="@(isNextDisabled ? "true" : null)" Disabled="@isNextDisabled" OnClick="() => OnPageClick(ActivePage + 1)" Icon="Enums.Icon.Chevron_Right" AriaLabel="Next page" />
+            </li>
+        </ul>
+    </nav>
+
+    @if (ShowPageSize)
+    {
+        <TwSelect T="int"
+            Id="@($"{Id}-page-size")"
+            Variant="Enums.InputVariant.Outlined"
+            Values="@PageSizeOptions"
+            SelectedValue="@PageSize"
+            SelectedValueChanged="@OnPageSizeSelected"
+            Required="true"
+            AriaLabel="Items per page" />
+    }
+</div>

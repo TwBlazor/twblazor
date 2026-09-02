@@ -1,0 +1,9 @@
+﻿<TwCard Class="my-6">
+    <h3 class="mb-4 text-xl font-semibold">@Title</h3>
+    @ChildContent
+</TwCard>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

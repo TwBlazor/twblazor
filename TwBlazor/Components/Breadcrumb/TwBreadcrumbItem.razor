@@ -1,0 +1,70 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+@if (Breadcrumb != null)
+{
+    @if (Breadcrumb.AriaCurrent)
+    {
+        <li class="@theme.Item">
+            @if (!isFirst)
+            {
+                <span class="@theme.Separator" aria-hidden="true">/</span>
+            }
+            @if (Breadcrumb.Icon != null)
+            {
+                <TwIcon Icon="@((Icon)Breadcrumb.Icon)" />
+            }
+            <span id="@Id" aria-current="page" class="@labelClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+                @Breadcrumb.Label
+            </span>
+        </li>
+    }
+    else
+    {
+        <li class="@theme.Item">
+            @if (!isFirst)
+            {
+                <span class="@theme.Separator" aria-hidden="true">/</span>
+            }
+            @if (Breadcrumb.Icon != null)
+            {
+                <TwIcon Icon="@((Icon)Breadcrumb.Icon)" />
+            }
+            <a id="@Id" href="@Breadcrumb.Href" class="@labelClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">@Breadcrumb.Label</a>
+        </li>
+    }
+}
+else
+{
+    @if (AriaCurrent)
+    {
+        <li class="@theme.Item">
+            @if (!isFirst)
+            {
+                <span class="@theme.Separator" aria-hidden="true">/</span>
+            }
+            @if (Icon != null)
+            {
+                <TwIcon Icon="@((Icon)Icon)" />
+            }
+            <span id="@Id" aria-current="page" class="@labelClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+                @Label
+            </span>
+        </li>
+    }
+    else
+    {
+        <li class="@theme.Item">
+            @if (!isFirst)
+            {
+                <span class="@theme.Separator" aria-hidden="true">/</span>
+            }
+            @if (Icon != null)
+            {
+                <TwIcon Icon="@((Icon)Icon)" />
+            }
+            <a id="@Id" href="@Href" class="@labelClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">@Label</a>
+        </li>
+    }
+}

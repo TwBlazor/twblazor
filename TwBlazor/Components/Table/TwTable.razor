@@ -1,0 +1,31 @@
+﻿@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<div class="overflow-auto">
+    <table id="@Id" class="@tableClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+        @if (Caption != null)
+        {
+            <caption class="@captionClasses">
+                @Caption
+            </caption>
+        }
+        @if (TableHeader != null)
+        {
+            <thead class="@headerClasses">
+                @TableHeader
+            </thead>
+        }
+        @if (TableBody != null)
+        {
+            <tbody class="@bodyClasses">
+                @TableBody
+            </tbody>
+        }
+        @if (TableFooter != null)
+        {
+            <tfoot class="@footerClasses">
+                @TableFooter
+            </tfoot>
+        }
+    </table>
+</div>

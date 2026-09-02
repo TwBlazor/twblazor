@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TwBlazor.Theme\TwBlazor.Theme.csproj" />
+    <ProjectReference Include="..\TwBlazor.Docs.Compiler\TwBlazor.Docs.Compiler.csproj" />
+  </ItemGroup>
+
+</Project>

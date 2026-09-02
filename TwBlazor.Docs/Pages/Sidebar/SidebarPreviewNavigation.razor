@@ -1,0 +1,76 @@
+@page "/sidebar/preview-navigation"
+@layout EmptyLayout
+@using TwBlazor.Docs.Layout
+@using TwBlazor.Models
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<HeadContent>
+    <meta name="color-scheme" content="light" />
+</HeadContent>
+
+@* #region CodeExample SidebarNavigationItems *@
+<TwSidebar IsSidebarOpen="true" NavigationItems="_navigationItems" IsSearchable Style="background-color: #ffffff;">
+    <HeaderContent>
+        <a href="#" class="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
+            <img src="_content/TwBlazor.Docs/images/logo.svg" alt="twblazor Logo" class="h-8 w-8 shrink-0" />
+            <span class="text-xl font-bold tracking-tight text-gray-900">twblazor</span>
+        </a>
+    </HeaderContent>
+    <ChildContent>
+        <div class="p-6 max-w-2xl">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Data-Driven Navigation</h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                This sidebar is generated entirely from a <code class="px-1.5 py-0.5 rounded bg-gray-100 text-xs font-mono text-gray-800">List&lt;NavigationItem&gt;</code>
+                passed to <code class="px-1.5 py-0.5 rounded bg-gray-100 text-xs font-mono text-gray-800">NavigationItems</code> - no hand-written markup for links or groups. Try the search box above.
+            </p>
+        </div>
+    </ChildContent>
+</TwSidebar>
+@* #endregion *@
+
+@code {
+    private IDisposable? _navigationHandler;
+
+    #region CodeExample SidebarNavigationItemsCode
+    private readonly List<NavigationItem> _navigationItems =
+    [
+        new() { Id = "dashboard", Label = "Dashboard", Href = "/dashboard" },
+        new()
+        {
+            Id = "content",
+            Label = "Content",
+            NavigationItems =
+            [
+                new() { Id = "posts", Label = "Posts", Href = "/posts" },
+                new() { Id = "pages", Label = "Pages", Href = "/pages" },
+                new() { Id = "media", Label = "Media", Href = "/media" },
+            ]
+        },
+        new()
+        {
+            Id = "settings",
+            Label = "Settings",
+            NavigationItems =
+            [
+                new() { Id = "profile", Label = "Profile", Href = "/profile" },
+                new() { Id = "security", Label = "Security", Href = "/security" },
+            ]
+        },
+    ];
+    #endregion
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _navigationHandler = NavigationManager.RegisterLocationChangingHandler(ctx =>
+            {
+                ctx.PreventNavigation();
+                return ValueTask.CompletedTask;
+            });
+        }
+    }
+
+    public void Dispose() => _navigationHandler?.Dispose();
+}

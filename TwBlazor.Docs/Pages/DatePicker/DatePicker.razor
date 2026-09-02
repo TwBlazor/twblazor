@@ -1,0 +1,40 @@
+@page "/date-picker"
+
+<PageContainer Title="TwDatePicker">
+    <PageCard Title="Basic Date Picker">
+        <CodeExample Name="DatePickerBasic" CSharpName="DatePickerBasicCode">
+            <div class="space-y-4">
+                <p><b>@@bind-SelectedDate (DateTime):</b> @SelectedDate.ToShortDateString()</p>
+                <TwDatePicker Id="basic-datepicker" @bind-SelectedDate="SelectedDate" Label="Select a datetime" Class="mt-3" />
+                <p><b>@@bind-Value (string):</b> @SelectedDateTextValue</p>
+                <TwDatePicker Id="basic-datepicker-string" @bind-Value="SelectedDateTextValue" Label="Select a datetime" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Input Variants">
+        <p class="mb-4">The DatePicker supports different visual variants for the input field.</p>
+
+        <CodeExample Name="DatePickerVariants" CSharpName="DatePickerBasicCode">
+            <div class="space-y-4">
+                <TwDatePicker Id="default-variant" @bind-SelectedDate="SelectedDate" Label="Default Variant" Variant="InputVariant.Default" />
+                <TwDatePicker Id="outlined-variant" @bind-SelectedDate="SelectedDate" Label="Outlined Variant" Variant="InputVariant.Outlined" />
+                <TwDatePicker Id="filled-variant" @bind-SelectedDate="SelectedDate" Label="Filled Variant" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled and Readonly Date Picker">
+        <CodeExample Name="DatePickerReadonlyDisabled" CSharpName="DatePickerBasicCode">
+            <TwDatePicker Id="disabled-datepicker" @bind-SelectedDate="SelectedDate" Label="Disabled Date Picker" Disabled Class="mt-3" />
+            <TwDatePicker Id="readonly-datepicker" @bind-SelectedDate="SelectedDate" Label="Readonly Date Picker" ReadOnly Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample DatePickerBasicCode
+    public DateTime SelectedDate { get; set; } = DateTime.Now;
+    public string SelectedDateTextValue { get; set; } = DateTime.Now.ToShortDateString();
+    #endregion
+}

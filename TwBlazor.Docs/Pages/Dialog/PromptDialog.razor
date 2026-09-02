@@ -1,0 +1,23 @@
+@using TwBlazor.Services
+
+<TwTextfield Label="@Label" @bind-Value="value" Class="mb-6" AriaLabel="@Label" />
+<div class="flex justify-end gap-2">
+    <TwButton Label="Cancel" Variant="ButtonVariant.Text" OnClick="Cancel" />
+    <TwButton Label="Save" Color="Color.Primary" OnClick="Save" />
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+
+    [Parameter] public string InitialValue { get; set; } = string.Empty;
+
+    [CascadingParameter] private TwDialogInstance? DialogInstance { get; set; }
+
+    private string value = string.Empty;
+
+    protected override void OnParametersSet() => value = InitialValue;
+
+    private void Save() => DialogInstance?.Close(value);
+
+    private void Cancel() => DialogInstance?.Cancel();
+}

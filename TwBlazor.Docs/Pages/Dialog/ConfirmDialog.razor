@@ -1,0 +1,17 @@
+@using TwBlazor.Services
+
+<p class="text-sm text-gray-700 dark:text-gray-300 mb-6">@Message</p>
+<div class="flex justify-end gap-2">
+    <TwButton Label="Cancel" Variant="ButtonVariant.Text" OnClick="Cancel" />
+    <TwButton Label="Confirm" Color="Color.Primary" OnClick="Confirm" />
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; } = string.Empty;
+
+    [CascadingParameter] private TwDialogInstance? DialogInstance { get; set; }
+
+    private void Confirm() => DialogInstance?.Close(true);
+
+    private void Cancel() => DialogInstance?.Cancel();
+}

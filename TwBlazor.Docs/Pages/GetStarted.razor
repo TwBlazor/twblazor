@@ -1,0 +1,77 @@
+@page "/get-started"
+
+<PageContainer Title="Get Started">
+    <PageCard Title="1. Add to App.razor">
+        <p Class="mb-3">
+            In your App.razor file, you need to include two stylesheet links along with the default content. The first link is for TwBlazor's core styling. The second is for TwIcon, which uses Bootstrap Icons. Note: While you can link to the Bootstrap Icons CDN directly, we include the icons in our package for convenience.
+        </p>
+        <TwCodeBlock Content="@_appHeadExample" />
+        <p Class="my-3">
+            At the bottom of the body you'll also need to include the links to TwBlazor.js.
+        </p>
+        <TwCodeBlock Content="@_appScriptsExample" />
+    </PageCard>
+
+    <PageCard Title="2. Add to Imports.razor">
+        <p Class="mb-3">
+            In Imports.razor you'll need to add references to the following:
+        </p>
+        <TwCodeBlock Content="@_importsExample" />
+    </PageCard>
+
+    <PageCard Title="3. Adding TwProviders">
+        <p Class="mb-3">TwBlazor toasts and other dialog components require you to add the following to the top of your layout pages (MainLayout.razor) or App.razor.</p>
+
+        <TwCodeBlock Content="@CodeExamples.Get("GetStartedProviders")" />
+    </PageCard>
+
+    <PageCard Title="4. Adding a TwTheme">
+        <p Class="mb-3">TwBlazor requires you to set up a few simple configuration classes for theming. Since Tailwind CSS cannot compile classes from .DLLs, you configure the classes in your own project. This keeps the twblazor.css file minimal while ensuring your Tailwind CSS compilation works correctly.</p>
+
+        <TwCodeBlock Content="@CodeExamples.Get("GetStartedTheme")" Language="csharp" Class="max-h-[400px] overflow-y-scroll" />
+    </PageCard>
+
+    <PageCard Title="5. Dependency Injection">
+        <p Class="mb-3">
+            Finally set up the dependency injection using the TwTheme you have configured.
+        </p>
+
+        <TwCodeBlock Content="@CodeExamples.Get("GetStartedDependencyInjection")" Language="csharp" />
+    </PageCard>
+</PageContainer>
+
+@code {
+    // These illustrate what to add to a *consuming* app's own App.razor/_Imports.razor -
+    // they intentionally don't match this docs site's own (NuGet-package-relative) copies of
+    // those files, so they're kept here rather than sourced from a real file.
+    private const string _appHeadExample = """
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <!-- ... -->
+            <!-- TwBlazor Styles -->
+            <link rel="stylesheet" href="@Assets["_content/TwBlazor/css/output.css"]" />
+            <!-- Bootstrap Icons -->
+            <link rel="stylesheet" href="@Assets["_content/TwBlazor/icons/bootstrap-icons.min.css"]">
+            <!-- ... -->
+        </head>
+        """;
+
+    private const string _appScriptsExample = """
+        <body>
+            <Routes @rendermode="InteractiveServer" />
+            <ReconnectModal />
+            <!-- ... -->
+            <!-- TwBlazor Scripts -->
+            <script src="@Assets["_content/TwBlazor/js/twblazor.js"]"></script>
+            <!-- ... -->
+            <script src="@Assets["_framework/blazor.web.js"]"></script>
+        </body>
+        """;
+
+    private const string _importsExample = """
+        @using TwBlazor.Components
+        @using TwBlazor.Enums
+        @using TwBlazor
+        """;
+}

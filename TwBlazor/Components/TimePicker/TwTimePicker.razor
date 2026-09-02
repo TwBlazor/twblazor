@@ -1,0 +1,44 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Components.TimePicker
+@inherits TwPopoverPickerComponentBase
+
+<TwInputRoot @ref="@InputRoot" RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy">
+    <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClass" @attributes="@LabelAttributes" />
+
+    <div class="@classes">
+        <div class="absolute top-0 start-0 h-10.5 flex items-center justify-center ps-2 w-10 cursor-pointer" role="button" tabindex="@(Disabled ? "-1" : "0")" aria-label="Open time picker" aria-disabled="@(Disabled ? "true" : null)" @onclick="OnIconClickAsync" @onkeydown="OnIconKeyDownAsync">
+            <svg class="text-gray-500 dark:text-gray-400 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </div>
+
+        <TwTextfield @ref="@trigger"
+                        T="string"
+                        Id="@Id"
+                        InputType="@(UseNativePicker ? "time" : "text")"
+                        Class="@textfieldClasses"
+                        Placeholder="@Placeholder"
+                        OnFocus="@OnFocusAsync"
+                        Value="@Value"
+                        ValueChanged="@((e) => OnTextValueChanged(e))"
+                        AriaLabel="@AriaLabel"
+                        AriaLabelledBy="@AriaLabelledBy"
+                        Attributes="@triggerAttributes"
+                        Variant="@Variant"
+                        ReadOnly="@ReadOnly"
+                        Disabled="@Disabled"
+                        Invalid="@Invalid"
+                        ErrorMessage="@ErrorMessage" />
+
+        @if (isFocused)
+        {
+            <div class="absolute top-full left-0 z-50 mt-2 rounded-lg shadow-lg" role="dialog" aria-label="Choose time" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
+                <TwTimePickerBody Class="time bg-white dark:bg-gray-800 p-4 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700 text-center font-medium dark:text-white"
+                                    Id="@Id"
+                                    Is12HourFormat="@Is12HourFormat"
+                                    SelectedTime="@SelectedTime"
+                                    SelectedTimeChanged="@OnTimePickerChanged" />
+            </div>
+        }
+    </div>
+</TwInputRoot>

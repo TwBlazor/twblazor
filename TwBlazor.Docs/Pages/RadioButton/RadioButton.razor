@@ -1,0 +1,174 @@
+@page "/radio-button"
+@using TwBlazor
+@using TwBlazor.Components
+@using TwBlazor.Enums
+@using TwBlazor.Models
+
+<PageContainer Title="TwRadioButton">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group radio buttons with <code>TwRadioGroup</code> and bind values with <code>@@bind-SelectedValue</code>.</p>
+
+        <CodeExample Name="RadioButtonBasic" CSharpName="RadioButtonBasicCode">
+            <TwRadioGroup T="string" Legend="Shipping method" Name="shipping">
+                <TwRadioButton Value="@("standard")" Label="Standard (3-5 days)" @bind-SelectedValue="shipping" Color="Color.Success" />
+                <TwRadioButton Value="@("express")" Label="Express (1-2 days)" @bind-SelectedValue="shipping" Color="Color.Success" />
+                <TwRadioButton Value="@("overnight")" Label="Overnight" @bind-SelectedValue="shipping" Color="Color.Success" />
+            </TwRadioGroup>
+            <p class="mt-4 text-sm text-gray-600 dark:text-white">Selected: <strong>@shipping</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <CodeExample Name="RadioColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="block mt-2">
+                        <div class="p-3">
+                            <TwRadioButton Label="@c.ToString()" Value="true" Color="c" SelectedValue="true" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="block mt-2">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwRadioButton Label="@c.ToString()" Value="true" Color="c" LabelClass="@(c == Color.Light ? "ms-2 mt-2 text-white dark:text-white" : "ms-2 mt-2 text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} radio button")" SelectedValue="true" />
+                        </div>
+                    </div>
+                }
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Data-Driven (Automatic)">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Items</code> and <code>@@bind-Value</code> to generate radio buttons from a list.</p>
+
+        <CodeExample Name="RadioButtonDataDriven" CSharpName="RadioButtonDataDrivenCode">
+            <div class="mb-6">
+                <TwRadioGroup Legend="Select a size"
+                              Items="@sizeItems"
+                              Name="auto-size"
+                              @bind-Value="selectedSize"
+                              ItemColor="Color.Primary" />
+                <p class="mt-4 text-sm text-gray-600 dark:text-white">Selected: <strong>@selectedSize</strong></p>
+            </div>
+
+            <div>
+                <TwRadioGroup Legend="Rate your experience"
+                              Items="@ratingItems"
+                              Name="rating"
+                              @bind-Value="rating"
+                              ItemColor="Color.Accent" />
+                <p class="mt-4 text-sm text-gray-600 dark:text-white">Rating: <strong>@rating / 5</strong></p>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Horizontal Layout & Custom Spacing">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Horizontal</code> to arrange buttons side-by-side, or <code>Class="gap-4"</code> for custom spacing.</p>
+
+        <CodeExample Name="RadioButtonHorizontalSpacing" CSharpName="RadioButtonHorizontalSpacingCode">
+            <div class="mb-6">
+                <TwRadioGroup Legend="Payment method"
+                              Items="@paymentItems"
+                              Name="payment"
+                              @bind-Value="payment"
+                              ItemColor="Color.Primary"
+                              Horizontal />
+                <p class="mt-4 text-sm text-gray-600 dark:text-white">Selected: <strong>@payment</strong></p>
+            </div>
+
+            <TwRadioGroup T="string" Legend="Billing cycle" Name="billing" Class="gap-6">
+                <TwRadioButton Value="@("monthly")" Label="Monthly" @bind-SelectedValue="billing" Color="Color.Accent" />
+                <TwRadioButton Value="@("yearly")" Label="Yearly (Save 20%)" @bind-SelectedValue="billing" Color="Color.Accent" />
+            </TwRadioGroup>
+            <p class="mt-4 text-gray-600 dark:text-white">Selected: <strong>@billing</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled State">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Disable the entire group with the <code>Disabled</code> property.</p>
+
+        <CodeExample Name="RadioButtonDisabled">
+            <TwRadioGroup T="string" Legend="Premium plan (Disabled)" Name="plan" Disabled>
+                <TwRadioButton Value="@("basic")" Label="Basic - £9/month" SelectedValue="@("basic")" Color="Color.Accent" />
+                <TwRadioButton Value="@("pro")" Label="Pro - £29/month" SelectedValue="@("basic")" Color="Color.Accent" />
+                <TwRadioButton Value="@("enterprise")" Label="Enterprise - £99/month" SelectedValue="@("basic")" Color="Color.Accent" />
+            </TwRadioGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Programmatic Control">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Change the selection programmatically by updating the bound value.</p>
+
+        <CodeExample Name="RadioButtonProgrammatic" CSharpName="RadioButtonProgrammaticCode">
+            <TwRadioGroup Legend="Subscription plan"
+                          Items="@planItems"
+                          Name="dynamic-plan"
+                          @bind-Value="dynamicPlan"
+                          ItemColor="Color.Accent" />
+
+            <div class="flex gap-2 mt-4">
+                <TwButton Label="Free" Color="Color.Primary" Variant="ButtonVariant.Outlined" OnClick="@(() => dynamicPlan = "free")" />
+                <TwButton Label="Basic" Color="Color.Primary" Variant="ButtonVariant.Outlined" OnClick="@(() => dynamicPlan = "basic")" />
+                <TwButton Label="Pro" Color="Color.Accent" Variant="ButtonVariant.Outlined" OnClick="@(() => dynamicPlan = "pro")" />
+            </div>
+
+            <p class="mt-4 text-sm text-gray-600 dark:text-white">Current plan: <strong>@dynamicPlan</strong></p>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample RadioButtonBasicCode
+    private string shipping = "standard";
+    #endregion
+
+    #region CodeExample RadioButtonDataDrivenCode
+    private string selectedSize = "medium";
+    private int rating = 3;
+
+    private readonly List<RadioGroupItem<string>> sizeItems = new()
+    {
+        new() { Label = "Small", Value = "small" },
+        new() { Label = "Medium", Value = "medium" },
+        new() { Label = "Large", Value = "large" },
+        new() { Label = "Extra Large", Value = "xl" }
+    };
+
+    private readonly List<RadioGroupItem<int>> ratingItems = new()
+    {
+        new() { Label = "⭐ Poor", Value = 1 },
+        new() { Label = "⭐⭐ Fair", Value = 2 },
+        new() { Label = "⭐⭐⭐ Good", Value = 3 },
+        new() { Label = "⭐⭐⭐⭐ Great", Value = 4 },
+        new() { Label = "⭐⭐⭐⭐⭐ Excellent", Value = 5 }
+    };
+    #endregion
+
+    #region CodeExample RadioButtonHorizontalSpacingCode
+    private string payment = "credit";
+    private string billing = "monthly";
+
+    private readonly List<RadioGroupItem<string>> paymentItems = new()
+    {
+        new() { Label = "Credit Card", Value = "credit" },
+        new() { Label = "PayPal", Value = "paypal" },
+        new() { Label = "Cryptocurrency", Value = "crypto" }
+    };
+    #endregion
+
+    #region CodeExample RadioButtonProgrammaticCode
+    private string dynamicPlan = "free";
+
+    private readonly List<RadioGroupItem<string>> planItems = new()
+    {
+        new() { Label = "Free - £0/month", Value = "free" },
+        new() { Label = "Basic - £9/month", Value = "basic" },
+        new() { Label = "Pro - £29/month", Value = "pro" },
+        new() { Label = "Enterprise - Contact us", Value = "enterprise" }
+    };
+    #endregion
+}

@@ -1,0 +1,49 @@
+@using TwBlazor.Models
+@using TwBlazor.Services
+@using TwBlazor.Enums
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+@if (toastService is not null && (toastService.HasToasts || (Attributes != null && Attributes.Count > 0) || !string.IsNullOrEmpty(Class) || !string.IsNullOrEmpty(Style) || !string.IsNullOrEmpty(AriaLabel) || !string.IsNullOrEmpty(AriaLabelledBy) || hasUserProvidedId))
+{
+    <div id="@Id" class="@containerClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+        @foreach (var toast in toastService.GetToasts())
+        {
+            <div class="@GetToastClasses(toast)"
+                 role="alert"
+                 aria-atomic="true"
+                 @onmouseenter="() => PauseToastForHover(toast)"
+                 @onmouseleave="() => ResumeToastForHover(toast)"
+                 @onfocusin="() => PauseToastForFocus(toast)"
+                 @onfocusout="() => ResumeToastForFocus(toast)">
+                @if (toast.Icon.HasValue)
+                {
+                    <div class="@iconContainerClasses">
+                        <TwIcon Icon="toast.Icon.Value" />
+                    </div>
+                }
+
+                <div class="@headerClasses">
+                    @if (!string.IsNullOrWhiteSpace(toast.Title))
+                    {
+                        <div class="@titleClasses">@toast.Title</div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(toast.Message))
+                    {
+                        <div class="@messageClasses">@toast.Message</div>
+                    }
+
+                    <div class="@timestampClasses">@toast.ElapsedTimeText</div>
+                </div>
+
+                <button type="button" 
+                        class="@closeButtonClasses" 
+                        aria-label="Close" 
+                        @onclick="() => ClearToast(toast)">
+                    <TwIcon Icon="Enums.Icon.X" />
+                </button>
+            </div>
+        }
+    </div>
+}

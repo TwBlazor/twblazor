@@ -1,0 +1,58 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Components.ColorPicker
+@inherits TwBlazorTextInputComponentBase
+
+<TwInputRoot @ref="@inputRoot" RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClasses" @attributes="@LabelAttributes" />
+    }
+
+    <div class="@inputContainerClasses relative">
+        <div class="relative shrink-0">
+            @if (useNativePicker)
+            {
+                <input type="color"
+                       class="@previewClasses"
+                       value="@GetPreviewColor()"
+                       disabled="@Disabled"
+                       aria-label="Color preview"
+                       @onchange="OnNativeColorChangedAsync" />
+            }
+            else
+            {
+                <button type="button"
+                        class="@previewClasses"
+                        style="background-color: @GetPreviewColor(); cursor:pointer;"
+                        disabled="@Disabled"
+                        aria-haspopup="dialog"
+                        aria-expanded="@(showDialog ? "true" : "false")"
+                        aria-label="@swatchAriaLabel"
+                        @onclick="ShowDialog">
+                </button>
+            }
+        </div>
+
+        <TwTextfield T="string"
+                     @bind-Value="@displayValue"
+                     @bind-Value:after="@HandleTextInputChangeAsync"
+                     Id="@Id"
+                     Variant="@effectiveVariant"
+                     Placeholder="@GetPlaceholder()"
+                     Disabled="@Disabled"
+                     ReadOnly="@ReadOnly"
+                     OnFocus="@OnFocus"
+                     BindEvent="@BindEvent"
+                     Class="@Class"
+                     Attributes="@Attributes"
+                     AriaLabel="@AriaLabel"
+                     AriaLabelledBy="@AriaLabelledBy" />
+
+        @if (showDialog)
+        {
+            <div class="@colorPickerTheme.DialogPosition" role="dialog" aria-label="Choose color" @onkeydown="OnDialogKeyDown" tabindex="-1" @ref="panelRef">
+                <TwColorPickerBody Value="@Value" ShowAlpha="@ShowAlpha" ShowModeSwitch="@ShowModeSwitch" OutputFormat="@OutputFormat" ValueChanged="OnDialogValueChanged" OnClose="OnDialogClose" Variant="@effectiveVariant" />
+            </div>
+        }
+    </div>
+</TwInputRoot>

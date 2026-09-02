@@ -1,0 +1,48 @@
+﻿@page "/file-upload"
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq
+
+<PageContainer Title="TwFileUpload">
+    <PageCard Title="Basic File Upload">
+        <CodeExample Name="FileUploadBasic">
+            <div class="space-y-4">
+                <TwFileUpload Id="basic-file-upload" Icon="@Icon.Upload" Label="Upload file" Variant="ButtonVariant.Outlined" Color="Color.Success" />
+                <TwFileUpload Id="multiple-file-upload" Icon="@Icon.Files" Label="Upload multiple files" Multiple Variant="ButtonVariant.Filled" Color="Color.Accent" />
+                <TwFileUpload Id="basic-file-upload-2" Icon="Icon.Cloud_Upload" Label="Upload a document" Color="Color.Primary" Variant="ButtonVariant.Outlined" />
+                <TwFileUpload Id="basic-file-upload-3" Icon="Icon.Airplane_Fill" Disabled Label="Disabled upload input" Variant="ButtonVariant.Filled" Color="Color.Accent" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Binding">
+        <CodeExample Name="FileUploadBinding" CSharpName="FileUploadBindingCode">
+            <div class="space-y-4">
+                <TwFileUpload Id="binding-upload" Icon="@Icon.Upload" Label="Bind files" Multiple @bind-Files="@boundFiles" Variant="ButtonVariant.Outlined" Color="Color.Primary" />
+
+                <div class="mt-2">
+                    <strong>Selected files</strong>
+                    <ul>
+                        @foreach (var f in boundFiles ?? Enumerable.Empty<IBrowserFile>())
+                        {
+                            <li>@f.Name (@(f.Size) bytes)</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Accept (Allowed file types)">
+        <CodeExample Name="FileUploadAllowedTypes">
+            <div class="space-y-4">
+                <TwFileUpload Id="accept-upload" Icon="@Icon.Upload" Label="Upload images only" AllowedFileTypes="@(new[] { ".png", ".jpg", "image/png", "image/jpeg" })" Variant="ButtonVariant.Filled" Color="Color.Primary" />
+            </div>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample FileUploadBindingCode
+    private List<IBrowserFile>? boundFiles = new();
+    #endregion
+}

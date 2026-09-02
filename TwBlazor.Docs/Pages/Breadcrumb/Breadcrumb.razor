@@ -1,0 +1,52 @@
+﻿@page "/breadcrumb"
+@using TwBlazor.Models
+
+<PageContainer Title="TwBreadcrumb">
+    <PageCard Title="Breadcrumbs">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">Usage of breadcrumb is simplified, you can use the component and allow for automatic breadcrumbs based on the current uri structure:</p>
+
+        <CodeExample Name="BreadcrumbAuto">
+            <TwBreadcrumb Auto />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Manual Breadcrumbs">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">You can also manually configure the breadcrumbs:</p>
+
+        <CodeExample Name="BreadcrumbManual" CSharpName="BreadcrumbManualCode">
+            <TwBreadcrumb Breadcrumbs="@breadcrumbs" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Inline Breadcrumbs">
+        <p class="text-gray-700 dark:text-gray-300 mb-4">You can also manually configure the breadcrumbs inline like so:</p>
+
+        <CodeExample Name="BreadcrumbInline">
+            <TwBreadcrumb>
+                <TwBreadcrumbItem Label="Home" Href="/" />
+                <TwBreadcrumbItem Label="Docs" Href="/docs" />
+                <TwBreadcrumbItem Label="Breadcrumb" Href="/breadcrumb" Icon="Icon.Segmented_Nav" AriaCurrent />
+            </TwBreadcrumb>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample BreadcrumbManualCode
+    private readonly List<BreadcrumbItem> breadcrumbs = new()
+    {
+        new()
+        {
+            Icon = Icon.House,
+            Label = "Home",
+            Href = "/"
+        },
+        new ()
+        {
+            Icon = Icon.Wrench,
+            Label = "Settings",
+            Href = "/settings"
+        }
+    };
+    #endregion
+}

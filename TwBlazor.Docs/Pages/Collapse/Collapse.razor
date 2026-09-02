@@ -1,0 +1,53 @@
+@page "/collapse"
+
+<PageContainer Title="TwCollapse">
+    <PageCard Title="Basic Collapse">
+        <p>The <code>TwCollapse</code> component provides a collapsible drawer panel that expands and collapses when the trigger button is clicked.</p>
+        <CodeExample Name="CollapseBasic">
+            <TwCollapse Title="What is TwBlazor?" Class="mt-4">
+                <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">TwBlazor is a Tailwind CSS component library for Blazor that makes it easy to build modern, accessible UIs.</p>
+            </TwCollapse>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Default Open">
+        <p>Set <code>IsOpen="true"</code> to have the panel expanded on first render.</p>
+        <CodeExample Name="CollapseOpen">
+            <TwCollapse Title="Getting started" IsOpen Class="mt-4">
+                <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Install the TwBlazor NuGet package and call <code>AddTwBlazor()</code> in your service registration.</p>
+            </TwCollapse>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Two-way Binding">
+        <p>Use <code>@("@bind-IsOpen")</code> to control the panel state from a parent component.</p>
+        <CodeExample Name="CollapseBinding">
+            <div class="flex items-center gap-3 mt-4 mb-4">
+                <TwButton Label="@(isOpen ? "Close" : "Open")" OnClick="@(() => isOpen = !isOpen)" Color="Color.Primary" />
+                <span class="text-sm text-gray-500 dark:text-gray-400">Panel is <strong>@(isOpen ? "open" : "closed")</strong></span>
+            </div>
+            <TwCollapse Title="Controlled panel" @bind-IsOpen="isOpen">
+                <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">This panel is controlled from outside the component via two-way binding.</p>
+            </TwCollapse>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Header">
+        <p>Use the <code>HeaderContent</code> parameter to replace the plain title with fully custom markup.</p>
+        <CodeExample Name="CollapseHeader">
+            <TwCollapse Class="mt-4">
+                <HeaderContent>
+                    <TwIcon Icon="Icon.Info_Circle" Class="text-blue-500" />
+                    <span>Additional information</span>
+                </HeaderContent>
+                <ChildContent>
+                    <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Custom header content lets you compose icons, badges, or any Blazor markup inside the trigger button.</p>
+                </ChildContent>
+            </TwCollapse>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    private bool isOpen;
+}

@@ -1,0 +1,16 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<div id="@Id"
+     class="@classes"
+     style="@Style"
+     role="group"
+     aria-label="@AriaLabel"
+     aria-labelledby="@(AriaLabel == null && !string.IsNullOrWhiteSpace(Legend) ? legendId : null)"
+     @attributes="@Attributes">
+    @if (!string.IsNullOrWhiteSpace(Legend))
+    {
+        <div id="@legendId" class="@legendClasses">@Legend</div>
+    }
+    @ChildContent
+</div>

@@ -1,0 +1,17 @@
+﻿@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div class="@classes">
+    <div class="datepicker-controls flex justify-between items-center h-9">
+        <TwIcon OnClick="@OnPreviousClick" Icon="Icon.Arrow_Left" RootClass="prev-btn" Class="text-xl py-2 px-4" AriaLabel="@PreviousLabel" Shadow="Enums.Shadow.None" />
+
+        <TwButton OnClick="@OnTitleClick" Class="view-switch">
+            @ChildContent
+        </TwButton>
+
+        <TwIcon OnClick="@OnNextClick" Icon="Icon.Arrow_Right" RootClass="next-btn" Class="text-xl py-2 px-4" AriaLabel="@NextLabel" Shadow="Enums.Shadow.None" />
+    </div>
+    @* Visually-hidden live region so screen readers announce the new month/year/decade whenever
+       navigation changes the title above, without altering the visible header's styling. *@
+    <div class="sr-only" aria-live="polite">@ChildContent</div>
+</div>

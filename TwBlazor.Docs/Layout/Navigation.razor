@@ -1,0 +1,17 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<TwSidebar NavigationItems="_navigationItems" MainContentClass="@(MainContentPadding ? "p-3" : string.Empty)" NavbarClass="justify-between" IsSidebarOpen="true" IsSearchable>
+    <NavbarContent>
+        <TwIcon Id="theme-toggle" Icon="@themeIcon" AriaLabel="Toggle theme" OnClick="ToggleTheme" Class="text-white" />
+    </NavbarContent>
+    <HeaderContent>
+        <a href="#" class="ml-2 w-fit text-2xl font-bold text-purple-950 dark:text-purple-200 inline-flex">
+            <img src="_content/TwBlazor.Docs/images/logo.svg" alt="twblazor Logo" class="h-10 me-2" />
+            twblazor
+        </a>
+    </HeaderContent>
+    <ChildContent>
+        @ChildContent
+    </ChildContent>
+</TwSidebar>

@@ -1,0 +1,23 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+@using TwBlazor.Enums
+
+<div class="@backdropClasses" tabindex="-1" @onclick="HandleBackdropClickAsync" @onkeydown="HandleKeyDownAsync">
+    <div id="@Id" class="@surfaceClasses" style="@Style" role="dialog" aria-modal="true" tabindex="-1" @ref="surfaceRef" aria-label="@effectiveAriaLabel" aria-labelledby="@(noHeader ? AriaLabelledBy : titleId)" @attributes="Attributes" @onclick:stopPropagation="true">
+        @if (!noHeader)
+        {
+            <div class="@headerClasses">
+                <h2 id="@titleId" class="@titleClasses">@Reference.Title</h2>
+                @if (showCloseButton)
+                {
+                    <button type="button" class="@closeButtonClasses" aria-label="Close" @onclick="HandleCloseButtonClickAsync">
+                        <TwIcon Icon="Enums.Icon.X" />
+                    </button>
+                }
+            </div>
+        }
+        <div class="@contentClasses">
+            @Reference.RenderFragment
+        </div>
+    </div>
+</div>

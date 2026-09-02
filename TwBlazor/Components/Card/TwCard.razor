@@ -1,0 +1,18 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@cardClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    @if (hasHeader)
+    {
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            @renderTitle
+        }
+        @if (HeaderContent is not null)
+        {
+            @HeaderContent
+        }
+    }
+    
+    @ChildContent
+</div>

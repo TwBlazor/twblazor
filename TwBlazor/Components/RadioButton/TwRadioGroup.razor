@@ -1,0 +1,36 @@
+@namespace TwBlazor.Components
+@typeparam T
+@inherits TwBlazorComponentBase
+
+<fieldset id="@Id"
+          class="@classes"
+          style="@Style"
+          disabled="@Disabled"
+          aria-label="@AriaLabel"
+          aria-labelledby="@AriaLabelledBy"
+          @attributes="@Attributes">
+    @if (!string.IsNullOrWhiteSpace(Legend))
+    {
+        <legend class="@legendClasses">@Legend</legend>
+    }
+    @if (Items != null && Items.Any())
+    {
+        <CascadingValue Value="@Name" Name="GroupName" IsFixed="true">
+            @foreach (var item in Items)
+            {
+                <TwRadioButton Label="@item.Label"
+                               Value="@item.Value"
+                               SelectedValue="@Value"
+                               SelectedValueChanged="@ValueChanged"
+                               Color="@ItemColor"
+                               Disabled="@Disabled" />
+            }
+        </CascadingValue>
+    }
+    else
+    {
+        <CascadingValue Value="@Name" Name="GroupName" IsFixed="true">
+            @ChildContent
+        </CascadingValue>
+    }
+</fieldset>

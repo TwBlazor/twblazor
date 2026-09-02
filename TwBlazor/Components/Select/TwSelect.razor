@@ -1,0 +1,33 @@
+﻿@typeparam T
+@inherits TwBlazorTextInputComponentBase
+@namespace TwBlazor.Components
+
+<TwInputRoot RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClasses" @attributes="@LabelAttributes" />
+    }
+
+    <select id="@Id"
+            class="@classes"
+            required="@Required"
+            @onchange="@HandleChange"
+            @attributes="@Attributes"
+            aria-required="@(Required ? "true" : null)"
+            aria-readonly="@(ReadOnly ? "true" : null)"
+            aria-invalid="@(Invalid ? "true" : null)"
+            aria-describedby="@errorId"
+            aria-label="@AriaLabel"
+            aria-labelledby="@AriaLabelledBy">
+        @if (!Required)
+        {
+            <option value="0" class="dark:bg-gray-800 dark:text-white p-3">@Placeholder</option>
+        }
+        @foreach (var (key, value) in parsedValues)
+        {
+            <option value="@key" selected="@(key == selectedValueId)" class="dark:bg-gray-800 dark:text-white p-3">
+                @GetDisplayText(value)
+            </option>
+        }
+    </select>
+</TwInputRoot>

@@ -1,0 +1,92 @@
+@page "/color-picker"
+@using TwBlazor.Enums
+
+<PageContainer Title="TwColorPicker">
+    <PageCard Title="Basic Color Picker">
+        <CodeExample Name="ColorPickerBasic" CSharpName="ColorPickerBasicCode">
+            <TwColorPicker Label="Choose Color" @bind-Value="SelectedColor" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="With Mode Switch">
+        <CodeExample Name="ColorPickerMode" CSharpName="ColorPickerModeCode">
+            <TwColorPicker Label="Primary Color" @bind-Value="PrimaryColor" ShowModeSwitch />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="With Alpha Channel">
+        <CodeExample Name="ColorPickerAlpha" CSharpName="ColorPickerAlphaCode">
+            <TwColorPicker Label="Overlay Color" @bind-Value="OverlayColor" ShowAlpha ShowModeSwitch />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Input Variants">
+        <CodeExample Name="ColorPickerVariants" CSharpName="ColorPickerVariantsCode">
+            <div class="grid gap-4">
+                <TwColorPicker Label="Primary Color" @bind-Value="PrimaryColor" Variant="InputVariant.Default" ShowModeSwitch />
+                <TwColorPicker Label="Accent Color" @bind-Value="AccentColor" Variant="InputVariant.Outlined" ShowModeSwitch />
+                <TwColorPicker Label="Theme Color" @bind-Value="ThemeColor" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled State">
+        <CodeExample Name="ColorPickerDisabled">
+            <TwColorPicker Label="Disabled Color" Value="#cccccc" Disabled />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Output Format">
+        <CodeExample Name="ColorPickerOutput" CSharpName="ColorPickerOutputCode">
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                @* Output as Hex (default) *@
+                <div>
+                    <TwColorPicker Label="Hex (default)" @bind-Value="HexColor" />
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Value: @HexColor</p>
+                </div>
+
+                @* Output as RGB with alpha *@
+                <div>
+                    <TwColorPicker Label="RGB with Alpha"
+                                   @bind-Value="RgbColor"
+                                   OutputFormat="ColorMode.Rgb"
+                                   ShowAlpha="true" />
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Value: @RgbColor</p>
+                </div>
+
+                @* Input format is auto-detected, independent of output format *@
+                <div>
+                    <TwColorPicker Label="HSL Input → RGB Output"
+                                   @bind-Value="HslToRgbColor"
+                                   OutputFormat="ColorMode.Rgb" />
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Value: @HslToRgbColor</p>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample ColorPickerBasicCode
+    private string SelectedColor { get; set; } = "#3b82f6";
+    #endregion
+
+    #region CodeExample ColorPickerModeCode
+    private string PrimaryColor { get; set; } = "#10b981";
+    #endregion
+
+    #region CodeExample ColorPickerVariantsCode
+    private string ThemeColor { get; set; } = "#8b5cf6";
+    private string AccentColor { get; set; } = "#ec4899";
+    #endregion
+
+    #region CodeExample ColorPickerAlphaCode
+    private string OverlayColor { get; set; } = "#f59e0bff";
+    #endregion
+
+    #region CodeExample ColorPickerOutputCode
+    private string HexColor { get; set; } = "#3b82f6";
+    private string RgbColor { get; set; } = "rgba(16, 185, 129, 0.8)";
+    private string HslToRgbColor { get; set; } = "hsl(262, 83%, 58%)";
+    #endregion
+}

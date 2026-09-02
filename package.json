@@ -1,0 +1,29 @@
+{
+  "name": "twblazor",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   <img src=\"./images/banner.svg\" height=300>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "vitest run --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TwBlazor/TwBlazor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/TwBlazor/TwBlazor/issues"
+  },
+  "homepage": "https://github.com/TwBlazor/TwBlazor#readme",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "^29.1.0",
+    "vitest": "^4.1.5"
+  }
+}

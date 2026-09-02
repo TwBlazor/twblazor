@@ -1,0 +1,170 @@
+@page "/chip"
+@using TwBlazor
+@using TwBlazor.Components
+@using TwBlazor.Enums
+
+<PageContainer Title="TwChip">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group chips with <code>TwChipGroup</code> for automatic wrapping and layout.</p>
+
+        <CodeExample Name="ChipBasic">
+            <TwChipGroup>
+                <TwChip Label="React" Color="Color.Primary" />
+                <TwChip Label="Vue" Color="Color.Success" />
+                <TwChip Label="Angular" Color="Color.Danger" />
+                <TwChip Label="Svelte" Color="Color.Accent" />
+                <TwChip Label="Blazor" Color="Color.Accent" />
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group chips with <code>TwChipGroup</code> for automatic wrapping and layout.</p>
+
+        <CodeExample Name="ChipColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                <TwChipGroup>
+                    @if (c != Color.Light && c != Color.Dark)
+                    {
+                        <div class="p-3">
+                            <TwChip Label="@c.ToString()" Color="@c" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwChip Label="@c.ToString()" Color="@c" />
+                        </div>
+                    }
+                </TwChipGroup>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Closable Chips">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Closable</code> and <code>OnClose</code> to create removable tags.</p>
+
+        <CodeExample Name="ChipClosable" CSharpName="ChipClosableCode">
+            <TwChipGroup>
+                @foreach (var tag in tags)
+                {
+                    <TwChip Label="@tag"
+                            Color="Color.Primary"
+                            Closable
+                            OnClose="@(() => RemoveTag(tag))" />
+                }
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Alignment & Spacing">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Control alignment with <code>Alignment</code> and adjust spacing with <code>Class="gap-*"</code>.</p>
+
+        <CodeExample Name="ChipAlignmentSpacing">
+            <div class="space-y-6">
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Center aligned with custom spacing</p>
+                    <TwChipGroup Alignment="center" Class="gap-4">
+                        <TwChip Label="Chip 1" Color="Color.Success" Variant="ButtonVariant.Outlined" />
+                        <TwChip Label="Chip 2" Color="Color.Success" Variant="ButtonVariant.Outlined" />
+                        <TwChip Label="Chip 3" Color="Color.Success" Variant="ButtonVariant.Outlined" />
+                    </TwChipGroup>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">End aligned with tight spacing</p>
+                    <TwChipGroup Alignment="end" Class="gap-1">
+                        <TwChip Label="Tight" Color="Color.Accent" Variant="ButtonVariant.Outlined" Size="ChipSize.Small" />
+                        <TwChip Label="Spacing" Color="Color.Accent" Variant="ButtonVariant.Outlined" Size="ChipSize.Small" />
+                        <TwChip Label="Example" Color="Color.Accent" Variant="ButtonVariant.Outlined" Size="ChipSize.Small" />
+                    </TwChipGroup>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="With Icons & Variants">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Add icons with <code>StartIcon</code>/<code>EndIcon</code> and use different variants for various use cases.</p>
+
+        <CodeExample Name="ChipIconVariants">
+            <div class="mb-6">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Skills with start icons</p>
+                <TwChipGroup Class="gap-3">
+                    <TwChip Label="C#" StartIcon="Icon.Code" Color="Color.Accent" Variant="ButtonVariant.Filled" />
+                    <TwChip Label="Blazor" StartIcon="Icon.Lightning" Color="Color.Primary" Variant="ButtonVariant.Filled" />
+                    <TwChip Label="ASP.NET" StartIcon="Icon.Globe" Color="Color.Success" Variant="ButtonVariant.Filled" />
+                    <TwChip Label="SQL" StartIcon="Icon.Database" Color="Color.Accent" Variant="ButtonVariant.Filled" />
+                </TwChipGroup>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Actions with end icons</p>
+                <TwChipGroup Class="gap-3">
+                    <TwChip Label="Download" EndIcon="Icon.Download" Color="Color.Primary" Variant="ButtonVariant.Outlined" />
+                    <TwChip Label="Share" EndIcon="Icon.Share" Color="Color.Success" Variant="ButtonVariant.Outlined" />
+                    <TwChip Label="Delete" EndIcon="Icon.Trash" Color="Color.Danger" Variant="ButtonVariant.Outlined" />
+                </TwChipGroup>
+            </div>
+
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Status indicators</p>
+                <TwChipGroup>
+                    <TwChip Label="Active" Color="Color.Success" Variant="ButtonVariant.Filled" Size="ChipSize.Small" />
+                    <TwChip Label="Pending" Color="Color.Accent" Variant="ButtonVariant.Filled" Size="ChipSize.Small" />
+                    <TwChip Label="Inactive" Color="Color.Primary" Variant="ButtonVariant.Outlined" Size="ChipSize.Small" />
+                    <TwChip Label="Error" Color="Color.Danger" Variant="ButtonVariant.Filled" Size="ChipSize.Small" />
+                </TwChipGroup>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="With Avatars">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use the <code>Avatar</code> property to display initials or text at the start of the chip.</p>
+
+        <CodeExample Name="ChipAvatars">
+            <TwChipGroup Class="gap-3">
+                <TwChip Label="John Doe" Avatar="JD" Color="Color.Primary" Variant="ButtonVariant.Filled" />
+                <TwChip Label="Sarah Smith" Avatar="SS" Color="Color.Accent" Variant="ButtonVariant.Filled" />
+                <TwChip Label="Mike Johnson" Avatar="MJ" Color="Color.Success" Variant="ButtonVariant.Filled" />
+                <TwChip Label="Admin" Avatar="A" Color="Color.Accent" Variant="ButtonVariant.Filled" Size="ChipSize.Small" />
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Link Chips">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Href</code> to make chips navigable. Use <code>Target</code> for external links.</p>
+
+        <CodeExample Name="ChipLinks">
+            <TwChipGroup Class="gap-3">
+                <TwChip Label="Documentation" Href="/docs" StartIcon="Icon.Book" Color="Color.Primary" Variant="ButtonVariant.Outlined" />
+                <TwChip Label="GitHub" Href="https://github.com" Target="_blank" StartIcon="Icon.Github" Color="Color.Primary" Variant="ButtonVariant.Outlined" />
+                <TwChip Label="API Reference" Href="/api" EndIcon="Icon.Arrow_Right" Color="Color.Accent" Variant="ButtonVariant.Filled" />
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled State">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use the <code>Disabled</code> property to make chips non-interactive.</p>
+
+        <CodeExample Name="ChipDisabled">
+            <TwChipGroup>
+                <TwChip Label="Enabled" Color="Color.Primary" Variant="ButtonVariant.Filled" />
+                <TwChip Label="Disabled" Color="Color.Primary" Variant="ButtonVariant.Filled" Disabled />
+                <TwChip Label="Disabled Outlined" Color="Color.Accent" Variant="ButtonVariant.Outlined" Disabled />
+                <TwChip Label="Disabled with Icon" StartIcon="Icon.Lock" Color="Color.Primary" Variant="ButtonVariant.Filled" Disabled />
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample ChipClosableCode
+    private readonly List<string> tags = new() { "JavaScript", "TypeScript", "React", "Node.js", "MongoDB" };
+
+    private void RemoveTag(string tag)
+    {
+        tags.Remove(tag);
+    }
+    #endregion
+}

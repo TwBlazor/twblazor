@@ -1,0 +1,28 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@containerClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    <button type="button"
+            id="@($"{Id}-trigger")"
+            class="@triggerClasses"
+            aria-expanded="@(IsOpen ? "true" : "false")"
+            aria-controls="@($"{Id}-content")"
+            @onclick="ToggleAsync">
+        @if (HeaderContent is not null)
+        {
+            @HeaderContent
+        }
+        else
+        {
+            <span>@Title</span>
+        }
+        <TwIcon Icon="Icon.Chevron_Down" Class="@iconClasses" />
+    </button>
+    <div id="@($"{Id}-content")"
+         role="region"
+         aria-labelledby="@($"{Id}-trigger")"
+         class="@contentClasses">
+        @ChildContent
+    </div>
+</div>

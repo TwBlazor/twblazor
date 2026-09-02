@@ -1,0 +1,64 @@
+name: Publish Develop Package
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-prerelease:
+    name: Build and Publish Prerelease
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Fetch full history for Nerdbank.GitVersioning
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build Tailwind CSS (minified)
+        shell: pwsh
+        run: |
+          $version = "v4.1.18"
+          Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/download/$version/tailwindcss-linux-x64" -OutFile ./tailwindcss
+          chmod +x ./tailwindcss
+          ./tailwindcss -i TwBlazor/wwwroot/css/input.css -o TwBlazor/wwwroot/css/twblazor.css --minify
+
+      - name: Build
+        run: dotnet build TwBlazor/TwBlazor.csproj --configuration Release --no-restore
+
+      - name: Pack
+        run: |
+          dotnet pack TwBlazor/TwBlazor.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts
+
+      - name: Publish to GitHub Packages
+        env:
+          NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg \
+            --source "https://nuget.pkg.github.com/TwBlazor/index.json" \
+            --api-key "$NUGET_API_KEY" \
+            --skip-duplicate

@@ -1,0 +1,79 @@
+@page "/spinner"
+
+<PageContainer Title="TwSpinner">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">An animated loading indicator rendered as an <code>&lt;output&gt;</code> element, so status changes are announced to assistive technology. The <code>Label</code> ("Loading..." by default) is always in the DOM for assistive technology, even when not shown visually.</p>
+
+        <CodeExample Name="SpinnerBasic">
+            <TwSpinner AriaLabel="Loading" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Sizes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to control the spinner's dimensions.</p>
+
+        <CodeExample Name="SpinnerSizes">
+            <div class="flex items-center gap-6">
+                <TwSpinner Size="SpinnerSize.Small" AriaLabel="Loading, small" />
+                <TwSpinner Size="SpinnerSize.Medium" AriaLabel="Loading, medium" />
+                <TwSpinner Size="SpinnerSize.Large" AriaLabel="Loading, large" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to match the spinner to its surrounding context.</p>
+
+        <CodeExample Name="SpinnerColors">
+            <div class="flex flex-wrap items-center gap-6">
+                <TwSpinner Color="Color.Primary" AriaLabel="Loading, primary" />
+                <TwSpinner Color="Color.Accent" AriaLabel="Loading, accent" />
+                <TwSpinner Color="Color.Success" AriaLabel="Loading, success" />
+                <TwSpinner Color="Color.Warning" AriaLabel="Loading, warning" />
+                <TwSpinner Color="Color.Danger" AriaLabel="Loading, danger" />
+                <TwSpinner Color="Color.Info" AriaLabel="Loading, info" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Visible Label">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">By default the label text is only announced to assistive technology. Set <code>ShowLabel</code> to display it next to the spinner too.</p>
+
+        <CodeExample Name="SpinnerVisibleLabel">
+            <div class="flex flex-col gap-4">
+                <TwSpinner Label="Loading..." ShowLabel Color="Color.Primary" />
+                <TwSpinner Label="Uploading files..." ShowLabel Size="SpinnerSize.Small" Color="Color.Success" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Inside a Button">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A common pattern: swap a button's label for a small spinner while an async action is in flight.</p>
+
+        <CodeExample Name="SpinnerButton" CSharpName="SpinnerButtonCode">
+            <TwButton Color="Color.Primary" Variant="ButtonVariant.Outlined" Disabled="@isSaving" OnClick="Save">
+                @if (isSaving)
+                {
+                    <TwSpinner Size="SpinnerSize.Small" AriaLabel="Saving" />
+                }
+                else
+                {
+                    @: Save changes
+                }
+            </TwButton>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample SpinnerButtonCode
+    private bool isSaving;
+
+    private async Task Save()
+    {
+        isSaving = true;
+        await Task.Delay(1500);
+        isSaving = false;
+    }
+    #endregion
+}

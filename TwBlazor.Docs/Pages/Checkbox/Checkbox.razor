@@ -1,0 +1,211 @@
+@page "/checkbox"
+@using TwBlazor.Components
+@using TwBlazor.Enums
+@using TwBlazor.Models
+
+<PageContainer Title="TwCheckbox">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</p>
+
+        <CodeExample Name="CheckboxBasic" CSharpName="CheckboxBasicCode">
+            <TwCheckboxGroup TValue="string" Legend="Select your interests" Name="interests">
+                <TwCheckbox Label="Sports" @bind-Value="sports" Color="Color.Primary" />
+                <TwCheckbox Label="Music" @bind-Value="music" Color="Color.Primary" />
+                <TwCheckbox Label="Reading" @bind-Value="reading" Color="Color.Primary" />
+                <TwCheckbox Label="Gaming" @bind-Value="gaming" Color="Color.Primary" />
+            </TwCheckboxGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</p>
+
+        <CodeExample Name="CheckboxColors">
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="block mt-2">
+                        <div class="p-3">
+                            <TwCheckbox Label="@c.ToString()" Value="true" Color="c" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="block mt-2">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                            <TwCheckbox Label="@c.ToString()" Value="true" Color="c" LabelClass="@(c == Color.Light ? "ms-2 mt-2 text-white dark:text-white" : "ms-2 mt-2 text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} checkbox")" />
+                        </div>
+                    </div>
+                }
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Data-Driven (Automatic)">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Items</code> and <code>@@bind-SelectedValues</code> to generate checkboxes from a list.</p>
+
+        <CodeExample Name="CheckboxDataDriven" CSharpName="CheckboxDataDrivenCode">
+            <div class="mb-6">
+                <TwCheckboxGroup Legend="Select programming languages"
+                                 Items="@languageItems"
+                                 @bind-SelectedValues="selectedLanguages"
+                                 ItemColor="Color.Accent"
+                                 Horizontal />
+                <p class="mt-4 text-sm text-gray-600 dark:text-white">
+                    Selected: <strong>@string.Join(", ", selectedLanguages?.Select(l => l.ToString()) ?? Enumerable.Empty<string>())</strong>
+                </p>
+            </div>
+
+            <div>
+                <TwCheckboxGroup Legend="Notification preferences"
+                                 Items="@notificationItems"
+                                 @bind-SelectedValues="selectedNotifications"
+                                 ItemColor="Color.Accent" />
+                <div class="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded">
+                    <p class="text-sm font-medium mb-2">Enabled notifications:</p>
+                    <ul class="text-sm list-disc list-inside">
+                        @foreach (var notif in selectedNotifications ?? Enumerable.Empty<string>())
+                        {
+                            <li>@notif</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Horizontal Layout & Custom Spacing">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Horizontal</code> to arrange checkboxes side-by-side, or <code>Spacing="4"</code> for custom spacing.</p>
+
+        <CodeExample Name="CheckboxHorizontalSpacing" CSharpName="CheckboxHorizontalSpacingCode">
+            <div class="mb-6">
+                <TwCheckboxGroup TValue="string" Legend="Days available" Name="days" Horizontal>
+                    <TwCheckbox Label="Mon" @bind-Value="monday" Color="Color.Success" />
+                    <TwCheckbox Label="Tue" @bind-Value="tuesday" Color="Color.Success" />
+                    <TwCheckbox Label="Wed" @bind-Value="wednesday" Color="Color.Success" />
+                    <TwCheckbox Label="Thu" @bind-Value="thursday" Color="Color.Success" />
+                    <TwCheckbox Label="Fri" @bind-Value="friday" Color="Color.Success" />
+                </TwCheckboxGroup>
+            </div>
+
+            <TwCheckboxGroup TValue="string" Legend="Terms and Conditions" Name="agreement" Spacing="4">
+                <TwCheckbox Label="I agree to the terms of service" @bind-Value="agreeTerms" Color="Color.Primary" />
+                <TwCheckbox Label="I agree to the privacy policy" @bind-Value="agreePrivacy" Color="Color.Primary" />
+                <TwCheckbox Label="I want to receive newsletters" @bind-Value="agreeNewsletter" Color="Color.Primary" />
+            </TwCheckboxGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled State">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Disable the entire group with the <code>Disabled</code> property.</p>
+
+        <CodeExample Name="CheckboxDisabled">
+            <TwCheckboxGroup TValue="string" Legend="Premium features (Disabled)" Name="premium" Disabled>
+                <TwCheckbox Label="Advanced Analytics" Value="false" Color="Color.Accent" />
+                <TwCheckbox Label="Priority Support" Value="false" Color="Color.Accent" />
+                <TwCheckbox Label="Custom Branding" Value="false" Color="Color.Accent" />
+            </TwCheckboxGroup>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Programmatic Control">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Change selections programmatically by updating the bound collection.</p>
+
+        <CodeExample Name="CheckboxProgrammatic" CSharpName="CheckboxProgrammaticCode">
+            <TwCheckboxGroup Legend="Select days"
+                             Items="@dayItems"
+                             @bind-SelectedValues="selectedDays"
+                             ItemColor="Color.Accent"
+                             Horizontal />
+
+            <div class="flex gap-2 mt-4">
+                <TwButton Label="Weekdays" Color="Color.Primary" Variant="ButtonVariant.Outlined" OnClick="@SelectWeekdays" />
+                <TwButton Label="Weekend" Color="Color.Success" Variant="ButtonVariant.Outlined" OnClick="@SelectWeekend" />
+                <TwButton Label="Clear All" Color="Color.Danger" Variant="ButtonVariant.Outlined" OnClick="@ClearDays" />
+            </div>
+
+            <p class="mt-4 text-sm text-gray-600 dark:text-white">Selected: <strong>@string.Join(", ", selectedDays ?? Enumerable.Empty<DayOfWeek>())</strong></p>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample CheckboxBasicCode
+    private bool sports = true;
+    private bool music = false;
+    private bool reading = true;
+    private bool gaming = false;
+    #endregion
+
+    #region CodeExample CheckboxHorizontalSpacingCode
+    private bool monday = true;
+    private bool tuesday = true;
+    private bool wednesday = false;
+    private bool thursday = true;
+    private bool friday = true;
+
+    private bool agreeTerms = false;
+    private bool agreePrivacy = false;
+    private bool agreeNewsletter = false;
+    #endregion
+
+    #region CodeExample CheckboxDataDrivenCode
+    public enum ProgrammingLanguage
+    {
+        CSharp,
+        JavaScript,
+        Python,
+        TypeScript,
+        Java
+    }
+
+    private readonly List<CheckboxGroupItem<ProgrammingLanguage>> languageItems = new()
+    {
+        new() { Label = "C#", Value = ProgrammingLanguage.CSharp, IsSelected = true },
+        new() { Label = "JavaScript", Value = ProgrammingLanguage.JavaScript, IsSelected = true },
+        new() { Label = "Python", Value = ProgrammingLanguage.Python, IsSelected = false },
+        new() { Label = "TypeScript", Value = ProgrammingLanguage.TypeScript, IsSelected = false },
+        new() { Label = "Java", Value = ProgrammingLanguage.Java, IsSelected = false }
+    };
+    private IEnumerable<ProgrammingLanguage>? selectedLanguages = new[] { ProgrammingLanguage.CSharp, ProgrammingLanguage.JavaScript };
+
+    private readonly List<CheckboxGroupItem<string>> notificationItems = new()
+    {
+        new() { Label = "Email notifications", Value = "Email", IsSelected = true },
+        new() { Label = "SMS notifications", Value = "SMS", IsSelected = false },
+        new() { Label = "Push notifications", Value = "Push", IsSelected = true }
+    };
+    private IEnumerable<string>? selectedNotifications = new[] { "Email", "Push" };
+    #endregion
+
+    #region CodeExample CheckboxProgrammaticCode
+    private readonly List<CheckboxGroupItem<DayOfWeek>> dayItems = new()
+    {
+        new() { Label = "Monday", Value = DayOfWeek.Monday, IsSelected = false },
+        new() { Label = "Tuesday", Value = DayOfWeek.Tuesday, IsSelected = false },
+        new() { Label = "Wednesday", Value = DayOfWeek.Wednesday, IsSelected = false },
+        new() { Label = "Thursday", Value = DayOfWeek.Thursday, IsSelected = false },
+        new() { Label = "Friday", Value = DayOfWeek.Friday, IsSelected = false },
+        new() { Label = "Saturday", Value = DayOfWeek.Saturday, IsSelected = false },
+        new() { Label = "Sunday", Value = DayOfWeek.Sunday, IsSelected = false }
+    };
+    private IEnumerable<DayOfWeek>? selectedDays = Enumerable.Empty<DayOfWeek>();
+
+    private void SelectWeekdays()
+    {
+        selectedDays = new[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday };
+    }
+
+    private void SelectWeekend()
+    {
+        selectedDays = new[] { DayOfWeek.Saturday, DayOfWeek.Sunday };
+    }
+
+    private void ClearDays()
+    {
+        selectedDays = Enumerable.Empty<DayOfWeek>();
+    }
+    #endregion
+}
