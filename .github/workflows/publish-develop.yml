@@ -12,14 +12,13 @@ on:
     branches:
       - develop
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   publish-prerelease:
     name: Build and Publish Prerelease
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout

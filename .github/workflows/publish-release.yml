@@ -20,12 +20,6 @@ on:
           - major
         default: minor
 
-permissions:
-  contents: write       # push the release tag, create the GitHub Release
-  packages: write       # push the NuGet package
-  id-token: write       # OIDC trusted publishing to NuGet.org
-  pull-requests: read   # read the merged PR's release: label
-
 concurrency:
   group: publish-release
   cancel-in-progress: false
@@ -34,6 +28,11 @@ jobs:
   release:
     name: Tag, Build and Publish Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write       # push the release tag, create the GitHub Release
+      packages: write       # push the NuGet package
+      id-token: write       # OIDC trusted publishing to NuGet.org
+      pull-requests: read   # read the merged PR's release: label
     outputs:
       tag: ${{ steps.version.outputs.tag }}
       version: ${{ steps.version.outputs.version }}

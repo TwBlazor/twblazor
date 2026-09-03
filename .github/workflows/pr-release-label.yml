@@ -19,11 +19,6 @@ on:
       - labeled
       - unlabeled
 
-permissions:
-  contents: read
-  issues: write         # create the labels, post the guidance comment
-  pull-requests: write
-
 concurrency:
   group: release-label-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -32,6 +27,10 @@ jobs:
   verify-release-label:
     name: Verify Release Bump Label
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write         # create the labels, post the guidance comment
+      pull-requests: write
 
     steps:
       - name: Ensure the release labels exist
