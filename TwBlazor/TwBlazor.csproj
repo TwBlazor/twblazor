@@ -11,7 +11,7 @@
 	<Authors>TwBlazor</Authors>
 	<Company>TwBlazor</Company>
 	<Description>Professional-grade Tailwind CSS components for modern Blazor development. Ship polished, accessible UI without wrestling with CSS.</Description>
-	<PackageProjectUrl>https://github.com/TwBlazor/TwBlazor</PackageProjectUrl>
+	<PackageProjectUrl>https://twblazor.com</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/TwBlazor/TwBlazor</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
