@@ -102,6 +102,8 @@ jobs:
 
       - name: Commit and push version bump
         shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           if git diff --quiet -- version.json; then
             echo "version.json already bumped relative to main; nothing to commit."
@@ -111,7 +113,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add version.json
           git commit -m "chore: bump minor version for main release"
-          git push origin "HEAD:${{ github.head_ref }}"
+          git push origin "HEAD:$HEAD_REF"
 
   auto-bump-develop-version:
     name: Auto-bump Version (develop)
@@ -133,6 +135,8 @@ jobs:
 
       - name: Commit and push version bump
         shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           if git diff --quiet -- version.json; then
             echo "version.json already bumped relative to develop; nothing to commit."
@@ -142,7 +146,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add version.json
           git commit -m "chore: bump patch version for develop"
-          git push origin "HEAD:${{ github.head_ref }}"
+          git push origin "HEAD:$HEAD_REF"
 
   sonar-quality-gate:
     name: Sonar Quality Gate (develop)
