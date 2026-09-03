@@ -1,0 +1,146 @@
+name: PR Checks (main)
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint-pr-title:
+    name: Lint PR Title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+
+    steps:
+      - name: Validate PR title
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+        run: |
+          if [ -z "$PR_NUMBER" ]; then
+            echo "SKIP - No PR found (manual dispatch), skipping title validation."
+            exit 0
+          fi
+          if [ "$PR_USER" == "dependabot[bot]" ]; then
+            echo "SKIP - Dependabot PR, skipping title validation."
+            exit 0
+          fi
+          PR_TITLE=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json title -q .title)
+          pattern="^(feat|fix|bug|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,100}$"
+          if ! echo "$PR_TITLE" | grep -qP "$pattern"; then
+            echo "ERROR - PR title does not follow Conventional Commits format."
+            echo "   Title: $PR_TITLE"
+            echo "   Expected format: <type>(<optional scope>): <description>"
+            echo "   Example: feat: add button component"
+            echo "   Valid types: feat, fix, bug, docs, style, refactor, perf, test, build, ci, chore, revert"
+            exit 1
+          fi
+          echo "PASS - PR title is valid: $PR_TITLE"
+
+  verify-branch-policy:
+    name: Verify Branch Policy
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Verify Source Branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$HEAD_REF" != "develop" ]; then
+            echo "::error::PRs to main must originate from develop branch"
+
+            # Post comment to PR
+            curl -X POST \
+              -H "Authorization: token $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+              -d "{\"body\":\"## Branch Policy Violation\n\nPull requests to \`main\` must originate from the \`develop\` branch only.\n\n**Current source branch:** \`${HEAD_REF}\`\n**Target branch:** \`main\`\n\n### Why?\n\nAll feature branches, bug fixes, and other changes must first be merged into \`develop\` for integration testing. Only the \`develop\` branch should be merged to \`main\` for production releases.\n\n### What to do:\n\n1. Close this PR\n2. Create a PR from \`${HEAD_REF}\` to \`develop\` instead\n3. Once merged and tested, \`develop\` can be merged to \`main\`\n\nFor more information, see our [Contributing Guidelines](https://github.com/${{ github.repository }}/blob/main/CONTRIBUTING.md).\"}"
+
+            exit 1
+          fi
+
+          echo "Branch policy check passed"
+
+  auto-bump-version:
+    name: Auto-bump Version
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0  # Required to diff version.json against origin/main
+          token: ${{ secrets.VERSION_BUMP_PAT }}
+
+      - name: Bump minor version if needed
+        shell: pwsh
+        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/main -HeadRef HEAD -Component Minor -Fix
+
+      - name: Commit and push version bump
+        shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if git diff --quiet -- version.json; then
+            echo "version.json already bumped relative to main; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add version.json
+          git commit -m "chore: bump minor version for main release"
+          git push origin "HEAD:$HEAD_REF"
+
+  sonar-quality-gate:
+    name: Sonar Quality Gate (develop)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check latest develop quality gate status
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESPONSE=$(curl -sS -u "$SONAR_TOKEN:" \
+            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=TwBlazor_twblazor&branch=develop")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status // "UNKNOWN"')
+          if [ "$STATUS" != "OK" ]; then
+            echo "::error::SonarCloud quality gate for develop is '$STATUS', not OK. Fix it on develop (which reruns the full scan) before merging to main."
+            exit 1
+          fi
+          echo "SonarCloud quality gate for develop is OK - skipping a redundant rescan on main."
+
+  header-check:
+    name: Header Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Validate copyright headers
+        shell: pwsh
+        run: ./scripts/validate-headers.ps1
