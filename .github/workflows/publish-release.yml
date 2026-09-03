@@ -23,6 +23,7 @@ on:
 permissions:
   contents: write       # push the release tag, create the GitHub Release
   packages: write       # push the NuGet package
+  id-token: write       # OIDC trusted publishing to NuGet.org
   pull-requests: read   # read the merged PR's release: label
 
 concurrency:
@@ -161,6 +162,16 @@ jobs:
             --source "https://nuget.pkg.github.com/TwBlazor/index.json" \
             --api-key "$NUGET_API_KEY" \
             --skip-duplicate
+
+      - name: NuGet login (OIDC → temp API key)
+        id: nuget-login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_ORG_USERNAME }}
+
+      - name: Publish to NuGet.org
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg             --source "https://api.nuget.org/v3/index.json"             --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"             --skip-duplicate
 
       - name: Create GitHub Release
         env:
