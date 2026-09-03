@@ -163,11 +163,17 @@ you don't need to do anything to get a preview package out.
 A release is just a pull request from `develop` into `main`:
 
 1. Open the PR as usual (see [Pull Requests](#-pull-requests) above).
-2. Add **one** of these labels to say how the version should move:
-   - `release:minor`, for backwards compatible changes, e.g. `1.1.0` → `1.2.0`
-   - `release:major`, for breaking changes, e.g. `1.1.0` → `2.0.0`
-   - A bot comments on the PR and the **Verify Release Bump Label** check stays
-     red until exactly one label is applied.
+2. Check the bump label. **`release:patch` is added automatically** when the PR
+   is opened, so a patch release needs no action. For anything else, remove it
+   and add the one you want:
+   - `release:major`, for breaking changes, e.g. `1.2.3` → `2.0.0`
+   - `release:minor`, for backwards compatible changes, e.g. `1.2.3` → `1.3.0`
+   - `release:patch`, for fixes only, e.g. `1.2.3` → `1.2.4` (the default)
+
+   Exactly one is required. Applying two, say `release:major` alongside
+   `release:minor`, makes the version ambiguous and fails the **Verify Release
+   Bump Label** check, as does removing all of them. Other labels such as `bug`
+   are ignored. A bot comments on the PR with the bump currently selected.
 3. Merge the PR.
 
 Merging automatically:
