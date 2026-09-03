@@ -26,7 +26,8 @@ param(
     [Parameter(Mandatory)][AllowEmptyString()][string]$Title,
     [AllowEmptyString()][string]$Body = '',
 
-    [string[]]$RequiredSections = @('Changes', 'Why', 'Testing', 'Checklist'),
+    # Must stay in step with the headings in .github/pull_request_template.md.
+    [string[]]$RequiredSections = @('Changes', 'Testing', 'Checklist'),
     [int]$MinSubjectLength = 10,
     [int]$MaxSubjectLength = 100
 )

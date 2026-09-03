@@ -145,6 +145,43 @@ feature/my-feature  →  develop  →  main
 
 ---
 
+## 📦 Releasing & Versioning
+
+Versions are not stored in a file: they come entirely from Git tags, read at
+build time by [MinVer](https://github.com/adamralph/minver). You never need to
+bump a version number by hand.
+
+### `develop` → GitHub Packages (preview)
+
+Every push to `develop` builds and publishes a **prerelease** NuGet package to
+the [GitHub Packages feed](https://github.com/TwBlazor/twblazor/pkgs/nuget/TwBlazor)
+automatically, versioned like `1.2.1-preview.4`. This happens on every merge, so
+you don't need to do anything to get a preview package out.
+
+### `develop` → `main` → NuGet.org (release)
+
+A release is just a pull request from `develop` into `main`:
+
+1. Open the PR as usual (see [Pull Requests](#-pull-requests) above).
+2. Add **one** of these labels to say how the version should move:
+   - `release:minor`, for backwards compatible changes, e.g. `1.1.0` → `1.2.0`
+   - `release:major`, for breaking changes, e.g. `1.1.0` → `2.0.0`
+   - A bot comments on the PR and the **Verify Release Bump Label** check stays
+     red until exactly one label is applied.
+3. Merge the PR.
+
+Merging automatically:
+- Tags the merge commit with the new version (e.g. `v1.2.0`)
+- Publishes the **stable** package to both GitHub Packages and
+  [NuGet.org](https://www.nuget.org/packages/TwBlazor)
+- Creates a GitHub Release with the packed `.nupkg` attached
+
+There is nothing further to do on `develop` afterwards. Its next build picks
+up the new release tag on its own and continues previewing from there (e.g.
+`1.2.1-preview.0`, then `.1`, and so on).
+
+---
+
 ## 🔀 Pull Requests
 
 - Keep PRs **focused on a single change**
@@ -157,16 +194,39 @@ feature/my-feature  →  develop  →  main
   - Tests pass
 - Add tests when changing logic
 - Link related issues (e.g. Fixes #123)
-- Use clear PR titles following [Conventional Commits](https://www.conventionalcommits.org/) format:  
-  `<type>(<optional scope>): <description>`  
-  **Valid types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`  
-  **Examples:**
-  - `feat(button): add outlined variant`
-  - `fix(modal): resolve close event not firing`
-  - `chore: update dependencies`  
-  > ⚠️ PRs with titles that don't follow this format will **fail** the automated title lint check.
 - Include screenshots/gifs for UI changes
 - Avoid unrelated refactoring
+
+### PR title
+
+Every PR title is checked by an automated **Lint PR** check and must follow
+[Conventional Commits](https://www.conventionalcommits.org/) format:
+
+`<type>(<optional scope>): <subject>.`
+
+- **Valid types:** `feat`, `fix`, `bug`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+- The subject (the part after `type:`) must be **10 to 100 characters**
+- The subject must **end with a full stop**
+
+**Examples:**
+- `feat(button): add outlined variant.`
+- `fix(modal): resolve close event not firing.`
+- `chore: update dependencies.`
+
+> ⚠️ PRs with titles that don't follow this format will **fail** the automated `Lint PR` check.
+
+### PR description
+
+Opening a PR prefills the description from
+[`.github/pull_request_template.md`](.github/pull_request_template.md). The same
+`Lint PR` check requires every section to actually be filled in:
+
+- **Changes**, what does this PR change?
+- **Testing**, how was it verified?
+- **Checklist**, tick at least one box
+
+An unedited template, or a section left as just the placeholder comment, will
+**fail** the check.
 
 ---
 
