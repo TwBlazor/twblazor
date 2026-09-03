@@ -3,8 +3,9 @@
 # package version from them), so this is the single place that decides what a
 # release is numbered.
 #
-#   -Bump Minor (default) -> 1.1.0 becomes 1.2.0
-#   -Bump Major           -> 1.1.0 becomes 2.0.0
+#   -Bump Major           -> 1.2.3 becomes 2.0.0
+#   -Bump Minor (default) -> 1.2.3 becomes 1.3.0
+#   -Bump Patch           -> 1.2.3 becomes 1.2.4
 #
 # When the repository has no release tag at all the base is 0.0.0, so the first
 # Minor release is 0.1.0.
@@ -12,11 +13,11 @@
 # Writes "version" and "tag" to $GITHUB_OUTPUT when running under Actions.
 #
 # Usage:
-#   pwsh ./scripts/next-release-version.ps1 [-Bump Minor|Major] [-TagPrefix v]
+#   pwsh ./scripts/next-release-version.ps1 [-Bump Major|Minor|Patch] [-TagPrefix v]
 
 [CmdletBinding()]
 param(
-    [ValidateSet('Minor', 'Major')]
+    [ValidateSet('Major', 'Minor', 'Patch')]
     [string]$Bump = 'Minor',
     [string]$TagPrefix = 'v'
 )
@@ -34,10 +35,10 @@ if ($null -eq $base) {
     Write-Host "Latest release tag: $($base.Tag)"
 }
 
-if ($Bump -eq 'Major') {
-    $version = "$($base.Major + 1).0.0"
-} else {
-    $version = "$($base.Major).$($base.Minor + 1).0"
+switch ($Bump) {
+    'Major' { $version = "$($base.Major + 1).0.0" }
+    'Minor' { $version = "$($base.Major).$($base.Minor + 1).0" }
+    'Patch' { $version = "$($base.Major).$($base.Minor).$($base.Patch + 1)" }
 }
 
 $tag = "$TagPrefix$version"
