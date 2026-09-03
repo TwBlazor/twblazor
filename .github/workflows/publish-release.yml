@@ -16,8 +16,9 @@ on:
         description: 'Version bump for this release'
         type: choice
         options:
-          - minor
           - major
+          - minor
+          - patch
         default: minor
 
 concurrency:
@@ -64,12 +65,19 @@ jobs:
           LABELS="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[].labels[].name' || true)"
           echo "Labels on the pull request for $SHA: ${LABELS:-(none)}"
 
-          if echo "$LABELS" | grep -qx 'release:major'; then
-            echo "bump=major" >> "$GITHUB_OUTPUT"
-          elif echo "$LABELS" | grep -qx 'release:minor'; then
-            echo "bump=minor" >> "$GITHUB_OUTPUT"
+          # Matched generically and required to be unique. pr-release-label.yml
+          # already blocks a PR carrying two bump labels, but this runs after the
+          # merge and must not silently pick one if that gate was bypassed.
+          BUMPS="$(echo "$LABELS" | grep -E '^release:(major|minor|patch)$' | sort -u | xargs || true)"
+          COUNT="$(echo "$BUMPS" | wc -w)"
+
+          if [ "$COUNT" -eq 1 ]; then
+            echo "bump=${BUMPS#release:}" >> "$GITHUB_OUTPUT"
+          elif [ "$COUNT" -gt 1 ]; then
+            echo "::error::The pull request for $SHA carries more than one release bump label ($BUMPS), so the version is ambiguous and nothing was published."
+            exit 1
           else
-            echo "::error::No release:minor or release:major label found on the pull request for $SHA, so nothing was published. To release this commit, run this workflow manually (Actions -> Publish Release Package -> Run workflow) and choose a bump."
+            echo "::error::No release:major, release:minor or release:patch label found on the pull request for $SHA, so nothing was published. To release this commit, run this workflow manually (Actions -> Publish Release Package -> Run workflow) and choose a bump."
             exit 1
           fi
 
