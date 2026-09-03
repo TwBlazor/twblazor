@@ -1,0 +1,138 @@
+name: Release Bump Label
+
+# Gate on develop -> main pull requests: exactly one of release:minor or
+# release:major must be applied. publish-release.yml reads that label after the
+# merge to decide the version it tags. Kept in its own workflow so that clicking
+# a label re-runs only this check, not the whole build and Sonar suite.
+#
+# Make "Release Bump Label" a required status check on main to stop an unlabelled
+# release PR merging.
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+      - unlabeled
+
+concurrency:
+  group: release-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify-release-label:
+    name: Verify Release Bump Label
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write         # create the labels, post the guidance comment
+      pull-requests: write
+
+    steps:
+      - name: Ensure the release labels exist
+        continue-on-error: true  # a fork PR's token is read-only; the check below still gates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create 'release:minor' --color '0E8A16' --description 'Release this PR as a minor version bump (1.1.0 -> 1.2.0)' --force
+          gh label create 'release:major' --color 'B60205' --description 'Release this PR as a major version bump (1.1.0 -> 2.0.0)' --force
+
+      - name: Check for exactly one bump label
+        id: check
+        env:
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          MINOR=$(echo "$LABELS" | jq -r 'index("release:minor") != null')
+          MAJOR=$(echo "$LABELS" | jq -r 'index("release:major") != null')
+
+          if [ "$MINOR" = "true" ] && [ "$MAJOR" = "true" ]; then
+            echo "state=both" >> "$GITHUB_OUTPUT"
+          elif [ "$MAJOR" = "true" ]; then
+            echo "state=major" >> "$GITHUB_OUTPUT"
+          elif [ "$MINOR" = "true" ]; then
+            echo "state=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "state=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment with the current state
+        continue-on-error: true  # a fork PR's token is read-only; the check below still gates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          STATE: ${{ steps.check.outputs.state }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          MARKER='<!-- release-bump-label -->'
+
+          case "$STATE" in
+            minor)
+              BODY="$MARKER
+          ### Release bump: minor
+
+          Merging this PR will tag main with the next **minor** version and publish it to GitHub Packages. Swap the label to \`release:major\` if this release contains breaking changes."
+              ;;
+            major)
+              BODY="$MARKER
+          ### Release bump: major
+
+          Merging this PR will tag main with the next **major** version and publish it to GitHub Packages. Swap the label to \`release:minor\` if this release is backwards compatible."
+              ;;
+            both)
+              BODY="$MARKER
+          ### Pick one release bump
+
+          This PR carries both \`release:minor\` and \`release:major\`. Remove one so the release version is unambiguous."
+              ;;
+            *)
+              BODY="$MARKER
+          ### Choose the release bump
+
+          This PR releases \`develop\` to \`main\`. Add one label in the sidebar to say how the version should move:
+
+          | Label | Result |
+          |---|---|
+          | \`release:minor\` | backwards compatible changes, e.g. \`1.1.0\` -> \`1.2.0\` |
+          | \`release:major\` | breaking changes, e.g. \`1.1.0\` -> \`2.0.0\` |
+
+          This check goes green as soon as one is applied. Nothing in the repository needs editing: the version is created as a Git tag when the PR merges."
+              ;;
+          esac
+
+          # Update the existing comment rather than adding one per re-run.
+          COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate \
+            --jq "[.[] | select(.body | startswith(\"$MARKER\"))] | .[0].id // empty")
+
+          if [ -n "$COMMENT_ID" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$COMMENT_ID" -f body="$BODY" >/dev/null
+          else
+            gh api -X POST "repos/$REPO/issues/$PR_NUMBER/comments" -f body="$BODY" >/dev/null
+          fi
+
+      - name: Fail unless exactly one label is applied
+        env:
+          STATE: ${{ steps.check.outputs.state }}
+        shell: bash
+        run: |
+          case "$STATE" in
+            minor|major)
+              echo "Release bump: $STATE"
+              ;;
+            both)
+              echo "::error::This PR carries both release:minor and release:major. Remove one."
+              exit 1
+              ;;
+            *)
+              echo "::error::Add either the release:minor or the release:major label to choose how this release moves the version."
+              exit 1
+              ;;
+          esac
