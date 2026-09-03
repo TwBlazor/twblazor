@@ -89,20 +89,20 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
     /// Reference to the saturation/lightness selector square, used by the parent <see cref="TwColorPicker"/>
     /// (via <c>twDialog.focusSurface</c>) as the first focusable control when the dialog opens.
     /// </summary>
-    private ElementReference selectorRef;
+    private ElementReference selectorRef = default;
 
     /// <summary>
     /// Reference to the hue slider strip, used to attach <c>twSlider.preventScrollKeys</c> so
     /// Arrow/Home/End change the hue without also scrolling the page.
     /// </summary>
-    private ElementReference hueRef;
+    private ElementReference hueRef = default;
 
     /// <summary>
     /// Reference to the alpha slider strip (only rendered when <see cref="ShowAlpha"/> is true), used
     /// to attach <c>twSlider.preventScrollKeys</c> so Arrow/Home/End change the alpha without also
     /// scrolling the page.
     /// </summary>
-    private ElementReference alphaRef;
+    private ElementReference alphaRef = default;
 
     // Keyboard step sizes for the role="slider" controls below. Small enough for fine adjustment,
     // large enough that a handful of key presses meaningfully moves the value.
@@ -341,7 +341,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         }
     }
 
-    private void OnSelectorMouseUp(MouseEventArgs _)
+    private void OnSelectorMouseUp()
     {
         isSelectorDragging = false;
     }
@@ -364,7 +364,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         UpdateSelectorPosition(x, y);
     }
 
-    private void OnSelectorTouchEnd(TouchEventArgs _) => isSelectorDragging = false;
+    private void OnSelectorTouchEnd() => isSelectorDragging = false;
 
     private void UpdateSelectorPosition(double offsetX, double offsetY)
     {
@@ -421,7 +421,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         }
     }
 
-    private void OnHueMouseUp(MouseEventArgs _) => isHueDragging = false;
+    private void OnHueMouseUp() => isHueDragging = false;
 
     private async Task OnHueTouchStart(TouchEventArgs e)
     {
@@ -441,7 +441,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         UpdateHuePosition(x);
     }
 
-    private void OnHueTouchEnd(TouchEventArgs _) => isHueDragging = false;
+    private void OnHueTouchEnd() => isHueDragging = false;
 
     private void UpdateHuePosition(double offsetX)
     {
@@ -492,7 +492,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         }
     }
 
-    private void OnAlphaMouseUp(MouseEventArgs _) => isAlphaDragging = false;
+    private void OnAlphaMouseUp() => isAlphaDragging = false;
 
     private async Task OnAlphaTouchStart(TouchEventArgs e)
     {
@@ -512,7 +512,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         UpdateAlphaPosition(x);
     }
 
-    private void OnAlphaTouchEnd(TouchEventArgs _) => isAlphaDragging = false;
+    private void OnAlphaTouchEnd() => isAlphaDragging = false;
 
     private void UpdateAlphaPosition(double offsetX)
     {
@@ -584,7 +584,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
 
     private void OnHexInputChanged(ChangeEventArgs e) => hexInput = e.Value?.ToString() ?? defaultColor;
 
-    private void OnHexInputCommitted(ChangeEventArgs e)
+    private void OnHexInputCommitted()
     {
         var hex = hexInput?.Trim() ?? defaultColor;
         if (!hex.StartsWith('#')) hex = "#" + hex;

@@ -1369,7 +1369,8 @@ public class TwColorPickerBodyTests : TwBlazorTestBase
     {
         var method = typeof(TwColorPickerBody).GetMethod(methodName,
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-        method.Invoke(instance, [eventArgs]);
+        var parameters = method.GetParameters().Length == 0 ? [] : new[] { eventArgs };
+        method.Invoke(instance, parameters);
     }
 
     private static void SetHexInputField(TwColorPickerBody instance, string value)
