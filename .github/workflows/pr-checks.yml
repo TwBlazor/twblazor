@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - develop
-      - main
   workflow_dispatch:
 
 jobs:
@@ -83,6 +82,92 @@ jobs:
 
           echo "Branch policy check passed"
 
+  auto-bump-version:
+    name: Auto-bump Version
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0  # Required to diff version.json against origin/main
+
+      - name: Bump minor version if needed
+        shell: pwsh
+        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/main -HeadRef HEAD -Component Minor -Fix
+
+      - name: Commit and push version bump
+        shell: bash
+        run: |
+          if git diff --quiet -- version.json; then
+            echo "version.json already bumped relative to main; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add version.json
+          git commit -m "chore: bump minor version for main release"
+          git push origin "HEAD:${{ github.head_ref }}"
+
+  auto-bump-develop-version:
+    name: Auto-bump Version (develop)
+    if: github.event_name == 'pull_request' && github.base_ref == 'develop'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0  # Required to diff version.json against origin/develop
+
+      - name: Bump patch version (-beta) if needed
+        shell: pwsh
+        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/develop -HeadRef HEAD -Component Patch -Fix
+
+      - name: Commit and push version bump
+        shell: bash
+        run: |
+          if git diff --quiet -- version.json; then
+            echo "version.json already bumped relative to develop; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add version.json
+          git commit -m "chore: bump patch version for develop"
+          git push origin "HEAD:${{ github.head_ref }}"
+
+  sonar-quality-gate:
+    name: Sonar Quality Gate (develop)
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check latest develop quality gate status
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESPONSE=$(curl -sS -u "$SONAR_TOKEN:" \
+            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=TwBlazor_twblazor&branch=develop")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status // "UNKNOWN"')
+          if [ "$STATUS" != "OK" ]; then
+            echo "::error::SonarCloud quality gate for develop is '$STATUS', not OK. Fix it on develop (which reruns the full scan) before merging to main."
+            exit 1
+          fi
+          echo "SonarCloud quality gate for develop is OK - skipping a redundant rescan on main."
+
   header-check:
     name: Header Check
     runs-on: ubuntu-latest
@@ -99,6 +184,10 @@ jobs:
 
   build-and-test:
     name: Build and Test
+    # Skip for develop -> main PRs: develop already ran (and re-runs on every
+    # push to develop), and main only ever merges develop's already-validated
+    # commit, so re-running here is redundant noise.
+    if: "!(github.event_name == 'pull_request' && github.base_ref == 'main')"
     uses: ./.github/workflows/build-and-test.yml
     permissions:
       checks: write
