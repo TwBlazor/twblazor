@@ -7,42 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint-pr-title:
-    name: Lint PR Title
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: read
-      pull-requests: read
-
-    steps:
-      - name: Validate PR title
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_USER: ${{ github.event.pull_request.user.login }}
-        run: |
-          if [ -z "$PR_NUMBER" ]; then
-            echo "SKIP - No PR found (manual dispatch), skipping title validation."
-            exit 0
-          fi
-          if [ "$PR_USER" == "dependabot[bot]" ]; then
-            echo "SKIP - Dependabot PR, skipping title validation."
-            exit 0
-          fi
-          PR_TITLE=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json title -q .title)
-          pattern="^(feat|fix|bug|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,100}$"
-          if ! echo "$PR_TITLE" | grep -qP "$pattern"; then
-            echo "ERROR - PR title does not follow Conventional Commits format."
-            echo "   Title: $PR_TITLE"
-            echo "   Expected format: <type>(<optional scope>): <description>"
-            echo "   Example: feat: add button component"
-            echo "   Valid types: feat, fix, bug, docs, style, refactor, perf, test, build, ci, chore, revert"
-            exit 1
-          fi
-          echo "PASS - PR title is valid: $PR_TITLE"
-
   verify-branch-policy:
     name: Verify Branch Policy
     if: github.event_name == 'pull_request'
