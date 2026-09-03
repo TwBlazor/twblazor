@@ -1,32 +1,57 @@
 name: Publish Develop Package
 
+# Publishes a prerelease of develop on every push. The version is derived by
+# MinVer from the newest release tag plus the number of commits since it, so it
+# increments on its own and nothing here writes back to the repository:
+#
+#   tag v1.1.0, 3 commits later -> 1.1.1-preview.3
+#   one more commit             -> 1.1.1-preview.4
+
 on:
   push:
     branches:
       - develop
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-
 jobs:
   publish-prerelease:
     name: Build and Publish Prerelease
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0  # Fetch full history for Nerdbank.GitVersioning
+          fetch-depth: 0    # MinVer needs full history to measure commit height
+          fetch-tags: true  # ...and every release tag to find the base version
+
+      - name: Skip released commits
+        id: guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Right after a release, sync-develop merges main (and its release tag)
+          # into develop. On that commit MinVer would produce the stable version
+          # rather than a prerelease, and publishing it here is exactly the
+          # "same version shipped from two branches" confusion this setup exists
+          # to avoid. Releases come from main only.
+          if git tag --list --points-at HEAD | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "HEAD is a tagged release; main publishes it. Skipping."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Setup .NET
+        if: steps.guard.outputs.publish == 'true'
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
       - name: Cache NuGet packages
+        if: steps.guard.outputs.publish == 'true'
         uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
@@ -35,9 +60,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
+        if: steps.guard.outputs.publish == 'true'
         run: dotnet restore
 
       - name: Build Tailwind CSS (minified)
+        if: steps.guard.outputs.publish == 'true'
         shell: pwsh
         run: |
           $version = "v4.1.18"
@@ -46,33 +73,34 @@ jobs:
           ./tailwindcss -i TwBlazor/wwwroot/css/input.css -o TwBlazor/wwwroot/css/twblazor.css --minify
 
       - name: Build
+        if: steps.guard.outputs.publish == 'true'
         run: dotnet build TwBlazor/TwBlazor.csproj --configuration Release --no-restore
 
       - name: Pack
+        if: steps.guard.outputs.publish == 'true'
         run: |
           dotnet pack TwBlazor/TwBlazor.csproj \
             --configuration Release \
             --no-build \
             --output ./artifacts
 
+      - name: Verify the package is a prerelease
+        if: steps.guard.outputs.publish == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -1 ./artifacts
+          if ! ls ./artifacts/TwBlazor.*-preview.*.nupkg >/dev/null 2>&1; then
+            echo "::error::develop packed a stable version. develop must only ever publish previews; check MinVer configuration in TwBlazor/TwBlazor.csproj."
+            exit 1
+          fi
+
       - name: Publish to GitHub Packages
+        if: steps.guard.outputs.publish == 'true'
         env:
           NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet nuget push ./artifacts/*.nupkg \
             --source "https://nuget.pkg.github.com/TwBlazor/index.json" \
             --api-key "$NUGET_API_KEY" \
-            --skip-duplicate
-
-      - name: NuGet login (OIDC → temp API key)
-        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
-        id: nuget-login
-        with:
-          user: ${{ secrets.NUGET_ORG_USERNAME }}
-
-      - name: Publish to NuGet.org
-        run: |
-          dotnet nuget push ./artifacts/*.nupkg \
-            --source "https://api.nuget.org/v3/index.json" \
-            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
             --skip-duplicate
