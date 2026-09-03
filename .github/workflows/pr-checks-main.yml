@@ -73,39 +73,22 @@ jobs:
 
           echo "Branch policy check passed"
 
-  auto-bump-version:
-    name: Auto-bump Version
+  verify-version-bump:
+    name: Verify Version Bump
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
-      - name: Checkout develop
+      - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0  # Required to diff version.json against origin/main
-          token: ${{ secrets.VERSION_BUMP_PAT }}
 
-      - name: Bump minor version if needed
+      - name: Verify minor version was bumped
         shell: pwsh
-        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/main -HeadRef HEAD -Component Minor -Fix
-
-      - name: Commit and push version bump
-        shell: bash
-        env:
-          HEAD_REF: ${{ github.head_ref }}
-        run: |
-          if git diff --quiet -- version.json; then
-            echo "version.json already bumped relative to main; nothing to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add version.json
-          git commit -m "chore: bump minor version for main release"
-          git push origin "HEAD:$HEAD_REF"
+        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/main -HeadRef HEAD -Component Minor
 
   sonar-quality-gate:
     name: Sonar Quality Gate (develop)
