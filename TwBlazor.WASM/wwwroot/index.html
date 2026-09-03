@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>twblazor | Tailwind CSS components for Blazor</title>
     <meta name="description" content="Professional-grade Tailwind CSS components for Blazor. Accessible, themeable, free and open-source components to help you ship polished .NET UIs faster." />
-    <link rel="canonical" href="https://twblazor.com/" />
+    <!-- No canonical here. Every route is served this same file, so a canonical
+         in the shell tells Google that /button, /dialog and the rest are all
+         duplicates of the home page, and they get dropped from the index as
+         "Alternate page with proper canonical tag". Each page declares its own
+         canonical through HeadContent instead. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="twblazor" />
     <meta property="og:title" content="twblazor - Tailwind CSS components for Blazor" />

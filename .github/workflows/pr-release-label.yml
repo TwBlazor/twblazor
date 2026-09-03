@@ -79,13 +79,13 @@ jobs:
               BODY="$MARKER
           ### Release bump: minor
 
-          Merging this PR will tag main with the next **minor** version and publish it to GitHub Packages. Swap the label to \`release:major\` if this release contains breaking changes."
+          Merging this PR will tag main with the next **minor** version and publish it to GitHub Packages **and NuGet.org**. A NuGet.org release cannot be deleted, only unlisted. Swap the label to \`release:major\` if this release contains breaking changes."
               ;;
             major)
               BODY="$MARKER
           ### Release bump: major
 
-          Merging this PR will tag main with the next **major** version and publish it to GitHub Packages. Swap the label to \`release:minor\` if this release is backwards compatible."
+          Merging this PR will tag main with the next **major** version and publish it to GitHub Packages **and NuGet.org**. A NuGet.org release cannot be deleted, only unlisted. Swap the label to \`release:minor\` if this release is backwards compatible."
               ;;
             both)
               BODY="$MARKER
