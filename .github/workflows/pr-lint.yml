@@ -1,0 +1,46 @@
+name: Lint PR
+
+# Validates the pull request's title and description against
+# scripts/validate-pr.ps1 and .github/pull_request_template.md.
+#
+# Kept out of pr-checks-develop.yml / pr-checks-main.yml for two reasons: the job
+# was duplicated verbatim between them, and it needs the "edited" trigger so that
+# correcting a title or description re-runs the check. Firing the whole build and
+# Sonar suite every time someone edits a description would be wasteful.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - reopened
+      - edited       # title or description changed - re-validate
+      - synchronize  # new commits - the check must report on the new head SHA
+
+concurrency:
+  group: pr-lint-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint-pr:
+    name: Lint PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Validate title and description
+        shell: pwsh
+        # Passed as environment variables rather than interpolated into the
+        # script body: a PR title is attacker-controlled text, and ${{ }} inside
+        # a run block would splice it straight into the shell.
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: ./scripts/validate-pr.ps1 -Title $env:PR_TITLE -Body $env:PR_BODY
