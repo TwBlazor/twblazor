@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write
 
 jobs:
   publish-release:
@@ -61,4 +62,17 @@ jobs:
           dotnet nuget push ./artifacts/*.nupkg \
             --source "https://nuget.pkg.github.com/TwBlazor/index.json" \
             --api-key "$NUGET_API_KEY" \
+            --skip-duplicate
+
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_ORG_USERNAME }}
+
+      - name: Publish to NuGet.org
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg \
+            --source "https://api.nuget.org/v3/index.json" \
+            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
             --skip-duplicate
