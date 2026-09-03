@@ -1,13 +1,20 @@
 <p align="center">
   <img src="./images/banner.svg" height="300" style="height: 300px;">
+    [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
 
-  [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=alert_status&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=bugs&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=code_smells&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=coverage&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=duplicated_lines_density&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=ncloc&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
-  [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_TwBlazor&metric=sqale_index&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_TwBlazor)
+    [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=bugs&token=6bbca7c19f7ba793b0e164a9805d518c9a175bfe)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+
+    [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
 </p>
 
 ## Setup
