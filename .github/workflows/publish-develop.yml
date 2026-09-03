@@ -27,31 +27,17 @@ jobs:
           fetch-depth: 0    # MinVer needs full history to measure commit height
           fetch-tags: true  # ...and every release tag to find the base version
 
-      - name: Skip released commits
-        id: guard
-        shell: bash
-        run: |
-          set -euo pipefail
-          # Right after a release, sync-develop merges main (and its release tag)
-          # into develop. On that commit MinVer would produce the stable version
-          # rather than a prerelease, and publishing it here is exactly the
-          # "same version shipped from two branches" confusion this setup exists
-          # to avoid. Releases come from main only.
-          if git tag --list --points-at HEAD | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "HEAD is a tagged release; main publishes it. Skipping."
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Compute preview version
+        id: version
+        shell: pwsh
+        run: ./scripts/next-preview-version.ps1
 
       - name: Setup .NET
-        if: steps.guard.outputs.publish == 'true'
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
       - name: Cache NuGet packages
-        if: steps.guard.outputs.publish == 'true'
         uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
@@ -60,11 +46,9 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        if: steps.guard.outputs.publish == 'true'
         run: dotnet restore
 
       - name: Build Tailwind CSS (minified)
-        if: steps.guard.outputs.publish == 'true'
         shell: pwsh
         run: |
           $version = "v4.1.18"
@@ -73,30 +57,38 @@ jobs:
           ./tailwindcss -i TwBlazor/wwwroot/css/input.css -o TwBlazor/wwwroot/css/twblazor.css --minify
 
       - name: Build
-        if: steps.guard.outputs.publish == 'true'
-        run: dotnet build TwBlazor/TwBlazor.csproj --configuration Release --no-restore
+        run: dotnet build TwBlazor/TwBlazor.csproj --configuration Release --no-restore -p:MinVerVersionOverride=${{ steps.version.outputs.version }}
 
       - name: Pack
-        if: steps.guard.outputs.publish == 'true'
         run: |
           dotnet pack TwBlazor/TwBlazor.csproj \
             --configuration Release \
             --no-build \
+            -p:MinVerVersionOverride=${{ steps.version.outputs.version }} \
             --output ./artifacts
 
-      - name: Verify the package is a prerelease
-        if: steps.guard.outputs.publish == 'true'
+      - name: Verify packed version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
           ls -1 ./artifacts
-          if ! ls ./artifacts/TwBlazor.*-preview.*.nupkg >/dev/null 2>&1; then
-            echo "::error::develop packed a stable version. develop must only ever publish previews; check MinVer configuration in TwBlazor/TwBlazor.csproj."
+          # Assert the exact version, not merely "some prerelease". If the
+          # override fails to reach build or pack, MinVer falls back to the
+          # newest *reachable* tag, which on develop is the previous release -
+          # that still looks like a prerelease while sorting below what has
+          # already shipped, so a looser check would wave it through.
+          if [ ! -f "./artifacts/TwBlazor.$VERSION.nupkg" ]; then
+            echo "::error::Expected ./artifacts/TwBlazor.$VERSION.nupkg. Check that -p:MinVerVersionOverride reached both the build and pack steps."
             exit 1
           fi
+          case "$VERSION" in
+            *-preview.*) echo "Packed TwBlazor $VERSION" ;;
+            *) echo "::error::develop computed a stable version ($VERSION); develop must only ever publish previews."; exit 1 ;;
+          esac
 
       - name: Publish to GitHub Packages
-        if: steps.guard.outputs.publish == 'true'
         env:
           NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
         run: |
