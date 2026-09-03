@@ -48,7 +48,7 @@ public partial class TwDatePickerDayView : TwBlazorComponentBase, IAsyncDisposab
     /// that suppresses the browser's default scroll behavior for the grid navigation keys (arrow
     /// keys, Home, End) - the same generic guard used by <see cref="TwTabContainer"/>'s tablist.
     /// </summary>
-    private ElementReference gridRef;
+    private ElementReference gridRef = default;
 
     private bool keydownGuardRegistered;
 
@@ -61,7 +61,7 @@ public partial class TwDatePickerDayView : TwBlazorComponentBase, IAsyncDisposab
     /// </summary>
     private sealed class DayCellRef
     {
-        public ElementReference Element;
+        public ElementReference Element = default;
     }
 
     private readonly Dictionary<int, DayCellRef> _dayCellRefs = [];

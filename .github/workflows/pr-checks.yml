@@ -172,7 +172,7 @@ jobs:
         shell: powershell
         run: |
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
-            /k:"TwBlazor_TwBlazor" `
+            /k:"TwBlazor_twblazor" `
             /o:"twblazor" `
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.token="$env:SONAR_TOKEN" `
