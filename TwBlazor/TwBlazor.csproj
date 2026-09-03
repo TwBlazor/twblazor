@@ -20,6 +20,16 @@
 	<PackageTags>blazor;tailwindcss;components;ui</PackageTags>
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+	<!-- Versioning (MinVer). The version is derived entirely from Git tags:
+	     a tagged commit builds that exact version, and any commit after it builds
+	     the next patch as a prerelease with the commit height appended.
+	       tag v1.1.0                -> 1.1.0
+	       3 commits after v1.1.0    -> 1.1.1-preview.3
+	     Nothing in the repository records the version, so there is no file to
+	     bump and no version conflict when develop merges into main. -->
+	<MinVerTagPrefix>v</MinVerTagPrefix>
+	<MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,7 +56,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
-	<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.94">
+	<PackageReference Include="MinVer" Version="7.0.0">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>

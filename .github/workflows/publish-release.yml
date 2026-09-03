@@ -1,24 +1,110 @@
 name: Publish Release Package
 
+# Cuts a stable release of main. The version is decided by the release:minor /
+# release:major label on the pull request that was merged (enforced before merge
+# by pr-release-label.yml), turned into a Git tag here. That tag is the only
+# record of the version: MinVer reads it at build time, so nothing in the
+# repository needs to be edited or committed in order to release.
+
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump for this release'
+        type: choice
+        options:
+          - minor
+          - major
+        default: minor
 
 permissions:
-  contents: read
-  packages: write
+  contents: write       # push the release tag, create the GitHub Release
+  packages: write       # push the NuGet package
+  pull-requests: read   # read the merged PR's release: label
+
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
 
 jobs:
-  publish-release:
-    name: Build and Publish Release
+  release:
+    name: Tag, Build and Publish Release
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0  # Required for nbgv to calculate version from Git history
+          fetch-depth: 0    # MinVer needs full history to measure commit height
+          fetch-tags: true  # ...and every release tag to find the base version
+
+      - name: Determine version bump
+        id: bump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_BUMP: ${{ inputs.bump }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual dispatch requested a '$INPUT_BUMP' bump."
+            echo "bump=$INPUT_BUMP" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          LABELS="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[].labels[].name' || true)"
+          echo "Labels on the pull request for $SHA: ${LABELS:-(none)}"
+
+          if echo "$LABELS" | grep -qx 'release:major'; then
+            echo "bump=major" >> "$GITHUB_OUTPUT"
+          elif echo "$LABELS" | grep -qx 'release:minor'; then
+            echo "bump=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::No release:minor or release:major label found on the pull request for $SHA, so nothing was published. To release this commit, run this workflow manually (Actions -> Publish Release Package -> Run workflow) and choose a bump."
+            exit 1
+          fi
+
+      - name: Compute release version
+        id: version
+        shell: pwsh
+        run: |
+          # Re-running the workflow on an already-released commit must not cut a
+          # second version, so reuse the tag when HEAD already carries one.
+          $existing = @(git tag --list --points-at HEAD | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' })
+          if ($existing.Count -gt 0) {
+              $tag = $existing[0]
+              Write-Host "HEAD is already tagged $tag; reusing that version."
+              "version=$($tag.Substring(1))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              "tag=$tag"                     | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } else {
+              ./scripts/next-release-version.ps1 -Bump '${{ steps.bump.outputs.bump }}'
+          }
+
+      - name: Create release tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The tag has to exist locally before the build, because that is where
+          # MinVer reads the version from.
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "Tag $TAG already exists."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" -m "Release $TAG"
+          fi
+          git push origin "refs/tags/$TAG"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -54,6 +140,19 @@ jobs:
             --no-build \
             --output ./artifacts
 
+      - name: Verify packed version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "./artifacts/TwBlazor.$VERSION.nupkg" ]; then
+            echo "::error::Expected ./artifacts/TwBlazor.$VERSION.nupkg but MinVer produced something else:"
+            ls -1 ./artifacts
+            exit 1
+          fi
+          echo "Packed TwBlazor $VERSION"
+
       - name: Publish to GitHub Packages
         env:
           NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
@@ -62,3 +161,58 @@ jobs:
             --source "https://nuget.pkg.github.com/TwBlazor/index.json" \
             --api-key "$NUGET_API_KEY" \
             --skip-duplicate
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "GitHub Release $TAG already exists."
+          else
+            gh release create "$TAG" --title "$TAG" --generate-notes ./artifacts/*.nupkg
+          fi
+
+  sync-develop:
+    name: Sync develop with main
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v5
+        with:
+          ref: develop
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Merge main into develop
+        shell: bash
+        run: |
+          set -euo pipefail
+          # This is what keeps the two streams in order. MinVer numbers a build
+          # from the newest tag reachable from that commit, so until develop can
+          # see the release tag it keeps producing previews off the *previous*
+          # release (1.1.1-preview.N) even though 1.2.0 has shipped. Merging main
+          # back in makes develop's next preview 1.2.1-preview.N, correctly above
+          # the release. Normally a fast-forward, since main is develop plus a
+          # merge commit.
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "develop already contains main; nothing to sync."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git merge --no-edit origin/main; then
+            git merge --abort || true
+            echo "::error::Could not merge main into develop automatically. Merge it by hand, otherwise develop will keep publishing previews numbered below the release just published."
+            exit 1
+          fi
+
+          git push origin HEAD:develop

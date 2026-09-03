@@ -73,23 +73,6 @@ jobs:
 
           echo "Branch policy check passed"
 
-  verify-version-bump:
-    name: Verify Version Bump
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-        with:
-          fetch-depth: 0  # Required to diff version.json against origin/main
-
-      - name: Verify minor version was bumped
-        shell: pwsh
-        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/main -HeadRef HEAD -Component Minor
-
   sonar-quality-gate:
     name: Sonar Quality Gate (develop)
     if: github.event_name == 'pull_request'

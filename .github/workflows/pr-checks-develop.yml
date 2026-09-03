@@ -43,39 +43,6 @@ jobs:
           fi
           echo "PASS - PR title is valid: $PR_TITLE"
 
-  auto-bump-version:
-    name: Auto-bump Version
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout source branch
-        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0  # Required to diff version.json against origin/develop
-
-      - name: Bump patch version (-beta) if needed
-        shell: pwsh
-        run: ./scripts/verify-version-bump.ps1 -BaseRef origin/develop -HeadRef HEAD -Component Patch -Fix
-
-      - name: Commit and push version bump
-        shell: bash
-        env:
-          HEAD_REF: ${{ github.head_ref }}
-        run: |
-          if git diff --quiet -- version.json; then
-            echo "version.json already bumped relative to develop; nothing to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add version.json
-          git commit -m "chore: bump patch version for develop"
-          git push origin "HEAD:$HEAD_REF"
-
   header-check:
     name: Header Check
     runs-on: ubuntu-latest
@@ -190,7 +157,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
-          fetch-depth: 0  # Full history required for Nerdbank.GitVersioning
+          fetch-depth: 0  # Full history required for MinVer
 
       - name: Setup .NET
         uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
