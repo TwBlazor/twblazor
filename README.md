@@ -14,11 +14,15 @@
 
 </p>
 
+<p align="center">
+    <a href="https://twblazor.github.io/twblazor/" target="_blank">API Documentation (docfx)</a> &bullet; <a href="https://twblazor.com/" target="_blank">Component Documentation (twblazor.com)</a> &bullet; <a href="https://twblazor.com/get-started" target="_blank">Get Started</a>
+</p>
+
 ## Setup
 
-1. Install the [TwBlazor NuGet package](https://github.com/TwBlazor/TwBlazor/pkgs/nuget/TwBlazor) in your Blazor project.
+1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
 ```pwsh
-$ dotnet add package TwBlazor --version x.x.x
+$ dotnet add package TwBlazor --version 1.3.1
 ```
 2. In your `App.razor` file, include two stylesheet links along with the default content. The first link is for TwBlazor's core styling. The second is for TwIcon, which uses Bootstrap Icons.
 ```razor

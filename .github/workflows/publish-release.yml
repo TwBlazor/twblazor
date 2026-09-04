@@ -29,6 +29,11 @@ jobs:
   release:
     name: Tag, Build and Publish Release
     runs-on: ubuntu-latest
+
+    # The app credentials live on this environment, not on the repository, and
+    # the environment is restricted to the main branch.
+    environment: release
+
     permissions:
       contents: write       # push the release tag, create the GitHub Release
       packages: write       # push the NuGet package
@@ -39,9 +44,21 @@ jobs:
       version: ${{ steps.version.outputs.version }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      # GITHUB_TOKEN is subject to branch protection like any other actor, so it
+      # cannot push the README commit below to a protected main. This app is on
+      # the ruleset's bypass list; see CONTRIBUTING for the repository setup.
+      # The tag push further down rides on the same credentials.
+      - name: Create app token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
+          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0    # MinVer needs full history to measure commit height
           fetch-tags: true  # ...and every release tag to find the base version
 
@@ -97,6 +114,55 @@ jobs:
               ./scripts/next-release-version.ps1 -Bump '${{ steps.bump.outputs.bump }}'
           }
 
+      # Deliberately ahead of the tag: the README commit has to be part of what
+      # gets tagged, or HEAD would no longer carry the tag and the re-run guard
+      # in "Compute release version" above would cut a second release. Pushing
+      # before anything is tagged or published also means a rejected push (main
+      # moved underneath us) fails the job with nothing half-released.
+      - name: Point README install command at this release
+        id: readme
+        shell: pwsh
+        run: ./scripts/update-readme-version.ps1 -Version '${{ steps.version.outputs.version }}'
+
+      - name: Commit README
+        if: steps.readme.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          VERSION: ${{ steps.readme.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Committed through the API rather than `git push` so that main can
+          # keep "Require signed commits": GitHub signs commits it creates
+          # itself, and the same commit made over git with an app token is
+          # unsigned. Authorship comes from the token, so this needs no
+          # git config identity.
+          #
+          # [skip ci] because an app token's writes DO start new workflow runs,
+          # unlike GITHUB_TOKEN's. Without it this re-triggers this workflow on
+          # a commit with no pull request behind it, so "Determine version
+          # bump" would fail and redden every release.
+          BLOB="$(gh api "repos/$REPO/contents/README.md?ref=$BRANCH" --jq .sha)"
+          NEW="$(gh api -X PUT "repos/$REPO/contents/README.md" \
+            -f message="docs: point README install command at $VERSION [skip ci]" \
+            -f content="$(base64 -w0 README.md)" \
+            -f sha="$BLOB" \
+            -f branch="$BRANCH" \
+            --jq .commit.sha)"
+          echo "Created signed commit $NEW on $BRANCH."
+
+          # That commit only exists on the server, so HEAD is still the merge
+          # commit. The tag below has to land on the new commit, and MinVer
+          # only considers tags reachable from HEAD, so move the checkout onto
+          # it - otherwise the tag and the packed version disagree.
+          # Fetch the branch (fetching a bare SHA needs a server-side option we
+          # should not rely on), then reset to the exact commit we just made
+          # rather than to FETCH_HEAD, so a concurrent push cannot slip in.
+          git fetch origin "$BRANCH"
+          git reset --hard "$NEW"
+
       - name: Create release tag
         env:
           TAG: ${{ steps.version.outputs.tag }}
@@ -115,12 +181,12 @@ jobs:
           git push origin "refs/tags/$TAG"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           dotnet-version: '10.0.x'
 
       - name: Cache NuGet packages
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -184,11 +250,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.version.outputs.tag }}
+          REPO: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "GitHub Release $TAG already exists."
           else
-            gh release create "$TAG" --title "$TAG" --generate-notes ./artifacts/*.nupkg
+            # --generate-notes takes no formatting options, so call the same API
+            # it calls and edit the result: GitHub writes each entry as
+            # "<title> by @user in <url>", and we want it without the "by".
+            # Anchored on the trailing " in " so a "by" inside a PR title is
+            # left alone.
+            NOTES="$(gh api "repos/$REPO/releases/generate-notes" \
+              -f tag_name="$TAG" --jq .body |
+              sed -E 's/ by (@[A-Za-z0-9-]+ in )/ \1/g')"
+            gh release create "$TAG" --title "$TAG" --notes "$NOTES" ./artifacts/*.nupkg
           fi
