@@ -1,3 +1,263 @@
+/*
+ * twblazor theme for the docfx "modern" template.
+ *
+ * The modern template is Bootstrap 5.3, so most of what follows is done by
+ * re-pointing Bootstrap's own custom properties at the same Tailwind v4 tokens
+ * twblazor.com uses. Colours below are copied verbatim from
+ * TwBlazor.Docs/wwwroot/css/output.css so the two sites stay in step:
+ *
+ *   navbar          bg-purple-900                      (TwSidebarTheme.Navbar)
+ *   nav row hover   hover:bg-gray-100 dark:bg-gray-700 (NavigationItemBase)
+ *   nav row active  bg-gray-200/80 dark:bg-gray-900/30 (NavigationItemActive)
+ *   sidebar         bg-white dark:bg-gray-800          (neutralSurface)
+ *   content         bg-white dark:bg-gray-900          (MainContentRoot)
+ *   body text       text-purple-950 dark:text-purple-200 (PageContainer)
+ *   code            intellij-light / tokyo-night-dark  (codeblock*.css)
+ */
+
+/* -------------------------------------------------------------------------
+ * Typography - Source Sans 3, self-hosted from TwBlazor.Docs/wwwroot/fonts
+ * (copied to _site/fonts by the `resource` mapping in docfx.json).
+ * ---------------------------------------------------------------------- */
+
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/source-sans-3-v19-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/source-sans-3-v19-latin-700.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/source-sans-3-v19-latin-900.woff2') format('woff2');
+}
+
+/* -------------------------------------------------------------------------
+ * Tokens
+ * ---------------------------------------------------------------------- */
+
+:root {
+    /* Tailwind v4 scales, as emitted into the docs site's output.css. */
+    --tw-gray-50: oklch(98.5% 0.002 247.839);
+    --tw-gray-100: oklch(96.7% 0.003 264.542);
+    --tw-gray-200: oklch(92.8% 0.006 264.531);
+    --tw-gray-300: oklch(87.2% 0.01 258.338);
+    --tw-gray-400: oklch(70.7% 0.022 261.325);
+    --tw-gray-500: oklch(55.1% 0.027 264.364);
+    --tw-gray-600: oklch(44.6% 0.03 256.802);
+    --tw-gray-700: oklch(37.3% 0.034 259.733);
+    --tw-gray-800: oklch(27.8% 0.033 256.848);
+    --tw-gray-900: oklch(21% 0.034 264.665);
+    --tw-gray-950: oklch(13% 0.028 261.692);
+
+    --tw-purple-50: oklch(97.7% 0.014 308.299);
+    --tw-purple-100: oklch(94.6% 0.033 307.174);
+    --tw-purple-200: oklch(90.2% 0.063 306.703);
+    --tw-purple-300: oklch(82.7% 0.119 306.383);
+    --tw-purple-400: oklch(71.4% 0.203 305.504);
+    --tw-purple-500: oklch(62.7% 0.265 303.9);
+    --tw-purple-600: oklch(55.8% 0.288 302.321);
+    --tw-purple-700: oklch(49.6% 0.265 301.924);
+    --tw-purple-800: oklch(43.8% 0.218 303.724);
+    --tw-purple-900: oklch(38.1% 0.176 304.987);
+    --tw-purple-950: oklch(29.1% 0.149 302.717);
+
+    /* Roles. Purple carries brand (navbar, headings, links, accents); the
+       neutral grey ramp carries navigation rows, exactly as TwSidebar does. */
+    --tw-navbar: var(--tw-purple-900);
+    --tw-brand: var(--tw-purple-600);
+    --tw-brand-strong: var(--tw-purple-700);
+    --tw-brand-ink: var(--tw-purple-950);
+
+    --tw-page: #ffffff;
+    --tw-panel: #ffffff;
+    --tw-nav-text: var(--tw-gray-700);
+    --tw-nav-hover-bg: var(--tw-gray-100);
+    --tw-nav-active-bg: oklch(92.8% 0.006 264.531 / 0.8);
+    --tw-nav-active-text: var(--tw-gray-600);
+
+    --tw-hairline: var(--tw-gray-200);
+    --tw-hairline-strong: var(--tw-gray-300);
+    --tw-code-bg: #f1f1f1;
+
+    --tw-shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.05);
+    --tw-shadow-md: 0 4px 12px rgb(16 24 40 / 0.08), 0 2px 4px rgb(16 24 40 / 0.04);
+
+    --tw-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --tw-duration: 200ms;
+
+    --tw-radius: 0.5rem;
+    --tw-radius-lg: 0.75rem;
+
+    /* TOC row geometry. The chevron sits in a gutter of its own, inset from
+       the row's left edge by the same padding the label gets, and centred
+       against a row of --tw-toc-row height. */
+    --tw-toc-pad-y: 0.35rem;
+    --tw-toc-pad-x: 0.6rem;
+    --tw-toc-stub: 0.85rem; /* the chevron gutter docfx indents each level by */
+    --tw-toc-line: 1.45;
+    --tw-toc-row: calc(var(--tw-toc-line) * 1em + 2 * var(--tw-toc-pad-y));
+
+    /* Bootstrap overrides - light */
+    --bs-primary: var(--tw-purple-600);
+    --bs-primary-rgb: 152, 16, 250;
+    --bs-body-bg: var(--tw-page);
+    --bs-body-color: var(--tw-purple-950);
+    --bs-secondary-color: var(--tw-gray-600);
+    /* Two separate tokens feed muted text: `.text-body-secondary` reads
+       --bs-secondary-color-rgb, while `.text-secondary` (which the footer
+       wears) reads the *theme* colour --bs-secondary-rgb. Both have to move
+       or the footer keeps Bootstrap's stock #6c757d and drifts from the
+       links inside it. */
+    --bs-secondary-color-rgb: 74, 85, 101; /* gray-600 */
+    --bs-secondary-rgb: 74, 85, 101; /* gray-600 */
+    --bs-secondary-bg: var(--tw-gray-100);
+    --bs-tertiary-bg: var(--tw-gray-50);
+    --bs-link-color: var(--tw-purple-700);
+    --bs-link-color-rgb: 130, 0, 219;
+    --bs-link-hover-color: var(--tw-purple-900);
+    --bs-link-hover-color-rgb: 89, 22, 139;
+    --bs-code-color: var(--tw-purple-700);
+    --bs-heading-color: var(--tw-purple-950);
+    --bs-emphasis-color: var(--tw-purple-950);
+    --bs-border-color: var(--tw-hairline);
+    --bs-border-color-translucent: var(--tw-hairline);
+    --bs-focus-ring-color: oklch(55.8% 0.288 302.321 / 0.25);
+    --bs-focus-ring-width: 3px;
+    --bs-highlight-bg: oklch(90.2% 0.063 306.703 / 0.7);
+    --bs-highlight-color: var(--tw-purple-950);
+    --bs-border-radius: var(--tw-radius);
+    --bs-border-radius-sm: 0.375rem;
+    --bs-border-radius-lg: var(--tw-radius-lg);
+    --bs-border-radius-xl: 1rem;
+}
+
+[data-bs-theme='dark'] {
+    --tw-page: oklch(21% 0.034 264.665); /* gray-900, as MainContentRoot */
+    --tw-panel: oklch(27.8% 0.033 256.848); /* gray-800, as the sidebar */
+    --tw-nav-text: var(--tw-gray-200);
+    --tw-nav-hover-bg: var(--tw-gray-700);
+    --tw-nav-active-bg: oklch(21% 0.034 264.665 / 0.4);
+    --tw-nav-active-text: #ffffff;
+
+    --tw-brand: var(--tw-purple-400);
+    --tw-brand-strong: var(--tw-purple-300);
+    --tw-brand-ink: var(--tw-purple-200);
+
+    --tw-hairline: oklch(37.3% 0.034 259.733 / 0.7);
+    --tw-hairline-strong: var(--tw-gray-600);
+    --tw-code-bg: #1a1b26;
+
+    --tw-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --tw-shadow-md: 0 6px 20px rgb(0 0 0 / 0.45);
+
+    --bs-body-bg: var(--tw-page);
+    --bs-body-color: var(--tw-purple-200);
+    --bs-secondary-color: var(--tw-gray-400);
+    --bs-secondary-color-rgb: 153, 161, 175; /* gray-400 */
+    --bs-secondary-rgb: 153, 161, 175; /* gray-400 */
+    --bs-secondary-bg: var(--tw-gray-800);
+    --bs-tertiary-bg: oklch(24% 0.033 260);
+    --bs-primary: var(--tw-purple-400);
+    --bs-primary-rgb: 194, 122, 255;
+    --bs-link-color: var(--tw-purple-300);
+    --bs-link-color-rgb: 218, 178, 255;
+    --bs-link-hover-color: var(--tw-purple-200);
+    --bs-link-hover-color-rgb: 233, 212, 255;
+    --bs-code-color: var(--tw-purple-300);
+    --bs-heading-color: var(--tw-purple-200);
+    --bs-emphasis-color: #ffffff;
+    --bs-border-color: var(--tw-hairline);
+    --bs-border-color-translucent: var(--tw-hairline);
+    --bs-focus-ring-color: oklch(71.4% 0.203 305.504 / 0.4);
+    --bs-highlight-bg: oklch(49.6% 0.265 301.924 / 0.45);
+    --bs-highlight-color: var(--tw-purple-200);
+}
+
+/* -------------------------------------------------------------------------
+ * Base
+ * ---------------------------------------------------------------------- */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6,
+.navbar-brand,
+.affix h5 {
+    font-family: 'Source Sans 3', var(--bs-body-font-family);
+    font-optical-sizing: auto;
+}
+
+h1, .h1 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+h2, .h2, h3, .h3 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+a {
+    transition: color var(--tw-duration) var(--tw-ease);
+}
+
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color);
+    border-radius: var(--bs-border-radius-sm);
+}
+
+/* -------------------------------------------------------------------------
+ * Header / navbar - solid purple-900, matching TwSidebarTheme.Navbar
+ * ---------------------------------------------------------------------- */
+
+/* The template marks the header `.bg-body .border-bottom`, and both utilities
+   are `!important`. A class selector outranks `body > header`, so these have
+   to match those classes to win. */
+body > header.bg-body {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background: var(--tw-navbar) !important;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.16);
+}
+
+body > header.border-bottom {
+    border-bottom: 0 !important;
+}
+
+body > header .navbar {
+    --bs-navbar-color: rgb(255 255 255 / 0.8);
+    --bs-navbar-hover-color: #ffffff;
+    --bs-navbar-active-color: #ffffff;
+    --bs-navbar-brand-color: #ffffff;
+    --bs-navbar-brand-hover-color: var(--tw-purple-200);
+    --bs-navbar-disabled-color: rgb(255 255 255 / 0.45);
+}
+
+body > header {
+    color: #ffffff;
+}
+
 #logo {
     max-height: 32px;
     width: auto;
@@ -6,4 +266,681 @@
 
 .navbar-brand {
     margin-right: 45px !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+}
+
+.navbar #navbar form.search > i.bi {
+    color: #ffffff;
+    opacity: 0.7;
+}
+
+.navbar #navbar form.search > input {
+    border-radius: var(--tw-radius); /* Tailwind rounded-lg */
+    color: #ffffff;
+    background-color: rgb(255 255 255 / 0.12);
+    border-color: rgb(255 255 255 / 0.22);
+    transition: background-color var(--tw-duration) var(--tw-ease),
+                border-color var(--tw-duration) var(--tw-ease),
+                box-shadow var(--tw-duration) var(--tw-ease);
+}
+
+.navbar #navbar form.search > input::placeholder {
+    color: rgb(255 255 255 / 0.65);
+}
+
+.navbar #navbar form.search > input:hover:not(:disabled) {
+    background-color: rgb(255 255 255 / 0.18);
+}
+
+.navbar #navbar form.search > input:focus {
+    background-color: rgb(255 255 255 / 0.22);
+    border-color: rgb(255 255 255 / 0.5);
+    box-shadow: 0 0 0 var(--bs-focus-ring-width) rgb(255 255 255 / 0.2);
+}
+
+/* The icon links and theme switcher sit immediately before the search box in
+   source order - keep them off it. */
+.navbar #navbar form.icons {
+    margin-right: 0.75rem;
+    gap: 0.15rem;
+}
+
+.navbar .btn.border-0 {
+    color: #ffffff;
+}
+
+.navbar .btn.border-0:hover,
+.navbar .btn.border-0:focus {
+    color: #ffffff;
+    background-color: rgb(255 255 255 / 0.14);
+}
+
+/* -------------------------------------------------------------------------
+ * Table of contents (left) - neutral rows, as TwSidebar
+ * ---------------------------------------------------------------------- */
+
+.toc-offcanvas .offcanvas-md {
+    /* A single rule separating the sidebar from the content, as on the docs
+       site - not a card outline. */
+    border-right: 1px solid var(--tw-hairline);
+    padding-right: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    /* Bootstrap blanks the background of a responsive offcanvas once it is
+       docked (`background-color: transparent !important`), so the sidebar
+       surface has to be reinstated at higher specificity. */
+    .toc-offcanvas .offcanvas-md {
+        background-color: var(--tw-panel) !important;
+        /* Put back, as inner padding, the space the negative margins below
+           reclaim - the panel grows to meet the navbar and the container
+           edge while its contents stay where they were. */
+        padding-top: 1rem;
+        padding-left: calc(var(--bs-gutter-x) * 0.5);
+    }
+
+    /* `main` carries 1.6rem of top padding and the container a 12px gutter.
+       Both are invisible until the sidebar has a background of its own, at
+       which point they read as a gap between it and the navbar. Matching
+       docfx's own selector so these win on specificity. The header is 60px,
+       which is the offset docfx assumes throughout. */
+    body:not([data-search])[data-layout=''] > main > .toc-offcanvas,
+    body:not([data-search])[data-layout='conceptual'] > main > .toc-offcanvas {
+        margin-top: -1.6rem;
+        margin-left: calc(var(--bs-gutter-x) * -0.5);
+        top: 60px;
+        max-height: calc(100vh - 60px);
+    }
+}
+
+@media (max-width: 767.98px) {
+    /* Full-height slide-out on mobile, where there is nothing to its right. */
+    .toc-offcanvas .offcanvas-md {
+        border-right: 0;
+        padding-right: 0;
+    }
+}
+
+.toc form.filter > input {
+    border-radius: var(--tw-radius); /* Tailwind rounded-lg */
+    border-color: var(--tw-hairline-strong);
+    background-color: var(--bs-body-bg);
+    transition: border-color var(--tw-duration) var(--tw-ease),
+                box-shadow var(--tw-duration) var(--tw-ease);
+}
+
+.toc form.filter > input:focus {
+    border-color: var(--tw-brand);
+    box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color);
+}
+
+/* Inset the tree (chevrons included) from the panel edges, without dragging
+   the filter input in with it - that sits outside this wrapper. Equal on both
+   sides so the row highlight is centred in the sidebar. */
+.toc > .flex-fill > ul {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.toc li {
+    margin: 0.1rem 0;
+}
+
+.toc li > a,
+.toc li > span.name-only {
+    /* `display: inline` upstream, which makes a full row target impossible.
+       The row is pulled left to the li's own edge so the chevron gutter falls
+       inside it, then padded back out so the label clears the chevron. */
+    display: block;
+    margin-left: calc(-1 * var(--tw-toc-stub));
+    padding: var(--tw-toc-pad-y) var(--tw-toc-pad-x) var(--tw-toc-pad-y)
+             calc(var(--tw-toc-pad-x) + var(--tw-toc-stub));
+    line-height: var(--tw-toc-line);
+    border-radius: var(--bs-border-radius-sm);
+    color: var(--tw-nav-text);
+    transition: background-color var(--tw-duration) var(--tw-ease),
+                color var(--tw-duration) var(--tw-ease);
+}
+
+.toc li > a:hover,
+.toc li > a:focus {
+    text-decoration: none;
+    color: var(--tw-nav-text);
+    background-color: var(--tw-nav-hover-bg);
+}
+
+.toc li.active > a {
+    background-color: var(--tw-nav-active-bg);
+    color: var(--tw-nav-active-text);
+    font-weight: 600;
+}
+
+/* The chevron is an empty absolutely-positioned span; give it the height of a
+   row and centre the glyph inside, or it floats above the taller row. */
+.toc li > .expand-stub {
+    position: absolute;
+    top: 0;
+    left: var(--tw-toc-pad-x);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tw-toc-stub);
+    height: var(--tw-toc-row);
+    cursor: pointer;
+}
+
+.toc .expand-stub:before {
+    position: static;
+    margin: 0;
+    width: auto;
+    color: var(--tw-gray-500);
+    transform-origin: 50% 50%;
+}
+
+.toc li.expanded > .expand-stub:before {
+    transform: rotate(90deg);
+}
+
+.toc span.name-only {
+    font-weight: 600;
+    color: var(--tw-brand-ink);
+    letter-spacing: -0.01em;
+}
+
+.toc > .no-result {
+    color: var(--bs-secondary-color);
+}
+
+/* -------------------------------------------------------------------------
+ * Affix ("In this article", right)
+ * ---------------------------------------------------------------------- */
+
+.affix h5 {
+    color: var(--tw-brand);
+    font-weight: 600;
+    border-bottom-color: var(--tw-hairline) !important;
+}
+
+.affix ul {
+    border-left: 1px solid var(--tw-hairline);
+    padding-left: 0.9rem;
+}
+
+.affix ul li a {
+    display: block;
+    color: var(--bs-secondary-color);
+    transition: color var(--tw-duration) var(--tw-ease),
+                transform var(--tw-duration) var(--tw-ease);
+}
+
+.affix ul li a:hover,
+.affix ul li a:focus {
+    text-decoration: none;
+    color: var(--tw-brand-strong);
+    transform: translateX(2px);
+}
+
+/* -------------------------------------------------------------------------
+ * Article
+ * ---------------------------------------------------------------------- */
+
+article h1 {
+    padding-bottom: 0.5rem;
+}
+
+article h2 {
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--tw-hairline);
+}
+
+body[data-yaml-mime='ManagedReference'] article h3[data-uid],
+body[data-yaml-mime='ApiPage'] article h3[data-uid] {
+    border-bottom: 1px solid var(--tw-hairline);
+    font-weight: 600;
+}
+
+article .anchorjs-link {
+    color: var(--tw-brand);
+    text-decoration: none;
+}
+
+article div.facts > dl > dt {
+    color: var(--bs-secondary-color);
+}
+
+article dl.parameters > dt > code {
+    color: var(--tw-brand-strong);
+}
+
+.breadcrumb a {
+    color: var(--bs-secondary-color);
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus {
+    color: var(--tw-brand-strong);
+}
+
+/* -------------------------------------------------------------------------
+ * Code - highlight.js themes lifted from the docs site
+ * (intellij-light / tokyo-night-dark, via codeblockLight.css and
+ * codeblockDark.css). main.css loads after docfx.min.css, so these win at
+ * equal specificity.
+ * ---------------------------------------------------------------------- */
+
+:not(pre) > code {
+    background-color: var(--tw-gray-100);
+    color: var(--bs-code-color);
+    padding: 0.15em 0.4em;
+    border-radius: 0.375rem;
+    font-size: 0.875em;
+}
+
+[data-bs-theme='dark'] :not(pre) > code {
+    background-color: oklch(27.8% 0.033 256.848 / 0.9);
+}
+
+/* Signatures, cross-references and type lists already sit inside styled
+   containers - a second tint on top of them just muddies the page. */
+.facts :not(pre) > code,
+dl.typelist :not(pre) > code,
+a > code,
+h1 code, h2 code, h3 code, h4 code {
+    background-color: transparent;
+    padding: 0;
+}
+
+pre {
+    background-color: var(--tw-code-bg);
+    border: 1px solid var(--tw-hairline);
+    border-radius: var(--tw-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--tw-shadow-sm);
+}
+
+pre > code,
+pre code.hljs {
+    background: transparent;
+    padding: 1em;
+}
+
+/* --- intellij-light ---------------------------------------------------- */
+
+.hljs {
+    background: var(--tw-code-bg);
+    color: #000;
+}
+
+.hljs-comment, .hljs-meta {
+    color: #3d4663;
+    font-style: italic;
+}
+
+.hljs-deletion, .hljs-doctag, .hljs-regexp, .hljs-selector-attr, .hljs-selector-class,
+.hljs-selector-id, .hljs-selector-pseudo, .hljs-tag, .hljs-template-tag,
+.hljs-variable.language_ {
+    color: #c7355e;
+}
+
+.hljs-link, .hljs-literal, .hljs-number, .hljs-params, .hljs-template-variable,
+.hljs-type, .hljs-variable {
+    color: #d86724;
+}
+
+.hljs-attribute, .hljs-built_in {
+    color: #b8863e;
+}
+
+.hljs-keyword, .hljs-property, .hljs-subst, .hljs-title, .hljs-title.class_,
+.hljs-title.class_.inherited__, .hljs-title.function_ {
+    color: #2b8fc7;
+    font-weight: 400;
+}
+
+.hljs-selector-tag {
+    color: #2d9d8e;
+}
+
+.hljs-addition, .hljs-bullet, .hljs-quote, .hljs-string, .hljs-symbol {
+    color: #5c9d3c;
+}
+
+.hljs-quote {
+    font-style: italic;
+}
+
+.hljs-code, .hljs-formula, .hljs-section {
+    color: #3d72c7;
+}
+
+.hljs-attr, .hljs-char.escape_, .hljs-keyword, .hljs-name, .hljs-operator {
+    color: #8b5bc7;
+}
+
+.hljs-punctuation {
+    color: #6a78a5;
+}
+
+.hljs-link {
+    text-decoration: underline;
+}
+
+.hljs-addition {
+    background: #bee6be;
+}
+
+.hljs-deletion {
+    background: #d6d6d6;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: 700;
+}
+
+/* --- tokyo-night-dark -------------------------------------------------- */
+
+[data-bs-theme='dark'] .hljs {
+    background: var(--tw-code-bg);
+    color: #fff;
+}
+
+[data-bs-theme='dark'] .hljs-comment,
+[data-bs-theme='dark'] .hljs-meta {
+    color: #565f89;
+    font-style: normal;
+}
+
+[data-bs-theme='dark'] .hljs-deletion,
+[data-bs-theme='dark'] .hljs-doctag,
+[data-bs-theme='dark'] .hljs-regexp,
+[data-bs-theme='dark'] .hljs-selector-attr,
+[data-bs-theme='dark'] .hljs-selector-class,
+[data-bs-theme='dark'] .hljs-selector-id,
+[data-bs-theme='dark'] .hljs-selector-pseudo,
+[data-bs-theme='dark'] .hljs-tag,
+[data-bs-theme='dark'] .hljs-template-tag,
+[data-bs-theme='dark'] .hljs-variable.language_ {
+    color: #f7768e;
+}
+
+[data-bs-theme='dark'] .hljs-link,
+[data-bs-theme='dark'] .hljs-literal,
+[data-bs-theme='dark'] .hljs-number,
+[data-bs-theme='dark'] .hljs-params,
+[data-bs-theme='dark'] .hljs-template-variable,
+[data-bs-theme='dark'] .hljs-type,
+[data-bs-theme='dark'] .hljs-variable {
+    color: #ff9e64;
+}
+
+[data-bs-theme='dark'] .hljs-attribute,
+[data-bs-theme='dark'] .hljs-built_in {
+    color: #e0af68;
+}
+
+[data-bs-theme='dark'] .hljs-keyword,
+[data-bs-theme='dark'] .hljs-property,
+[data-bs-theme='dark'] .hljs-subst,
+[data-bs-theme='dark'] .hljs-title,
+[data-bs-theme='dark'] .hljs-title.class_,
+[data-bs-theme='dark'] .hljs-title.class_.inherited__,
+[data-bs-theme='dark'] .hljs-title.function_ {
+    color: #7dcfff;
+}
+
+[data-bs-theme='dark'] .hljs-selector-tag {
+    color: #73daca;
+}
+
+[data-bs-theme='dark'] .hljs-addition,
+[data-bs-theme='dark'] .hljs-bullet,
+[data-bs-theme='dark'] .hljs-quote,
+[data-bs-theme='dark'] .hljs-string,
+[data-bs-theme='dark'] .hljs-symbol {
+    color: #9ece6a;
+    background: none;
+}
+
+[data-bs-theme='dark'] .hljs-code,
+[data-bs-theme='dark'] .hljs-formula,
+[data-bs-theme='dark'] .hljs-section {
+    color: #7aa2f7;
+}
+
+[data-bs-theme='dark'] .hljs-attr,
+[data-bs-theme='dark'] .hljs-char.escape_,
+[data-bs-theme='dark'] .hljs-keyword,
+[data-bs-theme='dark'] .hljs-name,
+[data-bs-theme='dark'] .hljs-operator {
+    color: #bb9af7;
+}
+
+[data-bs-theme='dark'] .hljs-punctuation {
+    color: #c0caf5;
+}
+
+[data-bs-theme='dark'] .hljs-deletion {
+    background: none;
+}
+
+[data-bs-theme='dark'] .hljs-emphasis {
+    font-style: italic;
+}
+
+[data-bs-theme='dark'] .hljs-strong {
+    font-weight: 700;
+}
+
+.codewrapper .btn,
+button.copy {
+    border-radius: var(--bs-border-radius-sm);
+    transition: background-color var(--tw-duration) var(--tw-ease),
+                opacity var(--tw-duration) var(--tw-ease);
+}
+
+/* -------------------------------------------------------------------------
+ * Tables
+ * ---------------------------------------------------------------------- */
+
+article table {
+    --bs-table-bg: transparent;
+    --bs-table-border-color: var(--tw-hairline);
+    border-radius: var(--tw-radius);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--tw-hairline);
+}
+
+article table > thead {
+    background-color: var(--tw-gray-50);
+}
+
+[data-bs-theme='dark'] article table > thead {
+    background-color: var(--tw-gray-800);
+}
+
+article table > thead th {
+    color: var(--bs-heading-color);
+    font-weight: 600;
+    border-bottom-color: var(--tw-hairline-strong);
+}
+
+article table > tbody > tr {
+    transition: background-color var(--tw-duration) var(--tw-ease);
+}
+
+article table > tbody > tr:hover {
+    background-color: var(--tw-gray-50);
+}
+
+[data-bs-theme='dark'] article table > tbody > tr:hover {
+    background-color: oklch(27.8% 0.033 256.848 / 0.6);
+}
+
+/* -------------------------------------------------------------------------
+ * Alerts (NOTE / TIP / WARNING / IMPORTANT / CAUTION)
+ * ---------------------------------------------------------------------- */
+
+.alert {
+    border-radius: var(--tw-radius-lg);
+    border-width: 1px;
+    border-left-width: 4px;
+    box-shadow: var(--tw-shadow-sm);
+}
+
+/* NOTE and TIP are mapped onto .alert-info by the template's JS. */
+.alert-info {
+    --bs-alert-color: var(--tw-purple-950);
+    --bs-alert-bg: var(--tw-purple-50);
+    --bs-alert-border-color: var(--tw-purple-600);
+    --bs-alert-link-color: var(--tw-purple-700);
+}
+
+[data-bs-theme='dark'] .alert-info {
+    --bs-alert-color: var(--tw-purple-200);
+    --bs-alert-bg: oklch(29.1% 0.149 302.717 / 0.45);
+    --bs-alert-border-color: var(--tw-purple-500);
+    --bs-alert-link-color: var(--tw-purple-300);
+}
+
+.alert > h5 {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+/* -------------------------------------------------------------------------
+ * Search results, next article, footer
+ * ---------------------------------------------------------------------- */
+
+#search-results > .search-list {
+    color: var(--bs-secondary-color);
+}
+
+#search-results > .sr-items .sr-item {
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--tw-hairline);
+    border-radius: var(--tw-radius-lg);
+    background-color: var(--tw-panel);
+    transition: border-color var(--tw-duration) var(--tw-ease),
+                box-shadow var(--tw-duration) var(--tw-ease),
+                transform var(--tw-duration) var(--tw-ease);
+}
+
+#search-results > .sr-items .sr-item:hover {
+    border-color: var(--tw-hairline-strong);
+    box-shadow: var(--tw-shadow-md);
+    transform: translateY(-1px);
+}
+
+#search-results > .sr-items .sr-item > .item-href {
+    color: var(--bs-secondary-color);
+}
+
+.next-article {
+    border-top-color: var(--tw-hairline) !important;
+}
+
+.contribution a.edit-link {
+    color: var(--bs-secondary-color);
+}
+
+.contribution a.edit-link:hover,
+.contribution a.edit-link:focus {
+    color: var(--tw-brand-strong);
+}
+
+body > footer {
+    border-top-color: var(--tw-hairline) !important;
+    background-color: var(--tw-gray-50);
+}
+
+[data-bs-theme='dark'] body > footer {
+    background-color: var(--tw-gray-800);
+}
+
+/* Footer links deliberately keep the default link treatment (purple and
+   underlined) so they read the same as links in the body copy - only the
+   surrounding text is muted. */
+
+/* -------------------------------------------------------------------------
+ * Scrollbars
+ * ---------------------------------------------------------------------- */
+
+/* `.toc > .flex-fill` is the element that actually scrolls the tree - left
+   unstyled it takes a full-width scrollbar that lands in the row inset and
+   closes the gap up again. */
+.toc-offcanvas,
+.toc-offcanvas .offcanvas-body,
+.toc > .flex-fill,
+.affix,
+article pre,
+article pre code {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tw-hairline-strong) transparent;
+}
+
+.toc-offcanvas::-webkit-scrollbar,
+.toc-offcanvas .offcanvas-body::-webkit-scrollbar,
+.toc > .flex-fill::-webkit-scrollbar,
+.affix::-webkit-scrollbar,
+article pre::-webkit-scrollbar,
+article pre code::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.toc-offcanvas::-webkit-scrollbar-thumb,
+.toc-offcanvas .offcanvas-body::-webkit-scrollbar-thumb,
+.toc > .flex-fill::-webkit-scrollbar-thumb,
+.affix::-webkit-scrollbar-thumb,
+article pre::-webkit-scrollbar-thumb,
+article pre code::-webkit-scrollbar-thumb {
+    background-color: var(--tw-hairline-strong);
+    border-radius: 999px;
+}
+
+.toc-offcanvas::-webkit-scrollbar-track,
+.toc-offcanvas .offcanvas-body::-webkit-scrollbar-track,
+.toc > .flex-fill::-webkit-scrollbar-track,
+.affix::-webkit-scrollbar-track,
+article pre::-webkit-scrollbar-track,
+article pre code::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* -------------------------------------------------------------------------
+ * Motion / print
+ * ---------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .affix ul li a:hover,
+    .affix ul li a:focus,
+    #search-results > .sr-items .sr-item:hover {
+        transform: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media print {
+    body > header {
+        position: static;
+    }
 }
