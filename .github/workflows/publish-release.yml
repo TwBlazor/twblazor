@@ -29,6 +29,11 @@ jobs:
   release:
     name: Tag, Build and Publish Release
     runs-on: ubuntu-latest
+
+    # The app credentials live on this environment, not on the repository, and
+    # the environment is restricted to the main branch.
+    environment: release
+
     permissions:
       contents: write       # push the release tag, create the GitHub Release
       packages: write       # push the NuGet package
@@ -39,9 +44,21 @@ jobs:
       version: ${{ steps.version.outputs.version }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      # GITHUB_TOKEN is subject to branch protection like any other actor, so it
+      # cannot push the README commit below to a protected main. This app is on
+      # the ruleset's bypass list; see CONTRIBUTING for the repository setup.
+      # The tag push further down rides on the same credentials.
+      - name: Create app token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
+          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0    # MinVer needs full history to measure commit height
           fetch-tags: true  # ...and every release tag to find the base version
 
@@ -97,6 +114,33 @@ jobs:
               ./scripts/next-release-version.ps1 -Bump '${{ steps.bump.outputs.bump }}'
           }
 
+      # Deliberately ahead of the tag: the README commit has to be part of what
+      # gets tagged, or HEAD would no longer carry the tag and the re-run guard
+      # in "Compute release version" above would cut a second release. Pushing
+      # before anything is tagged or published also means a rejected push (main
+      # moved underneath us) fails the job with nothing half-released.
+      - name: Point README install command at this release
+        id: readme
+        shell: pwsh
+        run: ./scripts/update-readme-version.ps1 -Version '${{ steps.version.outputs.version }}'
+
+      - name: Commit README
+        if: steps.readme.outputs.changed == 'true'
+        env:
+          FLOATING: ${{ steps.readme.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # [skip ci] matters here: unlike GITHUB_TOKEN, pushes made with an app
+          # token DO start new workflow runs. Without it this push re-triggers
+          # this workflow, and that run has no pull request behind its commit,
+          # so "Determine version bump" would fail and redden every release.
+          git commit -m "docs: point README install command at $FLOATING [skip ci]"
+          git push origin HEAD:main
+
       - name: Create release tag
         env:
           TAG: ${{ steps.version.outputs.tag }}
@@ -115,12 +159,12 @@ jobs:
           git push origin "refs/tags/$TAG"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           dotnet-version: '10.0.x'
 
       - name: Cache NuGet packages
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
