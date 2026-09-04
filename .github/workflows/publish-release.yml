@@ -267,3 +267,30 @@ jobs:
               sed -E 's/ by (@[A-Za-z0-9-]+ in )/ \1/g')"
             gh release create "$TAG" --title "$TAG" --notes "$NOTES" ./artifacts/*.nupkg
           fi
+
+      - name: Back-merge into develop
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The release leaves main ahead by the README commit, and develop is
+          # the default branch - the one the repository page renders - so
+          # without this it falls a version behind on every release, and the
+          # two histories drift further apart each time.
+          #
+          # develop is an ancestor of main immediately after a release merge, so
+          # this is a fast-forward; force stays false so it can never rewrite
+          # develop. If somebody merged into develop while the release ran it is
+          # no longer an ancestor and GitHub refuses the update - that is not a
+          # release failure, so it warns instead of exiting non-zero, and the
+          # next release catches up.
+          SHA="$(git rev-parse HEAD)"
+          if OUT="$(gh api -X PATCH "repos/$REPO/git/refs/heads/develop" \
+                      -F sha="$SHA" -F force=false 2>&1)"; then
+            echo "Fast-forwarded develop to $SHA."
+          else
+            echo "$OUT"
+            echo "::warning::Could not fast-forward develop to $SHA; it has likely moved on since this release started. Merge main into develop by hand."
+          fi
