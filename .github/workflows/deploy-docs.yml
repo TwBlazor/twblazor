@@ -57,7 +57,32 @@ jobs:
 
       - name: Build Documentation
         run: docfx docfx.json
-      
+
+      - name: Restrict indexing to the landing page
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Only the landing page should appear in search results; the ~150
+          # generated API pages are thin, near-duplicate content that competes
+          # with twblazor.com for the same terms.
+          #
+          # A meta tag rather than robots.txt, for two reasons. This is a GitHub
+          # Pages *project* site served from a sub-path
+          # (twblazor.github.io/twblazor/), and crawlers only read robots.txt at
+          # the host root - a robots.txt shipped here would never be fetched.
+          # Disallow would also be the wrong tool even if it were: it blocks
+          # crawling, not indexing, and a blocked URL can still be listed
+          # without a snippet. Add a CNAME later and this still works unchanged.
+          #
+          # "follow" so the links out to twblazor.com are still credited.
+          count=0
+          while IFS= read -r -d '' f; do
+            [ "$f" = "_site/index.html" ] && continue
+            sed -i 's|<head>|<head>\n    <meta name="robots" content="noindex, follow">|' "$f"
+            count=$((count + 1))
+          done < <(find _site -name '*.html' -print0)
+          echo "Marked $count pages noindex; _site/index.html stays indexable."
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
