@@ -127,19 +127,41 @@ jobs:
       - name: Commit README
         if: steps.readme.outputs.changed == 'true'
         env:
-          FLOATING: ${{ steps.readme.outputs.version }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          VERSION: ${{ steps.readme.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          # [skip ci] matters here: unlike GITHUB_TOKEN, pushes made with an app
-          # token DO start new workflow runs. Without it this push re-triggers
-          # this workflow, and that run has no pull request behind its commit,
-          # so "Determine version bump" would fail and redden every release.
-          git commit -m "docs: point README install command at $FLOATING [skip ci]"
-          git push origin HEAD:main
+          # Committed through the API rather than `git push` so that main can
+          # keep "Require signed commits": GitHub signs commits it creates
+          # itself, and the same commit made over git with an app token is
+          # unsigned. Authorship comes from the token, so this needs no
+          # git config identity.
+          #
+          # [skip ci] because an app token's writes DO start new workflow runs,
+          # unlike GITHUB_TOKEN's. Without it this re-triggers this workflow on
+          # a commit with no pull request behind it, so "Determine version
+          # bump" would fail and redden every release.
+          BLOB="$(gh api "repos/$REPO/contents/README.md?ref=$BRANCH" --jq .sha)"
+          NEW="$(gh api -X PUT "repos/$REPO/contents/README.md" \
+            -f message="docs: point README install command at $VERSION [skip ci]" \
+            -f content="$(base64 -w0 README.md)" \
+            -f sha="$BLOB" \
+            -f branch="$BRANCH" \
+            --jq .commit.sha)"
+          echo "Created signed commit $NEW on $BRANCH."
+
+          # That commit only exists on the server, so HEAD is still the merge
+          # commit. The tag below has to land on the new commit, and MinVer
+          # only considers tags reachable from HEAD, so move the checkout onto
+          # it - otherwise the tag and the packed version disagree.
+          # Fetch the branch (fetching a bare SHA needs a server-side option we
+          # should not rely on), then reset to the exact commit we just made
+          # rather than to FETCH_HEAD, so a concurrent push cannot slip in.
+          git fetch origin "$BRANCH"
+          git reset --hard "$NEW"
 
       - name: Create release tag
         env:

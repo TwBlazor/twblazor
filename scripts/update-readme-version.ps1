@@ -1,11 +1,10 @@
 # Rewrites the install command in README.md's Setup section so it always names
-# the current release line as a NuGet floating version:
+# the newest published release exactly:
 #
-#   dotnet add package TwBlazor --version 1.3.*
+#   dotnet add package TwBlazor --version 1.3.2
 #
-# The floating patch is the point: a consumer following the README picks up
-# every patch automatically, the same way merging a patch to main moves the
-# published package. Only major/minor releases need the README to change.
+# Every release moves it, patches included, so the README never names a version
+# older than what is on NuGet.
 #
 # Versions live only in Git tags, so the release line comes from the newest
 # stable tag through the shared helper - the same lookup the publish workflows
@@ -37,8 +36,8 @@ if ($Version) {
         throw "-Version must look like <major>.<minor>.<patch>, got '$Version'."
     }
 
-    $floating = "$($Matches[1]).$($Matches[2]).*"
-    Write-Host "Release version $Version -> --version $floating"
+    $installVersion = $Version
+    Write-Host "Release version $Version -> --version $installVersion"
 } else {
     $release = Get-LatestReleaseTag -TagPrefix $TagPrefix
 
@@ -48,14 +47,14 @@ if ($Version) {
         return
     }
 
-    $floating = "$($release.Major).$($release.Minor).*"
-    Write-Host "Latest release tag: $($release.Tag) -> --version $floating"
+    $installVersion = "$($release.Major).$($release.Minor).$($release.Patch)"
+    Write-Host "Latest release tag: $($release.Tag) -> --version $installVersion"
 }
 
 $readme = Get-Content -Path $Path -Raw
 
 # Deliberately matches whatever the line carries today - the x.x.x placeholder,
-# a pinned version, or an already-floating one - so re-running is a no-op.
+# a pinned version, or an older floating one - so re-running is a no-op.
 $pattern = '(dotnet add package TwBlazor --version )\S+'
 $found = [regex]::Matches($readme, $pattern)
 
@@ -65,12 +64,12 @@ if ($found.Count -ne 1) {
     throw "Expected exactly one 'dotnet add package TwBlazor --version <version>' line in $Path, found $($found.Count). Update `$pattern in this script if the install command was reworded."
 }
 
-$updated = [regex]::Replace($readme, $pattern, "`${1}$floating")
+$updated = [regex]::Replace($readme, $pattern, "`${1}$installVersion")
 
-Set-GitHubOutput -Name 'version' -Value $floating
+Set-GitHubOutput -Name 'version' -Value $installVersion
 
 if ($updated -eq $readme) {
-    Write-Host "README already reads '--version $floating'; nothing to do."
+    Write-Host "README already reads '--version $installVersion'; nothing to do."
     Set-GitHubOutput -Name 'changed' -Value 'false'
     return
 }
@@ -79,5 +78,5 @@ if ($updated -eq $readme) {
 # trailing newline the file had; Set-Content would otherwise append another.
 Set-Content -Path $Path -Value $updated -NoNewline -Encoding utf8
 
-Write-Host "Updated $Path to '--version $floating'."
+Write-Host "Updated $Path to '--version $installVersion'."
 Set-GitHubOutput -Name 'changed' -Value 'true'
