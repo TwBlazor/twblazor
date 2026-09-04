@@ -22,7 +22,7 @@
 
 1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
 ```pwsh
-$ dotnet add package TwBlazor --version 1.3.2
+$ dotnet add package TwBlazor --version 1.3.3
 ```
 2. In your `App.razor` file, include two stylesheet links along with the default content. The first link is for TwBlazor's core styling. The second is for TwIcon, which uses Bootstrap Icons.
 ```razor
