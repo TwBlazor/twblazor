@@ -184,11 +184,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.version.outputs.tag }}
+          REPO: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "GitHub Release $TAG already exists."
           else
-            gh release create "$TAG" --title "$TAG" --generate-notes ./artifacts/*.nupkg
+            # --generate-notes takes no formatting options, so call the same API
+            # it calls and edit the result: GitHub writes each entry as
+            # "<title> by @user in <url>", and we want it without the "by".
+            # Anchored on the trailing " in " so a "by" inside a PR title is
+            # left alone.
+            NOTES="$(gh api "repos/$REPO/releases/generate-notes" \
+              -f tag_name="$TAG" --jq .body |
+              sed -E 's/ by (@[A-Za-z0-9-]+ in )/ \1/g')"
+            gh release create "$TAG" --title "$TAG" --notes "$NOTES" ./artifacts/*.nupkg
           fi
