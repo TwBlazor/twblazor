@@ -371,7 +371,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/TwBlazor.Server/tailwind.extension.json
+/docs/TwBlazor.Server/tailwind.extension.json
 
 ##########################
 # DocFX
@@ -387,4 +387,4 @@ obj/.cache/
 docfx.log
 
 # Excluded generated docs code examples file to prevent merge conflicts.
-/TwBlazor.Docs/Generated/CodeExamples.cs
+/docs/TwBlazor.Docs/Generated/CodeExamples.cs

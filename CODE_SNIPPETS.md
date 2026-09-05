@@ -38,7 +38,7 @@ public static TwBlazorTheme CreateDefaultTheme()
 ```
 
 This can extract from any real source file, not just docs pages, for
-example `TwBlazor.Theme/Theme.cs` and `TwBlazor.Server/Program.cs` are
+example `src/TwBlazor.Theme/Theme.cs` and `docs/TwBlazor.Server/Program.cs` are
 scanned directly, so the "example" shown for configuring a theme is the
 actual default theme shipped with the library.
 
@@ -57,9 +57,9 @@ region still gets extracted as its own entry too.
 
 ## How it's built
 
-`TwBlazor.BuildTools` scans `TwBlazor.Docs/Pages`, `TwBlazor.Docs/Layout`,
-`TwBlazor.Theme/Theme.cs`, and `TwBlazor.Server/Program.cs` for both kinds of
-markers and generates `TwBlazor.Docs/Generated/CodeExamples.cs` - a static
+`TwBlazor.BuildTools` scans `docs/TwBlazor.Docs/Pages`, `docs/TwBlazor.Docs/Layout`,
+`src/TwBlazor.Theme/Theme.cs`, and `docs/TwBlazor.Server/Program.cs` for both kinds of
+markers and generates `docs/TwBlazor.Docs/Generated/CodeExamples.cs` - a static
 `CodeExamples.Get("Name")` lookup. Docs pages call that (directly, or via the
 `<CodeExample Name="...">` layout component) to render the snippet through
 `<ExampleCodeBlock>` / `<TwCodeBlock>`.
@@ -68,7 +68,7 @@ This runs automatically before `TwBlazor.Docs` builds. If a generated
 snippet looks stale, regenerate it manually from the repository root:
 
 ```
-dotnet run --project TwBlazor.BuildTools
+dotnet run --project build/TwBlazor.BuildTools
 ```
 
 Every `Name` must be unique across the whole docs site, regardless of which

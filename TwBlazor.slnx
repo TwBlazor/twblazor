@@ -1,29 +1,38 @@
 <Solution>
-  <Folder Name="/Build/">
-    <Project Path="TwBlazor.BuildTools/TwBlazor.BuildTools.csproj" />
-    <Project Path="TwBlazor.Docs.Compiler/TwBlazor.Docs.Compiler.csproj" />
+  <Folder Name="/build/">
+    <Project Path="build/TwBlazor.BuildTools/TwBlazor.BuildTools.csproj" />
+    <Project Path="build/TwBlazor.Docs.Compiler/TwBlazor.Docs.Compiler.csproj" />
   </Folder>
-  <Folder Name="/Solution Items/">
+  <Folder Name="/docs/">
+    <Project Path="docs/TwBlazor.Docs/TwBlazor.Docs.csproj" />
+    <Project Path="docs/TwBlazor.Server/TwBlazor.Server.csproj" />
+    <Project Path="docs/TwBlazor.WASM/TwBlazor.Wasm.csproj" />
+    <Project Path="docs/TwBlazor.WasmHost/TwBlazor.WasmHost.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TwBlazor.Theme/TwBlazor.Theme.csproj" />
+    <Project Path="src/TwBlazor/TwBlazor.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TwBlazor.A11yTests/TwBlazor.A11yTests.csproj" />
+    <Project Path="tests/TwBlazor.Tests/TwBlazor.Tests.csproj" />
+  </Folder>
+  <Folder Name="/_slnx/">
     <File Path=".editorconfig" />
     <File Path="CODE_OF_CONDUCT.md" />
     <File Path="CONTRIBUTING.md" />
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/Workflows/">
+  <Folder Name="/_workflows/">
     <File Path=".github/workflows/build-and-test.yml" />
     <File Path=".github/workflows/ci-build.yml" />
     <File Path=".github/workflows/deploy-docs.yml" />
-    <File Path=".github/workflows/pr-checks.yml" />
+    <File Path=".github/workflows/pr-checks-develop.yml" />
+    <File Path=".github/workflows/pr-checks-main.yml" />
+    <File Path=".github/workflows/pr-lint.yml" />
+    <File Path=".github/workflows/pr-release-label.yml" />
     <File Path=".github/workflows/publish-develop.yml" />
     <File Path=".github/workflows/publish-release.yml" />
   </Folder>
-  <Project Path="TwBlazor.A11yTests/TwBlazor.A11yTests.csproj" />
-  <Project Path="TwBlazor.Docs/TwBlazor.Docs.csproj" />
-  <Project Path="TwBlazor.Server/TwBlazor.Server.csproj" />
-  <Project Path="TwBlazor.Tests/TwBlazor.Tests.csproj" />
-  <Project Path="TwBlazor.Theme/TwBlazor.Theme.csproj" />
-  <Project Path="TwBlazor.WASM/TwBlazor.Wasm.csproj" />
-  <Project Path="TwBlazor.WasmHost/TwBlazor.WasmHost.csproj" />
-  <Project Path="TwBlazor/TwBlazor.csproj" />
 </Solution>

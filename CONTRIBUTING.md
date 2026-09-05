@@ -13,42 +13,55 @@ distributed as part of the project.
 
 ```
 TwBlazor/
-├── TwBlazor/                     # Component library
-│   ├── Builders/
-│   ├── Components/
-│   ├── Configuration/
-│   ├── Enums/
-│   ├── Extensions/
-│   ├── Models/
-│   ├── Services/
-│   ├── Utilities/
-│   └── wwwroot/
-├── TwBlazor.Docs/                # Documentation content (shared)
-│   ├── Generated/
-│   ├── Layout/
-│   ├── Pages/
-│   └── wwwroot/
-├── TwBlazor.Docs.Compiler/       # Build-time docs compiler
-│   ├── CodeExampleExtractor.cs
-│   ├── RegionSnippetExtractor.cs
-│   ├── CodeGenerator.cs
-│   ├── Paths.cs
-│   └── SnippetTextUtils.cs
-├── TwBlazor.Server/              # Server-side host
-│   ├── Components/
+├── build/                        # Build-time tooling
+│   ├── TwBlazor.BuildTools/      # Generates Generated/CodeExamples.cs before TwBlazor.Docs builds
+│   └── TwBlazor.Docs.Compiler/   # CodeExample/#region extraction library used by TwBlazor.BuildTools
+│       ├── CodeExampleExtractor.cs
+│       ├── RegionSnippetExtractor.cs
+│       ├── CodeGenerator.cs
+│       ├── Paths.cs
+│       └── SnippetTextUtils.cs
+├── docs/                         # Documentation site content, hosts, and docfx (API reference) config
+│   ├── templates/                # Custom docfx template
+│   ├── toc.yml
+│   ├── TwBlazor.Docs/            # Documentation content (shared by the Server and WASM hosts)
+│   │   ├── Generated/
 │   │   ├── Layout/
-│   │   └── Pages/
-│   └── Program.cs
-├── TwBlazor.Wasm/                # WASM project
-│   └── Program.cs
-├── TwBlazor.WasmHost/            # WASM host
-│   ├── Pages/
-│   │   └── _Host.cshtml
-│   └── Program.cs
-├── TwBlazor.Theme/               # Theme definitions
-│   └── Theme.cs
-└── TwBlazor.Tests/               # Unit tests
+│   │   ├── Pages/
+│   │   └── wwwroot/
+│   ├── TwBlazor.Server/          # Server-side host
+│   │   ├── Components/
+│   │   │   ├── Layout/
+│   │   │   └── Pages/
+│   │   └── Program.cs
+│   ├── TwBlazor.WASM/            # WASM project
+│   │   └── Program.cs
+│   └── TwBlazor.WasmHost/        # WASM host
+│       ├── Pages/
+│       │   └── _Host.cshtml
+│       └── Program.cs
+├── src/                          # Published library code
+│   ├── TwBlazor/                 # Component library
+│   │   ├── Builders/
+│   │   ├── Components/
+│   │   ├── Configuration/
+│   │   ├── Enums/
+│   │   ├── Extensions/
+│   │   ├── Models/
+│   │   ├── Services/
+│   │   ├── Utilities/
+│   │   └── wwwroot/
+│   └── TwBlazor.Theme/           # Theme definitions
+│       └── Theme.cs
+└── tests/                        # Automated tests
+    ├── vitest.config.js          # JS unit test config (see TwBlazor.Tests/js)
+    ├── TwBlazor.Tests/           # Unit tests (bUnit + xunit + JS/vitest)
+    └── TwBlazor.A11yTests/       # Accessibility (axe-core/Playwright) tests
 ```
+
+`docfx.json` itself stays at the repository root (it's picked up by `docfx docfx.json` in
+[`deploy-docs.yml`](.github/workflows/deploy-docs.yml)), but its `src`/`resource` paths point into
+`src/TwBlazor` and `docs/TwBlazor.Docs` above.
 
 ## CSS
 
@@ -61,14 +74,14 @@ You can also manually build the TwBlazor Tailwind CSS file(s) by navigating to t
 
 ### TwBlazor:
 
-- `cd ./TwBlazor` for the TwBlazor source CSS.
+- `cd ./src/TwBlazor` for the TwBlazor source CSS.
 - `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/twblazor.css --watch`
 
 ---
 
 ### TwBlazor Docs:
 
-- `cd ./TwBlazor.Docs` for the TwBlazor documentation site CSS.
+- `cd ./docs/TwBlazor.Docs` for the TwBlazor documentation site CSS.
 - `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch`
 
 
@@ -93,13 +106,13 @@ Run these commands from the root of the repository.
 ### Run the docs site (Blazor Server)
 
 ```
-dotnet run --project TwBlazor.Server
+dotnet run --project docs/TwBlazor.Server
 ```
 
 ### Run the docs site (Blazor WebAssembly)
 
 ```
-dotnet run --project TwBlazor.WasmHost
+dotnet run --project docs/TwBlazor.WasmHost
 ```
 
 This serves the compiled `TwBlazor.Wasm` app via the `TwBlazor.WasmHost` host project.
@@ -109,7 +122,7 @@ This serves the compiled `TwBlazor.Wasm` app via the `TwBlazor.WasmHost` host pr
 ### Run the tests
 
 ```
-dotnet test TwBlazor.Tests
+dotnet test tests/TwBlazor.Tests
 ```
 
 ### Rebuild the doc examples
@@ -117,7 +130,7 @@ dotnet test TwBlazor.Tests
 Code snippets shown on the documentation site are extracted from real source (docs pages and a few production files) by `TwBlazor.BuildTools`. See [CODE_SNIPPETS.md](CODE_SNIPPETS.md) for how this works. This runs automatically before `TwBlazor.Docs` builds, but you can trigger it manually if generated snippets look stale:
 
 ```
-dotnet run --project TwBlazor.BuildTools
+dotnet run --project build/TwBlazor.BuildTools
 ```
 
 ---
@@ -236,11 +249,14 @@ An unedited template, or a section left as just the placeholder comment, will
 
 ---
 
-## 🧱 Project Structure (example)
+## 🧱 Top-Level Folders
 
-- `/src` → main code  
-- `/docs` → documentation  
-- `/tests` → unit tests  
+- `/src` → the published component library (`TwBlazor`, `TwBlazor.Theme`)
+- `/build` → build-time tooling (`TwBlazor.BuildTools`, `TwBlazor.Docs.Compiler`)
+- `/docs` → documentation content, site hosts, and docfx config (`TwBlazor.Docs`, `TwBlazor.Server`, `TwBlazor.WASM`, `TwBlazor.WasmHost`, `templates/`, `toc.yml`)
+- `/tests` → automated tests (`TwBlazor.Tests`, `TwBlazor.A11yTests`, `vitest.config.js`)
+
+See [Project Structure](#project-structure) above for the full tree.
 
 ---
 
