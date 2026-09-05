@@ -118,7 +118,7 @@ public class TwSpinnerTests : TwBlazorTestBase
     }
 
     [Theory]
-    [InlineData(SpinnerSize.Small, "size-4")]
+    [InlineData(SpinnerSize.Small, "size-5")]
     [InlineData(SpinnerSize.Medium, "size-8")]
     [InlineData(SpinnerSize.Large, "size-12")]
     public void TwSpinner_AppliesSizeClasses(SpinnerSize size, string expectedClass)
@@ -159,6 +159,56 @@ public class TwSpinnerTests : TwBlazorTestBase
         // Assert
         var indicator = cut.Find("span[aria-hidden='true']");
         Assert.Contains("border-t-purple-600", indicator.GetAttribute("class"));
+    }
+
+    [Theory]
+    [InlineData(Color.Danger)]
+    [InlineData(Color.Accent)]
+    [InlineData(Color.Warning)]
+    [InlineData(Color.Success)]
+    [InlineData(Color.Primary)]
+    [InlineData(Color.Info)]
+    public void TwSpinner_UsesSharedNeutralTrack_ForSemanticColors(Color color)
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSpinner>(parameters => parameters
+            .Add(p => p.Color, color));
+
+        // Assert
+        var classes = cut.Find("span[aria-hidden='true']").GetAttribute("class");
+        Assert.Contains("border-gray-200", classes);
+        Assert.DoesNotContain("border-white/25", classes);
+        Assert.DoesNotContain("border-gray-900/15", classes);
+    }
+
+    [Fact]
+    public void TwSpinner_ColorLight_UsesWhiteArc_AndItsOwnTrack()
+    {
+        // Arrange & Act - Light is for placing on a dark surface, so its arc/track must not depend on
+        // the shared neutral Track (which is too close to a white arc to read against).
+        var cut = TestContext.Render<TwSpinner>(parameters => parameters
+            .Add(p => p.Color, Color.Light));
+
+        // Assert
+        var classes = cut.Find("span[aria-hidden='true']").GetAttribute("class");
+        Assert.Contains("border-t-white", classes);
+        Assert.Contains("border-white/25", classes);
+        Assert.DoesNotContain("border-gray-200", classes);
+    }
+
+    [Fact]
+    public void TwSpinner_ColorDark_UsesDarkArc_AndItsOwnTrack()
+    {
+        // Arrange & Act - Dark is for placing on a light surface, so its arc/track must not depend on
+        // the shared neutral Track (which is too close to a near-black arc to read against).
+        var cut = TestContext.Render<TwSpinner>(parameters => parameters
+            .Add(p => p.Color, Color.Dark));
+
+        // Assert
+        var classes = cut.Find("span[aria-hidden='true']").GetAttribute("class");
+        Assert.Contains("border-t-gray-900", classes);
+        Assert.Contains("border-gray-900/15", classes);
+        Assert.DoesNotContain("border-gray-200", classes);
     }
 
     [Fact]

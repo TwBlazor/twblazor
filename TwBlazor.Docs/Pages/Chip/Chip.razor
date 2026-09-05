@@ -39,7 +39,7 @@
                     }
                     else
                     {
-                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                        <div class="@(c != Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
                             <TwChip Label="@c.ToString()" Color="@c" />
                         </div>
                     }

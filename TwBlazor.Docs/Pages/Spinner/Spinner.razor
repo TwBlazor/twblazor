@@ -31,14 +31,21 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to match the spinner to its surrounding context.</p>
 
         <CodeExample Name="SpinnerColors">
-            <div class="flex flex-wrap items-center gap-6">
-                <TwSpinner Color="Color.Primary" AriaLabel="Loading, primary" />
-                <TwSpinner Color="Color.Accent" AriaLabel="Loading, accent" />
-                <TwSpinner Color="Color.Success" AriaLabel="Loading, success" />
-                <TwSpinner Color="Color.Warning" AriaLabel="Loading, warning" />
-                <TwSpinner Color="Color.Danger" AriaLabel="Loading, danger" />
-                <TwSpinner Color="Color.Info" AriaLabel="Loading, info" />
-            </div>
+            @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
+            {
+                @if (c != Color.Light && c != Color.Dark)
+                {
+                    <div class="p-3 inline-flex">
+                        <TwSpinner AriaLabel="@c.ToString()" Color="@c" />
+                    </div>
+                }
+                else
+                {
+                    <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg inline-flex" : "bg-white p-3 rounded-lg inline-flex")">
+                        <TwSpinner AriaLabel="@c.ToString()" Color="@c" />
+                    </div>
+                }
+            }
         </CodeExample>
     </PageCard>
 

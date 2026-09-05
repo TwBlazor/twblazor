@@ -65,9 +65,22 @@ public partial class TwSpinner : TwBlazorComponentBase
     /// </summary>
     private string classes => new ClassBuilder(theme.Base)
         .AddClass(sizeClasses)
-        .AddClass(theme.Track)
+        .AddClass(trackClasses)
         .AddClass(GetSpinnerColor(Color))
         .Build();
+
+    /// <summary>
+    /// Gets the dimmed-ring classes for the current <see cref="Color"/>. <see cref="Enums.Color.Light"/>
+    /// and <see cref="Enums.Color.Dark"/> get their own track (see <see cref="TwSpinnerTheme.LightTrack"/>/
+    /// <see cref="TwSpinnerTheme.DarkTrack"/>) since their arc colors don't read against the shared
+    /// neutral <see cref="TwSpinnerTheme.Track"/> used by every other color.
+    /// </summary>
+    private string trackClasses => Color switch
+    {
+        Enums.Color.Light => theme.LightTrack,
+        Enums.Color.Dark => theme.DarkTrack,
+        _ => theme.Track
+    };
 
     private string GetSpinnerColor(Color? color) => ColorBuilder.GetPaletteColor(color, theme.Colors, theme.Colors.Primary);
 
