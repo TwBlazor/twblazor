@@ -118,7 +118,7 @@ public partial class TwSkeleton : TwBlazorComponentBase, IAsyncDisposable
 
             if (!string.IsNullOrWhiteSpace(Style))
             {
-                parts.Add(Style!);
+                parts.Add(Style);
             }
 
             return string.Join(";", parts);

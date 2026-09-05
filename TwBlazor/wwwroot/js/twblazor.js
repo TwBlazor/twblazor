@@ -334,7 +334,11 @@ globalThis.twSkeleton = {
     },
 
     _hasVisibleElementChildren: function (el) {
-        return Array.from(el.children).some(globalThis.twSkeleton._isVisible);
+        // Array.some's callback also receives (index, array) - passing _isVisible directly would leak
+        // the index into its optional "rect" parameter, so it's wrapped to call with just the element.
+        return Array.from(el.children).some(function (child) {
+            return globalThis.twSkeleton._isVisible(child);
+        });
     },
 
     // Treats an element as "round" if every corner's border-radius covers at least half of its shorter
@@ -350,7 +354,7 @@ globalThis.twSkeleton = {
         ];
         var minSide = Math.min(rect.width, rect.height);
         return radii.every(function (radius) {
-            return parseFloat(radius) >= (minSide / 2) - 1;
+            return Number.parseFloat(radius) >= (minSide / 2) - 1;
         });
     },
 
@@ -369,8 +373,7 @@ globalThis.twSkeleton = {
             var range = document.createRange();
             range.selectNodeContents(node);
             var clientRects = range.getClientRects();
-            for (var i = 0; i < clientRects.length; i++) {
-                var lineRect = clientRects[i];
+            for (var lineRect of clientRects) {
                 if (lineRect.width <= 0 || lineRect.height <= 0) continue;
                 rects.push({
                     top: lineRect.top - containerRect.top,
@@ -413,7 +416,7 @@ globalThis.twSkeleton = {
         if (hasText) {
             var lines = globalThis.twSkeleton._textLineRects(el, containerRect);
             if (lines.length > 0) {
-                out.push.apply(out, lines);
+                out.push(...lines);
                 return;
             }
         }
