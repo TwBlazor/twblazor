@@ -4,7 +4,7 @@
 #   .\watch-tailwind.ps1 -Release  - Release mode: one-time minified build, then exits
 #
 # In development, ASP.NET Core's static web assets middleware serves _content/TwBlazor/css/twblazor.css
-# directly from TwBlazor\wwwroot\css\twblazor.css (source directory).
+# directly from src\TwBlazor\wwwroot\css\twblazor.css (source directory).
 
 param(
     [switch]$Release
@@ -18,10 +18,10 @@ if ($Release) {
 Write-Host ""
 
 # Define paths
-$twBlazorInput = ".\TwBlazor\wwwroot\css\input.css"
-$twBlazorOutput = ".\TwBlazor\wwwroot\css\twblazor.css"
-$twDocsInput = ".\TwBlazor.Docs\wwwroot\css\input.css"
-$twDocsOutput = ".\TwBlazor.Docs\wwwroot\css\output.css"
+$twBlazorInput = ".\src\TwBlazor\wwwroot\css\input.css"
+$twBlazorOutput = ".\src\TwBlazor\wwwroot\css\twblazor.css"
+$twDocsInput = ".\docs\TwBlazor.Docs\wwwroot\css\input.css"
+$twDocsOutput = ".\docs\TwBlazor.Docs\wwwroot\css\output.css"
 
 # Verify paths exist
 if (-not (Test-Path $twBlazorInput)) {

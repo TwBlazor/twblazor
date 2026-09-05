@@ -1,0 +1,75 @@
+@page "/skeleton"
+
+<PageTitle>TwSkeleton | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwSkeleton is a Blazor loading placeholder component with text, circle and rectangle shapes, pulse/wave/none animations, and automatic skeleton generation from ChildContent." />
+    <link rel="canonical" href="https://twblazor.com/skeleton" />
+</HeadContent>
+
+<PageContainer Title="TwSkeleton">
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">With no <code>ChildContent</code>, <code>TwSkeleton</code> renders a single full-width text line placeholder by default.</p>
+
+        <CodeExample Name="SkeletonBasic">
+            <TwSkeleton Id="basic-skeleton" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Shapes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>SkeletonType</code> for a circle or rectangle placeholder instead, and <code>Width</code>/<code>Height</code> to size it.</p>
+
+        <CodeExample Name="SkeletonShapes">
+            <div class="flex flex-wrap items-end gap-6">
+                <TwSkeleton Id="text-skeleton" SkeletonType="SkeletonType.Text" Width="220px" />
+                <TwSkeleton Id="circle-skeleton" SkeletonType="SkeletonType.Circle" Width="50px" Height="50px" />
+                <TwSkeleton Id="rectangle-skeleton" SkeletonType="SkeletonType.Rectangle" Width="200px" Height="110px" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Animation">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Animation</code> to switch between a soft opacity pulse (default), a shimmering wave sweep, or no animation at all.</p>
+
+        <CodeExample Name="SkeletonAnimation">
+            <div class="flex flex-wrap items-end gap-6">
+                <TwSkeleton Id="pulse-skeleton" SkeletonType="SkeletonType.Rectangle" Width="160px" Height="80px" Animation="SkeletonAnimation.Pulse" />
+                <TwSkeleton Id="wave-skeleton" SkeletonType="SkeletonType.Rectangle" Width="160px" Height="80px" Animation="SkeletonAnimation.Wave" />
+                <TwSkeleton Id="none-skeleton" SkeletonType="SkeletonType.Rectangle" Width="160px" Height="80px" Animation="SkeletonAnimation.None" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Auto-Generated from Content">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Wrap real markup in <code>ChildContent</code> and toggle <code>Loading</code> - while loading, <code>TwSkeleton</code> measures the actual rendered layout of that content (via a <code>ResizeObserver</code>) and generates matching placeholder blocks automatically, instead of a single generic box.</p>
+
+        <CodeExample Name="SkeletonAutoGenerate" CSharpName="SkeletonAutoGenerateCode">
+            <TwButton Class="mb-4" Color="Color.Primary" OnClick="ToggleLoading">
+                @(loading ? "Finish loading" : "Reset")
+            </TwButton>
+
+            <TwSkeleton Id="profile-skeleton" Loading="loading">
+                <TwCard>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center justify-center rounded-full size-12 bg-purple-600 text-white text-sm font-semibold" aria-hidden="true">JD</div>
+                        <div>
+                            <p class="font-semibold">Jane Doe</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Product Designer</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </TwCard>
+            </TwSkeleton>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample SkeletonAutoGenerateCode
+    private bool loading = true;
+
+    private void ToggleLoading() => loading = !loading;
+    #endregion
+}

@@ -1,0 +1,289 @@
+@page "/toast"
+@using TwBlazor.Services
+@using TwBlazor.Models
+
+<PageTitle>TwToast | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwToast is a Blazor toast component for notifications, with toast types, colours, duration, persistence and custom toasts." />
+    <link rel="canonical" href="https://twblazor.com/toast" />
+</HeadContent>
+@* #region CodeExample ToastInject *@
+@inject ITwToastService ToastService
+@* #endregion *@
+
+<PageContainer Title="TwToastProvider">
+    <PageCard Title="Setup">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            The Toast service provides a simple way to display temporary notification messages to users.
+            To use toasts, add the <code>TwToastProvider</code> component to your app and inject the <code>ITwToastService</code>.
+        </p>
+
+        <div class="space-y-5">
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">1. Add TwToastProvider to your layout</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                    Place the <code>&lt;TwToastProvider /&gt;</code> component in your main layout file (e.g., MainLayout.razor or App.razor):
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("ToastSetupProvider")" Language="html" />
+            </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">2. Register the services</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                    The toast service is registered automatically when you call <code>AddTwBlazor()</code> with your configured theme
+                    (see <a href="/get-started" class="underline">Get Started</a> for the full theme setup):
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedDependencyInjection")" Language="csharp" />
+            </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">3. Inject the service in your component</h4>
+                <TwCodeBlock Content="@CodeExamples.Get("ToastInject")" Language="csharp" />
+            </div>
+        </div>
+    </PageCard>
+
+    <PageCard Title="Toast Types">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            The toast service provides convenient methods for common notification types: Success, Error, Warning, and Info.
+        </p>
+
+        <CodeExample Name="ToastTypes" CSharpName="ToastTypesCode">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <TwButton Label="Success" Color="Color.Success" OnClick="ShowSuccessToast" Class="w-full" />
+                <TwButton Label="Error" Color="Color.Danger" OnClick="ShowErrorToast" Class="w-full" />
+                <TwButton Label="Warning" Color="Color.Warning" OnClick="ShowWarningToast" Class="w-full" />
+                <TwButton Label="Info" Color="Color.Primary" OnClick="ShowInfoToast" Class="w-full" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Toasts">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Create custom toasts with any color, icon, and duration using the <code>Show()</code> method, or build a <code>ToastModel</code> directly for full control.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <CodeExample Name="ToastCustom" CSharpName="ToastCustomCode">
+                    <TwButton Label="Show Custom Toast" Color="Color.Accent" OnClick="ShowCustomToast" Class="w-full" />
+                </CodeExample>
+            </div>
+
+            <div>
+                <CodeExample Name="ToastManual" CSharpName="ToastManualCode">
+                    <TwButton Label="Show Manual Toast" Color="Color.Primary" OnClick="ShowManualToast" Class="w-full" />
+                </CodeExample>
+            </div>
+        </div>
+    </PageCard>
+
+    <PageCard Title="Colors">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Toasts support every color in the <code>Color</code> enum, sharing the same palette as <a href="/alert" class="underline">TwAlert</a>.
+        </p>
+
+        <CodeExample Name="ToastColors" CSharpName="ToastColorsCode">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                @foreach (Color c in (Color[])Enum.GetValues(typeof(Color)))
+                {
+                    <TwButton Label="@c.ToString()" Color="@c" OnClick="@(() => ShowColorToast(c))" Variant="ButtonVariant.Filled" Class="text-xs" />
+                }
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Duration & Persistence">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            By default, toasts auto-dismiss after 5 seconds. Customize the duration per toast, or set it to <code>0</code> to make it persistent until manually dismissed.
+        </p>
+
+        <CodeExample Name="ToastDuration" CSharpName="ToastDurationCode">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <TwButton Label="3 Second Toast" Color="Color.Success" OnClick="@(() => ShowDurationToast(3000))" Class="w-full" />
+                <TwButton Label="5 Second Toast (Default)" Color="Color.Primary" OnClick="@(() => ShowDurationToast(5000))" Class="w-full" />
+                <TwButton Label="Persistent Toast" Color="Color.Accent" OnClick="ShowPersistentToast" Class="w-full" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Managing Toasts">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Clear all active toasts programmatically using the <code>ClearAll()</code> method.
+        </p>
+
+        <CodeExample Name="ToastClearAll" CSharpName="ToastClearAllCode">
+            <div class="flex gap-2 mb-2">
+                <TwButton Label="Show Multiple Toasts" Color="Color.Primary" OnClick="ShowMultipleToasts" />
+                <TwButton Label="Clear All Toasts" Color="Color.Danger" OnClick="@(() => ToastService.ClearAll())" Variant="ButtonVariant.Outlined" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Theme Configuration">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Toast styling is controlled by <code>TwBlazorTheme.Toast</code> (a <code>TwToastTheme</code>), configured via the <code>AddTwBlazor()</code>
+            options callback described on the <a href="/get-started" class="underline">Get Started</a> page. Every property is a set of Tailwind classes,
+            so changes are picked up by your own Tailwind build.
+        </p>
+
+        <div class="overflow-x-auto mb-4">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Property</th>
+                        <th class="px-4 py-3">Type</th>
+                        <th class="px-4 py-3">Controls</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Container</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed toast stack wrapper - screen position, stacking direction, z-index</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Toast</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Each individual toast card - padding, gap, shadow, transition</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">ToastRounded</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">ToastWidth</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Tailwind width class applied to every toast</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">HeaderClasses</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + message wrapper inside a toast</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Title</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast title text</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Message</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast message text</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Timestamp</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The relative timestamp text</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">IconContainer</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The icon wrapper</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            For example, to move toasts to the top-right and make them fully rounded:
+        </p>
+
+        <ExampleCodeBlock CSharp="@_themeExample" />
+
+        <p class="text-xs text-gray-500 dark:text-gray-500 mt-4">
+            Per-color styling (background, text, border) isn't set on <code>TwToastTheme</code> - toasts draw from the same
+            <code>Colors.AlertColors</code> tokens as <a href="/alert" class="underline">TwAlert</a>, and duration isn't themed either;
+            it's passed per call via <code>Show(..., duration)</code> or <code>ToastModel.Duration</code> (default <code>5000</code>ms, <code>0</code> = persistent).
+            See the <a href="/theme" class="underline">Theme</a> page for the full colour and design-token reference.
+        </p>
+    </PageCard>
+</PageContainer>
+
+@code {
+    // Illustrative only - not wired up to a live control on this page.
+    private const string _themeExample = @"builder.Services.AddTwBlazor(options =>
+{
+    options.Theme.Toast.Container = ""fixed top-0 right-0 p-4 z-50 flex flex-col gap-2 max-w-md""; // Move to top-right
+    options.Theme.Toast.ToastRounded = Rounded.Full; // Make toasts fully rounded
+    options.Theme.Toast.ToastWidth = ""max-w-sm""; // Wider toasts
+}, Theme.DefaultTheme);";
+
+    #region CodeExample ToastTypesCode
+    private void ShowSuccessToast()
+    {
+        ToastService.ShowSuccess("Success!", "Your operation completed successfully.");
+    }
+
+    private void ShowErrorToast()
+    {
+        ToastService.ShowError("Error", "Something went wrong.", 0);
+    }
+
+    private void ShowWarningToast()
+    {
+        ToastService.ShowWarning("Warning", "Please review your input.");
+    }
+
+    private void ShowInfoToast()
+    {
+        ToastService.ShowInfo("Information", "Here's some useful information.");
+    }
+    #endregion
+
+    #region CodeExample ToastCustomCode
+    private void ShowCustomToast()
+    {
+        ToastService.Show("Custom Toast", "This is a custom toast with a heart icon!", Color.Accent, Icon.Heart, 3000);
+    }
+    #endregion
+
+    #region CodeExample ToastManualCode
+    private void ShowManualToast()
+    {
+        ToastService.AddToast(new ToastModel
+        {
+            Title = "Manual Toast",
+            Message = "Created with ToastModel directly",
+            Color = Color.Primary,
+            Icon = Icon.Bell,
+            Duration = 5000
+        });
+    }
+    #endregion
+
+    #region CodeExample ToastColorsCode
+    private void ShowColorToast(Color color)
+    {
+        ToastService.Show($"{color} Toast", $"This is a {color.ToString().ToLower()} colored toast", color, Icon.Palette, 3000);
+    }
+    #endregion
+
+    #region CodeExample ToastDurationCode
+    private void ShowDurationToast(int duration)
+    {
+        var seconds = duration / 1000;
+        ToastService.Show($"{seconds} Second Toast", $"This toast will dismiss after {seconds} seconds", Color.Success, Icon.Clock, duration);
+    }
+
+    private void ShowPersistentToast()
+    {
+        ToastService.Show("Persistent Toast", "This toast won't auto-dismiss. Click the X to close.", Color.Accent, Icon.Info_Circle, 0);
+    }
+    #endregion
+
+    #region CodeExample ToastClearAllCode
+    private void ShowMultipleToasts()
+    {
+        ToastService.ShowSuccess("First Toast", "This is the first toast");
+        ToastService.ShowInfo("Second Toast", "This is the second toast");
+        ToastService.ShowWarning("Third Toast", "This is the third toast");
+    }
+    #endregion
+}

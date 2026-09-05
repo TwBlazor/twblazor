@@ -1,0 +1,45 @@
+﻿@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../../**/*.razor";
+@source "../../**/*.cs";
+@source "../../../TwBlazor/**/*.razor";
+@source "../../../TwBlazor/**/*.cs";
+@source "../../../TwBlazor.Theme/**/*.cs";
+@source not "../../bin/**";
+@source not "../../obj/**";
+@source not "../../../TwBlazor/bin/**";
+@source not "../../../TwBlazor/obj/**";
+@source not "../../../TwBlazor.Theme/bin/**";
+@source not "../../../TwBlazor.Theme/obj/**";
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+/* source-sans-3-regular - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/source-sans-3-v19-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* source-sans-3-700 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/source-sans-3-v19-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* source-sans-3-900 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/source-sans-3-v19-latin-900.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}

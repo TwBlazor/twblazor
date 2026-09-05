@@ -88,7 +88,7 @@ jobs:
         shell: powershell
         run: |
           $lcov = "coverage\lcov.info"
-          (Get-Content $lcov) -replace '\\', '/' -replace 'SF:TwBlazor/', 'SF:' | Set-Content $lcov
+          (Get-Content $lcov) -replace '\\', '/' -replace 'SF:src/TwBlazor/', 'SF:' | Set-Content $lcov
 
       - name: Build and analyze
         env:
@@ -100,10 +100,10 @@ jobs:
             /o:"twblazor" `
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.token="$env:SONAR_TOKEN" `
-            /d:sonar.exclusions="TwBlazor.Docs/Examples/**,**/*.css,**/*.woff,**/*.woff2,**/*.ttf,**/*.eot,**/*.png,**/*.jpg,**/*.jpeg,**/*.gif,**/*.ico" `
+            /d:sonar.exclusions="docs/TwBlazor.Docs/Examples/**,**/*.css,**/*.woff,**/*.woff2,**/*.ttf,**/*.eot,**/*.png,**/*.jpg,**/*.jpeg,**/*.gif,**/*.ico" `
             /d:sonar.cpd.exclusions="**/wwwroot/404.html" `
             /d:sonar.javascript.lcov.reportPaths="${{ github.workspace }}/coverage/lcov.info" `
-            /d:sonar.coverage.exclusions="TwBlazor.Docs/**,TwBlazor.Server/**,TwBlazor.Wasm/**,TwBlazor.WasmHost/**,TwBlazor.BuildTools/**,TwBlazor.Theme/**,TwBlazor.Docs.Compiler/**,**/Program.cs" `
+            /d:sonar.coverage.exclusions="docs/TwBlazor.Docs/**,docs/TwBlazor.Server/**,docs/TwBlazor.WASM/**,docs/TwBlazor.WasmHost/**,build/TwBlazor.BuildTools/**,src/TwBlazor.Theme/**,build/TwBlazor.Docs.Compiler/**,**/Program.cs" `
             /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}\coverage\**\coverage.opencover*.xml"
           dotnet build --configuration Release
           dotnet test --no-build --configuration Release --results-directory "${{ github.workspace }}\coverage" -- --coverlet --coverlet-output-format opencover

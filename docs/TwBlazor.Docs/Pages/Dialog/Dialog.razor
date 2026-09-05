@@ -1,0 +1,293 @@
+@page "/dialog"
+@using TwBlazor.Models
+@using TwBlazor.Services
+
+<PageTitle>TwDialog | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwDialog is a Blazor dialog component for modal windows. Supports returning data, positioning, sizing, behaviour options and theming." />
+    <link rel="canonical" href="https://twblazor.com/dialog" />
+</HeadContent>
+@* #region CodeExample DialogInject *@
+@inject ITwDialogService DialogService
+@* #endregion *@
+
+<PageContainer Title="TwDialogProvider">
+    <PageCard Title="Setup">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            The Dialog service shows arbitrary Blazor components as modal dialogs, wrapped in a themed <code>TwDialog</code> chrome
+            (backdrop, header, title, close button). To use dialogs, add the <code>TwDialogProvider</code> component to your app and
+            inject the <code>ITwDialogService</code>.
+        </p>
+
+        <div class="space-y-5">
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">1. Add TwDialogProvider to your layout</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                    Place the <code>&lt;TwDialogProvider /&gt;</code> component in your main layout file (e.g., MainLayout.razor or App.razor):
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("DialogSetupProvider")" Language="html" />
+            </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">2. Register the services</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                    The dialog service is registered automatically when you call <code>AddTwBlazor()</code> with your configured theme
+                    (see <a href="/get-started" class="underline">Get Started</a> for the full theme setup):
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedDependencyInjection")" Language="csharp" />
+            </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">3. Inject the service in your component</h4>
+                <TwCodeBlock Content="@CodeExamples.Get("DialogInject")" Language="csharp" />
+            </div>
+        </div>
+    </PageCard>
+
+    <PageCard Title="Basic Usage">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Dialog content is a normal Blazor component. Show it with <code>ShowAsync&lt;TComponent&gt;()</code>, passing a title and any
+            <code>TwDialogParameters</code> the content needs. Inside the content component, a cascaded <code>TwDialogInstance</code>
+            lets it close (or cancel) itself.
+        </p>
+
+        <CodeExample Name="DialogConfirm" CSharpName="DialogConfirmCode">
+            <TwButton Label="Show Confirm Dialog" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowConfirmDialog" />
+            @if (confirmResult is not null)
+            {
+                <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Result: <strong>@confirmResult</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Returning Data">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            A dialog can return more than a boolean. Call <code>DialogInstance.Close(data)</code> with any value, then read it back with
+            <code>reference.GetReturnValueAsync&lt;T&gt;()</code>.
+        </p>
+
+        <CodeExample Name="DialogPrompt" CSharpName="DialogPromptCode">
+            <TwButton Label="Edit Name" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowPromptDialog" />
+            @if (promptResult is not null)
+            {
+                <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Saved: <strong>@promptResult</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Position">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Pass a <code>TwDialogOptions</code> with a <code>Position</code> to control where the dialog appears on screen.
+        </p>
+
+        <CodeExample Name="DialogPosition" CSharpName="DialogPositionCode">
+            <div class="grid grid-cols-3 gap-2 max-w-md">
+                @foreach (DialogPosition position in Enum.GetValues<DialogPosition>())
+                {
+                    <TwButton Label="@position.ToString()" Variant="ButtonVariant.Filled" Color="Color.Primary" Class="text-xs" OnClick="@(() => ShowAtPosition(position))" />
+                }
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Sizing">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Use <code>MaxWidth</code> for a responsive width breakpoint, or <code>FullScreen</code> to fill the entire viewport.
+        </p>
+
+        <CodeExample Name="DialogSizing" CSharpName="DialogSizingCode">
+            <div class="flex flex-wrap gap-2">
+                @foreach (DialogMaxWidth maxWidth in Enum.GetValues<DialogMaxWidth>())
+                {
+                    <TwButton Label="@maxWidth.ToString()" Variant="ButtonVariant.Filled" Color="Color.Primary" Class="text-xs" OnClick="@(() => ShowWithMaxWidth(maxWidth))" />
+                }
+                <TwButton Label="Full Screen" Variant="ButtonVariant.Filled" Color="Color.Primary" Class="text-xs" OnClick="ShowFullScreenDialog" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Behavior Options">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <code>NoHeader</code> hides the title bar entirely, and combining <code>BackdropClick</code>, <code>CloseOnEscapeKey</code>,
+            and <code>CloseButton</code> (all set to <code>false</code>) produces a dialog that can only be closed by its own content.
+        </p>
+
+        <CodeExample Name="DialogBehavior" CSharpName="DialogBehaviorCode">
+            <div class="flex flex-wrap gap-2">
+                <TwButton Label="No Header" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowNoHeaderDialog" />
+                <TwButton Label="Not Dismissible" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowNonDismissibleDialog" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Theme Configuration">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Dialog styling is controlled by <code>TwBlazorTheme.Dialog</code> (a <code>TwDialogTheme</code>), configured via the
+            <code>AddTwBlazor()</code> options callback described on the <a href="/get-started" class="underline">Get Started</a> page.
+            Every property is a set of Tailwind classes, so changes are picked up by your own Tailwind build.
+        </p>
+
+        <div class="overflow-x-auto mb-4">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Property</th>
+                        <th class="px-4 py-3">Type</th>
+                        <th class="px-4 py-3">Controls</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Backdrop</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed overlay - darken colour, z-index, padding</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">PositionCenter</code>, <code class="text-xs">PositionTopLeft</code>, ...</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Flex alignment classes for each <code>DialogPosition</code> value</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Surface</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dialog card itself - background, text colour, max height</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">DialogRounded</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">DialogShadow</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Shadow?</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Shadow override; falls back to the theme's default <code>Shadow</code> when null</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Header</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + close button row</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Title</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dialog title text</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">Content</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The scrollable body wrapping the dialog's content</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">FullScreen</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Classes applied when <code>TwDialogOptions.FullScreen</code> is <code>true</code></td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">FullWidth</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Classes applied when <code>TwDialogOptions.FullWidth</code> is <code>true</code></td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3"><code class="text-xs">ExtraSmallWidth</code> ... <code class="text-xs">ExtraExtraLargeWidth</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The Tailwind max-width class for each <code>DialogMaxWidth</code> breakpoint</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            For example, to darken the backdrop further and use fully rounded dialogs by default:
+        </p>
+
+        <ExampleCodeBlock CSharp="@_themeExample" />
+    </PageCard>
+</PageContainer>
+
+@code {
+    // Illustrative only - not wired up to a live control on this page.
+    private const string _themeExample = @"builder.Services.AddTwBlazor(options =>
+{
+    options.Theme.Dialog.Backdrop = ""fixed inset-0 z-[110] flex p-4 bg-black/70 overflow-y-auto""; // Darker backdrop
+    options.Theme.Dialog.DialogRounded = Rounded.Full; // Fully rounded dialogs
+}, Theme.DefaultTheme);";
+
+    private string? confirmResult;
+    private string? promptResult;
+    private string userName = "Ada Lovelace";
+
+    #region CodeExample DialogConfirmCode
+    private async Task ShowConfirmDialog()
+    {
+        var reference = await DialogService.ShowAsync<ConfirmDialog>("Confirm Action",
+            new TwDialogParameters { ["Message"] = "Are you sure you want to continue?" });
+
+        var result = await reference.Result;
+        confirmResult = result is { Canceled: false } ? "Confirmed" : "Cancelled";
+    }
+    #endregion
+
+    #region CodeExample DialogPromptCode
+    private async Task ShowPromptDialog()
+    {
+        var reference = await DialogService.ShowAsync<PromptDialog>("Edit Name", new TwDialogParameters
+        {
+            ["Label"] = "Name",
+            ["InitialValue"] = userName
+        });
+
+        var name = await reference.GetReturnValueAsync<string>();
+        if (!string.IsNullOrEmpty(name))
+        {
+            userName = name;
+            promptResult = name;
+        }
+    }
+    #endregion
+
+    #region CodeExample DialogPositionCode
+    private Task ShowAtPosition(DialogPosition position)
+    {
+        return DialogService.ShowAsync<ConfirmDialog>("Positioned Dialog",
+            new TwDialogParameters { ["Message"] = $"This dialog is positioned at {position}." },
+            new TwDialogOptions { Position = position });
+    }
+    #endregion
+
+    #region CodeExample DialogSizingCode
+    private Task ShowWithMaxWidth(DialogMaxWidth maxWidth)
+    {
+        return DialogService.ShowAsync<ConfirmDialog>("Sized Dialog",
+            new TwDialogParameters { ["Message"] = $"This dialog uses the {maxWidth} width." },
+            new TwDialogOptions { MaxWidth = maxWidth });
+    }
+
+    private Task ShowFullScreenDialog()
+    {
+        return DialogService.ShowAsync<ConfirmDialog>("Full Screen Dialog",
+            new TwDialogParameters { ["Message"] = "This dialog fills the entire screen." },
+            new TwDialogOptions { FullScreen = true });
+    }
+    #endregion
+
+    #region CodeExample DialogBehaviorCode
+    private Task ShowNoHeaderDialog()
+    {
+        return DialogService.ShowAsync<ConfirmDialog>(
+            parameters: new TwDialogParameters { ["Message"] = "This dialog has no header or title." },
+            options: new TwDialogOptions { NoHeader = true });
+    }
+
+    private Task ShowNonDismissibleDialog()
+    {
+        return DialogService.ShowAsync<ConfirmDialog>("Not Dismissible",
+            new TwDialogParameters { ["Message"] = "This dialog can only be closed using its own buttons." },
+            new TwDialogOptions { BackdropClick = false, CloseOnEscapeKey = false, CloseButton = false });
+    }
+    #endregion
+}
