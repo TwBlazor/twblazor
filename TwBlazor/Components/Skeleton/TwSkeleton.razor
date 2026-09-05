@@ -1,0 +1,19 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@rootClasses" style="@rootStyle" @attributes="Attributes" role="@(Loading ? "status" : null)" aria-busy="@(Loading ? "true" : null)" aria-live="@(Loading ? "polite" : null)" aria-label="@effectiveAriaLabel" aria-labelledby="@AriaLabelledBy">
+    @if (!Loading)
+    {
+        @ChildContent
+    }
+    else if (hasChildContent)
+    {
+        <div @ref="measureRef" class="@theme.MeasuringWrapper">
+            @ChildContent
+        </div>
+        @foreach (var rect in measuredRects)
+        {
+            <div class="@RectClasses(rect)" style="@RectStyle(rect)"></div>
+        }
+    }
+</div>
