@@ -313,3 +313,155 @@ globalThis.twColorPicker = {
         return [rect.width, rect.height];
     }
 };
+
+// Skeleton: measures the real rendered layout of a TwSkeleton's hidden ChildContent so C# can generate
+// placeholder blocks shaped like it, instead of a single generic box. A ResizeObserver on the container
+// re-measures whenever its layout changes (initial render, responsive breakpoints, images finishing
+// load, window resize) and reports back through dotnetRef - there is no separate "measure once" entry
+// point, since ResizeObserver already fires once immediately upon observe().
+globalThis.twSkeleton = {
+    _observers: new WeakMap(),
+
+    // Elements with no visible element children are the "leaves" a placeholder box is generated for;
+    // elements that do have visible children are only structural wrappers (e.g. a TwCard's container
+    // div) and are walked into instead, so the generated skeleton follows the real content down to its
+    // actual text/image/icon boxes rather than covering an entire nested component with one block.
+    _isVisible: function (el, rect) {
+        var style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'collapse') return false;
+        rect = rect || el.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+    },
+
+    _hasVisibleElementChildren: function (el) {
+        // Array.some's callback also receives (index, array) - passing _isVisible directly would leak
+        // the index into its optional "rect" parameter, so it's wrapped to call with just the element.
+        return Array.from(el.children).some(function (child) {
+            return globalThis.twSkeleton._isVisible(child);
+        });
+    },
+
+    // Treats an element as "round" if every corner's border-radius covers at least half of its shorter
+    // side - this catches both an explicit circular avatar and a "rounded-full" icon badge, without
+    // needing to special-case specific classes or tag names.
+    _isRound: function (el, rect) {
+        var style = getComputedStyle(el);
+        var radii = [
+            style.borderTopLeftRadius,
+            style.borderTopRightRadius,
+            style.borderBottomLeftRadius,
+            style.borderBottomRightRadius
+        ];
+        var minSide = Math.min(rect.width, rect.height);
+        return radii.every(function (radius) {
+            return Number.parseFloat(radius) >= (minSide / 2) - 1;
+        });
+    },
+
+    // One skeleton bar per wrapped visual line, rather than one box for the whole paragraph - each text
+    // node's Range.getClientRects() gives exactly that, one rect per line it wraps onto.
+    _textLineRects: function (el, containerRect) {
+        var rects = [];
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+            acceptNode: function (node) {
+                return node.textContent.trim().length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+            }
+        });
+
+        var node;
+        while ((node = walker.nextNode())) {
+            var range = document.createRange();
+            range.selectNodeContents(node);
+            var clientRects = range.getClientRects();
+            for (var lineRect of clientRects) {
+                if (lineRect.width <= 0 || lineRect.height <= 0) continue;
+                rects.push({
+                    top: lineRect.top - containerRect.top,
+                    left: lineRect.left - containerRect.left,
+                    width: lineRect.width,
+                    height: lineRect.height,
+                    shape: 'text'
+                });
+            }
+        }
+
+        return rects;
+    },
+
+    _walk: function (el, containerRect, out) {
+        var rect = el.getBoundingClientRect();
+        if (!globalThis.twSkeleton._isVisible(el, rect)) return;
+
+        if (globalThis.twSkeleton._hasVisibleElementChildren(el)) {
+            Array.from(el.children).forEach(function (child) {
+                globalThis.twSkeleton._walk(child, containerRect, out);
+            });
+            return;
+        }
+
+        // A round leaf (e.g. an avatar showing initials) is always reported as a single circle, even
+        // when it has text content - splitting "JD" into its own tiny text line would misrepresent it.
+        if (globalThis.twSkeleton._isRound(el, rect)) {
+            out.push({
+                top: rect.top - containerRect.top,
+                left: rect.left - containerRect.left,
+                width: rect.width,
+                height: rect.height,
+                shape: 'circle'
+            });
+            return;
+        }
+
+        var hasText = el.textContent && el.textContent.trim().length > 0;
+        if (hasText) {
+            var lines = globalThis.twSkeleton._textLineRects(el, containerRect);
+            if (lines.length > 0) {
+                out.push(...lines);
+                return;
+            }
+        }
+
+        out.push({
+            top: rect.top - containerRect.top,
+            left: rect.left - containerRect.left,
+            width: rect.width,
+            height: rect.height,
+            shape: 'rect'
+        });
+    },
+
+    _measure: function (container) {
+        var containerRect = container.getBoundingClientRect();
+        var out = [];
+        Array.from(container.children).forEach(function (child) {
+            globalThis.twSkeleton._walk(child, containerRect, out);
+        });
+        return out;
+    },
+
+    observe: function (container, dotnetRef) {
+        if (!container || globalThis.twSkeleton._observers.has(container)) return;
+
+        var emit = function () {
+            try {
+                dotnetRef.invokeMethodAsync('OnRectsMeasured', globalThis.twSkeleton._measure(container));
+            } catch (err) {
+                console.error('twSkeleton emit error', err);
+            }
+        };
+
+        var observer = new ResizeObserver(emit);
+        observer.observe(container);
+        globalThis.twSkeleton._observers.set(container, observer);
+        emit();
+    },
+
+    unobserve: function (container) {
+        if (!container) return;
+        var observer = globalThis.twSkeleton._observers.get(container);
+        if (observer) {
+            observer.disconnect();
+            globalThis.twSkeleton._observers.delete(container);
+        }
+    }
+};

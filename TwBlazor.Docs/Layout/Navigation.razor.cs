@@ -42,6 +42,7 @@ public partial class Navigation : IDisposable
                 new() { Id = "chip", Label = "Chip", Href = "/chip" },
                 new() { Id = "icon", Label = "Icon", Href = "/icon" },
                 new() { Id = "progress", Label = "Progress", Href = "/progress", New = true },
+                new() { Id = "skeleton", Label = "Skeleton", Href = "/skeleton", New = true },
                 new() { Id = "spinner", Label = "Spinner", Href = "/spinner", New = true }
             ]
         },

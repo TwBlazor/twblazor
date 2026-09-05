@@ -5,3 +5,30 @@
 @source "../../**/*.cs";
 @source not "../../bin/**";
 @source not "../../obj/**";
+
+/* TwSkeleton's Wave animation: Tailwind has no built-in shimmer utility, so this sweeps a translucent
+   gradient across the placeholder via ::after. Requires the placeholder itself to be "relative
+   overflow-hidden" (set on TwSkeletonTheme.Base) so the gradient is clipped to its bounds. */
+@keyframes tw-skeleton-wave {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50%,
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.tw-skeleton-wave::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 40%), transparent);
+    animation: tw-skeleton-wave 1.6s linear infinite;
+}
+
+.dark .tw-skeleton-wave::after {
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+}

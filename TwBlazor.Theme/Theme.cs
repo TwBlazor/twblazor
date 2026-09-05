@@ -540,6 +540,16 @@ public static class Theme
                     PanelContainer = $"p-6 border-l border-r border-b {neutralSurface.Border}",
                     Background = neutralSurface.Background,
                 },
+                new TwSkeletonTheme
+                {
+                    Base = "relative overflow-hidden bg-gray-200 dark:bg-gray-700 block",
+                    Text = "w-full h-4",
+                    Circle = "size-12",
+                    Rectangle = "w-full h-24",
+                    MeasuringWrapper = "invisible",
+                    Pulse = "animate-pulse",
+                    Wave = "tw-skeleton-wave"
+                },
                 new TwSidebarTheme
                 {
                     Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} shadow-sm p-3 w-full flex items-center flex-shrink-0 z-40 h-[56px]",
