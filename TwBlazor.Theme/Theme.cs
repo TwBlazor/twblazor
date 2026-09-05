@@ -43,9 +43,9 @@ public static class Theme
             {
                 Primary = "text-purple-600",
                 Accent = "text-fuchsia-600",
-                Success = "text-green-600",
+                Success = "text-green-700",
                 Danger = "text-red-600",
-                Warning = "text-yellow-600",
+                Warning = "text-yellow-700",
                 Info = "text-blue-600",
                 Light = "text-gray-100",
                 Dark = "text-gray-950",
@@ -230,9 +230,6 @@ public static class Theme
             Subtle = "text-gray-500 dark:text-gray-400"
         };
 
-        // "opacity-38" was a typo for "opacity-40" that had spread to several components (and even
-        // showed up alongside the correct value within a couple of them) - reusing this one token
-        // keeps every disabled state at the intended 40%.
         const string disabledOpacity = "opacity-40";
 
         // Small layout/shape tokens repeated identically across otherwise-unrelated components -
@@ -275,33 +272,33 @@ public static class Theme
                     Filled = new()
                     {
                         Primary = $"{background.Medium.Primary} hover:bg-purple-700 active:bg-purple-800 {text.Medium.Light}",
-                        Accent = $"{background.Medium.Accent} hover:bg-fuchsia-700 active:bg-fuchsia-800 {text.Medium.Light}",
-                        Success = $"{background.Medium.Success} hover:bg-green-700 active:bg-green-800 {text.Medium.Light}",
-                        Danger = $"{background.Medium.Danger} hover:bg-red-700 active:bg-red-800 {text.Medium.Light}",
-                        Warning = $"{background.Medium.Warning} hover:bg-yellow-600 active:bg-yellow-700 {text.Medium.Light}",
+                        Accent = "bg-fuchsia-700 hover:bg-fuchsia-800 active:bg-fuchsia-900 text-gray-100",
+                        Success = $"{background.Medium.Success} hover:bg-green-700 active:bg-green-800 {text.Medium.Dark}",
+                        Danger = "bg-red-700 hover:bg-red-800 active:bg-red-900 text-gray-100",
+                        Warning = $"{background.Medium.Warning} hover:bg-yellow-600 active:bg-yellow-700 {text.Medium.Dark}",
                         Info = $"{background.Medium.Info} hover:bg-blue-700 active:bg-blue-800 {text.Medium.Light}",
                         Light = $"{background.Medium.Light} hover:bg-gray-50 active:bg-gray-100 {text.Medium.Dark}",
                         Dark = $"{background.Dark.Dark} hover:bg-gray-800 active:bg-gray-700 {text.Medium.Light}",
                     },
                     Outlined = new()
                     {
-                        Primary = $"{text.Medium.Primary} bg-transparent {hoverColors.Primary} border {borderColors.Primary}",
-                        Accent = $"{text.Medium.Accent} bg-transparent {hoverColors.Accent} border {borderColors.Accent}",
-                        Success = $"{text.Medium.Success} bg-transparent {hoverColors.Success} border {borderColors.Success}",
-                        Danger = $"{text.Medium.Danger} bg-transparent {hoverColors.Danger} border {borderColors.Danger}",
-                        Warning = $"{text.Medium.Warning} bg-transparent {hoverColors.Warning} border {borderColors.Warning}",
-                        Info = $"{text.Medium.Info} bg-transparent {hoverColors.Info} border {borderColors.Info}",
+                        Primary = $"{text.Medium.Primary} {darkText.Light.Primary} bg-transparent {hoverColors.Primary} border {borderColors.Primary}",
+                        Accent = $"{text.Medium.Accent} {darkText.Light.Accent} bg-transparent {hoverColors.Accent} border {borderColors.Accent}",
+                        Success = $"{text.Medium.Success} {darkText.Light.Success} bg-transparent {hoverColors.Success} border {borderColors.Success}",
+                        Danger = $"{text.Medium.Danger} {darkText.Light.Danger} bg-transparent {hoverColors.Danger} border {borderColors.Danger}",
+                        Warning = $"{text.Medium.Warning} {darkText.Light.Warning} bg-transparent {hoverColors.Warning} border {borderColors.Warning}",
+                        Info = $"{text.Medium.Info} {darkText.Light.Info} bg-transparent {hoverColors.Info} border {borderColors.Info}",
                         Light = $"{text.Light.Dark} bg-transparent {hoverColors.Light} border {borderColors.Light}",
                         Dark = $"{text.Medium.Dark} bg-transparent {hoverColors.Dark} border {borderColors.Dark}",
                     },
                     Text = new()
                     {
-                        Primary = $"{text.Medium.Primary} bg-transparent {hoverColors.Primary}",
-                        Accent = $"{text.Medium.Accent} bg-transparent {hoverColors.Accent}",
-                        Success = $"{text.Medium.Success} bg-transparent {hoverColors.Success}",
-                        Danger = $"{text.Medium.Danger} bg-transparent {hoverColors.Danger}",
-                        Warning = $"{text.Medium.Warning} bg-transparent {hoverColors.Warning}",
-                        Info = $"{text.Medium.Info} bg-transparent {hoverColors.Info}",
+                        Primary = $"{text.Medium.Primary} {darkText.Light.Primary} bg-transparent {hoverColors.Primary}",
+                        Accent = $"{text.Medium.Accent} {darkText.Light.Accent} bg-transparent {hoverColors.Accent}",
+                        Success = $"{text.Medium.Success} {darkText.Light.Success} bg-transparent {hoverColors.Success}",
+                        Danger = $"{text.Medium.Danger} {darkText.Light.Danger} bg-transparent {hoverColors.Danger}",
+                        Warning = $"{text.Medium.Warning} {darkText.Light.Warning} bg-transparent {hoverColors.Warning}",
+                        Info = $"{text.Medium.Info} {darkText.Light.Info} bg-transparent {hoverColors.Info}",
                         Light = $"{text.Light.Dark} bg-transparent {hoverColors.Light}",
                         Dark = $"{text.Dark.Dark} bg-transparent {hoverColors.Dark}",
                     },

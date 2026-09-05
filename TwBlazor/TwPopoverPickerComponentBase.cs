@@ -105,6 +105,7 @@ public abstract class TwPopoverPickerComponentBase : TwBlazorTextInputComponentB
             var expanded = isFocused ? "true" : "false";
             return new Dictionary<string, object>
             {
+                ["role"] = "combobox",
                 ["aria-haspopup"] = "dialog",
                 ["aria-expanded"] = expanded
             };

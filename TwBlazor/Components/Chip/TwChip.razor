@@ -39,7 +39,7 @@ else
           style="@Style"
           role="@(isClickable ? "button" : null)"
           tabindex="@(isClickable && !Disabled ? "0" : null)"
-          aria-disabled="@(isClickable && Disabled ? "true" : null)"
+          aria-disabled="@(Disabled ? "true" : null)"
           @onclick="OnClickAsync"
           @onkeydown="OnKeyDownAsync"
           @attributes="@Attributes"

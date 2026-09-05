@@ -45,16 +45,27 @@ public class ColorBuilder(TwBlazorOptions options)
 
     public string GetTextColor(Color? color)
     {
+        // The six saturated hues pair their light-mode "-600" shade (text.Medium) with the dark-mode
+        // "-200" pastel shade (darkText.Light) rather than darkText.Medium's "-600" shade: this method
+        // is used for plain colored text (tabs, icons, links) that can end up directly on a dark
+        // surface, and "-600" text doesn't have enough contrast against a dark background - unlike
+        // darkText.Medium's other consumers (e.g. Pagination's active button), which pair it with a
+        // light pastel background even in dark mode.
         return color switch
         {
-            Color.Primary => $"{options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Medium.Primary}",
-            Color.Accent => $"{options.Theme.Colors.TextColors.Medium.Accent} {options.Theme.Colors.DarkTextColors.Medium.Accent}",
-            Color.Success => $"{options.Theme.Colors.TextColors.Medium.Success} {options.Theme.Colors.DarkTextColors.Medium.Success}",
-            Color.Danger => $"{options.Theme.Colors.TextColors.Medium.Danger} {options.Theme.Colors.DarkTextColors.Medium.Danger}",
-            Color.Warning => $"{options.Theme.Colors.TextColors.Medium.Warning} {options.Theme.Colors.DarkTextColors.Medium.Warning}",
-            Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Medium.Info}",
+            Color.Primary => $"{options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Light.Primary}",
+            Color.Accent => $"{options.Theme.Colors.TextColors.Medium.Accent} {options.Theme.Colors.DarkTextColors.Light.Accent}",
+            Color.Success => $"{options.Theme.Colors.TextColors.Medium.Success} {options.Theme.Colors.DarkTextColors.Light.Success}",
+            Color.Danger => $"{options.Theme.Colors.TextColors.Medium.Danger} {options.Theme.Colors.DarkTextColors.Light.Danger}",
+            Color.Warning => $"{options.Theme.Colors.TextColors.Medium.Warning} {options.Theme.Colors.DarkTextColors.Light.Warning}",
+            Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Light.Info}",
             Color.Light => $"{options.Theme.Colors.TextColors.Medium.Light} {options.Theme.Colors.DarkTextColors.Medium.Light}",
             Color.Dark => $"{options.Theme.Colors.TextColors.Medium.Dark} {options.Theme.Colors.DarkTextColors.Medium.Dark}",
+            // Empty (not a neutral default) is deliberate: TwIcon is the other consumer of this
+            // method, and an icon with no explicit Color is meant to inherit its surrounding
+            // element's text color via `currentColor` - forcing one here would break that and mismatch
+            // icons against the button/chip/etc text they sit inside. TwTab supplies its own fallback
+            // instead, since a tab button has no useful color to inherit otherwise.
             _ => string.Empty,
         };
     }

@@ -3,8 +3,11 @@
 
 @source "../../**/*.razor";
 @source "../../**/*.cs";
+@source "../../../TwBlazor.Theme/**/*.cs";
 @source not "../../bin/**";
 @source not "../../obj/**";
+@source not "../../../TwBlazor.Theme/bin/**";
+@source not "../../../TwBlazor.Theme/obj/**";
 
 /* TwSkeleton's Wave animation: Tailwind has no built-in shimmer utility, so this sweeps a translucent
    gradient across the placeholder via ::after. Requires the placeholder itself to be "relative

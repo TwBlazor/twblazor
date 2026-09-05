@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Builders;
 using TwBlazor.Configuration.Components;
 using TwBlazor.Enums;
 using TwBlazor.Utilities;
@@ -61,11 +62,27 @@ public partial class TwTab : TwBlazorComponentBase
     /// padding, text styling, and interactive effects.</remarks>
     public string TabClasses => new ClassBuilder(Parent.Dense ? theme.TabDensePadding : theme.TabPadding)
         .AddClass(theme.TabBase)
-        .AddClass(colorBuilder.GetTextColor(Color))
+        .AddClass(tabTextColor)
         .AddClass(theme.ActiveIndicator, (Parent.ActiveTab == this && !Disabled))
         .AddClass(theme.InactiveIndicator, Parent.ActiveTab != this && !Disabled)
         .AddClass(theme.DisabledTab, Disabled)
         .AddClass(Class).Build();
+
+    /// <summary>
+    /// The tab's text color classes. Unlike <see cref="ColorBuilder.GetTextColor"/>'s other consumer
+    /// (<see cref="TwIcon"/>, which should inherit its surrounding element's color via
+    /// <c>currentColor</c> when no explicit <see cref="Color"/> is set), a tab button has no useful
+    /// color to inherit, so it falls back to the theme's neutral heading color instead of an empty
+    /// string.
+    /// </summary>
+    private string tabTextColor
+    {
+        get
+        {
+            var color = colorBuilder.GetTextColor(Color);
+            return string.IsNullOrEmpty(color) ? options.Theme.Colors.NeutralText.Heading : color;
+        }
+    }
 
     protected override void OnInitialized()
     {

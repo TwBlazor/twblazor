@@ -18,10 +18,11 @@
     <File Path=".github/workflows/publish-develop.yml" />
     <File Path=".github/workflows/publish-release.yml" />
   </Folder>
-  <Project Path="TwBlazor.Docs/TwBlazor.Docs.csproj" Id="e40fd9c6-811a-4a42-9286-4938adb779d6" />
+  <Project Path="TwBlazor.A11yTests/TwBlazor.A11yTests.csproj" />
+  <Project Path="TwBlazor.Docs/TwBlazor.Docs.csproj" />
   <Project Path="TwBlazor.Server/TwBlazor.Server.csproj" />
   <Project Path="TwBlazor.Tests/TwBlazor.Tests.csproj" />
-  <Project Path="TwBlazor.Theme/TwBlazor.Theme.csproj" Id="ab073040-c95c-4b15-a27d-b2fad3ab5ced" />
+  <Project Path="TwBlazor.Theme/TwBlazor.Theme.csproj" />
   <Project Path="TwBlazor.WASM/TwBlazor.Wasm.csproj" />
   <Project Path="TwBlazor.WasmHost/TwBlazor.WasmHost.csproj" />
   <Project Path="TwBlazor/TwBlazor.csproj" />

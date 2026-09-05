@@ -13,7 +13,7 @@
     }
     <span class="sr-only" aria-live="polite">@statusMessage</span>
     <pre>
-        <code class="@($"language-{Language}")" @ref="codeBlock">
+        <code class="@($"language-{Language}")" tabindex="0" @ref="codeBlock">
             @Content
         </code>
     </pre>

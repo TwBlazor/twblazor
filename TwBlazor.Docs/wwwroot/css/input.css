@@ -3,8 +3,15 @@
 
 @source "../../**/*.razor";
 @source "../../**/*.cs";
+@source "../../../TwBlazor/**/*.razor";
+@source "../../../TwBlazor/**/*.cs";
+@source "../../../TwBlazor.Theme/**/*.cs";
 @source not "../../bin/**";
 @source not "../../obj/**";
+@source not "../../../TwBlazor/bin/**";
+@source not "../../../TwBlazor/obj/**";
+@source not "../../../TwBlazor.Theme/bin/**";
+@source not "../../../TwBlazor.Theme/obj/**";
 
 h1, h2, h3, h4, h5, h6 {
     font-family: "Source Sans 3", sans-serif;
