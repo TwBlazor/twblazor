@@ -369,12 +369,12 @@ public static class Theme
                 {
                     Colors = new()
                     {
-                        Primary = $"{background.Light.Primary} {darkBackground.Dark.Primary} {text.Medium.Primary} {darkText.Light.Primary} border-l-4 {borderColors.Primary}",
-                        Accent = $"{background.Light.Accent} {darkBackground.Dark.Accent} {text.Medium.Accent} {darkText.Light.Accent} border-l-4 {borderColors.Accent}",
-                        Success = $"{background.Light.Success} {darkBackground.Dark.Success} {text.Medium.Success} {darkText.Light.Success} border-l-4 {borderColors.Success}",
-                        Danger = $"{background.Light.Danger} {darkBackground.Dark.Danger} {text.Medium.Danger} {darkText.Light.Danger} border-l-4 {borderColors.Danger}",
-                        Warning = $"{background.Light.Warning} {darkBackground.Dark.Warning} {text.Medium.Warning} {darkText.Light.Warning} border-l-4 {borderColors.Warning}",
-                        Info = $"{background.Light.Info} {darkBackground.Dark.Info} {text.Medium.Info} {darkText.Light.Info} border-l-4 {borderColors.Info}",
+                        Primary = $"{background.Light.Primary} {darkBackground.Dark.Primary} {text.Dark.Primary} {darkText.Light.Primary} border-l-4 {borderColors.Primary}",
+                        Accent = $"{background.Light.Accent} {darkBackground.Dark.Accent} {text.Dark.Accent} {darkText.Light.Accent} border-l-4 {borderColors.Accent}",
+                        Success = $"{background.Light.Success} {darkBackground.Dark.Success} {text.Dark.Success} {darkText.Light.Success} border-l-4 {borderColors.Success}",
+                        Danger = $"{background.Light.Danger} {darkBackground.Dark.Danger} {text.Dark.Danger} {darkText.Light.Danger} border-l-4 {borderColors.Danger}",
+                        Warning = $"{background.Light.Warning} {darkBackground.Dark.Warning} {text.Dark.Warning} {darkText.Light.Warning} border-l-4 {borderColors.Warning}",
+                        Info = $"{background.Light.Info} {darkBackground.Dark.Info} {text.Dark.Info} {darkText.Light.Info} border-l-4 {borderColors.Info}",
                         Light = $"{background.Light.Light} {darkBackground.Dark.Light} {text.Medium.Dark} {darkText.Medium.Dark} border-l-4 {borderColors.Light}",
                         Dark = $"{background.Light.Dark} {darkBackground.Dark.Dark} {text.Medium.Dark} {darkText.Light.Dark} border-l-4 {borderColors.Dark}",
                     },
@@ -678,7 +678,7 @@ public static class Theme
                         Warning = $"{background.Light.Warning} {darkBackground.Light.Warning} {text.Dark.Warning} border-l-4 {borderColors.Warning}",
                         Info = $"{background.Light.Info} {darkBackground.Light.Info} {text.Dark.Info} border-l-4 {borderColors.Info}",
                         Light = $"{background.Light.Light} {darkBackground.Light.Light} {text.Dark.Dark} border-l-4 {borderColors.Light}",
-                        Dark = $"{background.Dark.Dark} {darkBackground.Dark.Dark} {text.Light.Light} border-l-4 {borderColors.Dark}"
+                        Dark = $"{background.Dark.Dark} {text.Light.Light} border-l-4 {borderColors.Dark}"
                     },
                     HeaderClasses = $"{defaultGap} flex-1 min-w-0 flex flex-col",
                     IconContainer = "flex-shrink-0",
