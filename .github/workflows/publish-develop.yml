@@ -54,14 +54,14 @@ jobs:
           $version = "v4.1.18"
           Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/download/$version/tailwindcss-linux-x64" -OutFile ./tailwindcss
           chmod +x ./tailwindcss
-          ./tailwindcss -i TwBlazor/wwwroot/css/input.css -o TwBlazor/wwwroot/css/twblazor.css --minify
+          ./tailwindcss -i src/TwBlazor/wwwroot/css/input.css -o src/TwBlazor/wwwroot/css/twblazor.css --minify
 
       - name: Build
-        run: dotnet build TwBlazor/TwBlazor.csproj --configuration Release --no-restore -p:MinVerVersionOverride=${{ steps.version.outputs.version }}
+        run: dotnet build src/TwBlazor/TwBlazor.csproj --configuration Release --no-restore -p:MinVerVersionOverride=${{ steps.version.outputs.version }}
 
       - name: Pack
         run: |
-          dotnet pack TwBlazor/TwBlazor.csproj \
+          dotnet pack src/TwBlazor/TwBlazor.csproj \
             --configuration Release \
             --no-build \
             -p:MinVerVersionOverride=${{ steps.version.outputs.version }} \

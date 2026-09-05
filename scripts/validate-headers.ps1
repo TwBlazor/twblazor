@@ -1,4 +1,4 @@
-# Validates that every .cs file in the TwBlazor library project (TwBlazor.csproj)
+# Validates that every .cs file in the TwBlazor library project (src/TwBlazor/TwBlazor.csproj)
 # starts with the MIT copyright header defined in .editorconfig's file_header_template.
 #
 # Usage:
@@ -22,7 +22,7 @@ try {
 
     # Only TwBlazor.csproj ships as the published package - other projects (Docs, Tests,
     # Theme, BuildTools, etc.) don't need the header.
-    $files = git ls-files 'TwBlazor/*.cs' | Where-Object { $_ -notmatch '[\\/](obj|bin)[\\/]' }
+    $files = git ls-files 'src/TwBlazor/*.cs' | Where-Object { $_ -notmatch '[\\/](obj|bin)[\\/]' }
 
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
     $missing = @()
@@ -56,7 +56,7 @@ try {
     }
 
     if ($missing.Count -eq 0) {
-        Write-Host "All $($files.Count) file(s) in TwBlazor/ have the copyright header." -ForegroundColor Green
+        Write-Host "All $($files.Count) file(s) in src/TwBlazor/ have the copyright header." -ForegroundColor Green
         exit 0
     }
 

@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+	<TargetFramework>net10.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn> <!-- Suppress missing XML comment warnings -->
+
+	<!-- Package Information -->
+	<PackageId>TwBlazor</PackageId>
+	<Authors>TwBlazor</Authors>
+	<Company>TwBlazor</Company>
+	<Description>Professional-grade Tailwind CSS components for modern Blazor development. Ship polished, accessible UI without wrestling with CSS.</Description>
+	<PackageProjectUrl>https://twblazor.com</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/TwBlazor/TwBlazor</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageIcon>logo.png</PackageIcon>
+	<PackageTags>blazor;tailwindcss;components;ui</PackageTags>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+	<!-- Versioning (MinVer). The version is derived entirely from Git tags:
+	     a tagged commit builds that exact version, and any commit after it builds
+	     the next patch as a prerelease with the commit height appended.
+	       tag v1.1.0                -> 1.1.0
+	       3 commits after v1.1.0    -> 1.1.1-preview.3
+	     Nothing in the repository records the version, so there is no file to
+	     bump and no version conflict when develop merges into main. -->
+	<MinVerTagPrefix>v</MinVerTagPrefix>
+	<MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	<None Include="..\..\images\logo.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Content Update="wwwroot\icons\bootstrap-icons.min.css">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+	<SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+	  <_Parameter1>TwBlazor.Tests</_Parameter1>
+	</AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
+	<PackageReference Include="MinVer" Version="7.0.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\icons\fonts\bootstrap-icons.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\icons\fonts\bootstrap-icons.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\js\twblazor.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+	<Content Update="wwwroot\css\output.css">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+  </Project>

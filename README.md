@@ -55,7 +55,7 @@ At the bottom of the body, include the TwBlazor.js script:
 @using TwBlazor.Enums
 @using TwBlazor
 ```
-4. Add a new static class `Theme` to configure the TwBlazor theme, ensuring Tailwind CSS targets this file for class compilation. You can view the default theme in the [TwBlazor.Theme](./TwBlazor.Theme/Theme.cs) project for reference and use it as a base for your own custom theme.
+4. Add a new static class `Theme` to configure the TwBlazor theme, ensuring Tailwind CSS targets this file for class compilation. You can view the default theme in the [TwBlazor.Theme](./src/TwBlazor.Theme/Theme.cs) project for reference and use it as a base for your own custom theme.
 5. Register the TwBlazor services in `Program.cs`:
 ```csharp
 // Add TwBlazor services in program.cs

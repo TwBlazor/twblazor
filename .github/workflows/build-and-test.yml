@@ -39,7 +39,13 @@ jobs:
         env:
           BUILD_CONFIGURATION: ${{ inputs.configuration }}
         run: dotnet build --configuration "$BUILD_CONFIGURATION" --no-restore
-        
+
+      - name: Install Playwright browser
+        shell: pwsh
+        env:
+          BUILD_CONFIGURATION: ${{ inputs.configuration }}
+        run: pwsh tests/TwBlazor.A11yTests/bin/$env:BUILD_CONFIGURATION/net10.0/playwright.ps1 install --with-deps chromium
+
       - name: Test
         env:
           BUILD_CONFIGURATION: ${{ inputs.configuration }}

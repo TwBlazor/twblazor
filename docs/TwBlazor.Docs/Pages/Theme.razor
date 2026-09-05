@@ -1,0 +1,380 @@
+@page "/theme"
+
+<PageTitle>Theme | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="Theme TwBlazor using surface, text, border and spacing tokens. Set accent colours and control how every component is styled." />
+    <link rel="canonical" href="https://twblazor.com/theme" />
+</HeadContent>
+
+<PageContainer Title="Theme">
+    @* ───── Surface System ───── *@
+    <PageCard Title="Surface System">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Surfaces use the Neutral palette to provide layering and elevation cues.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="rounded-lg p-4 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700">
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">Surface Dim</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-gray-50 / dark:bg-gray-950</p>
+            </div>
+            <div class="rounded-lg p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">Surface</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-white / dark:bg-gray-900</p>
+            </div>
+            <div class="rounded-lg p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">Surface Bright</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-gray-50 / dark:bg-gray-800</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <div class="rounded-lg p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700">
+                <span class="text-xs font-semibold text-gray-900 dark:text-white">Container Lowest</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-white / dark:bg-gray-950</p>
+            </div>
+            <div class="rounded-lg p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                <span class="text-xs font-semibold text-gray-900 dark:text-white">Container Low</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-gray-50 / dark:bg-gray-900</p>
+            </div>
+            <div class="rounded-lg p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span class="text-xs font-semibold text-gray-900 dark:text-white">Container</span>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">bg-gray-100 / dark:bg-gray-800</p>
+            </div>
+            <div class="rounded-lg p-4 bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-700">
+                <span class="text-xs font-semibold text-gray-900 dark:text-white">Container High</span>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">bg-gray-200 / dark:bg-gray-700</p>
+            </div>
+            <div class="rounded-lg p-4 bg-gray-300 dark:bg-gray-600 border border-gray-200 dark:border-gray-700">
+                <span class="text-xs font-semibold text-gray-900 dark:text-white">Container Highest</span>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">bg-gray-300 / dark:bg-gray-600</p>
+            </div>
+        </div>
+    </PageCard>
+
+    @* ───── Text & Border Tokens ───── *@
+    <PageCard Title="Text & Border Tokens">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @* Text tokens *@
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Text</h4>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <span class="text-gray-900 dark:text-white font-medium">On Surface</span>
+                    <code class="ml-auto text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-600 dark:text-gray-400">text-gray-900 / dark:text-white</code>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <span class="text-gray-600 dark:text-gray-400 font-medium">On Surface Variant</span>
+                    <code class="ml-auto text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-600 dark:text-gray-400">text-gray-600 / dark:text-gray-400</code>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">Placeholder</span>
+                    <code class="ml-auto text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-600 dark:text-gray-400">text-gray-500 / dark:text-gray-400</code>
+                </div>
+            </div>
+
+            @* Border tokens *@
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Borders</h4>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-8 rounded border-2 border-gray-300 dark:border-gray-600"></div>
+                    <div>
+                        <span class="text-gray-900 dark:text-white font-medium text-sm">Outline</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">border-gray-300 / dark:border-gray-600</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-8 rounded border-2 border-gray-200 dark:border-gray-700"></div>
+                    <div>
+                        <span class="text-gray-900 dark:text-white font-medium text-sm">Outline Variant</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">border-gray-200 / dark:border-gray-700</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-8 rounded border-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"></div>
+                    <div>
+                        <span class="text-gray-900 dark:text-white font-medium text-sm">Button Border (Default)</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">border-gray-300 / dark:border-gray-700</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-0.5">Used on pagination and neutral button borders. Subtle in light mode, visible in dark mode.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </PageCard>
+
+    @* ───── Spacing Tokens ───── *@
+    <PageCard Title="Spacing Tokens">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Standard spacing classes applied consistently across all components.
+        </p>
+
+        @* Gap scale *@
+        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Gap Scale</h4>
+        <div class="overflow-x-auto mb-6">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Class</th>
+                        <th class="px-4 py-3">Value</th>
+                        <th class="px-4 py-3">Used in</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">gap-1</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">4px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">DatePicker grid cells, sidebar navigation item list</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">gap-2</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">8px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Inline icon + label — Button, Alert, Checkbox, Switch, Radio, DataTable sort header</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">gap-3</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">12px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Sidebar navigation item content (icon + label)</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3"><code class="text-xs">gap-4</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">16px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">TimePicker horizontal column sections</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @* Padding scale *@
+        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Padding Scale</h4>
+        <div class="overflow-x-auto mb-6">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Classes</th>
+                        <th class="px-4 py-3">Context</th>
+                        <th class="px-4 py-3">Components</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-4 py-2</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Dense</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Alert (Dense mode)</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-3</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Input horizontal</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Textfield / Select (Outlined &amp; Filled variants)</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-4 py-3</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Sidebar item</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Sidebar nav items (parent + link)</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-6</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Button horizontal</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Button</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-6 py-3</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Table header cell</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">DataTable header cells</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-6 py-4</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Table body cell / standard</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">DataTable body cells, Alert (default)</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">px-6 py-5</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Card section</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Card header / body / footer</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3"><code class="text-xs">p-6</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Panel content</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Tab panel content area</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @* Vertical separation *@
+        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Vertical Separation</h4>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Class</th>
+                        <th class="px-4 py-3">Value</th>
+                        <th class="px-4 py-3">Used in</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">my-2</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">8px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Form control vertical rhythm — Checkbox, Switch, Radio label</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3"><code class="text-xs">mt-2</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">8px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Picker dropdown offset from trigger (DatePicker, TimePicker)</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3"><code class="text-xs">mb-4</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">16px</td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Component section separation — DataTable search bar above table</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </PageCard>
+
+    @* ───── Component Usage Reference ───── *@
+    <PageCard Title="Component Colour Usage">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            How the colour tokens map to specific component areas.
+        </p>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Component Area</th>
+                        <th class="px-4 py-3">Light</th>
+                        <th class="px-4 py-3">Dark</th>
+                        <th class="px-4 py-3">Token</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-900">
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Page Background</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-white</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-900</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Cards / Panels</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-100</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface Container</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Table Header</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-50</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface Container High</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Table Body</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-white</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-900</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Sidebar</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-white</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface Container</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Navbar</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-900</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Inverse Surface</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Popups / Dropdowns</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-white</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface Container</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Primary Text</td>
+                        <td class="px-4 py-3"><code class="text-xs">text-gray-900</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">text-white</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">On Surface</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Secondary Text / Labels</td>
+                        <td class="px-4 py-3"><code class="text-xs">text-gray-600</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">text-gray-400</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">On Surface Variant</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Input Borders</td>
+                        <td class="px-4 py-3"><code class="text-xs">border-gray-300</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">border-gray-600</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Outline</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Dividers / Subtle Borders</td>
+                        <td class="px-4 py-3"><code class="text-xs">border-gray-200</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">border-gray-700</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Outline Variant</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <td class="px-4 py-3 font-medium">Focus / Active accent</td>
+                        <td class="px-4 py-3"><code class="text-xs">green-600</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">green-500</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Primary</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3 font-medium">Filled Background</td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-100</code></td>
+                        <td class="px-4 py-3"><code class="text-xs">bg-gray-800</code></td>
+                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Surface Container</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </PageCard>
+
+    @* ───── Accent Colour Swatches ───── *@
+    <PageCard Title="Accent Colour Swatches">
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            The <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">Color</code> enum
+                allows any Tailwind colour to be applied as an accent. Default (no colour specified) resolves to Blue.
+        </p>
+
+        <div class="grid grid-cols-3 md:grid-cols-7 gap-2">
+            @foreach (var swatch in _swatches)
+            {
+                <div class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 text-center">
+                    <div class="h-10 @swatch.BgClass"></div>
+                    <span class="text-xs text-gray-600 dark:text-gray-400 py-1 block">@swatch.Label</span>
+                </div>
+            }
+        </div>
+    </PageCard>
+</PageContainer>
+
+@code {
+    private sealed record SwatchItem(string Label, string BgClass);
+
+    private readonly SwatchItem[] _swatches =
+    [
+        new("Red", "bg-red-600"),
+        new("Orange", "bg-orange-600"),
+        new("Amber", "bg-amber-500"),
+        new("Yellow", "bg-yellow-500"),
+        new("Lime", "bg-lime-500"),
+        new("Green", "bg-green-600"),
+        new("Emerald", "bg-emerald-600"),
+        new("Teal", "bg-teal-600"),
+        new("Cyan", "bg-cyan-600"),
+        new("Sky", "bg-sky-600"),
+        new("Blue", "bg-blue-600"),
+        new("Indigo", "bg-indigo-600"),
+        new("Violet", "bg-violet-600"),
+        new("Purple", "bg-purple-600"),
+        new("Fuchsia", "bg-fuchsia-600"),
+        new("Pink", "bg-pink-600"),
+        new("Rose", "bg-rose-600"),
+        new("Slate", "bg-slate-600"),
+        new("Gray", "bg-gray-600"),
+        new("Zinc", "bg-zinc-600"),
+        new("Neutral", "bg-neutral-600"),
+    ];
+}

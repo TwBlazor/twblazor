@@ -1,0 +1,70 @@
+﻿@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@rootClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
+    <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow-lg dark:focus:bg-gray-800 dark:focus:text-white" href="#main-content-root">skip to the main content</a>
+
+    @* Backdrop overlay for mobile when sidebar is open *@
+    @if (IsSidebarOpen)
+    {
+        <div class="fixed inset-0 bg-black/50 z-[90] lg:hidden" @onclick="ToggleSidebar" aria-hidden="true"></div>
+    }
+
+    <nav class="@sidebarClasses" aria-label="sidebar navigation">
+        @if (HeaderContent != null)
+        {
+            @HeaderContent
+        }
+        
+        @if (IsSearchable)
+        {
+            <TwTextfield T=string Placeholder="Search..." Class="mt-3" Value="@searchTerm" ValueChanged="@((v) => OnSearchInput(v))" BindEvent="oninput" Variant="InputVariant.Outlined" Dense />
+        }
+
+        <div class="mt-3 flex flex-col gap-1 overflow-y-auto pb-6">
+            @if (displayedNavigationItems.Any())
+            {
+                @foreach (var ni in displayedNavigationItems)
+                {
+                    
+                    if (ni.NavigationItems.Any()) // is a parent item.
+                    {
+                        var parentId = GetParentItemId(ni);
+                        var childrenId = $"{parentId}-children";
+                        <div class="flex flex-col">
+                            <TwSidebarItem NavigationItem="ni" Id="@parentId" IsParent IsCollapsed="ni.Collapsed" ChildrenId="@childrenId" OnClick="@(() => ni.Collapsed = !ni.Collapsed)" />
+                            <div id="@childrenId" class="@GetChildContainerClasses(ni.Collapsed)">
+                                <ul>
+                                    @* child items *@
+                                    @{ var childItems = ni.NavigationItems; }
+                                    @foreach (var ci in childItems)
+                                    {
+                                        <li>
+                                            <TwSidebarItem NavigationItem="ci" IsChild IsLastChild="ci == childItems[^1]" />
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else // is a single item.
+                    {
+                        <TwSidebarItem NavigationItem="ni" />
+                    }
+                }
+            }
+             
+            @SidebarContent
+        </div>
+    </nav>
+    <div id="main-content-root" class="@mainContentRootClasses">
+        <TwNavbar Fixed="IsNavbarFixed" Class="@NavbarClass">
+            <TwIcon Icon="@(IsSidebarOpen? Icon.X: Icon.List)" AriaLabel="@(IsSidebarOpen ? "Close sidebar" : "Open sidebar")" aria-expanded="@(IsSidebarOpen ? "true" : "false")" OnClick="ToggleSidebar" Class="text-xl text-white" />
+            @NavbarContent
+        </TwNavbar>
+        <div class="@mainContentClasses" tabindex="0">
+            @ChildContent
+        </div>
+    </div>
+</div>

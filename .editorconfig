@@ -330,7 +330,7 @@ dotnet_naming_style._camelcase.capitalization = camel_case
 
 # TwBlazor.csproj is the only published package, so it's the only project that
 # needs an MIT copyright header. Validated/applied by scripts/Test-CopyrightHeaders.ps1.
-[TwBlazor/**.cs]
+[src/TwBlazor/**.cs]
 file_header_template = Copyright (c) 2025 Jack Shuter @ TwBlazor - twblazor.com\nLicensed under the MIT License. See LICENSE.txt in the project root for license information.
 dotnet_diagnostic.IDE0073.severity = warning
 
