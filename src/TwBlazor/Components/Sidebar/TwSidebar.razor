@@ -19,7 +19,7 @@
         
         @if (IsSearchable)
         {
-            <TwTextfield T=string Placeholder="Search..." Class="mt-3" Value="@searchTerm" ValueChanged="@((v) => OnSearchInput(v))" BindEvent="oninput" Variant="InputVariant.Outlined" Dense />
+            <TwTextfield T=string Placeholder="Search..." Class="mt-3" Value="@searchTerm" ValueChanged="@((v) => OnSearchInput(v))" BindEvent="oninput" />
         }
 
         <div class="mt-3 flex flex-col gap-1 overflow-y-auto pb-6">
