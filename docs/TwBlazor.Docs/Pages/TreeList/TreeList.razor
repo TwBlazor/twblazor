@@ -13,7 +13,7 @@
 
 <PageContainer Title="TwTreeList">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Build a tree by nesting <code>TwTreeListItem</code> tags inside a <code>TwTreeList</code> - and inside each other, for children. A node with nested items can be expanded or collapsed by clicking it.</p>
+        <Description>Build a tree by nesting <code>TwTreeListItem</code> tags inside a <code>TwTreeList</code> - and inside each other, for children. A node with nested items can be expanded or collapsed by clicking it.</Description>
         <CodeExample Name="TreeListBasic">
             <TwTreeList AriaLabel="File explorer">
                 <TwTreeListItem Label="Documents">
@@ -30,7 +30,7 @@
     </PageCard>
 
     <PageCard Title="Default Expanded">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>Collapsed="false"</code> on a node so its children are already visible on first render.</p>
+        <Description>Set <code>Collapsed="false"</code> on a node so its children are already visible on first render.</Description>
         <CodeExample Name="TreeListExpanded">
             <TwTreeList AriaLabel="Project structure">
                 <TwTreeListItem Label="src" Collapsed="false">
@@ -46,7 +46,7 @@
     </PageCard>
 
     <PageCard Title="Selecting a Node">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Assign <code>OnClick</code> on a node to react when it's activated by click or keyboard (Enter/Space).</p>
+        <Description>Assign <code>OnClick</code> on a node to react when it's activated by click or keyboard (Enter/Space).</Description>
         <CodeExample Name="TreeListSelection" CSharpName="TreeListSelectionCode">
             <TwTreeList AriaLabel="Select a file">
                 <TwTreeListItem Label="Reports">
@@ -60,7 +60,7 @@
     </PageCard>
 
     <PageCard Title="Checkboxes">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>ShowCheckboxes</code> on the tree to render a checkbox next to each node. Checking or unchecking a node cascades to all of its descendants, and a parent whose children disagree renders indeterminate (a dash) rather than a plain check.</p>
+        <Description>Set <code>ShowCheckboxes</code> on the tree to render a checkbox next to each node. Checking or unchecking a node cascades to all of its descendants, and a parent whose children disagree renders indeterminate (a dash) rather than a plain check.</Description>
         <CodeExample Name="TreeListCheckboxes">
             <TwTreeList ShowCheckboxes AriaLabel="Select project files">
                 <TwTreeListItem Label="src" Collapsed="false">
@@ -76,7 +76,7 @@
     </PageCard>
 
     <PageCard Title="Disabled Nodes">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>Disabled</code> on a node to prevent it from expanding or raising <code>OnClick</code>.</p>
+        <Description>Set <code>Disabled</code> on a node to prevent it from expanding or raising <code>OnClick</code>.</Description>
         <CodeExample Name="TreeListDisabled">
             <TwTreeList AriaLabel="File explorer with a locked folder">
                 <TwTreeListItem Label="Shared" Collapsed="false">
@@ -90,7 +90,7 @@
     </PageCard>
 
     <PageCard Title="Custom Icons">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Every node shows a folder or file icon by default. Set <code>Icon</code> on a node to override it.</p>
+        <Description>Every node shows a folder or file icon by default. Set <code>Icon</code> on a node to override it.</Description>
         <CodeExample Name="TreeListCustomIcons">
             <TwTreeList AriaLabel="Mixed content types">
                 <TwTreeListItem Label="Photos" Icon="Icon.Image" />
@@ -101,7 +101,7 @@
     </PageCard>
 
     <PageCard Title="Hiding Icons">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Set <code>HideIcons</code> on the tree for a plainer look with just labels and the expand/collapse chevron.</p>
+        <Description>Set <code>HideIcons</code> on the tree for a plainer look with just labels and the expand/collapse chevron.</Description>
         <CodeExample Name="TreeListHideIcons">
             <TwTreeList HideIcons AriaLabel="File explorer without icons">
                 <TwTreeListItem Label="Documents">
@@ -113,7 +113,7 @@
     </PageCard>
 
     <PageCard Title="Building From Your Own Data">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A node is just a component, so a tree built from your own data is a normal <code>@@foreach</code> - no separate model type to learn. <code>OnClick</code> works the same regardless of how a node was created, so clicking a team here calls into <code>ITwDialogService</code> to show its members.</p>
+        <Description>A node is just a component, so a tree built from your own data is a normal <code>@@foreach</code> - no separate model type to learn. <code>OnClick</code> works the same regardless of how a node was created, so clicking a team here calls into <code>ITwDialogService</code> to show its members.</Description>
         <CodeExample Name="TreeListFromData" CSharpName="TreeListFromDataCode">
             <TwTreeList AriaLabel="Departments">
                 @foreach (var department in departments)

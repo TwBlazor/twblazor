@@ -13,10 +13,10 @@
 
 <PageContainer Title="TwToastProvider">
     <PageCard Title="Setup">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             The Toast service provides a simple way to display temporary notification messages to users.
             To use toasts, add the <code>TwToastProvider</code> component to your app and inject the <code>ITwToastService</code>.
-        </p>
+        </Description>
 
         <div class="space-y-5">
             <div>
@@ -44,9 +44,9 @@
     </PageCard>
 
     <PageCard Title="Toast Types">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             The toast service provides convenient methods for common notification types: Success, Error, Warning, and Info.
-        </p>
+        </Description>
 
         <CodeExample Name="ToastTypes" CSharpName="ToastTypesCode">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -59,9 +59,9 @@
     </PageCard>
 
     <PageCard Title="Custom Toasts">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Create custom toasts with any color, icon, and duration using the <code>Show()</code> method, or build a <code>ToastModel</code> directly for full control.
-        </p>
+        </Description>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -79,9 +79,9 @@
     </PageCard>
 
     <PageCard Title="Colors">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Toasts support every color in the <code>Color</code> enum, sharing the same palette as <a href="/alert" class="underline">TwAlert</a>.
-        </p>
+        </Description>
 
         <CodeExample Name="ToastColors" CSharpName="ToastColorsCode">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
@@ -94,9 +94,9 @@
     </PageCard>
 
     <PageCard Title="Duration & Persistence">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             By default, toasts auto-dismiss after 5 seconds. Customize the duration per toast, or set it to <code>0</code> to make it persistent until manually dismissed.
-        </p>
+        </Description>
 
         <CodeExample Name="ToastDuration" CSharpName="ToastDurationCode">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -108,9 +108,9 @@
     </PageCard>
 
     <PageCard Title="Managing Toasts">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Clear all active toasts programmatically using the <code>ClearAll()</code> method.
-        </p>
+        </Description>
 
         <CodeExample Name="ToastClearAll" CSharpName="ToastClearAllCode">
             <div class="flex gap-2 mb-2">
@@ -121,11 +121,11 @@
     </PageCard>
 
     <PageCard Title="Theme Configuration">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Toast styling is controlled by <code>TwBlazorTheme.Toast</code> (a <code>TwToastTheme</code>), configured via the <code>AddTwBlazor()</code>
             options callback described on the <a href="/get-started" class="underline">Get Started</a> page. Every property is a set of Tailwind classes,
             so changes are picked up by your own Tailwind build.
-        </p>
+        </Description>
 
         <div class="overflow-x-auto mb-4">
             <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">

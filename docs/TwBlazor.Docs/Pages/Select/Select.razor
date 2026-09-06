@@ -8,6 +8,7 @@
 
 <PageContainer Title="TwSelect">
     <PageCard Title="Basic Select">
+        <Description>Bind <code>SelectedValue</code> and use <code>Variant</code> to switch between default, filled and outlined styles.</Description>
         <CodeExample Name="SelectBasic" CSharpName="SelectBasicCode">
             <div class="w-full flex flex-row">
                 <div class="flex-col lg:flex-row flex flex-grow gap-4 mb-4">
@@ -48,6 +49,7 @@
     </PageCard>
 
     <PageCard Title="Select with Complex Objects">
+        <Description>Use <code>PropertyName</code> to display a specific property when binding to a list of complex objects.</Description>
         <CodeExample Name="SelectComplexObjects" CSharpName="SelectComplexObjectsCode">
             <TwSelect T="Person"
                       Label="Select Person"
@@ -69,6 +71,7 @@
     </PageCard>
 
     <PageCard Title="Required Select">
+        <Description>Set the <code>Required</code> property to mark the select as a required field.</Description>
         <CodeExample Name="SelectRequired">
             <TwSelect T="string"
                       Label="Favourite Color"
@@ -85,6 +88,7 @@
     </PageCard>
 
     <PageCard Title="Disabled and Readonly Select">
+        <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the select.</Description>
         <CodeExample Name="SelectReadonlyDisabled">
             <div class="flex flex-col gap-3">
                 <TwSelect T="string"
@@ -107,6 +111,7 @@
     </PageCard>
 
     <PageCard Title="Select with Numbers">
+        <Description>TwSelect works with numeric types as well as strings and objects.</Description>
         <CodeExample Name="SelectNumeric">
             <TwSelect T="int"
                       Label="Quantity"

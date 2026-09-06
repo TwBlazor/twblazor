@@ -10,6 +10,7 @@
 
 <PageContainer Title="TwFileUpload">
     <PageCard Title="Basic File Upload">
+        <Description>Use <code>Icon</code>, <code>Label</code>, <code>Variant</code> and <code>Color</code> to style the upload button, and <code>Multiple</code> to allow more than one file.</Description>
         <CodeExample Name="FileUploadBasic">
             <div class="space-y-4">
                 <TwFileUpload Id="basic-file-upload" Icon="@Icon.Upload" Label="Upload file" Variant="ButtonVariant.Outlined" Color="Color.Success" />
@@ -21,6 +22,7 @@
     </PageCard>
 
     <PageCard Title="Binding">
+        <Description>Bind <code>@("@bind-Files")</code> to access the list of selected files.</Description>
         <CodeExample Name="FileUploadBinding" CSharpName="FileUploadBindingCode">
             <div class="space-y-4">
                 <TwFileUpload Id="binding-upload" Icon="@Icon.Upload" Label="Bind files" Multiple @bind-Files="@boundFiles" Variant="ButtonVariant.Outlined" Color="Color.Primary" />
@@ -39,6 +41,7 @@
     </PageCard>
 
     <PageCard Title="Accept (Allowed file types)">
+        <Description>Use <code>AllowedFileTypes</code> to restrict which file types can be selected, via the <code>accept</code> attribute.</Description>
         <CodeExample Name="FileUploadAllowedTypes">
             <div class="space-y-4">
                 <TwFileUpload Id="accept-upload" Icon="@Icon.Upload" Label="Upload images only" AllowedFileTypes="@(new[] { ".png", ".jpg", "image/png", "image/jpeg" })" Variant="ButtonVariant.Filled" Color="Color.Primary" />

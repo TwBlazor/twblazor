@@ -9,24 +9,28 @@
 
 <PageContainer Title="TwColorPicker">
     <PageCard Title="Basic Color Picker">
+        <Description>Bind <code>Value</code> to let users pick a color from a labeled color picker input.</Description>
         <CodeExample Name="ColorPickerBasic" CSharpName="ColorPickerBasicCode">
             <TwColorPicker Label="Choose Color" @bind-Value="SelectedColor" />
         </CodeExample>
     </PageCard>
 
     <PageCard Title="With Mode Switch">
+        <Description>Set <code>ShowModeSwitch</code> to let users toggle between color input modes (e.g. hex and RGB).</Description>
         <CodeExample Name="ColorPickerMode" CSharpName="ColorPickerModeCode">
             <TwColorPicker Label="Primary Color" @bind-Value="PrimaryColor" ShowModeSwitch />
         </CodeExample>
     </PageCard>
 
     <PageCard Title="With Alpha Channel">
+        <Description>Set <code>ShowAlpha</code> to add an alpha channel slider for transparency.</Description>
         <CodeExample Name="ColorPickerAlpha" CSharpName="ColorPickerAlphaCode">
             <TwColorPicker Label="Overlay Color" @bind-Value="OverlayColor" ShowAlpha ShowModeSwitch />
         </CodeExample>
     </PageCard>
 
     <PageCard Title="Input Variants">
+        <Description>Use the <code>Variant</code> property to switch between default, outlined and filled input styles.</Description>
         <CodeExample Name="ColorPickerVariants" CSharpName="ColorPickerVariantsCode">
             <div class="grid gap-4">
                 <TwColorPicker Label="Primary Color" @bind-Value="PrimaryColor" Variant="InputVariant.Default" ShowModeSwitch />
@@ -37,12 +41,14 @@
     </PageCard>
 
     <PageCard Title="Disabled State">
+        <Description>Use the <code>Disabled</code> property to prevent interaction with the color picker.</Description>
         <CodeExample Name="ColorPickerDisabled">
             <TwColorPicker Label="Disabled Color" Value="#cccccc" Disabled />
         </CodeExample>
     </PageCard>
 
     <PageCard Title="Output Format">
+        <Description>Use <code>OutputFormat</code> to control whether the bound value is emitted as hex or RGB, regardless of the input format.</Description>
         <CodeExample Name="ColorPickerOutput" CSharpName="ColorPickerOutputCode">
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @* Output as Hex (default) *@

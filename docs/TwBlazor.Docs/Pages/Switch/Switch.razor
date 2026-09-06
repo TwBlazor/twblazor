@@ -8,7 +8,7 @@
 
 <PageContainer Title="TwSwitch">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A toggle switch for binary on/off state, bound with <code>@@bind-Value</code>.</p>
+        <Description>A toggle switch for binary on/off state, bound with <code>@@bind-Value</code>.</Description>
 
         <CodeExample Name="SwitchBasic" CSharpName="SwitchBasicCode">
             <TwSwitch @bind-Value="notificationsEnabled" Label="Notifications" LabelClass="ms-2" AriaLabel="Toggle notifications" />
@@ -17,7 +17,7 @@
     </PageCard>
 
     <PageCard Title="Colors">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to give a switch meaning at a glance - here each toggle drives an independent, bound setting.</p>
+        <Description>Use <code>Color</code> to give a switch meaning at a glance - here each toggle drives an independent, bound setting.</Description>
         <CodeExample Name="SwitchColors">
             @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
             {
@@ -42,7 +42,7 @@
     </PageCard>
 
     <PageCard Title="Disabled & Readonly">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><code>Disabled</code> dims and locks the switch; <code>ReadOnly</code> keeps its state and color but blocks changes.</p>
+        <Description><code>Disabled</code> dims and locks the switch; <code>ReadOnly</code> keeps its state and color but blocks changes.</Description>
 
         <CodeExample Name="SwitchReadonlyDisabled" CSharpName="SwitchReadonlyDisabledCode">
             <div class="space-y-3">
@@ -53,7 +53,7 @@
     </PageCard>
 
     <PageCard Title="Settings Panel">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A practical example - each switch binds to its own field, and a summary below reflects the combined state.</p>
+        <Description>A practical example - each switch binds to its own field, and a summary below reflects the combined state.</Description>
 
         <CodeExample Name="SwitchSettingsPanel" CSharpName="SwitchSettingsPanelCode">
             <div class="space-y-3">

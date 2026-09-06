@@ -8,7 +8,7 @@
 
 <PageContainer Title="TwSpinner">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">An animated loading indicator rendered as an <code>&lt;output&gt;</code> element, so status changes are announced to assistive technology. The <code>Label</code> ("Loading..." by default) is always in the DOM for assistive technology, even when not shown visually.</p>
+        <Description>An animated loading indicator rendered as an <code>&lt;output&gt;</code> element, so status changes are announced to assistive technology. The <code>Label</code> ("Loading..." by default) is always in the DOM for assistive technology, even when not shown visually.</Description>
 
         <CodeExample Name="SpinnerBasic">
             <TwSpinner AriaLabel="Loading" />
@@ -16,7 +16,7 @@
     </PageCard>
 
     <PageCard Title="Sizes">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to control the spinner's dimensions.</p>
+        <Description>Use <code>Size</code> to control the spinner's dimensions.</Description>
 
         <CodeExample Name="SpinnerSizes">
             <div class="flex items-center gap-6">
@@ -28,7 +28,7 @@
     </PageCard>
 
     <PageCard Title="Colors">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to match the spinner to its surrounding context.</p>
+        <Description>Use <code>Color</code> to match the spinner to its surrounding context.</Description>
 
         <CodeExample Name="SpinnerColors">
             @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
@@ -50,7 +50,7 @@
     </PageCard>
 
     <PageCard Title="Visible Label">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">By default the label text is only announced to assistive technology. Set <code>ShowLabel</code> to display it next to the spinner too.</p>
+        <Description>By default the label text is only announced to assistive technology. Set <code>ShowLabel</code> to display it next to the spinner too.</Description>
 
         <CodeExample Name="SpinnerVisibleLabel">
             <div class="flex flex-col gap-4">
@@ -61,7 +61,7 @@
     </PageCard>
 
     <PageCard Title="Inside a Button">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A common pattern: swap a button's label for a small spinner while an async action is in flight.</p>
+        <Description>A common pattern: swap a button's label for a small spinner while an async action is in flight.</Description>
 
         <CodeExample Name="SpinnerButton" CSharpName="SpinnerButtonCode">
             <TwButton Color="Color.Primary" Variant="ButtonVariant.Outlined" Disabled="@isSaving" OnClick="Save">
