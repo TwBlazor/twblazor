@@ -140,12 +140,14 @@
 
 @code {
     // Illustrative only - not wired up to a live control on this page.
-    private const string _themeExample = @"builder.Services.AddTwBlazor(options =>
-{
-    options.Theme.Toast.Container = ""fixed top-0 right-0 p-4 z-50 flex flex-col gap-2 max-w-md""; // Move to top-right
-    options.Theme.Toast.ToastRounded = Rounded.Full; // Make toasts fully rounded
-    options.Theme.Toast.ToastWidth = ""max-w-sm""; // Wider toasts
-}, Theme.DefaultTheme);";
+    private const string _themeExample = """
+        builder.Services.AddTwBlazor(options =>
+        {
+            options.Theme.Toast.Container = "fixed top-0 right-0 p-4 z-50 flex flex-col gap-2 max-w-md"; // Move to top-right
+            options.Theme.Toast.ToastRounded = Rounded.Full; // Make toasts fully rounded
+            options.Theme.Toast.ToastWidth = "max-w-sm"; // Wider toasts
+        }, Theme.DefaultTheme);
+        """;
 
     #region CodeExample ToastTypesCode
     private void ShowSuccessToast()

@@ -134,11 +134,13 @@
 
 @code {
     // Illustrative only - not wired up to a live control on this page.
-    private const string _themeExample = @"builder.Services.AddTwBlazor(options =>
-{
-    options.Theme.Dialog.Backdrop = ""fixed inset-0 z-[110] flex p-4 bg-black/70 overflow-y-auto""; // Darker backdrop
-    options.Theme.Dialog.DialogRounded = Rounded.Full; // Fully rounded dialogs
-}, Theme.DefaultTheme);";
+    private const string _themeExample = """
+        builder.Services.AddTwBlazor(options =>
+        {
+            options.Theme.Dialog.Backdrop = "fixed inset-0 z-[110] flex p-4 bg-black/70 overflow-y-auto"; // Darker backdrop
+            options.Theme.Dialog.DialogRounded = Rounded.Full; // Fully rounded dialogs
+        }, Theme.DefaultTheme);
+        """;
 
     private string? confirmResult;
     private string? promptResult;
