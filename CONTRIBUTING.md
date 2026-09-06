@@ -9,6 +9,29 @@ distributed as part of the project.
 
 ---
 
+## 📖 Index
+
+- [Project Structure](#project-structure)
+- [CSS](#css)
+- [Code of Conduct](#-code-of-conduct)
+- [Prerequisites](#️-prerequisites)
+- [Getting Started](#-getting-started)
+- [Branching Strategy](#-branching-strategy)
+- [Releasing & Versioning](#-releasing--versioning)
+- [Pull Requests](#-pull-requests)
+- [Top-Level Folders](#-top-level-folders)
+- [Coding Guidelines](#-coding-guidelines)
+- [Component Guidelines](#-component-guidelines-if-applicable)
+- [Adding a New Component](#-adding-a-new-component)
+- [Testing](#-testing)
+- [Common Mistakes](#-common-mistakes)
+- [Keeping Your Branch Updated](#-keeping-your-branch-updated)
+- [Before Large Changes](#-before-large-changes)
+- [CI / Checks](#-ci--checks)
+- [Quick Checklist](#-quick-checklist)
+
+---
+
 ## Project Structure
 
 ```
@@ -279,8 +302,52 @@ See [Project Structure](#project-structure) above for the full tree.
 
 - Keep parameters simple (no hidden side effects)
 - Use clear naming
-- Avoid directly mutating inputs—use events/callbacks instead
+- Avoid directly mutating inputs-use events/callbacks instead
 - Keep UI and logic separated where possible
+
+---
+
+## 🆕 Adding a New Component
+
+A new component touches four places: the component itself, its docs page, its
+tests, and an entry in [`components.json`](components.json). Using `TwTreeList`
+as a reference:
+
+1. **Component** - add `src/TwBlazor/Components/<Name>/Tw<Name>.razor` (and
+   `.razor.cs` code-behind). Follow the [Component Guidelines](#-component-guidelines-if-applicable)
+   above.
+2. **Docs page** - add `docs/TwBlazor.Docs/Pages/<Name>/<Name>.razor` showing
+   the component's variants/states. This is the page real users see, and is
+   also what the accessibility tests scan (see below).
+3. **Tests** - add `tests/TwBlazor.Tests/Components/<Name>/Tw<Name>Tests.cs`
+   following the [Testing](#-testing) naming conventions.
+4. **Register it in `components.json`** - add an entry to the appropriate
+   category array at the repo root:
+
+   ```json
+   { "id": "my-component-navitem", "display": "My Component", "name": "TwMyComponent", "url": "/my-component" }
+   ```
+
+   - `id` - unique DOM/nav id, conventionally `<kebab-name>-navitem`
+   - `display` - label shown in the docs sidebar
+   - `name` - the component's C# type name
+   - `url` - route of the docs page from step 2
+   - `isNew` (optional) - set `true` to show a "New" badge in the sidebar
+
+`components.json` is the single source of truth that indexes every documented
+component, and is consumed in two places:
+
+- **Docs navigation** - [`Navigation.razor.cs`](docs/TwBlazor.Docs/Layout/Navigation.razor.cs)
+  deserializes it (via an embedded resource) to build the sidebar. Category
+  order and item order in the file are exactly the order rendered.
+- **Accessibility tests** - [`AccessibilityRoutes.cs`](tests/TwBlazor.A11yTests/AccessibilityRoutes.cs)
+  reads the same embedded resource to enumerate every component's `url` and
+  runs an axe-core scan against it in both light and dark mode. Adding your
+  component's route to `components.json` is what gets it covered by these
+  tests automatically - no separate test wiring is needed.
+
+Since `components.json` is embedded as a resource in `TwBlazor.Docs.csproj`,
+no project file changes are required beyond editing the JSON itself.
 
 ---
 
@@ -294,7 +361,7 @@ See [Project Structure](#project-structure) above for the full tree.
   - Descriptive
 
 ### Naming
-- `Subject_Action_ExpectedResult` — use the full component or method name as the subject  
+- `Subject_Action_ExpectedResult` - use the full component or method name as the subject  
   **Examples:**
   - `TwDataTable_Renders_WithEmptyItems`
   - `TwDataTable_Pageable_ShowsPaginationControls`
