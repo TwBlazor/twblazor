@@ -69,6 +69,32 @@
     <Compile Include="Generated\CodeExamples.cs" />
   </ItemGroup>
 
+  <!-- Copy TwBlazor's generated XML doc comments into wwwroot so ThemeConfigurationCard can fetch
+       them at runtime under Blazor WebAssembly, where Assembly.Location is empty and there's no
+       filesystem to read the file straight off disk (see XmlDocSummary.cs). Unlike GenerateDefaultTheme
+       above, this always runs - including under Cloudflare Pages - since the published WASM site is
+       exactly the target it exists for. AfterTargets="ResolveAssemblyReferences" is safe to rely on
+       TwBlazor.xml already existing: TwBlazor.csproj is a ProjectReference, so its own build (which
+       produces the XML file) is always a prerequisite of this project's build. -->
+  <Target Name="CopyTwBlazorXmlDoc" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_TwBlazorReference Include="@(ReferencePath)" Condition="'%(ReferencePath.Filename)' == 'TwBlazor'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_TwBlazorXmlDocSource Condition="'@(_TwBlazorReference)' != ''">%(_TwBlazorReference.RootDir)%(_TwBlazorReference.Directory)%(_TwBlazorReference.Filename).xml</_TwBlazorXmlDocSource>
+    </PropertyGroup>
+    <Copy SourceFiles="$(_TwBlazorXmlDocSource)" DestinationFolder="$(MSBuildProjectDirectory)\wwwroot" SkipUnchangedFiles="true" Condition="'$(_TwBlazorXmlDocSource)' != '' and Exists('$(_TwBlazorXmlDocSource)')" />
+  </Target>
+
+  <!-- Explicit Remove+Include, same reasoning as Generated\CodeExamples.cs above: on a clean
+       checkout the default wwwroot glob is evaluated before CopyTwBlazorXmlDoc runs, so it
+       wouldn't otherwise see this generated file; the Remove avoids a duplicate item once the
+       glob *does* see it on a later incremental build. -->
+  <ItemGroup>
+    <Content Remove="wwwroot\TwBlazor.xml" />
+    <Content Include="wwwroot\TwBlazor.xml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>

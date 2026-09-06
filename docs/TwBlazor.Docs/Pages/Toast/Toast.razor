@@ -11,7 +11,22 @@
 @inject ITwToastService ToastService
 @* #endregion *@
 
-<PageContainer Title="TwToastProvider">
+<PageContainer Title="TwToastProvider" ThemeType="typeof(TwToastTheme)">
+    <ThemeContent>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            For example, to move toasts to the top-right and make them fully rounded:
+        </p>
+
+        <ExampleCodeBlock CSharp="@_themeExample" />
+
+        <p class="text-xs text-gray-500 dark:text-gray-500 mt-4">
+            Duration isn't themed - it's passed per call via <code>Show(..., duration)</code> or
+            <code>ToastModel.Duration</code> (default <code>5000</code>ms, <code>0</code> = persistent).
+            See the <a href="/theme" class="underline">Theme</a> page for the full colour and design-token reference.
+        </p>
+    </ThemeContent>
+    <ChildContent>
+
     <PageCard Title="Setup">
         <Description>
             The Toast service provides a simple way to display temporary notification messages to users.
@@ -120,88 +135,7 @@
         </CodeExample>
     </PageCard>
 
-    <PageCard Title="Theme Configuration">
-        <Description>
-            Toast styling is controlled by <code>TwBlazorTheme.Toast</code> (a <code>TwToastTheme</code>), configured via the <code>AddTwBlazor()</code>
-            options callback described on the <a href="/get-started" class="underline">Get Started</a> page. Every property is a set of Tailwind classes,
-            so changes are picked up by your own Tailwind build.
-        </Description>
-
-        <TwTable Bordered Striped Class="mb-4">
-            <TableHeader>
-                <tr>
-                    <th class="px-4 py-3">Property</th>
-                    <th class="px-4 py-3">Type</th>
-                    <th class="px-4 py-3">Controls</th>
-                </tr>
-            </TableHeader>
-            <TableBody>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">Container</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed toast stack wrapper - screen position, stacking direction, z-index</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">Toast</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Each individual toast card - padding, gap, shadow, transition</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">ToastRounded</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">ToastWidth</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Tailwind width class applied to every toast</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">HeaderClasses</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + message wrapper inside a toast</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">Title</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast title text</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">Message</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast message text</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">Timestamp</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The relative timestamp text</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">IconContainer</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The icon wrapper</td>
-                </tr>
-                <tr>
-                    <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
-                </tr>
-            </TableBody>
-        </TwTable>
-
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-            For example, to move toasts to the top-right and make them fully rounded:
-        </p>
-
-        <ExampleCodeBlock CSharp="@_themeExample" />
-
-        <p class="text-xs text-gray-500 dark:text-gray-500 mt-4">
-            Per-color styling (background, text, border) isn't set on <code>TwToastTheme</code> - toasts draw from the same
-            <code>Colors.AlertColors</code> tokens as <a href="/alert" class="underline">TwAlert</a>, and duration isn't themed either;
-            it's passed per call via <code>Show(..., duration)</code> or <code>ToastModel.Duration</code> (default <code>5000</code>ms, <code>0</code> = persistent).
-            See the <a href="/theme" class="underline">Theme</a> page for the full colour and design-token reference.
-        </p>
-    </PageCard>
+    </ChildContent>
 </PageContainer>
 
 @code {

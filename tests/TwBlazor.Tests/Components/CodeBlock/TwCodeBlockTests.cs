@@ -222,8 +222,8 @@ public class TwCodeBlockTests : TwBlazorTestBase
 
         // Assert
         var invocations = jsRuntime.Invocations["navigator.clipboard.writeText"];
-        Assert.Single(invocations);
-        Assert.Equal(content, invocations[0].Arguments[0]);
+        var invocation = Assert.Single(invocations);
+        Assert.Equal(content, invocation.Arguments[0]);
     }
 
     [Fact]

@@ -1,10 +1,30 @@
-﻿<div class="rounded-lg p-6 text-purple-950 dark:text-purple-200">
+<div class="rounded-lg p-6 text-purple-950 dark:text-purple-200">
     <h1 class="mb-6 text-3xl font-bold">@Title</h1>
 
     @ChildContent
+
+    @if (ThemeType is not null)
+    {
+        <ThemeConfigurationCard ThemeType="ThemeType" ComponentTitle="Title">@ThemeContent</ThemeConfigurationCard>
+    }
 </div>
 
 @code {
     [Parameter] public string? Title { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// The component's theme class (e.g. <c>typeof(TwDialogTheme)</c>). When set, a "Theme Configuration"
+    /// card is appended automatically, reflecting the type's public properties into a table instead of
+    /// requiring every page to hand-write (and keep in sync) its own. Set explicitly per page rather than
+    /// derived from <see cref="Title"/>, since a handful of theme classes don't share the page's name
+    /// (e.g. the "TwDialogProvider" page's theme is <c>TwDialogTheme</c>).
+    /// </summary>
+    [Parameter] public Type? ThemeType { get; set; }
+
+    /// <summary>
+    /// Optional content rendered below the reflected property table - e.g. a worked example of
+    /// overriding a couple of the theme's properties.
+    /// </summary>
+    [Parameter] public RenderFragment? ThemeContent { get; set; }
 }
