@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata;
+using System.Reflection.Metadata;
 using TwBlazor.Configuration;
 using TwBlazor.Configuration.Color;
 using TwBlazor.Configuration.Components;
@@ -206,28 +206,28 @@ public static class Theme
             Dark = "checked:bg-gray-900 checked:border-gray-900 dark:checked:bg-gray-900 dark:checked:border-gray-900"
         };
 
-        // Neutral (non-semantic) surface tokens shared by any component that just wants "the"
-        // card/dialog/popover look - reused below instead of retyping the same literal classes.
-        // Add more weights here as needed; see TwSurfacePalette's remarks for why each stays a
-        // single full class-name string.
         var neutralSurface = new TwSurfacePalette
         {
-            Background = "bg-white dark:bg-gray-800",
-            BackgroundSubtle = "bg-gray-50 dark:bg-gray-900",
-            Border = "border-gray-200 dark:border-gray-700",
-            BorderSubtle = "border-gray-100 dark:border-gray-700",
-            Hover = "hover:bg-gray-100 dark:hover:bg-gray-700"
+            Background = "bg-[oklch(100%_0_0)] dark:bg-[oklch(25.33%_0.016_252.42)]",
+            BackgroundSubtle = "bg-[oklch(98%_0_0)] dark:bg-[oklch(23.26%_0.014_253.1)]",
+            Border = "border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)]",
+            BorderSubtle = "border-[oklch(98%_0_0)] dark:border-[oklch(23.26%_0.014_253.1)]",
+            Hover = "hover:bg-[oklch(98%_0_0)] dark:hover:bg-[oklch(23.26%_0.014_253.1)]",
+            Elevated = "bg-[oklch(98%_0_0)] dark:bg-[oklch(34%_0.018_253)]",
+            BorderStrong = "border-[oklch(21%_0.006_285.885)]/25 dark:border-[oklch(97.807%_0.029_256.847)]/20"
         };
 
         // Neutral (non-semantic) text tokens - same idea as neutralSurface, but for the default
-        // body/heading text color and its quieter variants. "Heading" standardizes a couple of
-        // components that had drifted to text-gray-900 instead of the gray-950 used everywhere else.
+        // body/heading text color and its quieter variants. Solid colors, not opacity blends: an
+        // alpha-blended glyph reads as washed-out for small icon glyphs (they have no backdrop of
+        // their own to blend against), so each weight is its own step down the base-content hue,
+        // just less contrasty than Heading rather than literally more transparent.
         var neutralText = new TwNeutralTextPalette
         {
-            Heading = "text-gray-950 dark:text-white",
-            Secondary = "text-gray-700 dark:text-gray-300",
-            Muted = "text-gray-600 dark:text-gray-400",
-            Subtle = "text-gray-500 dark:text-gray-400"
+            Heading = "text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)]",
+            Secondary = "text-[oklch(40%_0.006_285.885)] dark:text-[oklch(88%_0.02_256.847)]",
+            Muted = "text-[oklch(50%_0.006_285.885)] dark:text-[oklch(78%_0.02_256.847)]",
+            Subtle = "text-[oklch(60%_0.006_285.885)] dark:text-[oklch(68%_0.02_256.847)]"
         };
 
         const string disabledOpacity = "opacity-40";
@@ -325,7 +325,7 @@ public static class Theme
                 Md = "rounded",
                 Lg = roundedLg,
                 Full = "rounded-full",
-                DefaultRounded = Rounded.Sm,
+                DefaultRounded = Rounded.Md,
                 RoundedTop = new()
                 {
                     None = "rounded-t-none",
@@ -380,7 +380,7 @@ public static class Theme
                 {
                     List = "inline-flex flex-wrap gap-3",
                     Item = $"flex items-center {defaultGap}",
-                    Separator = "font-bold text-gray-300",
+                    Separator = $"font-bold {neutralText.Subtle}",
                     Label = "wrap-break-word"
                 },
                 new TwButtonTheme
@@ -394,9 +394,9 @@ public static class Theme
                     DisabledCursor = "cursor-not-allowed",
                     ReadonlyCursor = "cursor-default",
                     DefaultCursor = pointerCursor,
-                    DisabledFilled = "bg-gray-900/15 dark:bg-white/15 text-gray-900/40 dark:text-white/40 cursor-not-allowed shadow-none",
-                    DisabledOutlined = "border border-gray-900/15 dark:border-white/15 text-gray-900/40 dark:text-white/40 bg-transparent cursor-not-allowed",
-                    DisabledText = "text-gray-900/40 dark:text-white/40 bg-transparent cursor-not-allowed"
+                    DisabledFilled = "bg-[oklch(21%_0.006_285.885)]/15 dark:bg-[oklch(97.807%_0.029_256.847)]/15 text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 cursor-not-allowed shadow-none",
+                    DisabledOutlined = "border border-[oklch(21%_0.006_285.885)]/15 dark:border-[oklch(97.807%_0.029_256.847)]/15 text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 bg-transparent cursor-not-allowed",
+                    DisabledText = "text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 bg-transparent cursor-not-allowed"
                 },
                 new TwCardTheme
                 {
@@ -407,9 +407,9 @@ public static class Theme
                 new TwCheckboxTheme
                 {
                     Colors = checkBoxRadioButtonColors,
-                    Base = $"peer {pointerCursor} appearance-none border-2 border-gray-300 dark:border-gray-600 transition-colors duration-200 ease-in-out",
+                    Base = $"peer {pointerCursor} appearance-none border-2 border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] transition-colors duration-200 ease-in-out",
                     Disabled = $"{disabledOpacity} cursor-not-allowed",
-                    Hover = $"{pointerCursor} hover:border-gray-600 dark:hover:border-gray-300",
+                    Hover = $"{pointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
                     LabelBase = $"flex items-center relative select-none min-h-[24px] {defaultGap}",
                     LabelInteractiveCursor = pointerCursor,
                     LabelNonInteractiveCursor = "pointer-events-none",
@@ -420,7 +420,7 @@ public static class Theme
                 new TwChipTheme
                 {
                     Base = $"{position.Center} transition-colors duration-200 inline-flex gap-1.5 font-medium shadow-sm touch-manipulation",
-                    CloseButton = $"{position.Center} flex hover:bg-gray-100/20 dark:hover:bg-gray-800/20 rounded-full w-4 h-4 text-center",
+                    CloseButton = $"{position.Center} flex hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 rounded-full w-4 h-4 text-center",
                     Sm = "text-[10px] leading-none px-1.5 py-1 h-5",
                     Md = "text-xs leading-none px-2 py-1 h-6",
                     Lg = "text-sm leading-none px-2.5 py-1.5 h-8"
@@ -428,33 +428,32 @@ public static class Theme
                 new TwCollapseTheme
                 {
                     Container = $"tw-collapse border {neutralSurface.Border}",
-                    Trigger = $"flex w-full items-center justify-between {defaultGap} {interactiveRowPadding} text-left font-medium {neutralText.Heading} transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 touch-manipulation",
+                    Trigger = $"flex w-full items-center justify-between {defaultGap} {interactiveRowPadding} text-left font-medium {neutralText.Heading} transition-colors duration-200 {neutralSurface.Hover} focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 touch-manipulation",
                     Icon = "ml-auto h-4 w-4 shrink-0 transition-transform duration-300 flex",
                     IconOpen = "rotate-180",
                     Content = $"overflow-hidden border-t {neutralSurface.Border} transition-colors duration-300"
                 },
                 new TwColorPickerTheme
                 {
-                    Swatch = "h-7 w-7 rounded-md ring-1 ring-inset ring-black/10 dark:ring-white/15 shadow-sm flex-shrink-0 transition-[box-shadow,opacity] duration-200",
+                    Swatch = "h-7 w-7 rounded-md ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm flex-shrink-0 transition-[box-shadow,opacity] duration-200",
                     SwatchDisabled = disabledOpacity,
-                    SwatchHover = "hover:ring-black/20 dark:hover:ring-white/25",
+                    SwatchHover = "hover:ring-[oklch(21%_0.006_285.885)]/20 dark:hover:ring-[oklch(97.807%_0.029_256.847)]/25",
                     InputContainer = $"flex items-center {defaultGap}",
                     DialogPosition = "absolute top-full left-0 mt-2 z-50",
-                    DialogSurface = $"tw-color-picker-dialog {neutralSurface.Background} rounded-xl shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 {comfortablePadding} w-64",
-                    PreviewSwatch = $"w-11 h-11 {roundedLg} ring-1 ring-inset ring-black/10 dark:ring-white/15 shadow-sm flex-shrink-0",
-                    SelectorSquare = $"relative w-full h-48 {roundedLg} overflow-hidden ring-1 ring-inset ring-black/10 dark:ring-white/10 cursor-crosshair touch-none",
+                    DialogSurface = $"tw-color-picker-dialog {neutralSurface.Elevated} rounded-xl shadow-xl ring-1 ring-[oklch(21%_0.006_285.885)]/25 dark:ring-[oklch(97.807%_0.029_256.847)]/20 {comfortablePadding} w-64",
+                    PreviewSwatch = $"w-11 h-11 {roundedLg} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm flex-shrink-0",
+                    SelectorSquare = $"relative w-full h-48 {roundedLg} overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
                     SelectorThumb = "absolute w-3.5 h-3.5 rounded-full border-2 border-white ring-1 ring-black/20 shadow-md pointer-events-none",
-                    SliderTrack = "w-full h-2.5 rounded-full overflow-hidden ring-1 ring-inset ring-black/10 dark:ring-white/10 pointer-events-none",
+                    SliderTrack = "w-full h-2.5 rounded-full overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 pointer-events-none",
                     SliderThumb = "absolute top-1/2 w-4 h-4 rounded-full border-2 border-white ring-1 ring-black/20 shadow-md pointer-events-none",
                     AlphaLabel = $"text-xs font-medium {neutralText.Secondary} w-10",
                     ActionBar = $"flex justify-end {defaultGap} pt-3 border-t {neutralSurface.BorderSubtle}"
                 },
                 new TwDatePickerTheme
                 {
-                    Header = $"{neutralSurface.Background} text-center font-medium {roundedTopLg} border-b {neutralSurface.Border}",
-
+                    Header = $"{neutralSurface.Elevated} text-center font-medium {roundedTopLg} border-b {neutralSurface.BorderStrong}",
                     WeekdaysHeader = $"{position.Center} {text.Medium.Primary} {darkText.Light.Primary} h-8 flex text-xs font-semibold tracking-wide ",
-                    Base = $"absolute {pointerCursor} border-0 text-center text-sm py-2 font-medium transition-colors duration-200 top-full left-0 flex flex-row md:flex-row items-center z-50 mt-1 {neutralSurface.Background} {compactPadding} border {neutralSurface.Border}",
+                    Base = $"absolute {pointerCursor} border-0 text-center text-sm py-2 font-medium transition-colors duration-200 top-full left-0 flex flex-row md:flex-row items-center z-50 mt-1 {neutralSurface.Elevated} {compactPadding} border {neutralSurface.BorderStrong}",
                     ActiveClass = "bg-purple-50 dark:bg-purple-500/30",
                     ButtonClass = $"{compactPadding} h-8 flex items-center w-full justify-center"
                 },
@@ -478,11 +477,11 @@ public static class Theme
                 },
                 new TwDialogTheme
                 {
-                    Backdrop = $"fixed inset-0 z-[110] flex {comfortablePadding} bg-gray-900/50 dark:bg-black/70 overflow-y-auto overscroll-contain",
+                    Backdrop = $"fixed inset-0 z-[110] flex {comfortablePadding} bg-black/50 overflow-y-auto overscroll-contain",
                     Surface = $"relative flex w-full flex-col {neutralText.Heading} {neutralSurface.Background} max-h-[calc(100vh-2rem)]",
                     Header = $"flex items-center justify-between gap-4 px-6 py-4 border-b {neutralSurface.Border} flex-shrink-0",
                     Title = "text-lg font-semibold",
-                    CloseButton = $"transition-colors duration-200 {roundedLg} p-1 {neutralText.Subtle} {neutralSurface.Hover} hover:text-gray-700 dark:hover:text-gray-200 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-blue-500/20",
+                    CloseButton = $"transition-colors duration-200 {roundedLg} p-1 {neutralText.Subtle} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-blue-500/20",
                     Content = "px-6 py-4 overflow-y-auto",
                     FullScreen = "w-full h-full max-w-none",
                     FullWidth = "w-full",
@@ -493,20 +492,20 @@ public static class Theme
                 new TwInputTheme
                 {
                     DefaultInputVariant = InputVariant.Filled,
-                    TextfieldBase = $"w-full min-w-0 max-w-full {neutralText.Heading} transition-colors duration-200 text-base block ease-in-out placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none",
+                    TextfieldBase = $"w-full min-w-0 max-w-full {neutralText.Heading} transition-colors duration-200 text-base block ease-in-out placeholder:text-[oklch(21%_0.006_285.885)]/50 dark:placeholder:text-[oklch(97.807%_0.029_256.847)]/50 focus:outline-none",
                     SelectBase = $"w-full {neutralText.Heading} transition-colors duration-200 appearance-none text-base block pr-10 py-2 focus:outline-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat",
                     InputLegendBase = $"text-base font-medium {neutralText.Secondary} mb-3",
                     LabelBase = $"block mb-2 text-xs font-normal tracking-wide {neutralText.Muted}",
-                    OutlinedBorder = "border-1 border-gray-300 dark:border-gray-600",
-                    FilledBorder = "border-b-2 border-gray-300 dark:border-gray-600",
+                    OutlinedBorder = $"border-1 {neutralSurface.BorderStrong}",
+                    FilledBorder = $"border-b-2 {neutralSurface.BorderStrong}",
                     FocusBorder = "focus:border-purple-600 dark:focus:border-purple-500",
-                    FilledBackgroundColor = "bg-gray-100 dark:bg-gray-900/85"
+                    FilledBackgroundColor = neutralSurface.Elevated
                 },
                 new TwPaginationTheme
                 {
                     Base = $"{position.Center} flex h-8 leading-tight select-none border-1 {neutralSurface.Border} px-3 mx-0.5 tabular-nums",
                     ActiveButton = $"{text.Medium.Primary} {darkText.Medium.Primary} {background.Light.Primary} {darkBackground.Light.Primary} font-bold hover:bg-purple-100 {pointerCursor}",
-                    Buttons = $"{text.Medium.Dark} {background.Medium.Light} {neutralSurface.Hover} dark:bg-gray-800 dark:text-gray-400 dark:hover:text-white {pointerCursor}"
+                    Buttons = $"{neutralText.Muted} {neutralSurface.Background} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] {pointerCursor}"
                 },
                 new TwProgressTheme
                 {
@@ -521,7 +520,7 @@ public static class Theme
                         Light = "[&::-webkit-progress-value]:bg-white dark:[&::-webkit-progress-value]:bg-white [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500",
                         Dark = "[&::-webkit-progress-value]:bg-gray-900 dark:[&::-webkit-progress-value]:bg-gray-900 [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500"
                     },
-                    Base = "block w-full min-w-0 appearance-none overflow-hidden rounded-full border-none bg-gray-200 dark:bg-gray-700 indeterminate:animate-pulse [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:duration-300",
+                    Base = "block w-full min-w-0 appearance-none overflow-hidden rounded-full border-none bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] indeterminate:animate-pulse [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:duration-300",
                     Small = "h-1.5",
                     Medium = "h-2.5",
                     Large = "h-4"
@@ -532,7 +531,7 @@ public static class Theme
                     TabPadding = "py-5 px-6",
                     TabDensePadding = "px-4",
                     ActiveIndicator = "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-current after:scale-x-100 after:transition-transform after:duration-300",
-                    InactiveIndicator = "hover:text-gray-900 dark:hover:text-gray-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-current after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                    InactiveIndicator = "hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-current after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
                     DisabledTab = $"{disabledOpacity} cursor-not-allowed",
                     TabListContainer = $"flex flex-wrap border-t border-l border-r border-b-2 {neutralSurface.Border} shadow-sm",
                     PanelContainer = $"p-6 border-l border-r border-b {neutralSurface.Border}",
@@ -540,7 +539,7 @@ public static class Theme
                 },
                 new TwSkeletonTheme
                 {
-                    Base = "relative overflow-hidden bg-gray-200 dark:bg-gray-700 block",
+                    Base = "relative overflow-hidden bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] block",
                     Text = "w-full h-4",
                     Circle = "size-12",
                     Rectangle = "w-full h-24",
@@ -552,16 +551,16 @@ public static class Theme
                 {
                     Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} shadow-sm p-3 w-full flex items-center flex-shrink-0 z-40 h-[56px]",
                     Sidebar = $"transition-transform duration-200 shadow-sm h-dvh w-64 flex-shrink-0 {neutralSurface.Background} {comfortablePadding} z-[100] ease-in-out overflow-auto overscroll-contain",
-                    NavigationItemBase = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center text-gray-700 dark:text-gray-200 {neutralSurface.Hover} {interactiveRowPadding} text-sm focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {pointerCursor}",
-                    NavigationItemActive = "bg-gray-200/80 dark:bg-gray-900/30 text-gray-600 dark:text-white font-semibold",
-                    NavigationDropdownContainer = "bg-gray-50 dark:bg-gray-900/30",
+                    NavigationItemBase = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Secondary} {neutralSurface.Hover} {interactiveRowPadding} text-sm focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {pointerCursor}",
+                    NavigationItemActive = "bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)] font-semibold",
+                    NavigationDropdownContainer = neutralSurface.BackgroundSubtle,
                     MainContent = "w-full flex-1 overflow-y-auto transition-[margin] duration-200 ease-in-out left-0",
-                    MainContentRoot = "h-dvh w-full flex flex-col transition-[margin] duration-300 ease-in-out dark:bg-gray-900 bg-transparent dark:text-white overflow-x-hidden"
+                    MainContentRoot = $"bg-transparent {neutralSurface.Background} h-dvh w-full flex flex-col transition-[margin] duration-300 ease-in-out {neutralText.Heading} overflow-x-hidden"
                 },
                 new TwTreeListTheme
                 {
                     Container = "flex flex-col text-sm",
-                    Group = "ml-4 pl-2 py-1 bg-gray-50 dark:bg-gray-900/30 flex flex-col",
+                    Group = $"ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} flex flex-col",
                     Row = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} py-1 text-sm hover:underline group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
                     RowDisabled = $"{disabledOpacity} pointer-events-none",
                     ToggleIcon = "h-4 w-4 shrink-0 transition-transform duration-200",
@@ -572,9 +571,9 @@ public static class Theme
                 new TwRadioButtonTheme
                 {
                     Colors = checkBoxRadioButtonColors,
-                    Base = $"peer h-5 w-5 {pointerCursor} appearance-none rounded-full border-2 border-gray-300 dark:border-gray-600 transition-colors duration-200 ease-in-out",
+                    Base = $"peer h-5 w-5 {pointerCursor} appearance-none rounded-full border-2 border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] transition-colors duration-200 ease-in-out",
                     Disabled = $"{disabledOpacity} cursor-not-allowed",
-                    Hover = $"{pointerCursor} hover:border-gray-600 dark:hover:border-gray-300",
+                    Hover = $"{pointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
                     LabelBase = $"flex items-center relative select-none min-h-[24px] {defaultGap}",
                     LabelInteractiveCursor = pointerCursor,
                     LabelNonInteractiveCursor = "pointer-events-none",
@@ -596,7 +595,7 @@ public static class Theme
                     },
                     Wrapper = "relative flex items-center w-full h-6 select-none",
                     Base = $"peer absolute inset-0 z-20 w-full h-full m-0 appearance-none bg-transparent {pointerCursor} focus:outline-none focus-visible:outline-none touch-manipulation",
-                    Track = "pointer-events-none absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden",
+                    Track = "pointer-events-none absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] overflow-hidden",
                     Fill = "h-full",
                     Thumb = "pointer-events-none absolute top-1/2 z-10 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-100 border-2 shadow-md ring-1 ring-black/5 transition-transform duration-100 ease-out peer-hover:scale-110 peer-active:scale-95",
                     Bubble = "pointer-events-none absolute bottom-full z-10 -translate-x-1/2 mb-2 whitespace-nowrap rounded-md bg-gray-900 dark:bg-gray-700 px-2 py-1 text-xs font-medium text-white shadow-lg opacity-0 scale-95 transition-[opacity,transform] duration-100 ease-out peer-hover:opacity-100 peer-hover:scale-100 peer-focus-visible:opacity-100 peer-focus-visible:scale-100 tabular-nums"
@@ -615,7 +614,7 @@ public static class Theme
                         Dark = "peer-checked:bg-gray-900 dark:peer-checked:bg-gray-800",
                     },
                     Switch = "absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-gray-100 rounded-full shadow-lg transition-transform duration-300 ease-in-out peer-checked:translate-x-full peer-checked:shadow-lg",
-                    Track = $"absolute inset-0 bg-gray-300 dark:bg-gray-600 rounded-full transition-[background-color,opacity] duration-300 ease-in-out peer-disabled:{disabledOpacity} peer-disabled:pointer-events-none shadow-inner",
+                    Track = $"absolute inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] rounded-full transition-[background-color,opacity] duration-300 ease-in-out peer-disabled:{disabledOpacity} peer-disabled:pointer-events-none shadow-inner",
                     Base = "peer sr-only",
                     LabelBase = $"inline-flex items-center {defaultGap} select-none",
                     LabelInteractiveCursor = pointerCursor,
@@ -652,29 +651,28 @@ public static class Theme
                     IconGlyph = $"{neutralText.Subtle} h-5 w-5",
                     TextfieldPadding = "pl-10 pr-3",
                     PanelPosition = $"absolute top-full left-0 z-50 mt-2 {roundedLg} shadow-lg",
-                    BodySurface = $"{neutralSurface.Background} {comfortablePadding} shadow-xl {roundedLg} border {neutralSurface.Border} text-center font-medium dark:text-white",
+                    BodySurface = $"{neutralSurface.Elevated} {comfortablePadding} shadow-xl {roundedLg} border {neutralSurface.BorderStrong} text-center font-medium {neutralText.Heading}",
                     BodyRoot = "",
-                    BodyInner = $"{compactPadding} text-center font-medium dark:text-white",
+                    BodyInner = $"{compactPadding} text-center font-medium {neutralText.Heading}",
                     ContentRow = $"flex {position.Center} gap-3",
                     Column = "flex flex-col items-center gap-1",
                     StepButton = $"{pointerCursor} {neutralText.Subtle} hover:text-purple-600 dark:hover:text-purple-400",
                     NumberWrapper = "flex items-center justify-center",
-                    NumberInput = $"w-12 bg-transparent text-center text-lg font-semibold {neutralText.Heading} border-b-2 border-gray-300 dark:border-gray-600 transition-colors duration-200 py-1 focus:outline-none",
+                    NumberInput = $"w-12 bg-transparent text-center text-lg font-semibold {neutralText.Heading} border-b-2 border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] transition-colors duration-200 py-1 focus:outline-none",
                     Separator = $"text-lg font-semibold {neutralText.Subtle} px-1 self-center",
                     AmPmWrapper = "flex items-center ml-2",
                     AmPmButtonClass = "min-w-12"
                 },
                 new TwTableTheme
                 {
-                    Base = $"{neutralText.Heading} w-full text-sm text-left rtl:text-right overflow-hidden",
-                    Bordered = $"border {neutralSurface.Border} shadow-sm",
-                    Header = $"{background.Light.Dark} dark:bg-gray-950/50 uppercase text-xs font-semibold tracking-wide",
-                    HeaderBorderedCells = "[&_th]:border-b-2 [&_th]:border-gray-200 [&_th]:dark:border-gray-700",
-                    Body = $"{background.Medium.Light} {darkBackground.Dark.Dark}",
-                    BodyStriped = "[&>tr:nth-child(even)]:bg-gray-50 [&>tr:nth-child(odd)]:dark:bg-gray-800/50 [&>tr:nth-child(even)]:dark:bg-gray-800",
-                    BodyHoverable = "[&>tr:hover]:!bg-gray-100 [&>tr:hover]:dark:!bg-gray-800 [&>tr]:transition-colors [&>tr]:duration-200",
-                    BorderedCells = "[&_td]:border [&_td]:border-gray-200 [&_td]:dark:border-gray-700",
-                    BorderedHeaderCells = "[&_th]:border [&_th]:border-gray-200 [&_th]:dark:border-gray-700"
+                    Base = $"{neutralText.Heading} w-full text-sm text-left rtl:text-right",
+                    Bordered = $"border {neutralSurface.Border}",
+                    Header = $"{neutralSurface.BackgroundSubtle} uppercase text-xs font-semibold tracking-wide border-b {neutralSurface.Border}",
+                    Body = neutralSurface.Background,
+                    BodyStriped = "[&>tr:nth-child(even)]:bg-[oklch(98%_0_0)] [&>tr:nth-child(even)]:dark:bg-[oklch(23.26%_0.014_253.1)]",
+                    BodyHoverable = "[&>tr:hover]:!bg-purple-50 [&>tr:hover]:dark:!bg-purple-900/20 [&>tr]:transition-colors [&>tr]:duration-200",
+                    RowDivider = "divide-y divide-[oklch(95%_0_0)] dark:divide-[oklch(21.15%_0.012_254.09)]",
+                    Footer = $"border-t {neutralSurface.Border}"
                 },
                 new TwToastTheme
                 {
@@ -697,7 +695,7 @@ public static class Theme
                     Toast = $"{defaultGap} shadow-sm transition-colors duration-200 flex items-start {comfortablePadding} ease-in-out",
                     ToastWidth = "max-w-[300px]",
                     Timestamp = "text-xs opacity-70",
-                    CloseButton = "rounded-full flex-shrink-0 p-1 hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40"
+                    CloseButton = "rounded-full flex-shrink-0 p-1 hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40"
                 }
             ]
         };
@@ -711,4 +709,3 @@ internal static class ThemeUpdateHandler
 {
     internal static void UpdateApplication(Type[]? _) => Theme.DefaultTheme = Theme.CreateDefaultTheme();
 }
-

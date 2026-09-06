@@ -101,7 +101,7 @@ public class TwSidebarItemTests : TwBlazorTestBase
         var classAttr = anchor.GetAttribute("class");
 
         // Assert
-        Assert.Contains("hover:bg-gray-100", classAttr);
+        Assert.Contains("hover:bg-[oklch(98%_0_0)]", classAttr);
         Assert.Contains("custom-link-class", classAttr); // appended custom class
     }
 

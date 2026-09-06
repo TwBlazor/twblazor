@@ -11,7 +11,16 @@
 @inject ITwDialogService DialogService
 @* #endregion *@
 
-<PageContainer Title="TwDialogProvider">
+<PageContainer Title="TwDialogProvider" ThemeType="typeof(TwDialogTheme)">
+    <ThemeContent>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            For example, to darken the backdrop further and use fully rounded dialogs by default:
+        </p>
+
+        <ExampleCodeBlock CSharp="@_themeExample" />
+    </ThemeContent>
+    <ChildContent>
+
     <PageCard Title="Setup">
         <Description>
             The Dialog service shows arbitrary Blazor components as modal dialogs, wrapped in a themed <code>TwDialog</code> chrome
@@ -120,102 +129,18 @@
         </CodeExample>
     </PageCard>
 
-    <PageCard Title="Theme Configuration">
-        <Description>
-            Dialog styling is controlled by <code>TwBlazorTheme.Dialog</code> (a <code>TwDialogTheme</code>), configured via the
-            <code>AddTwBlazor()</code> options callback described on the <a href="/get-started" class="underline">Get Started</a> page.
-            Every property is a set of Tailwind classes, so changes are picked up by your own Tailwind build.
-        </Description>
-
-        <div class="overflow-x-auto mb-4">
-            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
-                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
-                    <tr>
-                        <th class="px-4 py-3">Property</th>
-                        <th class="px-4 py-3">Type</th>
-                        <th class="px-4 py-3">Controls</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-900">
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Backdrop</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed overlay - darken colour, z-index, padding</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">PositionCenter</code>, <code class="text-xs">PositionTopLeft</code>, ...</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Flex alignment classes for each <code>DialogPosition</code> value</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Surface</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dialog card itself - background, text colour, max height</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">DialogRounded</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">DialogShadow</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Shadow?</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Shadow override; falls back to the theme's default <code>Shadow</code> when null</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Header</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + close button row</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Title</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dialog title text</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Content</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The scrollable body wrapping the dialog's content</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">FullScreen</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Classes applied when <code>TwDialogOptions.FullScreen</code> is <code>true</code></td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">FullWidth</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Classes applied when <code>TwDialogOptions.FullWidth</code> is <code>true</code></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3"><code class="text-xs">ExtraSmallWidth</code> ... <code class="text-xs">ExtraExtraLargeWidth</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The Tailwind max-width class for each <code>DialogMaxWidth</code> breakpoint</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-            For example, to darken the backdrop further and use fully rounded dialogs by default:
-        </p>
-
-        <ExampleCodeBlock CSharp="@_themeExample" />
-    </PageCard>
+    </ChildContent>
 </PageContainer>
 
 @code {
     // Illustrative only - not wired up to a live control on this page.
-    private const string _themeExample = @"builder.Services.AddTwBlazor(options =>
-{
-    options.Theme.Dialog.Backdrop = ""fixed inset-0 z-[110] flex p-4 bg-black/70 overflow-y-auto""; // Darker backdrop
-    options.Theme.Dialog.DialogRounded = Rounded.Full; // Fully rounded dialogs
-}, Theme.DefaultTheme);";
+    private const string _themeExample = """
+        builder.Services.AddTwBlazor(options =>
+        {
+            options.Theme.Dialog.Backdrop = "fixed inset-0 z-[110] flex p-4 bg-black/70 overflow-y-auto"; // Darker backdrop
+            options.Theme.Dialog.DialogRounded = Rounded.Full; // Fully rounded dialogs
+        }, Theme.DefaultTheme);
+        """;
 
     private string? confirmResult;
     private string? promptResult;

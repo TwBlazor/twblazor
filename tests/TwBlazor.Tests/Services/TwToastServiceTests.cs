@@ -28,8 +28,8 @@ public class TwToastServiceTests
 
         // Assert
         Assert.True(service.HasToasts);
-        Assert.Single(service.GetToasts());
-        Assert.Equal(toast, service.GetToasts()[0]);
+        var addedToast = Assert.Single(service.GetToasts());
+        Assert.Equal(toast, addedToast);
     }
 
     [Fact]

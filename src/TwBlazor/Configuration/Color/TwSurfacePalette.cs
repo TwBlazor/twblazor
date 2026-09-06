@@ -49,4 +49,20 @@ public class TwSurfacePalette
     /// interactive rows (e.g. <c>hover:bg-gray-100 dark:hover:bg-gray-700</c>).
     /// </summary>
     public string Hover { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets a background for surfaces that must read clearly against the page even with no
+    /// backdrop behind them - floating popover panels (date/time/color picker bodies) and emphasized
+    /// (filled) inputs. Unlike <see cref="BackgroundSubtle"/>, this is deliberately lighter than
+    /// <see cref="Background"/> in dark mode, since a same-or-darker fill has nothing to visually pop
+    /// against without a dimming backdrop (e.g. <c>bg-gray-50 dark:bg-gray-700</c>).
+    /// </summary>
+    public string Elevated { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets a more visible border than <see cref="Border"/>, for the same no-backdrop
+    /// surfaces as <see cref="Elevated"/> plus input outlines, where the default border is too subtle
+    /// to read against the page (e.g. <c>border-gray-400 dark:border-gray-500</c>).
+    /// </summary>
+    public string BorderStrong { get; set; } = string.Empty;
 }

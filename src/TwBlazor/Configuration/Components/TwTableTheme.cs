@@ -24,19 +24,20 @@ public class TwTableTheme
     public required string Base { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes applied to the table element when its <c>NoBorder</c> parameter is <c>false</c> (the default).
+    /// Gets or sets the classes applied to the outer wrapping <c>&lt;div&gt;</c> when the table's
+    /// <c>NoBorder</c> parameter is <c>false</c> (the default) - the container's border and shadow.
+    /// Rounding and clipping live on that same wrapper regardless of <c>NoBorder</c>, via
+    /// <see cref="TwBlazor.TwBlazorComponentBase.Rounded"/>, so the table's corners (including the
+    /// header's background) are always clipped cleanly instead of the raw square corners a
+    /// <c>&lt;table&gt;</c> element renders even with a rounded class applied directly to it.
     /// </summary>
     public required string Bordered { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes applied to the table header, controlling its background, text colour and typography.
+    /// Gets or sets the classes applied to the table header, controlling its background, text colour,
+    /// typography, and the permanent divider separating it from the body.
     /// </summary>
     public required string Header { get; set; }
-
-    /// <summary>
-    /// Gets or sets the classes applied to header cells when the table's <c>Bordered</c> parameter is <c>true</c>.
-    /// </summary>
-    public required string HeaderBorderedCells { get; set; }
 
     /// <summary>
     /// Gets or sets the base background classes applied to the table body.
@@ -54,12 +55,17 @@ public class TwTableTheme
     public required string BodyHoverable { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes applied to data cells (<c>td</c>) in the body and footer when <c>Bordered</c> is <c>true</c>.
+    /// Gets or sets the classes applied to the table body when its <c>Bordered</c> parameter is <c>true</c> -
+    /// a single hairline between consecutive rows (e.g. via <c>divide-y</c>). Deliberately not a full
+    /// per-cell grid: a border around every cell reads as a busy, dated spreadsheet grid, especially
+    /// combined with <c>Striped</c> - a thin row divider gives the same "this is bordered" affordance
+    /// without the clash.
     /// </summary>
-    public required string BorderedCells { get; set; }
+    public required string RowDivider { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes applied to header-style cells (<c>th</c>) in the body and footer when <c>Bordered</c> is <c>true</c>.
+    /// Gets or sets the classes applied to the table footer when the table's <c>Bordered</c> parameter
+    /// is <c>true</c> - a single divider separating it from the body.
     /// </summary>
-    public required string BorderedHeaderCells { get; set; }
+    public required string Footer { get; set; }
 }

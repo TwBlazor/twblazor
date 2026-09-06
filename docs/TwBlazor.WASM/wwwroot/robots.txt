@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /_content/
+
+Sitemap: https://twblazor.com/sitemap.xml
