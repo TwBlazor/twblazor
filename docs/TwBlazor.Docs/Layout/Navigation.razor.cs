@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using TwBlazor.Enums;
@@ -17,80 +18,53 @@ public partial class Navigation : IDisposable
     private static readonly string _apiDocumentationUri = "https://twblazor.github.io/twblazor/";
 #pragma warning restore S1075
 
-    private readonly List<NavigationItem> _navigationItems =
-    [
-        new() { Id = "home", Label = "Home", Href = "/" },
-        new() { Id = "get-started", Label = "Get started", Href = "/get-started" },
-        new()
+    // Category order in the sidebar follows components.json's array order.
+    private readonly List<NavigationItem> _navigationItems = BuildNavigationItems();
+
+    private static List<NavigationItem> BuildNavigationItems()
+    {
+        List<NavigationItem> items =
+        [
+            new() { Id = "home", Label = "Home", Href = "/" },
+            new() { Id = "get-started", Label = "Get started", Href = "/get-started" },
+        ];
+
+        foreach (var category in LoadComponentCategories())
         {
-            Id = "data",
-            Label = "Data",
-            NavigationItems =
-            [
-                new() { Id = "data-table", Label = "Data Table", Href = "/data-table" },
-                new() { Id = "table", Label = "Table", Href = "/table" },
-                new() { Id = "pagination", Label = "Pagination", Href = "/pagination" },
-            ]
-        },
-        new()
-        {
-            Id = "feedback",
-            Label = "Feedback",
-            NavigationItems =
-            [
-                new() { Id = "alert", Label = "Alert", Href = "/alert" },
-                new() { Id = "chip", Label = "Chip", Href = "/chip" },
-                new() { Id = "icon", Label = "Icon", Href = "/icon" },
-                new() { Id = "progress", Label = "Progress", Href = "/progress", New = true },
-                new() { Id = "skeleton", Label = "Skeleton", Href = "/skeleton", New = true },
-                new() { Id = "spinner", Label = "Spinner", Href = "/spinner", New = true }
-            ]
-        },
-        new()
-        {
-            Id = "forms",
-            Label = "Forms",
-            NavigationItems =
-            [
-                new() { Id = "button", Label = "Button", Href = "/button" },
-                new() { Id = "checkbox", Label = "Checkbox", Href = "/checkbox" },
-                new() { Id = "color-picker", Label = "Color Picker", Href = "/color-picker", New = true },
-                new() { Id = "date-picker", Label = "Date Picker", Href = "/date-picker" },
-                new() { Id = "datetime-picker", Label = "Datetime Picker", Href = "/datetime-picker" },
-                new() { Id = "file-upload", Label = "File Upload", Href = "/file-upload" },
-                new() { Id = "radio-button", Label = "Radio Button", Href = "/radio-button" },
-                new() { Id = "select", Label = "Select", Href = "/select" },
-                new() { Id = "slider", Label = "Slider", Href = "/slider", New = true },
-                new() { Id = "switch", Label = "Switch", Href = "/switch", New = true },
-                new() { Id = "textfield", Label = "Textfield", Href = "/textfield" },
-                new() { Id = "time-picker", Label = "Time Picker", Href = "/time-picker" },
-            ]
-        },
-        new()
-        {
-            Id = "layout",
-            Label = "Layout",
-            NavigationItems =
-            [
-                new() { Id = "breadcrumb", Label = "Breadcrumb", Href = "/breadcrumb" },
-                new() { Id = "card", Label = "Card", Href = "/card" },
-                new() { Id = "collapse", Label = "Collapse", Href = "/collapse" },
-                new() { Id = "sidebar", Label = "Sidebar", Href = "/sidebar" },
-                new() { Id = "tabs", Label = "Tabs", Href = "/tabs" },
-            ]
-        },
-        new()
-        {
-            Id = "services",
-            Label = "Services",
-            NavigationItems =
-            [
-                new() { Id = "dialog", Label = "Dialog Service", Href = "/dialog" },
-                new() { Id = "toast", Label = "Toast Service", Href = "/toast" },
-            ]
-        },
-        new() { Id = "api-doc", Label = "API Documentation", Href = _apiDocumentationUri },
-    ];
+            var children = category.Items
+                .Select(c => new NavigationItem { Id = c.Id, Label = c.Display, Href = c.Url, New = c.IsNew })
+                .ToList();
+
+            items.Add(new NavigationItem { Id = category.Category.ToLowerInvariant(), Label = category.Category, NavigationItems = children });
+        }
+
+        items.Add(new() { Id = "api-doc", Label = "API Documentation", Href = _apiDocumentationUri });
+
+        return items;
+    }
+
+    private static List<ComponentCategory> LoadComponentCategories()
+    {
+        var assembly = typeof(Navigation).Assembly;
+        using var stream = assembly.GetManifestResourceStream("TwBlazor.Docs.components.json")
+            ?? throw new InvalidOperationException("Embedded resource 'components.json' was not found.");
+
+        return JsonSerializer.Deserialize<List<ComponentCategory>>(stream, JsonSerializerOptions.Web) ?? [];
+    }
+
+    private sealed class ComponentCategory
+    {
+        public string Category { get; set; } = string.Empty;
+        public List<ComponentNavEntry> Items { get; set; } = [];
+    }
+
+    private sealed class ComponentNavEntry
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Display { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public bool IsNew { get; set; }
+    }
 
     private readonly CancellationTokenSource _cts = new();
 

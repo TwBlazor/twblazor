@@ -88,6 +88,159 @@ public class TwCheckboxTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TwCheckbox_UsesMediumSize_ByDefault()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool>>(parameters => parameters
+            .Add(p => p.Value, false));
+
+        // Assert - the default size must stay identical to what this component has always rendered at.
+        var input = cut.Find("input");
+        var classes = input.GetAttribute("class");
+        Assert.Contains("h-5", classes);
+        Assert.Contains("w-5", classes);
+    }
+
+    [Fact]
+    public void TwCheckbox_AppliesSmallSize_WhenSizeIsSm()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool>>(parameters => parameters
+            .Add(p => p.Value, false)
+            .Add(p => p.Size, Size.Sm));
+
+        // Assert
+        var input = cut.Find("input");
+        var classes = input.GetAttribute("class");
+        Assert.Contains("h-4", classes);
+        Assert.Contains("w-4", classes);
+        Assert.DoesNotContain("h-5", classes);
+    }
+
+    [Fact]
+    public void TwCheckbox_AppliesLargeSize_WhenSizeIsLg()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool>>(parameters => parameters
+            .Add(p => p.Value, false)
+            .Add(p => p.Size, Size.Lg));
+
+        // Assert
+        var input = cut.Find("input");
+        var classes = input.GetAttribute("class");
+        Assert.Contains("h-6", classes);
+        Assert.Contains("w-6", classes);
+        Assert.DoesNotContain("h-5", classes);
+    }
+
+    [Theory]
+    [InlineData(Size.Sm, "h-2.5", "w-2.5")]
+    [InlineData(Size.Md, "h-3.5", "w-3.5")]
+    [InlineData(Size.Lg, "h-4", "w-4")]
+    public void TwCheckbox_ScalesCheckIcon_WithSize(Size size, string expectedHeight, string expectedWidth)
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool>>(parameters => parameters
+            .Add(p => p.Value, true)
+            .Add(p => p.Size, size));
+
+        // Assert
+        var svg = cut.Find("svg");
+        var classes = svg.GetAttribute("class");
+        Assert.Contains(expectedHeight, classes);
+        Assert.Contains(expectedWidth, classes);
+    }
+
+    [Fact]
+    public void TwCheckbox_RendersIndeterminateIcon_WhenValueIsNull()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)null));
+
+        // Assert - indeterminate is rendered as a dash icon via a plain C# conditional, since there's
+        // no HTML attribute for the native indeterminate DOM property.
+        var input = cut.Find("input");
+        Assert.False(input.HasAttribute("checked"));
+        Assert.Single(cut.FindAll("rect"));
+    }
+
+    [Fact]
+    public void TwCheckbox_AppliesSameFillColor_WhenIndeterminateAsWhenChecked()
+    {
+        // Arrange & Act - the fill for a genuinely checked box is gated behind Tailwind's `checked:`
+        // pseudo-class, which never matches while indeterminate (Value is null, so the native
+        // `checked` DOM property is false). Without an unconditional copy of that same fill,
+        // indeterminate renders as a near-invisible dash on a plain, unfilled box.
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.Color, Color.Primary));
+
+        // Assert
+        var classes = cut.Find("input").GetAttribute("class");
+        Assert.NotNull(classes);
+        Assert.Contains("checked:bg-purple-600", classes);
+        Assert.Contains("bg-purple-600", classes.Replace("checked:bg-purple-600", string.Empty));
+    }
+
+    [Fact]
+    public void TwCheckbox_DoesNotRenderIndeterminateIcon_WhenValueIsTrue()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)true));
+
+        // Assert
+        Assert.Empty(cut.FindAll("rect"));
+    }
+
+    [Fact]
+    public void TwCheckbox_DoesNotRenderIndeterminateIcon_WhenValueIsFalse()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)false));
+
+        // Assert
+        Assert.Empty(cut.FindAll("rect"));
+    }
+
+    [Fact]
+    public void TwCheckbox_InvokesValueChanged_WithTrue_WhenIndeterminateCheckboxIsChecked()
+    {
+        // Arrange - clicking an indeterminate checkbox always resolves it to checked or unchecked;
+        // there's no click gesture that produces indeterminate itself.
+        bool? valueFromCallback = null;
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<bool?>(this, v => valueFromCallback = v)));
+
+        // Act
+        var input = cut.Find("input");
+        input.Change(true);
+
+        // Assert
+        Assert.True(valueFromCallback);
+    }
+
+    [Fact]
+    public void TwCheckbox_InvokesValueChanged_WithFalse_WhenIndeterminateCheckboxIsUnchecked()
+    {
+        // Arrange
+        bool? valueFromCallback = null;
+        var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
+            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<bool?>(this, v => valueFromCallback = v)));
+
+        // Act
+        var input = cut.Find("input");
+        input.Change(false);
+
+        // Assert
+        Assert.False(valueFromCallback);
+    }
+
+    [Fact]
     public void TwCheckbox_RendersLabel_WhenLabelProvided()
     {
         // Arrange & Act

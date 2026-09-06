@@ -325,7 +325,7 @@ public static class Theme
                 Md = "rounded",
                 Lg = roundedLg,
                 Full = "rounded-full",
-                DefaultRounded = Rounded.Lg,
+                DefaultRounded = Rounded.Sm,
                 RoundedTop = new()
                 {
                     None = "rounded-t-none",
@@ -379,7 +379,7 @@ public static class Theme
                 new TwBreadcrumbTheme
                 {
                     List = "inline-flex flex-wrap gap-3",
-                    Item = "flex items-center gap-1",
+                    Item = $"flex items-center {defaultGap}",
                     Separator = "font-bold text-gray-300",
                     Label = "wrap-break-word"
                 },
@@ -407,22 +407,23 @@ public static class Theme
                 new TwCheckboxTheme
                 {
                     Colors = checkBoxRadioButtonColors,
-                    Base = $"peer h-5 w-5 {pointerCursor} appearance-none border-2 border-gray-300 dark:border-gray-600 transition-colors duration-200 ease-in-out",
+                    Base = $"peer {pointerCursor} appearance-none border-2 border-gray-300 dark:border-gray-600 transition-colors duration-200 ease-in-out",
                     Disabled = $"{disabledOpacity} cursor-not-allowed",
                     Hover = $"{pointerCursor} hover:border-gray-600 dark:hover:border-gray-300",
                     LabelBase = $"flex items-center relative select-none min-h-[24px] {defaultGap}",
                     LabelInteractiveCursor = pointerCursor,
                     LabelNonInteractiveCursor = "pointer-events-none",
                     LabelDisabled = disabledOpacity,
-                    IconWrapper = "absolute opacity-0 peer-checked:opacity-100 translate-x-1/4"
+                    IconWrapper = "absolute opacity-0 peer-checked:opacity-100 translate-x-1/4",
+                    IndeterminateIconWrapper = "absolute translate-x-1/4"
                 },
                 new TwChipTheme
                 {
                     Base = $"{position.Center} transition-colors duration-200 inline-flex gap-1.5 font-medium shadow-sm touch-manipulation",
                     CloseButton = $"{position.Center} flex hover:bg-gray-100/20 dark:hover:bg-gray-800/20 rounded-full w-4 h-4 text-center",
-                    Sm = "text-xs px-2 py-0.5 h-6",
-                    Md = "text-sm px-2.5 py-1 h-8",
-                    Lg = "text-sm px-3 py-1.5 h-10"
+                    Sm = "text-[10px] leading-none px-1.5 py-1 h-5",
+                    Md = "text-xs leading-none px-2 py-1 h-6",
+                    Lg = "text-sm leading-none px-2.5 py-1.5 h-8"
                 },
                 new TwCollapseTheme
                 {
@@ -556,6 +557,17 @@ public static class Theme
                     NavigationDropdownContainer = "bg-gray-50 dark:bg-gray-900/30",
                     MainContent = "w-full flex-1 overflow-y-auto transition-[margin] duration-200 ease-in-out left-0",
                     MainContentRoot = "h-dvh w-full flex flex-col transition-[margin] duration-300 ease-in-out dark:bg-gray-900 bg-transparent dark:text-white overflow-x-hidden"
+                },
+                new TwTreeListTheme
+                {
+                    Container = "flex flex-col text-sm",
+                    Group = "ml-4 pl-2 py-1 bg-gray-50 dark:bg-gray-900/30 flex flex-col",
+                    Row = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} py-1 text-sm hover:underline group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
+                    RowDisabled = $"{disabledOpacity} pointer-events-none",
+                    ToggleIcon = "h-4 w-4 shrink-0 transition-transform duration-200",
+                    ToggleIconOpen = "rotate-180",
+                    Label = "truncate",
+                    ItemIcon = $"h-4 w-4 shrink-0 {neutralText.Muted}"
                 },
                 new TwRadioButtonTheme
                 {

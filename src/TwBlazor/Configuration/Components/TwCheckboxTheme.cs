@@ -14,7 +14,9 @@ namespace TwBlazor.Configuration.Components;
 public class TwCheckboxTheme
 {
     /// <summary>
-    /// Gets or sets the color palette applied to checkboxes.
+    /// Gets or sets the color palette applied to checkboxes. Each entry is gated behind Tailwind's
+    /// native <c>checked:</c> pseudo-class, so it only takes effect when the checkbox's actual DOM
+    /// <c>checked</c> property is true.
     /// </summary>
     public required TwBlazorPalette Colors { get; set; }
 
@@ -57,4 +59,10 @@ public class TwCheckboxTheme
     /// Gets or sets the classes for the checkmark icon wrapper shown when the checkbox is checked.
     /// </summary>
     public required string IconWrapper { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the dash icon wrapper shown when a <c>TwCheckbox&lt;bool?&gt;</c>'s
+    /// bound value is <see langword="null"/> (indeterminate).
+    /// </summary>
+    public required string IndeterminateIconWrapper { get; set; }
 }

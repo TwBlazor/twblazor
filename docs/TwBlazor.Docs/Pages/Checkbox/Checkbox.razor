@@ -23,6 +23,31 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Sizes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to render a smaller or larger checkbox. Defaults to <code>Size.Md</code>, the original size.</p>
+
+        <CodeExample Name="CheckboxSizes">
+            <div class="flex items-center gap-6">
+                <TwCheckbox Label="Small" Value="true" Size="Size.Sm" Color="Color.Primary" />
+                <TwCheckbox Label="Medium" Value="true" Size="Size.Md" Color="Color.Primary" />
+                <TwCheckbox Label="Large" Value="true" Size="Size.Lg" Color="Color.Primary" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Indeterminate State">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Bind a <code>TwCheckbox&lt;bool?&gt;</code> and pass <code>null</code> to render it indeterminate - useful for a "select all" checkbox that reflects a partially-selected list below it. Clicking an indeterminate checkbox always resolves it to fully checked or unchecked; there's no click gesture that produces the indeterminate state itself.</p>
+
+        <CodeExample Name="CheckboxIndeterminate" CSharpName="CheckboxIndeterminateCode">
+            <TwCheckbox T="bool?" Label="Select all fruits" Value="selectAllState" ValueChanged="OnSelectAllChanged" Color="Color.Primary" />
+            <div class="ml-6 mt-2 flex flex-col gap-2">
+                <TwCheckbox Label="Apples" @bind-Value="apples" Color="Color.Primary" />
+                <TwCheckbox Label="Bananas" @bind-Value="bananas" Color="Color.Primary" />
+                <TwCheckbox Label="Cherries" @bind-Value="cherries" Color="Color.Primary" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Colors">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</p>
 
@@ -143,6 +168,28 @@
     private bool music = false;
     private bool reading = true;
     private bool gaming = false;
+    #endregion
+
+    #region CodeExample CheckboxIndeterminateCode
+    private bool apples = true;
+    private bool bananas = false;
+    private bool cherries = true;
+
+    private bool? selectAllState =>
+        (apples, bananas, cherries) switch
+        {
+            (true, true, true) => true,
+            (false, false, false) => false,
+            _ => null
+        };
+
+    private void OnSelectAllChanged(bool? value)
+    {
+        var newValue = value ?? false;
+        apples = newValue;
+        bananas = newValue;
+        cherries = newValue;
+    }
     #endregion
 
     #region CodeExample CheckboxHorizontalSpacingCode
