@@ -6,7 +6,7 @@
     role="treeitem"
     tabindex="@(Disabled ? "-1" : "0")"
     aria-disabled="@(Disabled ? "true" : "false")"
-    aria-expanded="@(hasChildren ? (collapsed ? "false" : "true") : null)"
+    aria-expanded="@ariaExpandedValue"
     aria-checked="@(showCheckboxes ? GetAriaChecked() : null)"
     class="@itemClasses"
     style="@Style"

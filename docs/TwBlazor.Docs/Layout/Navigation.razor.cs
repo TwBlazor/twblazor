@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Text.Json;
 using TwBlazor.Enums;
 using TwBlazor.Models;
 
@@ -63,7 +63,7 @@ public partial class Navigation : IDisposable
         public string Id { get; set; } = string.Empty;
         public string Display { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
-        public bool IsNew { get; set; }
+        public bool IsNew { get; set; } // NOSONAR - populated by JSON deserialization from components.json
     }
 
     private readonly CancellationTokenSource _cts = new();

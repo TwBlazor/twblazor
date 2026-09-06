@@ -1,7 +1,7 @@
-using System.Text;
 using Deque.AxeCore.Commons;
 using Deque.AxeCore.Playwright;
 using Microsoft.Playwright;
+using System.Text;
 using TwBlazor.A11yTests.Infrastructure;
 
 namespace TwBlazor.A11yTests;

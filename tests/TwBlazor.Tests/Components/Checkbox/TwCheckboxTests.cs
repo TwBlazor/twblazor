@@ -156,7 +156,7 @@ public class TwCheckboxTests : TwBlazorTestBase
     {
         // Arrange & Act
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)null));
+            .Add(p => p.Value, null));
 
         // Assert - indeterminate is rendered as a dash icon via a plain C# conditional, since there's
         // no HTML attribute for the native indeterminate DOM property.
@@ -173,7 +173,7 @@ public class TwCheckboxTests : TwBlazorTestBase
         // `checked` DOM property is false). Without an unconditional copy of that same fill,
         // indeterminate renders as a near-invisible dash on a plain, unfilled box.
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.Value, null)
             .Add(p => p.Color, Color.Primary));
 
         // Assert
@@ -188,7 +188,7 @@ public class TwCheckboxTests : TwBlazorTestBase
     {
         // Arrange & Act
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)true));
+            .Add(p => p.Value, true));
 
         // Assert
         Assert.Empty(cut.FindAll("rect"));
@@ -199,7 +199,7 @@ public class TwCheckboxTests : TwBlazorTestBase
     {
         // Arrange & Act
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)false));
+            .Add(p => p.Value, false));
 
         // Assert
         Assert.Empty(cut.FindAll("rect"));
@@ -212,7 +212,7 @@ public class TwCheckboxTests : TwBlazorTestBase
         // there's no click gesture that produces indeterminate itself.
         bool? valueFromCallback = null;
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.Value, null)
             .Add(p => p.ValueChanged, EventCallback.Factory.Create<bool?>(this, v => valueFromCallback = v)));
 
         // Act
@@ -229,7 +229,7 @@ public class TwCheckboxTests : TwBlazorTestBase
         // Arrange
         bool? valueFromCallback = null;
         var cut = TestContext.Render<TwCheckbox<bool?>>(parameters => parameters
-            .Add(p => p.Value, (bool?)null)
+            .Add(p => p.Value, null)
             .Add(p => p.ValueChanged, EventCallback.Factory.Create<bool?>(this, v => valueFromCallback = v)));
 
         // Act

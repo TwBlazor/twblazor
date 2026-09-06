@@ -138,6 +138,19 @@ public partial class TwTreeListItem : TwBlazorComponentBase
 
     private bool hasChildren => ChildContent != null;
 
+    private string? ariaExpandedValue
+    {
+        get
+        {
+            if (!hasChildren)
+            {
+                return null;
+            }
+
+            return collapsed ? "false" : "true";
+        }
+    }
+
     private async Task OnItemActivatedAsync()
     {
         if (Disabled)
@@ -252,10 +265,17 @@ public partial class TwTreeListItem : TwBlazorComponentBase
     /// Gets the icon to render for this node: its own override when set, otherwise a folder (open/closed
     /// matching its collapsed state) for a node with children, or a generic file icon for a leaf.
     /// </summary>
-    private Icon effectiveIcon =>
-        Icon ?? (hasChildren
-            ? (collapsed ? Enums.Icon.Folder : Enums.Icon.Folder2_Open)
-            : Enums.Icon.File_Earmark);
+    private Icon effectiveIcon => Icon ?? GetDefaultIcon();
+
+    private Icon GetDefaultIcon()
+    {
+        if (!hasChildren)
+        {
+            return Enums.Icon.File_Earmark;
+        }
+
+        return collapsed ? Enums.Icon.Folder : Enums.Icon.Folder2_Open;
+    }
 
     /// <summary>
     /// Gets a stable identifier for this node, used as the rendered element's id. Falls back to a value
