@@ -172,7 +172,7 @@ public class TwTabTests : TwBlazorTestBase
         var inactiveButton = buttons[1];
 
         // Inactive tab should have hover effects
-        Assert.Contains("hover:text-gray-900", inactiveButton.GetAttribute("class"));
+        Assert.Contains("hover:text-[oklch(21%_0.006_285.885)]", inactiveButton.GetAttribute("class"));
         Assert.Contains("after:scale-x-0", inactiveButton.GetAttribute("class"));
         Assert.Contains("hover:after:scale-x-100", inactiveButton.GetAttribute("class"));
     }

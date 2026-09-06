@@ -325,9 +325,11 @@ public class TwTableTests : TwBlazorTestBase
         var cut = TestContext.Render<TwTable>(parameters => parameters
             .Add(p => p.Class, "custom-table-class"));
 
-        // Assert
-        var table = cut.Find("table");
-        Assert.Contains("custom-table-class", table.GetAttribute("class"));
+        // Assert - Class lands on the outer wrapping <div> (the component's actual visual box),
+        // not the inner <table>, which would trap it inside the wrapper's rounded clip instead of
+        // creating space around the whole component - see TwTable.razor.cs's containerClasses.
+        var container = cut.Find("div");
+        Assert.Contains("custom-table-class", container.GetAttribute("class"));
     }
 
     [Fact]
@@ -395,10 +397,11 @@ public class TwTableTests : TwBlazorTestBase
         // Assert
         var container = cut.Find("div");
         Assert.Contains(tableTheme.Bordered, container.GetAttribute("class") ?? string.Empty);
+        // Class lands on the outer wrapping <div>, not the inner <table> - see TwTable.razor.cs's containerClasses.
+        Assert.Contains("shadow-lg", container.GetAttribute("class"));
 
         var table = cut.Find("table");
         Assert.Equal("users-table", table.GetAttribute("id"));
-        Assert.Contains("shadow-lg", table.GetAttribute("class"));
         Assert.Equal("grid", table.GetAttribute("role"));
 
         var thead = cut.Find("thead");

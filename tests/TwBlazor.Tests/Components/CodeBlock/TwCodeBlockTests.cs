@@ -459,12 +459,12 @@ public class TwCodeBlockTests : TwBlazorTestBase
     [Fact]
     public void TwCodeBlock_AppliesDefaultRoundedClass_FromGlobalOptions()
     {
-        // Arrange & Act - no Rounded parameter; global default is Rounded.Sm
+        // Arrange & Act - no Rounded parameter; global default is Rounded.Md
         var cut = TestContext.Render<TwCodeBlock>();
 
         // Assert
         var classes = cut.Find("div").GetAttribute("class");
-        Assert.Contains("rounded-sm", classes);
+        Assert.Contains("rounded", classes);
     }
 
     [Fact]

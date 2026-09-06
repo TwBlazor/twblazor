@@ -71,8 +71,8 @@ public class TwRadioGroupTests : TwBlazorTestBase
         var legendClass = legend.GetAttribute("class");
         Assert.Contains("text-base", legendClass);
         Assert.Contains("font-medium", legendClass);
-        Assert.Contains("text-gray-700", legendClass);
-        Assert.Contains("dark:text-gray-300", legendClass);
+        Assert.Contains("text-[oklch(40%_0.006_285.885)]", legendClass);
+        Assert.Contains("dark:text-[oklch(88%_0.02_256.847)]", legendClass);
         Assert.Contains("mb-3", legendClass);
     }
 

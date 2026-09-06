@@ -279,7 +279,7 @@ public class TwDatePickerTests : TwBlazorTestBase
 
         // Assert
         Assert.NotNull(input);
-        Assert.Contains("bg-gray-100", input.GetAttribute("class"));
+        Assert.Contains("bg-[oklch(98%_0_0)]", input.GetAttribute("class"));
     }
 
     [Fact]

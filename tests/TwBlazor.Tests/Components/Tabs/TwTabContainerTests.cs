@@ -441,11 +441,11 @@ public class TwTabContainerTests : TwBlazorTestBase
 
         // Assert
         var tablist = cut.Find("div[role='tablist']");
-        Assert.Contains("dark:border-gray-700", tablist.GetAttribute("class"));
-        Assert.Contains("dark:bg-gray-800", tablist.GetAttribute("class"));
+        Assert.Contains("dark:border-[oklch(21.15%_0.012_254.09)]", tablist.GetAttribute("class"));
+        Assert.Contains("dark:bg-[oklch(25.33%_0.016_252.42)]", tablist.GetAttribute("class"));
 
         var tabpanel = cut.Find("div[role='tabpanel']");
-        Assert.Contains("dark:bg-gray-800", tabpanel.GetAttribute("class"));
+        Assert.Contains("dark:bg-[oklch(25.33%_0.016_252.42)]", tabpanel.GetAttribute("class"));
     }
 
     [Fact]
@@ -492,10 +492,10 @@ public class TwTabContainerTests : TwBlazorTestBase
 
         // Assert
         var tablist = cut.Find("div[role='tablist']");
-        Assert.Contains("bg-white", tablist.GetAttribute("class"));
+        Assert.Contains("bg-[oklch(100%_0_0)]", tablist.GetAttribute("class"));
 
         var tabpanel = cut.Find("div[role='tabpanel']");
-        Assert.Contains("bg-white", tabpanel.GetAttribute("class"));
+        Assert.Contains("bg-[oklch(100%_0_0)]", tabpanel.GetAttribute("class"));
     }
 
     [Fact]
@@ -517,13 +517,13 @@ public class TwTabContainerTests : TwBlazorTestBase
         var tablistClass = tablist.GetAttribute("class") ?? string.Empty;
         Assert.DoesNotContain("bg-white", tablistClass);
         Assert.DoesNotContain("dark:bg-gray-800", tablistClass);
-        Assert.Contains("border-gray-200", tablistClass);
+        Assert.Contains("border-[oklch(95%_0_0)]", tablistClass);
 
         var tabpanel = cut.Find("div[role='tabpanel']");
         var tabpanelClass = tabpanel.GetAttribute("class") ?? string.Empty;
         Assert.DoesNotContain("bg-white", tabpanelClass);
         Assert.DoesNotContain("dark:bg-gray-800", tabpanelClass);
-        Assert.Contains("border-gray-200", tabpanelClass);
+        Assert.Contains("border-[oklch(95%_0_0)]", tabpanelClass);
     }
 
     private static RenderFragment ThreeTabs(bool disableSecond = false) => builder =>

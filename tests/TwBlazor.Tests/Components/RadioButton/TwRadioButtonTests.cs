@@ -191,7 +191,7 @@ public class TwRadioButtonTests : TwBlazorTestBase
         Assert.Contains("appearance-none", classes);
         Assert.Contains("rounded-full", classes);
         Assert.Contains("border", classes);
-        Assert.Contains("border-gray-300", classes);
+        Assert.Contains("border-[oklch(95%_0_0)]", classes);
     }
 
     [Fact]
