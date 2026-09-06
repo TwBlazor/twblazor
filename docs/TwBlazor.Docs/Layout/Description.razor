@@ -1,0 +1,10 @@
+<div class="@Classes">@ChildContent</div>
+
+@code {
+    [Parameter] public bool NoMargin { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Classes => NoMargin
+        ? "text-gray-900 dark:text-gray-200 text-sm"
+        : "text-gray-900 dark:text-gray-200 mb-4 text-sm";
+}

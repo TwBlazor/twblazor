@@ -1,0 +1,48 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<li id="@effectiveItemId"
+    role="treeitem"
+    tabindex="@(Disabled ? "-1" : "0")"
+    aria-disabled="@(Disabled ? "true" : "false")"
+    aria-expanded="@ariaExpandedValue"
+    aria-checked="@(showCheckboxes ? GetAriaChecked() : null)"
+    class="@itemClasses"
+    style="@Style"
+    @attributes="Attributes"
+    @onclick="OnItemActivatedAsync"
+    @onclick:stopPropagation="true"
+    @onkeydown="OnItemKeyDownAsync"
+    @onkeydown:stopPropagation="true">
+    <div class="@rowClasses">
+        @if (hasChildren)
+        {
+            <TwIcon Icon="TwBlazor.Enums.Icon.Chevron_Down" Class="@toggleIconClasses" />
+        }
+        @if (showCheckboxes)
+        {
+            <span @onclick:stopPropagation="true">
+                <TwCheckbox T="bool?"
+                            Value="GetEffectiveChecked()"
+                            ValueChanged="@(v => ToggleCheckedAsync(v ?? false))"
+                            Disabled="Disabled"
+                            Size="Size.Sm"
+                            AriaLabel="@($"Select {Label}")" />
+            </span>
+        }
+        @if (!hideIcons)
+        {
+            <TwIcon Icon="effectiveIcon" Class="@theme.ItemIcon" />
+        }
+        <span class="@theme.Label">@Label</span>
+    </div>
+    @if (hasChildren)
+    {
+        <ul role="group" class="@groupClasses" hidden="@collapsed">
+            <CascadingValue Value="this">
+                @ChildContent
+            </CascadingValue>
+        </ul>
+    }
+</li>

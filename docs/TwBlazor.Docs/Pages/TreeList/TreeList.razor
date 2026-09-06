@@ -1,0 +1,174 @@
+@page "/tree-list"
+@using TwBlazor.Enums
+@using TwBlazor.Models
+@using TwBlazor.Services
+@using TwBlazor.Docs.Pages.Dialog
+@inject ITwDialogService DialogService
+
+<PageTitle>TwTreeList | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwTreeList is a Blazor tree view component for rendering recursively nested, expandable/collapsible data, with per-node click handling, checkboxes, custom icons and disabled states." />
+    <link rel="canonical" href="https://twblazor.com/tree-list" />
+</HeadContent>
+
+<PageContainer Title="TwTreeList">
+    <PageCard Title="Basic Usage">
+        <Description>Build a tree by nesting <code>TwTreeListItem</code> tags inside a <code>TwTreeList</code> - and inside each other, for children. A node with nested items can be expanded or collapsed by clicking it.</Description>
+        <CodeExample Name="TreeListBasic">
+            <TwTreeList AriaLabel="File explorer">
+                <TwTreeListItem Label="Documents">
+                    <TwTreeListItem Label="resume.pdf" />
+                    <TwTreeListItem Label="cover-letter.docx" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="Pictures">
+                    <TwTreeListItem Label="holiday.jpg" />
+                    <TwTreeListItem Label="profile.png" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="readme.md" />
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Default Expanded">
+        <Description>Set <code>Collapsed="false"</code> on a node so its children are already visible on first render.</Description>
+        <CodeExample Name="TreeListExpanded">
+            <TwTreeList AriaLabel="Project structure">
+                <TwTreeListItem Label="src" Collapsed="false">
+                    <TwTreeListItem Label="Components" Collapsed="false">
+                        <TwTreeListItem Label="TwTreeList.razor" />
+                        <TwTreeListItem Label="TwTreeListItem.razor" />
+                    </TwTreeListItem>
+                    <TwTreeListItem Label="TwBlazorComponentBase.cs" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="TwBlazor.csproj" />
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Selecting a Node">
+        <Description>Assign <code>OnClick</code> on a node to react when it's activated by click or keyboard (Enter/Space).</Description>
+        <CodeExample Name="TreeListSelection" CSharpName="TreeListSelectionCode">
+            <TwTreeList AriaLabel="Select a file">
+                <TwTreeListItem Label="Reports">
+                    <TwTreeListItem Label="Q1.xlsx" OnClick="@(() => OnFileSelected("Q1.xlsx"))" />
+                    <TwTreeListItem Label="Q2.xlsx" OnClick="@(() => OnFileSelected("Q2.xlsx"))" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="summary.pdf" OnClick="@(() => OnFileSelected("summary.pdf"))" />
+            </TwTreeList>
+            <p class="mt-4 text-sm text-gray-600 dark:text-white">Selected: <strong>@(selectedFile ?? "none")</strong></p>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Checkboxes">
+        <Description>Set <code>ShowCheckboxes</code> on the tree to render a checkbox next to each node. Checking or unchecking a node cascades to all of its descendants, and a parent whose children disagree renders indeterminate (a dash) rather than a plain check.</Description>
+        <CodeExample Name="TreeListCheckboxes">
+            <TwTreeList ShowCheckboxes AriaLabel="Select project files">
+                <TwTreeListItem Label="src" Collapsed="false">
+                    <TwTreeListItem Label="Program.cs" Checked="true" />
+                    <TwTreeListItem Label="Startup.cs" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="tests" Collapsed="false">
+                    <TwTreeListItem Label="UnitTests.csproj" Checked="true" />
+                    <TwTreeListItem Label="IntegrationTests.csproj" Checked="true" />
+                </TwTreeListItem>
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled Nodes">
+        <Description>Set <code>Disabled</code> on a node to prevent it from expanding or raising <code>OnClick</code>.</Description>
+        <CodeExample Name="TreeListDisabled">
+            <TwTreeList AriaLabel="File explorer with a locked folder">
+                <TwTreeListItem Label="Shared" Collapsed="false">
+                    <TwTreeListItem Label="team-notes.txt" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="Locked" Disabled="true" Collapsed="false">
+                    <TwTreeListItem Label="secret.txt" />
+                </TwTreeListItem>
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Icons">
+        <Description>Every node shows a folder or file icon by default. Set <code>Icon</code> on a node to override it.</Description>
+        <CodeExample Name="TreeListCustomIcons">
+            <TwTreeList AriaLabel="Mixed content types">
+                <TwTreeListItem Label="Photos" Icon="Icon.Image" />
+                <TwTreeListItem Label="Videos" Icon="Icon.Camera_Video" />
+                <TwTreeListItem Label="Favorites" Icon="Icon.Star_Fill" />
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Hiding Icons">
+        <Description>Set <code>HideIcons</code> on the tree for a plainer look with just labels and the expand/collapse chevron.</Description>
+        <CodeExample Name="TreeListHideIcons">
+            <TwTreeList HideIcons AriaLabel="File explorer without icons">
+                <TwTreeListItem Label="Documents">
+                    <TwTreeListItem Label="resume.pdf" />
+                </TwTreeListItem>
+                <TwTreeListItem Label="readme.md" />
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Building From Your Own Data">
+        <Description>A node is just a component, so a tree built from your own data is a normal <code>@@foreach</code> - no separate model type to learn. <code>OnClick</code> works the same regardless of how a node was created, so clicking a team here calls into <code>ITwDialogService</code> to show its members.</Description>
+        <CodeExample Name="TreeListFromData" CSharpName="TreeListFromDataCode">
+            <TwTreeList AriaLabel="Departments">
+                @foreach (var department in departments)
+                {
+                    @if (department.Teams.Count > 0)
+                    {
+                        <TwTreeListItem Label="@department.Name" Collapsed="false">
+                            @foreach (var team in department.Teams)
+                            {
+                                <TwTreeListItem Label="@team" OnClick="@(() => ShowTeamMembers(team))" />
+                            }
+                        </TwTreeListItem>
+                    }
+                    else
+                    {
+                        <TwTreeListItem Label="@department.Name" />
+                    }
+                }
+            </TwTreeList>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample TreeListSelectionCode
+    private string? selectedFile;
+
+    private void OnFileSelected(string label) => selectedFile = label;
+    #endregion
+
+    #region CodeExample TreeListFromDataCode
+    private sealed class Department
+    {
+        public string Name { get; set; } = string.Empty;
+        public List<string> Teams { get; set; } = [];
+    }
+
+    private readonly List<Department> departments =
+    [
+        new() { Name = "Engineering", Teams = ["Platform", "Mobile"] },
+        new() { Name = "Marketing", Teams = ["Content", "Growth"] },
+    ];
+
+    private static readonly string[] _namePool =
+    [
+        "Alice Johnson", "Bob Smith", "Carol Lee", "David Kim", "Priya Patel",
+        "Wei Zhang", "Fatima Al-Sayed", "Liam O'Brien", "Sofia Rossi", "Noah Muller"
+    ];
+
+    private Task ShowTeamMembers(string team)
+    {
+        var members = _namePool.OrderBy(_ => Random.Shared.Next()).Take(3);
+
+        return DialogService.ShowAsync<ConfirmDialog>(team,
+            new TwDialogParameters { ["Message"] = $"Team members: {string.Join(", ", members)}" });
+    }
+    #endregion
+}

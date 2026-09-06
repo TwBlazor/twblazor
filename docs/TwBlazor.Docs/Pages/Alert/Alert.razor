@@ -10,7 +10,7 @@
 
 <PageContainer Title="TwAlert">
     <PageCard Title="Alert">
-        <p>Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.</p>
+        <Description>Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.</Description>
         <CodeExample Name="AlertBasic">
             <TwAlert Id="example-alert" Class="mt-2" Color="Color.Accent">
                 <p>This is an example alert with a <a href="#" class="underline m-0 p-0 inline">link</a>.</p>
@@ -19,6 +19,7 @@
     </PageCard>
 
     <PageCard Title="Colors">
+        <Description>TwAlert supports all the standard theme colors via the <code>Color</code> property.</Description>
         <CodeExample Name="AlertColors">
             @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
             {
@@ -30,7 +31,7 @@
     </PageCard>
 
     <PageCard Title="Dense Alerts">
-        <p>You can also make alerts dense and take up less space using the <code>Dense</code> property.</p>
+        <Description>You can also make alerts dense and take up less space using the <code>Dense</code> property.</Description>
         <CodeExample Name="AlertDense">
             <div class="grid grid-cols-1 md:grid-cols-2 mb-2 gap-2">
                 <TwAlert Id="dense-alert-1" Class="mt-2" Color="Color.Success" Dense>
@@ -45,7 +46,7 @@
 
     <PageCard Title="Alert Icons">
 
-        <p>TwAlert also supports easy icons parameters <code>StartIcon</code> and <code>EndIcon</code>.</p>
+        <Description>TwAlert also supports easy icons parameters <code>StartIcon</code> and <code>EndIcon</code>.</Description>
         <CodeExample Name="AlertIcons">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <TwAlert Id="icon-alert-1" Class="mt-2" Color="Color.Primary" Dense StartIcon="Icon.Wallet">
@@ -65,7 +66,7 @@
     </PageCard>
 
     <PageCard Title="Dismissible Alerts">
-        <p>You can also make alerts dismissible by using <code>OnDismiss</code> or the <code>Dismissible</code> property set as true, setting <code>Dismissible</code> to true will show the X button and won't require an event callback.</p>
+        <Description>You can also make alerts dismissible by using <code>OnDismiss</code> or the <code>Dismissible</code> property set as true, setting <code>Dismissible</code> to true will show the X button and won't require an event callback.</Description>
         <CodeExample Name="AlertDismissable" CSharpName="AlertDismissHandler">
             <TwAlert Id="info-alert" StartIcon="Icon.Info_Circle" Class="mt-2" Color="Color.Primary" Dense OnDismiss="@(() => HandleDismiss())">
                 This is a dense alert that is dismissible.

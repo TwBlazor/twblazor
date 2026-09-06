@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Text.Json;
+
 namespace TwBlazor.A11yTests;
 
 /// <summary>
@@ -13,10 +16,10 @@ public static class AccessibilityRoutes
         get
         {
             var data = new TheoryData<string, bool>();
-            foreach (var route in All)
+            foreach (var route in _all)
             {
                 data.Add(route, false);
-                if (!PreviewRoutes.Contains(route))
+                if (!_previewRoutes.Contains(route))
                 {
                     data.Add(route, true);
                 }
@@ -25,46 +28,45 @@ public static class AccessibilityRoutes
         }
     }
 
-    private static readonly string[] PreviewRoutes =
+    private static readonly string[] _previewRoutes =
     [
         "/sidebar/preview",
         "/sidebar/preview-navigation",
     ];
 
-    private static readonly string[] All =
+    // Routable pages that aren't a documented component and so have no entry in components.json.
+    private static readonly string[] _nonComponentRoutes =
     [
         "/",
-        "/alert",
-        "/breadcrumb",
-        "/button",
-        "/card",
-        "/checkbox",
-        "/chip",
-        "/collapse",
-        "/color-picker",
-        "/data-table",
-        "/date-picker",
-        "/datetime-picker",
-        "/dialog",
-        "/file-upload",
         "/get-started",
-        "/icon",
-        "/pagination",
-        "/progress",
-        "/radio-button",
-        "/select",
-        "/sidebar",
-        "/sidebar/preview",
-        "/sidebar/preview-navigation",
-        "/skeleton",
-        "/slider",
-        "/spinner",
-        "/switch",
-        "/table",
-        "/tabs",
-        "/textfield",
         "/theme",
-        "/time-picker",
-        "/toast",
     ];
+
+    private static readonly string[] _all = BuildAllRoutes();
+
+    private static string[] BuildAllRoutes()
+    {
+        List<string> routes = [.. _nonComponentRoutes, .. _previewRoutes, .. LoadComponentRoutes()];
+        return [.. routes.OrderBy(route => route, StringComparer.Ordinal)];
+    }
+
+    private static IEnumerable<string> LoadComponentRoutes()
+    {
+        var docsAssembly = Assembly.Load("TwBlazor.Docs");
+        using var stream = docsAssembly.GetManifestResourceStream("TwBlazor.Docs.components.json")
+            ?? throw new InvalidOperationException("Embedded resource 'components.json' was not found.");
+
+        var categories = JsonSerializer.Deserialize<List<ComponentCategory>>(stream, JsonSerializerOptions.Web) ?? [];
+        return categories.SelectMany(c => c.Items).Select(e => e.Url);
+    }
+
+    private sealed class ComponentCategory
+    {
+        public List<ComponentEntry> Items { get; set; } = [];
+    }
+
+    private sealed class ComponentEntry
+    {
+        public string Url { get; set; } = string.Empty;
+    }
 }

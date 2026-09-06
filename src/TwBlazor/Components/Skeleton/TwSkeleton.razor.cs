@@ -4,9 +4,9 @@
 // Design and API shape inspired by MudBlazor's MudSkeleton
 // (https://github.com/MudBlazor/MudBlazor/tree/dev/src/MudBlazor/Components/Skeleton), MIT License.
 
-using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Globalization;
 using TwBlazor.Configuration.Components;
 using TwBlazor.Enums;
 using TwBlazor.Models;

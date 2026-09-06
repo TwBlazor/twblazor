@@ -8,7 +8,7 @@
 
 <PageContainer Title="TwCollapse">
     <PageCard Title="Basic Collapse">
-        <p>The <code>TwCollapse</code> component provides a collapsible drawer panel that expands and collapses when the trigger button is clicked.</p>
+        <Description>The <code>TwCollapse</code> component provides a collapsible drawer panel that expands and collapses when the trigger button is clicked.</Description>
         <CodeExample Name="CollapseBasic">
             <TwCollapse Title="What is TwBlazor?" Class="mt-4">
                 <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">TwBlazor is a Tailwind CSS component library for Blazor that makes it easy to build modern, accessible UIs.</p>
@@ -17,7 +17,7 @@
     </PageCard>
 
     <PageCard Title="Default Open">
-        <p>Set <code>IsOpen="true"</code> to have the panel expanded on first render.</p>
+        <Description>Set <code>IsOpen="true"</code> to have the panel expanded on first render.</Description>
         <CodeExample Name="CollapseOpen">
             <TwCollapse Title="Getting started" IsOpen Class="mt-4">
                 <p class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Install the TwBlazor NuGet package and call <code>AddTwBlazor()</code> in your service registration.</p>
@@ -26,7 +26,7 @@
     </PageCard>
 
     <PageCard Title="Two-way Binding">
-        <p>Use <code>@("@bind-IsOpen")</code> to control the panel state from a parent component.</p>
+        <Description>Use <code>@("@bind-IsOpen")</code> to control the panel state from a parent component.</Description>
         <CodeExample Name="CollapseBinding">
             <div class="flex items-center gap-3 mt-4 mb-4">
                 <TwButton Label="@(isOpen ? "Close" : "Open")" OnClick="@(() => isOpen = !isOpen)" Color="Color.Primary" />
@@ -39,7 +39,7 @@
     </PageCard>
 
     <PageCard Title="Custom Header">
-        <p>Use the <code>HeaderContent</code> parameter to replace the plain title with fully custom markup.</p>
+        <Description>Use the <code>HeaderContent</code> parameter to replace the plain title with fully custom markup.</Description>
         <CodeExample Name="CollapseHeader">
             <TwCollapse Class="mt-4">
                 <HeaderContent>

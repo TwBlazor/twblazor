@@ -8,7 +8,7 @@
 
 <PageContainer Title="TwSlider">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">A drop-in replacement for <code>&lt;input type="range"&gt;</code> with a fully custom, themeable track and thumb.</p>
+        <Description>A drop-in replacement for <code>&lt;input type="range"&gt;</code> with a fully custom, themeable track and thumb.</Description>
 
         <CodeExample Name="SliderBasic" CSharpName="SliderBasicCode">
             <TwSlider T="int" Id="volume-slider" Min="0" Max="100" Step="1" Label="Volume" @bind-Value="volumeValue" AriaLabel="Volume slider" />
@@ -17,7 +17,7 @@
     </PageCard>
 
     <PageCard Title="Colors">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Color</code> to give a slider meaning at a glance - here it signals status rather than just decoration.</p>
+        <Description>Use <code>Color</code> to give a slider meaning at a glance - here it signals status rather than just decoration.</Description>
 
         <CodeExample Name="SliderColors" CSharpName="SliderColorsCode">
             <div class="space-y-6">
@@ -40,7 +40,7 @@
     </PageCard>
 
     <PageCard Title="Precision & Range">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Any comparable numeric type works via <code>T</code> - use decimals with a fractional <code>Step</code> for fine control, or negative <code>Min</code> values for ranges that cross zero.</p>
+        <Description>Any comparable numeric type works via <code>T</code> - use decimals with a fractional <code>Step</code> for fine control, or negative <code>Min</code> values for ranges that cross zero.</Description>
 
         <CodeExample Name="SliderPrecisionRange" CSharpName="SliderPrecisionRangeCode">
             <div class="space-y-6">
@@ -58,7 +58,7 @@
     </PageCard>
 
     <PageCard Title="Disabled & Readonly">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3"><code>Disabled</code> dims and locks the slider; <code>ReadOnly</code> keeps its color but blocks changes.</p>
+        <Description><code>Disabled</code> dims and locks the slider; <code>ReadOnly</code> keeps its color but blocks changes.</Description>
 
         <CodeExample Name="SliderDisabledReadonly" CSharpName="SliderDisabledReadonlyCode">
             <div class="space-y-6">

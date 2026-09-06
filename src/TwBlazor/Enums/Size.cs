@@ -4,22 +4,22 @@
 namespace TwBlazor.Enums;
 
 /// <summary>
-/// Defines the chip size variants.
+/// Represents a general small/medium/large size scale, shared across components that offer a size variant.
 /// </summary>
-public enum ChipSize
+public enum Size
 {
     /// <summary>
-    /// Small chip (height: 20px).
+    /// Small size.
     /// </summary>
-    Small,
+    Sm,
 
     /// <summary>
-    /// Medium chip (height: 24px) - Default.
+    /// Medium size - the default for components that use this scale.
     /// </summary>
-    Medium,
+    Md,
 
     /// <summary>
-    /// Large chip (height: 32px).
+    /// Large size.
     /// </summary>
-    Large
+    Lg
 }

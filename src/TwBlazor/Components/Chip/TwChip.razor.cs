@@ -199,10 +199,10 @@ public partial class TwChip : TwBlazorComponentBase
     {
         var sizeClass = Size switch
         {
-            ChipSize.Small => "w-4 h-4 text-[10px]",
-            ChipSize.Medium => "w-5 h-5 text-xs",
-            ChipSize.Large => "w-6 h-6 text-sm",
-            _ => "w-5 h-5 text-xs"
+            ChipSize.Small => "w-3.5 h-3.5 text-[9px]",
+            ChipSize.Medium => "w-4 h-4 text-[10px]",
+            ChipSize.Large => "w-5 h-5 text-xs",
+            _ => "w-4 h-4 text-[10px]"
         };
 
         return $"inline-flex items-center justify-center rounded-full bg-current/10 {sizeClass} font-semibold -ml-1";
@@ -218,10 +218,10 @@ public partial class TwChip : TwBlazorComponentBase
         // Fixed w-*/h-* boxes left extra space the glyph didn't fill, throwing off items-center.
         return Size switch
         {
-            ChipSize.Small => "text-xs leading-none",
-            ChipSize.Medium => "text-base leading-none",
-            ChipSize.Large => "text-xl leading-none",
-            _ => "text-base leading-none"
+            ChipSize.Small => "text-[10px] leading-none",
+            ChipSize.Medium => "text-xs leading-none",
+            ChipSize.Large => "text-base leading-none",
+            _ => "text-xs leading-none"
         };
     }
 }

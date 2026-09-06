@@ -1,0 +1,56 @@
+[
+  {
+    "category": "Data",
+    "items": [
+      { "id": "data-table-navitem", "display": "Data Table", "name": "TwDataTable", "url": "/data-table" },
+      { "id": "pagination-navitem", "display": "Pagination", "name": "TwPagination", "url": "/pagination" },
+      { "id": "table-navitem", "display": "Table", "name": "TwTable", "url": "/table" }
+    ]
+  },
+  {
+    "category": "Feedback",
+    "items": [
+      { "id": "alert-navitem", "display": "Alert", "name": "TwAlert", "url": "/alert" },
+      { "id": "chip-navitem", "display": "Chip", "name": "TwChip", "url": "/chip" },
+      { "id": "icon-navitem", "display": "Icon", "name": "TwIcon", "url": "/icon" },
+      { "id": "progress-navitem", "display": "Progress", "name": "TwProgress", "url": "/progress", "isNew": true },
+      { "id": "skeleton-navitem", "display": "Skeleton", "name": "TwSkeleton", "url": "/skeleton", "isNew": true },
+      { "id": "spinner-navitem", "display": "Spinner", "name": "TwSpinner", "url": "/spinner", "isNew": true }
+    ]
+  },
+  {
+    "category": "Forms",
+    "items": [
+      { "id": "button-navitem", "display": "Button", "name": "TwButton", "url": "/button" },
+      { "id": "checkbox-navitem", "display": "Checkbox", "name": "TwCheckbox", "url": "/checkbox" },
+      { "id": "color-picker-navitem", "display": "Color Picker", "name": "TwColorPicker", "url": "/color-picker", "isNew": true },
+      { "id": "date-picker-navitem", "display": "Date Picker", "name": "TwDatePicker", "url": "/date-picker" },
+      { "id": "datetime-picker-navitem", "display": "Datetime Picker", "name": "TwDateTimePicker", "url": "/datetime-picker" },
+      { "id": "file-upload-navitem", "display": "File Upload", "name": "TwFileUpload", "url": "/file-upload" },
+      { "id": "radio-button-navitem", "display": "Radio Button", "name": "TwRadioButton", "url": "/radio-button" },
+      { "id": "select-navitem", "display": "Select", "name": "TwSelect", "url": "/select" },
+      { "id": "slider-navitem", "display": "Slider", "name": "TwSlider", "url": "/slider", "isNew": true },
+      { "id": "switch-navitem", "display": "Switch", "name": "TwSwitch", "url": "/switch", "isNew": true },
+      { "id": "textfield-navitem", "display": "Textfield", "name": "TwTextfield", "url": "/textfield" },
+      { "id": "time-picker-navitem", "display": "Time Picker", "name": "TwTimePicker", "url": "/time-picker" }
+    ]
+  },
+  {
+    "category": "Layout",
+    "items": [
+      { "id": "breadcrumb-navitem", "display": "Breadcrumb", "name": "TwBreadcrumb", "url": "/breadcrumb" },
+      { "id": "card-navitem", "display": "Card", "name": "TwCard", "url": "/card" },
+      { "id": "collapse-navitem", "display": "Collapse", "name": "TwCollapse", "url": "/collapse" },
+      { "id": "sidebar-navitem", "display": "Sidebar", "name": "TwSidebar", "url": "/sidebar" },
+      { "id": "tabs-navitem", "display": "Tabs", "name": "TwTabContainer", "url": "/tabs" },
+      { "id": "tree-list-navitem", "display": "Tree List", "name": "TwTreeList", "url": "/tree-list", "isNew": true }
+    ]
+  },
+  {
+    "category": "Services",
+    "items": [
+      { "id": "dialog-navitem", "display": "Dialog Service", "name": "TwDialog", "url": "/dialog" },
+      { "id": "toast-navitem", "display": "Toast Service", "name": "TwToastProvider", "url": "/toast" }
+    ]
+  }
+]
