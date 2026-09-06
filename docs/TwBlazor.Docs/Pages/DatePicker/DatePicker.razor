@@ -8,6 +8,7 @@
 
 <PageContainer Title="TwDatePicker">
     <PageCard Title="Basic Date Picker">
+        <Description>Bind <code>SelectedDate</code> for a <code>DateTime</code> value, or <code>Value</code> for a plain string.</Description>
         <CodeExample Name="DatePickerBasic" CSharpName="DatePickerBasicCode">
             <div class="space-y-4">
                 <p><b>@@bind-SelectedDate (DateTime):</b> @SelectedDate.ToShortDateString()</p>
@@ -19,7 +20,7 @@
     </PageCard>
 
     <PageCard Title="Input Variants">
-        <p class="mb-4">The DatePicker supports different visual variants for the input field.</p>
+        <Description>The DatePicker supports different visual variants for the input field.</Description>
 
         <CodeExample Name="DatePickerVariants" CSharpName="DatePickerBasicCode">
             <div class="space-y-4">
@@ -31,6 +32,7 @@
     </PageCard>
 
     <PageCard Title="Disabled and Readonly Date Picker">
+        <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the date picker.</Description>
         <CodeExample Name="DatePickerReadonlyDisabled" CSharpName="DatePickerBasicCode">
             <TwDatePicker Id="disabled-datepicker" @bind-SelectedDate="SelectedDate" Label="Disabled Date Picker" Disabled Class="mt-3" />
             <TwDatePicker Id="readonly-datepicker" @bind-SelectedDate="SelectedDate" Label="Readonly Date Picker" ReadOnly Class="mt-3" />

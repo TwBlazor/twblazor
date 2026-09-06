@@ -9,6 +9,7 @@
 
 <PageContainer Title="TwTextfield">
     <PageCard Title="Textfield">
+        <Description>Bind <code>Value</code> to a labeled text input with a placeholder.</Description>
         <CodeExample Name="TextfieldBasic">
             <div class="md:flex-col flex-row flex gap-2">
                 <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield"  />
@@ -17,16 +18,19 @@
         </CodeExample>
     </PageCard>
     <PageCard Title="Disabled Textfield">
+        <Description>Use the <code>Disabled</code> property to prevent interaction with the textfield.</Description>
         <CodeExample Name="TextfieldDisabled">
             <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Disabled />
         </CodeExample>
     </PageCard>
     <PageCard Title="Readonly Textfield">
+        <Description>Use the <code>ReadOnly</code> property to display a value that can't be edited.</Description>
         <CodeExample Name="TextfieldReadonly">
             <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" ReadOnly />
         </CodeExample>
     </PageCard>
     <PageCard Title="Outlined Variant">
+        <Description>Set <code>Variant="InputVariant.Outlined"</code> for an outlined textfield style.</Description>
         <CodeExample Name="TextfieldOutlined">
             <div class="md:flex-col flex-row flex gap-2">
                 <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Variant="InputVariant.Outlined" />
@@ -35,6 +39,7 @@
         </CodeExample>
     </PageCard>
     <PageCard Title="Filled Variant">
+        <Description>Set <code>Variant="InputVariant.Filled"</code> for a filled textfield style.</Description>
         <CodeExample Name="TextfieldFilled">
             <div class="md:flex-col flex-row flex gap-2">
                 <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Forename textfield" Variant="InputVariant.Filled" />
@@ -43,6 +48,7 @@
         </CodeExample>
     </PageCard>
     <PageCard Title="Different Input Types">
+        <Description>Use <code>InputType</code> to render native input types such as <code>email</code> and <code>password</code>.</Description>
         <CodeExample Name="TextfieldTypes">
             <div class="md:flex-col flex-row flex gap-2">
                 <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" InputType="email" />

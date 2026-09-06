@@ -13,11 +13,11 @@
 
 <PageContainer Title="TwDialogProvider">
     <PageCard Title="Setup">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             The Dialog service shows arbitrary Blazor components as modal dialogs, wrapped in a themed <code>TwDialog</code> chrome
             (backdrop, header, title, close button). To use dialogs, add the <code>TwDialogProvider</code> component to your app and
             inject the <code>ITwDialogService</code>.
-        </p>
+        </Description>
 
         <div class="space-y-5">
             <div>
@@ -45,11 +45,11 @@
     </PageCard>
 
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Dialog content is a normal Blazor component. Show it with <code>ShowAsync&lt;TComponent&gt;()</code>, passing a title and any
             <code>TwDialogParameters</code> the content needs. Inside the content component, a cascaded <code>TwDialogInstance</code>
             lets it close (or cancel) itself.
-        </p>
+        </Description>
 
         <CodeExample Name="DialogConfirm" CSharpName="DialogConfirmCode">
             <TwButton Label="Show Confirm Dialog" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowConfirmDialog" />
@@ -61,10 +61,10 @@
     </PageCard>
 
     <PageCard Title="Returning Data">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             A dialog can return more than a boolean. Call <code>DialogInstance.Close(data)</code> with any value, then read it back with
             <code>reference.GetReturnValueAsync&lt;T&gt;()</code>.
-        </p>
+        </Description>
 
         <CodeExample Name="DialogPrompt" CSharpName="DialogPromptCode">
             <TwButton Label="Edit Name" Variant="ButtonVariant.Filled" Color="Color.Primary" OnClick="ShowPromptDialog" />
@@ -76,9 +76,9 @@
     </PageCard>
 
     <PageCard Title="Position">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Pass a <code>TwDialogOptions</code> with a <code>Position</code> to control where the dialog appears on screen.
-        </p>
+        </Description>
 
         <CodeExample Name="DialogPosition" CSharpName="DialogPositionCode">
             <div class="grid grid-cols-3 gap-2 max-w-md">
@@ -91,9 +91,9 @@
     </PageCard>
 
     <PageCard Title="Sizing">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Use <code>MaxWidth</code> for a responsive width breakpoint, or <code>FullScreen</code> to fill the entire viewport.
-        </p>
+        </Description>
 
         <CodeExample Name="DialogSizing" CSharpName="DialogSizingCode">
             <div class="flex flex-wrap gap-2">
@@ -107,10 +107,10 @@
     </PageCard>
 
     <PageCard Title="Behavior Options">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             <code>NoHeader</code> hides the title bar entirely, and combining <code>BackdropClick</code>, <code>CloseOnEscapeKey</code>,
             and <code>CloseButton</code> (all set to <code>false</code>) produces a dialog that can only be closed by its own content.
-        </p>
+        </Description>
 
         <CodeExample Name="DialogBehavior" CSharpName="DialogBehaviorCode">
             <div class="flex flex-wrap gap-2">
@@ -121,11 +121,11 @@
     </PageCard>
 
     <PageCard Title="Theme Configuration">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <Description>
             Dialog styling is controlled by <code>TwBlazorTheme.Dialog</code> (a <code>TwDialogTheme</code>), configured via the
             <code>AddTwBlazor()</code> options callback described on the <a href="/get-started" class="underline">Get Started</a> page.
             Every property is a set of Tailwind classes, so changes are picked up by your own Tailwind build.
-        </p>
+        </Description>
 
         <div class="overflow-x-auto mb-4">
             <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">

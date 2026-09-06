@@ -11,7 +11,7 @@
 
 <PageContainer Title="TwCheckbox">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</p>
+        <Description>Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</Description>
 
         <CodeExample Name="CheckboxBasic" CSharpName="CheckboxBasicCode">
             <TwCheckboxGroup TValue="string" Legend="Select your interests" Name="interests">
@@ -24,7 +24,7 @@
     </PageCard>
 
     <PageCard Title="Sizes">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to render a smaller or larger checkbox. Defaults to <code>Size.Md</code>, the original size.</p>
+        <Description>Use <code>Size</code> to render a smaller or larger checkbox. Defaults to <code>Size.Md</code>, the original size.</Description>
 
         <CodeExample Name="CheckboxSizes">
             <div class="flex items-center gap-6">
@@ -36,7 +36,7 @@
     </PageCard>
 
     <PageCard Title="Indeterminate State">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Bind a <code>TwCheckbox&lt;bool?&gt;</code> and pass <code>null</code> to render it indeterminate - useful for a "select all" checkbox that reflects a partially-selected list below it. Clicking an indeterminate checkbox always resolves it to fully checked or unchecked; there's no click gesture that produces the indeterminate state itself.</p>
+        <Description>Bind a <code>TwCheckbox&lt;bool?&gt;</code> and pass <code>null</code> to render it indeterminate - useful for a "select all" checkbox that reflects a partially-selected list below it. Clicking an indeterminate checkbox always resolves it to fully checked or unchecked; there's no click gesture that produces the indeterminate state itself.</Description>
 
         <CodeExample Name="CheckboxIndeterminate" CSharpName="CheckboxIndeterminateCode">
             <TwCheckbox T="bool?" Label="Select all fruits" Value="selectAllState" ValueChanged="OnSelectAllChanged" Color="Color.Primary" />
@@ -49,7 +49,7 @@
     </PageCard>
 
     <PageCard Title="Colors">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</p>
+        <Description>Group checkboxes with <code>TwCheckboxGroup</code> and bind individual values with <code>@@bind-Value</code>.</Description>
 
         <CodeExample Name="CheckboxColors">
             @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))))
@@ -75,7 +75,7 @@
     </PageCard>
 
     <PageCard Title="Data-Driven (Automatic)">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Items</code> and <code>@@bind-SelectedValues</code> to generate checkboxes from a list.</p>
+        <Description>Use <code>Items</code> and <code>@@bind-SelectedValues</code> to generate checkboxes from a list.</Description>
 
         <CodeExample Name="CheckboxDataDriven" CSharpName="CheckboxDataDrivenCode">
             <div class="mb-6">
@@ -108,7 +108,7 @@
     </PageCard>
 
     <PageCard Title="Horizontal Layout & Custom Spacing">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Horizontal</code> to arrange checkboxes side-by-side, or <code>Spacing="4"</code> for custom spacing.</p>
+        <Description>Use <code>Horizontal</code> to arrange checkboxes side-by-side, or <code>Spacing="4"</code> for custom spacing.</Description>
 
         <CodeExample Name="CheckboxHorizontalSpacing" CSharpName="CheckboxHorizontalSpacingCode">
             <div class="mb-6">
@@ -130,7 +130,7 @@
     </PageCard>
 
     <PageCard Title="Disabled State">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Disable the entire group with the <code>Disabled</code> property.</p>
+        <Description>Disable the entire group with the <code>Disabled</code> property.</Description>
 
         <CodeExample Name="CheckboxDisabled">
             <TwCheckboxGroup TValue="string" Legend="Premium features (Disabled)" Name="premium" Disabled>
@@ -142,7 +142,7 @@
     </PageCard>
 
     <PageCard Title="Programmatic Control">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Change selections programmatically by updating the bound collection.</p>
+        <Description>Change selections programmatically by updating the bound collection.</Description>
 
         <CodeExample Name="CheckboxProgrammatic" CSharpName="CheckboxProgrammaticCode">
             <TwCheckboxGroup Legend="Select days"

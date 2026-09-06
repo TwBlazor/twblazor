@@ -11,7 +11,7 @@
 
 <PageContainer Title="TwButton">
     <PageCard Title="Buttons">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">Usage of the button component is simple, you can use it to trigger actions. Below are some common actions:</p>
+        <Description>Usage of the button component is simple, you can use it to trigger actions. Below are some common actions:</Description>
 
         <CodeExample Name="ButtonBasic" CSharpName="ButtonBasicCode">
             <TwButtonGroup>
@@ -22,7 +22,7 @@
     </PageCard>
 
     <PageCard Title="Icon Buttons">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">The button component can also be used with icons only:</p>
+        <Description>The button component can also be used with icons only:</Description>
 
         <CodeExample Name="ButtonIconOnly" CSharpName="ButtonIconOnlyCode">
             <TwButtonGroup>
@@ -32,7 +32,7 @@
     </PageCard>
 
     <PageCard Title="Buttons Variants & Colors">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">There are multiple different button variants.</p>
+        <Description>There are multiple different button variants.</Description>
 
         <CodeExample Name="ButtonVariants">
             @foreach (Color c in ((Color[])Enum.GetValues(typeof(Color))).Take(10))
@@ -64,9 +64,9 @@
     </PageCard>
 
     <PageCard Title="Buttons with Icons">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
+        <Description>
             Buttons can include icons at the start or end for better visual communication:
-        </p>
+        </Description>
 
         <CodeExample Name="ButtonIcons">
             <div class="mb-4">
@@ -79,9 +79,9 @@
     </PageCard>
 
     <PageCard Title="All Colors">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
+        <Description>
             Buttons support all color themes from the color palette:
-        </p>
+        </Description>
 
         <CodeExample Name="ButtonColors">
             @foreach (Color c in (Color[]) Enum.GetValues(typeof(Color)))
@@ -92,9 +92,9 @@
     </PageCard>
 
     <PageCard Title="Button States">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
+        <Description>
             Buttons can be disabled or set to readonly mode:
-        </p>
+        </Description>
 
         <CodeExample Name="ButtonReadonlyDisabled">
             <div class="mb-4">
@@ -107,7 +107,7 @@
     </PageCard>
 
     <PageCard Title="Basic Button Groups">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">Group related buttons together with consistent spacing.</p>
+        <Description>Group related buttons together with consistent spacing.</Description>
 
         <CodeExample Name="ButtonGroup">
             <TwButtonGroup>
@@ -119,7 +119,7 @@
     </PageCard>
 
     <PageCard Title="Vertical Button Groups">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">Stack buttons vertically.</p>
+        <Description>Stack buttons vertically.</Description>
 
         <CodeExample Name="ButtonGroupVertical">
             <TwButtonGroup Vertical>
@@ -131,7 +131,7 @@
     </PageCard>
 
     <PageCard Title="Full Width Button Groups">
-        <p class="text-gray-700 dark:text-gray-300 mb-4">Make buttons fill the container width equally.</p>
+        <Description>Make buttons fill the container width equally.</Description>
 
         <CodeExample Name="ButtonGroupFullWidth">
             <TwButtonGroup FullWidth>

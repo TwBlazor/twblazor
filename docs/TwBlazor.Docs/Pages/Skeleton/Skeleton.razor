@@ -8,7 +8,7 @@
 
 <PageContainer Title="TwSkeleton">
     <PageCard Title="Basic Usage">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">With no <code>ChildContent</code>, <code>TwSkeleton</code> renders a single full-width text line placeholder by default.</p>
+        <Description>With no <code>ChildContent</code>, <code>TwSkeleton</code> renders a single full-width text line placeholder by default.</Description>
 
         <CodeExample Name="SkeletonBasic">
             <TwSkeleton Id="basic-skeleton" />
@@ -16,7 +16,7 @@
     </PageCard>
 
     <PageCard Title="Shapes">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>SkeletonType</code> for a circle or rectangle placeholder instead, and <code>Width</code>/<code>Height</code> to size it.</p>
+        <Description>Use <code>SkeletonType</code> for a circle or rectangle placeholder instead, and <code>Width</code>/<code>Height</code> to size it.</Description>
 
         <CodeExample Name="SkeletonShapes">
             <div class="flex flex-wrap items-end gap-6">
@@ -28,7 +28,7 @@
     </PageCard>
 
     <PageCard Title="Animation">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Animation</code> to switch between a soft opacity pulse (default), a shimmering wave sweep, or no animation at all.</p>
+        <Description>Use <code>Animation</code> to switch between a soft opacity pulse (default), a shimmering wave sweep, or no animation at all.</Description>
 
         <CodeExample Name="SkeletonAnimation">
             <div class="flex flex-wrap items-end gap-6">
@@ -40,7 +40,7 @@
     </PageCard>
 
     <PageCard Title="Auto-Generated from Content">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Wrap real markup in <code>ChildContent</code> and toggle <code>Loading</code> - while loading, <code>TwSkeleton</code> measures the actual rendered layout of that content (via a <code>ResizeObserver</code>) and generates matching placeholder blocks automatically, instead of a single generic box.</p>
+        <Description>Wrap real markup in <code>ChildContent</code> and toggle <code>Loading</code> - while loading, <code>TwSkeleton</code> measures the actual rendered layout of that content (via a <code>ResizeObserver</code>) and generates matching placeholder blocks automatically, instead of a single generic box.</Description>
 
         <CodeExample Name="SkeletonAutoGenerate" CSharpName="SkeletonAutoGenerateCode">
             <TwButton Class="mb-4" Color="Color.Primary" OnClick="ToggleLoading">
