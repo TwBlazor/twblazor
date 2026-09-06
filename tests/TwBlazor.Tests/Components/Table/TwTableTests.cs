@@ -142,8 +142,7 @@ public class TwTableTests : TwBlazorTestBase
 
         // Assert
         var tbody = cut.Find("tbody");
-        Assert.Contains("nth-child(even)", tbody.GetAttribute("class"));
-        Assert.Contains("bg-gray-50", tbody.GetAttribute("class"));
+        Assert.Contains(tableTheme.BodyStriped, tbody.GetAttribute("class"));
     }
 
     [Fact]
@@ -170,8 +169,7 @@ public class TwTableTests : TwBlazorTestBase
         // Assert
         var tbody = cut.Find("tbody");
         var tbodyClass = tbody.GetAttribute("class") ?? string.Empty;
-        Assert.Contains("hover", tbodyClass);
-        Assert.Contains("!bg-gray-100", tbodyClass);
+        Assert.Contains(tableTheme.BodyHoverable, tbodyClass);
     }
 
     [Fact]
@@ -189,30 +187,54 @@ public class TwTableTests : TwBlazorTestBase
     }
 
     [Fact]
-    public void TwTable_Bordered_DefaultsToFalse()
+    public void TwTable_Container_HasBorderByDefault()
+    {
+        // Arrange & Act - the outer container border/shadow lives on the wrapping <div>, not the
+        // <table> itself, so it clips cleanly to the rounded corners instead of the raw square
+        // corners a <table> element renders even with a rounded class applied directly to it.
+        var cut = TestContext.Render<TwTable>();
+
+        // Assert
+        var container = cut.Find("div");
+        Assert.Contains(tableTheme.Bordered, container.GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public void TwTable_NoBorder_HidesContainerBorder()
     {
         // Arrange & Act
         var cut = TestContext.Render<TwTable>(parameters => parameters
             .Add(p => p.NoBorder, true));
 
         // Assert
-        var table = cut.Find("table");
-        var tableClass = table.GetAttribute("class") ?? string.Empty;
-        Assert.DoesNotContain("border border-gray-200", tableClass);
+        var container = cut.Find("div");
+        Assert.DoesNotContain(tableTheme.Bordered, container.GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public void TwTable_Bordered_DefaultsToFalse()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwTable>(parameters => parameters
+            .Add(p => p.TableBody, RenderFragmentBuilder("<tr><td>Test</td></tr>")));
+
+        // Assert
+        var tbody = cut.Find("tbody");
+        Assert.DoesNotContain(tableTheme.RowDivider, tbody.GetAttribute("class") ?? string.Empty);
     }
 
     [Fact]
     public void TwTable_Bordered_CanBeEnabled()
     {
-        // Arrange & Act
+        // Arrange & Act - Bordered adds a hairline divider between rows, not a full per-cell grid
+        // (which reads as a busy, dated spreadsheet grid, especially combined with Striped).
         var cut = TestContext.Render<TwTable>(parameters => parameters
-            .Add(p => p.Bordered, true));
+            .Add(p => p.Bordered, true)
+            .Add(p => p.TableBody, RenderFragmentBuilder("<tr><td>Test</td></tr>")));
 
         // Assert
-        var table = cut.Find("table");
-        var tableClass = table.GetAttribute("class") ?? string.Empty;
-        Assert.Contains("border", tableClass);
-        Assert.Contains("border-gray-200", tableClass);
+        var tbody = cut.Find("tbody");
+        Assert.Contains(tableTheme.RowDivider, tbody.GetAttribute("class") ?? string.Empty);
     }
 
     [Fact]
@@ -303,9 +325,11 @@ public class TwTableTests : TwBlazorTestBase
         var cut = TestContext.Render<TwTable>(parameters => parameters
             .Add(p => p.Class, "custom-table-class"));
 
-        // Assert
-        var table = cut.Find("table");
-        Assert.Contains("custom-table-class", table.GetAttribute("class"));
+        // Assert - Class lands on the outer wrapping <div> (the component's actual visual box),
+        // not the inner <table>, which would trap it inside the wrapper's rounded clip instead of
+        // creating space around the whole component - see TwTable.razor.cs's containerClasses.
+        var container = cut.Find("div");
+        Assert.Contains("custom-table-class", container.GetAttribute("class"));
     }
 
     [Fact]
@@ -371,10 +395,13 @@ public class TwTableTests : TwBlazorTestBase
             .Add(p => p.Attributes, attributes));
 
         // Assert
+        var container = cut.Find("div");
+        Assert.Contains(tableTheme.Bordered, container.GetAttribute("class") ?? string.Empty);
+        // Class lands on the outer wrapping <div>, not the inner <table> - see TwTable.razor.cs's containerClasses.
+        Assert.Contains("shadow-lg", container.GetAttribute("class"));
+
         var table = cut.Find("table");
         Assert.Equal("users-table", table.GetAttribute("id"));
-        Assert.Contains("shadow-lg", table.GetAttribute("class"));
-        Assert.Contains("border", table.GetAttribute("class"));
         Assert.Equal("grid", table.GetAttribute("role"));
 
         var thead = cut.Find("thead");
@@ -383,8 +410,9 @@ public class TwTableTests : TwBlazorTestBase
 
         var tbody = cut.Find("tbody");
         Assert.Contains("bg-white", tbody.GetAttribute("class"));
-        Assert.Contains("nth-child(even)", tbody.GetAttribute("class"));
-        Assert.Contains("hover", tbody.GetAttribute("class"));
+        Assert.Contains(tableTheme.BodyStriped, tbody.GetAttribute("class"));
+        Assert.Contains(tableTheme.BodyHoverable, tbody.GetAttribute("class"));
+        Assert.Contains(tableTheme.RowDivider, tbody.GetAttribute("class"));
         Assert.Contains("John Doe", tbody.TextContent);
     }
 
@@ -417,7 +445,8 @@ public class TwTableTests : TwBlazorTestBase
         // Assert
         var table = cut.Find("table");
         var tableClass = table.GetAttribute("class") ?? string.Empty;
-        Assert.Contains("dark:text-white", tableClass);
+        Assert.Contains(tableTheme.Base, tableClass);
+        Assert.Contains("dark:", tableClass);
     }
 
     [Fact]
@@ -447,13 +476,15 @@ public class TwTableTests : TwBlazorTestBase
             .Add(p => p.TableHeader, header)
             .Add(p => p.TableBody, body));
 
-        // Assert
+        // Assert - header and body intentionally use different background tokens so the header
+        // reads as visually distinct from the body, in both light and dark mode.
         var thead = cut.Find("thead");
-        Assert.Contains("bg-gray-200", thead.GetAttribute("class"));
-        Assert.Contains("dark:bg-gray-950", thead.GetAttribute("class"));
+        Assert.Contains(tableTheme.Header, thead.GetAttribute("class"));
 
         var tbody = cut.Find("tbody");
-        Assert.Contains("dark:bg-gray-900", tbody.GetAttribute("class"));
+        Assert.Contains(tableTheme.Body, tbody.GetAttribute("class"));
+
+        Assert.NotEqual(tableTheme.Header, tableTheme.Body);
     }
 
     [Fact]
@@ -563,10 +594,8 @@ public class TwTableTests : TwBlazorTestBase
         var tbodyClass = tbody.GetAttribute("class") ?? string.Empty;
 
         // Should have both striped and hover classes
-        Assert.Contains("nth-child(even)", tbodyClass);
-        Assert.Contains("bg-gray-50", tbodyClass);
-        Assert.Contains("hover", tbodyClass);
-        Assert.Contains("!bg-gray-100", tbodyClass);
+        Assert.Contains(tableTheme.BodyStriped, tbodyClass);
+        Assert.Contains(tableTheme.BodyHoverable, tbodyClass);
     }
 
     [Fact]
@@ -588,13 +617,12 @@ public class TwTableTests : TwBlazorTestBase
             .Add(p => p.Striped, true)
             .Add(p => p.Hoverable, true));
 
-        // Assert
+        // Assert - hover should use !important to override striped
         var tbody = cut.Find("tbody");
         var tbodyClass = tbody.GetAttribute("class") ?? string.Empty;
 
-        // Hover should use !important to override striped
-        Assert.Contains("!bg-gray-100", tbodyClass);
-        Assert.Contains("!bg-gray-800", tbodyClass);
+        Assert.Contains("!bg-", tbodyClass);
+        Assert.Contains(tableTheme.BodyHoverable, tbodyClass);
     }
 
     [Fact]

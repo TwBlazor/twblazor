@@ -228,7 +228,7 @@ public class TwPaginationTests : TwBlazorTestBase
         var links = cut.FindAll("nav ul li button");
         var inactiveLink = links.Single(a => LinkText(a) == "4");
 
-        Assert.Contains("text-gray-950", inactiveLink.GetAttribute("class"));
+        Assert.Contains("text-[oklch(50%_0.006_285.885)]", inactiveLink.GetAttribute("class"));
         Assert.DoesNotContain("text-purple-600", inactiveLink.GetAttribute("class"));
     }
 
@@ -321,7 +321,7 @@ public class TwPaginationTests : TwBlazorTestBase
         Assert.Null(previous.GetAttribute("aria-disabled"));
         Assert.Null(previous.GetAttribute("tabindex"));
         Assert.DoesNotContain("pointer-events-none", previous.GetAttribute("class"));
-        Assert.Contains("hover:bg-gray-100", previous.GetAttribute("class"));
+        Assert.Contains("hover:bg-[oklch(98%_0_0)]", previous.GetAttribute("class"));
     }
 
     [Fact]
@@ -353,7 +353,7 @@ public class TwPaginationTests : TwBlazorTestBase
         Assert.Null(next.GetAttribute("aria-disabled"));
         Assert.Null(next.GetAttribute("tabindex"));
         Assert.DoesNotContain("pointer-events-none", next.GetAttribute("class"));
-        Assert.Contains("hover:bg-gray-100", next.GetAttribute("class"));
+        Assert.Contains("hover:bg-[oklch(98%_0_0)]", next.GetAttribute("class"));
     }
 
     [Fact]

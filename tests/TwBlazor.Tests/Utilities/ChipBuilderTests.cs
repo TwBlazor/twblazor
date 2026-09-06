@@ -106,8 +106,8 @@ public class ChipBuilderTests : TwBlazorTestBase
         var result = ChipBuilder.GetVariantClasses(ButtonVariant.Filled, Color.Primary, true);
 
         // Assert
-        Assert.Contains("bg-gray-900/15", result);
-        Assert.Contains("text-gray-900/40", result);
+        Assert.Contains("bg-[oklch(21%_0.006_285.885)]/15", result);
+        Assert.Contains("text-[oklch(21%_0.006_285.885)]/40", result);
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public class ChipBuilderTests : TwBlazorTestBase
 
         // Assert
         Assert.Contains("border", result);
-        Assert.Contains("text-gray-900/40", result);
+        Assert.Contains("text-[oklch(21%_0.006_285.885)]/40", result);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class ChipBuilderTests : TwBlazorTestBase
         var result = ChipBuilder.GetVariantClasses(ButtonVariant.Text, Color.Primary, true);
 
         // Assert
-        Assert.Contains("text-gray-900/40", result);
+        Assert.Contains("text-[oklch(21%_0.006_285.885)]/40", result);
         Assert.Contains("bg-transparent", result);
     }
 

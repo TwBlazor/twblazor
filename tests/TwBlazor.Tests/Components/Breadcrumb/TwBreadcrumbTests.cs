@@ -343,10 +343,10 @@ public class TwBreadcrumbTests : TwBlazorTestBase
             .Add(x => x.Auto, true));
 
         // Assert
-        Assert.Single(cut.Instance.Breadcrumbs);
-        Assert.Equal("docs", cut.Instance.Breadcrumbs[0].Label);
-        Assert.Equal("/docs", cut.Instance.Breadcrumbs[0].Href);
-        Assert.True(cut.Instance.Breadcrumbs[0].AriaCurrent);
+        var breadcrumb = Assert.Single(cut.Instance.Breadcrumbs);
+        Assert.Equal("docs", breadcrumb.Label);
+        Assert.Equal("/docs", breadcrumb.Href);
+        Assert.True(breadcrumb.AriaCurrent);
     }
 
     [Fact]

@@ -5,7 +5,7 @@
     <div class="datepicker-controls flex justify-between items-center h-9">
         <TwIcon OnClick="@OnPreviousClick" Icon="Icon.Arrow_Left" RootClass="prev-btn" Class="text-xl py-2 px-4" AriaLabel="@PreviousLabel" Shadow="Enums.Shadow.None" />
 
-        <TwButton OnClick="@OnTitleClick" Class="view-switch">
+        <TwButton OnClick="@OnTitleClick" Class="@titleButtonClasses">
             @ChildContent
         </TwButton>
 

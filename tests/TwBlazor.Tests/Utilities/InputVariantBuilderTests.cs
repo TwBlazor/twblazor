@@ -191,7 +191,7 @@ public class InputVariantBuilderTests : TwBlazorTestBase
         var result = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
 
         // Assert
-        Assert.Contains("dark:bg-gray-900/85", result);
+        Assert.Contains("dark:bg-[oklch(34%_0.018_253)]", result);
     }
 
     #endregion

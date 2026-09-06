@@ -388,3 +388,7 @@ docfx.log
 
 # Excluded generated docs code examples file to prevent merge conflicts.
 /docs/TwBlazor.Docs/Generated/CodeExamples.cs
+
+# Generated copy of TwBlazor's XML doc comments, published as a static asset for
+# ThemeConfigurationCard to fetch under Blazor WebAssembly - see TwBlazor.Docs.csproj.
+/docs/TwBlazor.Docs/wwwroot/TwBlazor.xml
