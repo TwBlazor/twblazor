@@ -127,69 +127,67 @@
             so changes are picked up by your own Tailwind build.
         </Description>
 
-        <div class="overflow-x-auto mb-4">
-            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
-                <thead class="bg-gray-50 dark:bg-gray-800 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
-                    <tr>
-                        <th class="px-4 py-3">Property</th>
-                        <th class="px-4 py-3">Type</th>
-                        <th class="px-4 py-3">Controls</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-900">
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Container</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed toast stack wrapper - screen position, stacking direction, z-index</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Toast</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Each individual toast card - padding, gap, shadow, transition</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">ToastRounded</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">ToastWidth</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Tailwind width class applied to every toast</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">HeaderClasses</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + message wrapper inside a toast</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Title</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast title text</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Message</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast message text</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">Timestamp</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The relative timestamp text</td>
-                    </tr>
-                    <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-3"><code class="text-xs">IconContainer</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The icon wrapper</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
-                        <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <TwTable Bordered Striped Class="mb-4">
+            <TableHeader>
+                <tr>
+                    <th class="px-4 py-3">Property</th>
+                    <th class="px-4 py-3">Type</th>
+                    <th class="px-4 py-3">Controls</th>
+                </tr>
+            </TableHeader>
+            <TableBody>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">Container</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The fixed toast stack wrapper - screen position, stacking direction, z-index</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">Toast</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Each individual toast card - padding, gap, shadow, transition</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">ToastRounded</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Rounded?</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Corner radius override; falls back to the theme's default <code>Rounded</code> when null</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">ToastWidth</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">Tailwind width class applied to every toast</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">HeaderClasses</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The title + message wrapper inside a toast</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">Title</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast title text</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">Message</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The toast message text</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">Timestamp</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The relative timestamp text</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">IconContainer</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The icon wrapper</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-3"><code class="text-xs">CloseButton</code></td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">string</td>
+                    <td class="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">The dismiss (&times;) button</td>
+                </tr>
+            </TableBody>
+        </TwTable>
 
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
             For example, to move toasts to the top-right and make them fully rounded:

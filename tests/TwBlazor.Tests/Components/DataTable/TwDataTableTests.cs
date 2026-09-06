@@ -431,10 +431,11 @@ public class TwDataTableTests : TwBlazorTestBase
             .Add(p => p.Items, GetTestProducts())
             .Add(p => p.Columns, GetTestColumns()));
 
-        // Assert
+        // Assert - header and body intentionally use different background tokens so the header
+        // reads as visually distinct from the body, in both light and dark mode.
         var headerRow = cut.Find("thead tr");
-        Assert.Contains("bg-gray-200", headerRow.GetAttribute("class"));
-        Assert.Contains("dark:bg-gray-950", headerRow.GetAttribute("class"));
+        Assert.Contains(tableTheme.Header, headerRow.GetAttribute("class"));
+        Assert.NotEqual(tableTheme.Header, tableTheme.Body);
     }
 
     [Fact]

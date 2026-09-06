@@ -96,16 +96,36 @@ public partial class TwTable : TwBlazorComponentBase
     [Parameter]
     public bool NoBorder { get; set; } = false;
 
+    /// <summary>
+    /// Gets the classes for the outer wrapping &lt;div&gt; - rounding, clipping, and (unless <see cref="NoBorder"/>)
+    /// the container border/shadow. Kept on this wrapper rather than the &lt;table&gt; itself, and separate from
+    /// the inner scroll &lt;div&gt;, since a &lt;table&gt; element doesn't reliably clip its own rounded corners
+    /// (the header's background bleeds past them), and combining scrolling with clipping on a single element
+    /// would fight over the same overflow behavior.
+    /// </summary>
+    /// <remarks>
+    /// Also carries <see cref="TwTableTheme.Body"/>'s background (the container itself is otherwise
+    /// transparent, so any slack between the table and the rounded clip boundary - e.g. the horizontal
+    /// scrollbar gutter the inner scroll &lt;div&gt; can reserve along the bottom edge - would reveal
+    /// the page behind it there instead of matching the table) and <see cref="TwBlazorComponentBase.Class"/>:
+    /// this wrapper is the component's actual visual box, so a caller's margin/width/etc. needs to land
+    /// here rather than on the inner &lt;table&gt;, where it would be trapped inside the rounded clip
+    /// instead of creating space around the whole component.
+    /// </remarks>
+    private string containerClasses => new ClassBuilder()
+        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
+        .AddClass("overflow-hidden")
+        .AddClass(theme.Body)
+        .AddClass(theme.Bordered, !NoBorder)
+        .AddClass(Class)
+        .Build();
+
     private string tableClasses => new ClassBuilder()
         .AddClass(theme.Base)
-        .AddClass(theme.Bordered, !NoBorder)
-        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
-        .AddClass(Class)
         .Build();
 
     private string headerClasses => new ClassBuilder()
         .AddClass(theme.Header)
-        .AddClass(theme.HeaderBorderedCells, Bordered)
         .AddClass(HeaderClass ?? string.Empty)
         .Build();
 
@@ -113,8 +133,7 @@ public partial class TwTable : TwBlazorComponentBase
         .AddClass(theme.Body)
         .AddClass(theme.BodyStriped, Striped)
         .AddClass(theme.BodyHoverable, Hoverable)
-        .AddClass(theme.BorderedCells, Bordered)
-        .AddClass(theme.BorderedHeaderCells, Bordered)
+        .AddClass(theme.RowDivider, Bordered)
         .AddClass(BodyClass ?? string.Empty)
         .Build();
 
@@ -123,8 +142,7 @@ public partial class TwTable : TwBlazorComponentBase
         .Build();
 
     private string footerClasses => new ClassBuilder()
-        .AddClass(theme.BorderedCells, Bordered)
-        .AddClass(theme.BorderedHeaderCells, Bordered)
+        .AddClass(theme.Footer, Bordered)
         .AddClass(FooterClass ?? string.Empty)
         .Build();
 }

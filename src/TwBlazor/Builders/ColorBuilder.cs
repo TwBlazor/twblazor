@@ -47,12 +47,12 @@ public class ColorBuilder(TwBlazorOptions options)
     {
         return color switch
         {
-            Color.Primary => $"{options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Light.Primary}",
-            Color.Accent => $"{options.Theme.Colors.TextColors.Medium.Accent} {options.Theme.Colors.DarkTextColors.Light.Accent}",
-            Color.Success => $"{options.Theme.Colors.TextColors.Medium.Success} {options.Theme.Colors.DarkTextColors.Light.Success}",
-            Color.Danger => $"{options.Theme.Colors.TextColors.Medium.Danger} {options.Theme.Colors.DarkTextColors.Light.Danger}",
-            Color.Warning => $"{options.Theme.Colors.TextColors.Medium.Warning} {options.Theme.Colors.DarkTextColors.Light.Warning}",
-            Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Light.Info}",
+            Color.Primary => $"{options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Medium.Primary}",
+            Color.Accent => $"{options.Theme.Colors.TextColors.Medium.Accent} {options.Theme.Colors.DarkTextColors.Medium.Accent}",
+            Color.Success => $"{options.Theme.Colors.TextColors.Medium.Success} {options.Theme.Colors.DarkTextColors.Medium.Success}",
+            Color.Danger => $"{options.Theme.Colors.TextColors.Medium.Danger} {options.Theme.Colors.DarkTextColors.Medium.Danger}",
+            Color.Warning => $"{options.Theme.Colors.TextColors.Medium.Warning} {options.Theme.Colors.DarkTextColors.Medium.Warning}",
+            Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Medium.Info}",
             Color.Light => $"{options.Theme.Colors.TextColors.Medium.Light} {options.Theme.Colors.DarkTextColors.Medium.Light}",
             Color.Dark => $"{options.Theme.Colors.TextColors.Medium.Dark} {options.Theme.Colors.DarkTextColors.Medium.Dark}",
             _ => string.Empty,
