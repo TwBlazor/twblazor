@@ -18,7 +18,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             @foreach (var c in Colors)
             {
-                <div class="flex flex-col items-center gap-2 @(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : c == Color.Dark ? "bg-white p-3 rounded-lg" : "p-3")">
+                <div class="flex flex-col items-center gap-2 @SwatchWrapperClass(c)">
                     <TwButton Label="@c.ToString()" Color="c" Variant="ButtonVariant.Filled" Class="w-full justify-center" />
                     @* Light/Dark swatches keep a fixed background regardless of page theme (they're demonstrating
                        what those colors look like on their usual opposite backdrop), so their caption needs a
@@ -99,6 +99,13 @@
 
 @code {
     private static readonly Color[] Colors = Enum.GetValues<Color>();
+
+    private static string SwatchWrapperClass(Color c) => c switch
+    {
+        Color.Light => "bg-gray-900 p-3 rounded-lg",
+        Color.Dark => "bg-white p-3 rounded-lg",
+        _ => "p-3"
+    };
 
     private static string Resolve(TwBlazorPalette palette, Color c) => c switch
     {

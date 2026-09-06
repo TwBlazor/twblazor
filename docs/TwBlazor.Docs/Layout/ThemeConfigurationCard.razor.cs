@@ -100,11 +100,27 @@ public partial class ThemeConfigurationCard : ComponentBase
             return FriendlyTypeName(underlying) + "?";
         }
 
-        return type == typeof(string) ? "string"
-            : type == typeof(bool) ? "bool"
-            : type == typeof(int) ? "int"
-            : type == typeof(double) ? "double"
-            : type.Name;
+        if (type == typeof(string))
+        {
+            return "string";
+        }
+
+        if (type == typeof(bool))
+        {
+            return "bool";
+        }
+
+        if (type == typeof(int))
+        {
+            return "int";
+        }
+
+        if (type == typeof(double))
+        {
+            return "double";
+        }
+
+        return type.Name;
     }
 
     private sealed record ThemePropertyRow(string Name, string TypeDisplay, IReadOnlyList<DescriptionSegment> Description, string DocsUrl, bool IsGlobalToken);

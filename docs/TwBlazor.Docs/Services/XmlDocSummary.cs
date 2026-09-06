@@ -32,7 +32,7 @@ internal sealed record DescriptionSegment(string Text, string? Url = null);
 internal static partial class XmlDocSummary
 {
     // The docfx site is published from the repo root under this sub-path (see docfx.json / deploy-docs.yml).
-    public const string ApiBaseUrl = "https://twblazor.github.io/twblazor/";
+    public const string ApiBaseUrl = "https://twblazor.github.io/twblazor/"; // NOSONAR: fixed docfx publish location, not environment-specific
 
     // Relative to the app's own base address - resolve with NavigationManager.ToAbsoluteUri before
     // passing it in, since this class has no DI access of its own to do that itself.
@@ -118,61 +118,67 @@ internal static partial class XmlDocSummary
         }
     }
 
-    // XElement.Value concatenates only text nodes, silently dropping self-closing tags like
-    // <see cref="..."/> entirely (they have no text content) - so this has to walk the node tree itself
-    // rather than read element.Value, or every cross-reference vanishes without a trace.
     private static List<DescriptionSegment> BuildSegments(XElement summary)
     {
         var segments = new List<DescriptionSegment>();
         var text = new StringBuilder();
 
-        void FlushText()
+        AppendNodes(summary.Nodes(), segments, text);
+        FlushText(segments, text);
+        TrimEdges(segments);
+
+        return segments;
+    }
+
+    private static void FlushText(List<DescriptionSegment> segments, StringBuilder text)
+    {
+        if (text.Length > 0)
         {
-            if (text.Length > 0)
+            segments.Add(new DescriptionSegment(text.ToString()));
+            text.Clear();
+        }
+    }
+
+    // XElement.Value concatenates only text nodes, silently dropping self-closing tags like
+    // <see cref="..."/> entirely (they have no text content) - so this has to walk the node tree itself
+    // rather than read element.Value, or every cross-reference vanishes without a trace.
+    private static void AppendNodes(IEnumerable<XNode> nodes, List<DescriptionSegment> segments, StringBuilder text)
+    {
+        foreach (var node in nodes)
+        {
+            switch (node)
             {
-                segments.Add(new DescriptionSegment(text.ToString()));
-                text.Clear();
+                case XText textNode:
+                    text.Append(textNode.Value);
+                    break;
+                case XElement { Name.LocalName: "see" or "seealso" } reference:
+                    var cref = (string?)reference.Attribute("cref");
+                    if (cref is null)
+                    {
+                        text.Append((string?)reference.Attribute("langword"));
+                        break;
+                    }
+
+                    FlushText(segments, text);
+                    segments.Add(new DescriptionSegment(ShortMemberName(cref), BuildDocsUrl(cref)));
+                    break;
+                case XElement { Name.LocalName: "paramref" or "typeparamref" } reference:
+                    text.Append((string?)reference.Attribute("name"));
+                    break;
+                case XElement element:
+                    // <c>, <para>, <b>, etc. - keep their inner text, recursing for anything nested inside.
+                    AppendNodes(element.Nodes(), segments, text);
+                    break;
             }
         }
+    }
 
-        void AppendNodes(IEnumerable<XNode> nodes)
-        {
-            foreach (var node in nodes)
-            {
-                switch (node)
-                {
-                    case XText textNode:
-                        text.Append(textNode.Value);
-                        break;
-                    case XElement { Name.LocalName: "see" or "seealso" } reference:
-                        var cref = (string?)reference.Attribute("cref");
-                        if (cref is null)
-                        {
-                            text.Append((string?)reference.Attribute("langword"));
-                            break;
-                        }
-
-                        FlushText();
-                        segments.Add(new DescriptionSegment(ShortMemberName(cref), BuildDocsUrl(cref)));
-                        break;
-                    case XElement { Name.LocalName: "paramref" or "typeparamref" } reference:
-                        text.Append((string?)reference.Attribute("name"));
-                        break;
-                    case XElement element:
-                        // <c>, <para>, <b>, etc. - keep their inner text, recursing for anything nested inside.
-                        AppendNodes(element.Nodes());
-                        break;
-                }
-            }
-        }
-
-        AppendNodes(summary.Nodes());
-        FlushText();
-
-        // The raw XML text carries the doc comment's original indentation and line breaks - collapse
-        // each text run's internal whitespace to single spaces, and trim only the very first/last
-        // segment's outer edges (an interior run's leading/trailing space is what separates it from a
-        // neighboring link and has to survive, e.g. "for " immediately before a linked "Small").
+    // The raw XML text carries the doc comment's original indentation and line breaks - collapse
+    // each text run's internal whitespace to single spaces, and trim only the very first/last
+    // segment's outer edges (an interior run's leading/trailing space is what separates it from a
+    // neighboring link and has to survive, e.g. "for " immediately before a linked "Small").
+    private static void TrimEdges(List<DescriptionSegment> segments)
+    {
         for (var i = 0; i < segments.Count; i++)
         {
             if (segments[i].Url is not null)
@@ -181,20 +187,13 @@ internal static partial class XmlDocSummary
             }
 
             var collapsed = WhitespacePattern().Replace(segments[i].Text, " ");
-            if (i == 0)
-            {
-                collapsed = collapsed.TrimStart();
-            }
-
-            if (i == segments.Count - 1)
-            {
-                collapsed = collapsed.TrimEnd();
-            }
+            var isFirst = i == 0;
+            var isLast = i == segments.Count - 1;
+            collapsed = isFirst ? collapsed.TrimStart() : collapsed;
+            collapsed = isLast ? collapsed.TrimEnd() : collapsed;
 
             segments[i] = segments[i] with { Text = collapsed };
         }
-
-        return segments;
     }
 
     // Doc comment crefs are like "F:TwBlazor.Enums.ProgressSize.Small" - a one-letter member-kind
