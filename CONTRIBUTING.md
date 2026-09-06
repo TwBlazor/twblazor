@@ -9,6 +9,39 @@ distributed as part of the project.
 
 ---
 
+## 📖 Index
+
+- [Code of Conduct](#-code-of-conduct)
+- [Prerequisites](#️-prerequisites)
+- [Project Structure](#project-structure)
+- [Top-Level Folders](#-top-level-folders)
+- [Getting Started](#-getting-started)
+- [CSS](#css)
+- [Coding Guidelines](#-coding-guidelines)
+- [Component Guidelines](#-component-guidelines-if-applicable)
+- [Adding a New Component](#-adding-a-new-component)
+- [Testing](#-testing)
+- [Branching Strategy](#-branching-strategy)
+- [Pull Requests](#-pull-requests)
+- [Releasing & Versioning](#-releasing--versioning)
+- [Common Mistakes](#-common-mistakes)
+- [Before Large Changes](#-before-large-changes)
+- [Keeping Your Branch Updated](#-keeping-your-branch-updated)
+- [CI / Checks](#-ci--checks)
+- [Quick Checklist](#-quick-checklist)
+
+---
+
+## 📋 Code of Conduct
+Be respectful and constructive. See `CODE_OF_CONDUCT.md`.
+
+---
+
+## ⚙️ Prerequisites
+- Latest stable .NET SDK (.NET 10)
+
+---
+
 ## Project Structure
 
 ```
@@ -63,39 +96,16 @@ TwBlazor/
 [`deploy-docs.yml`](.github/workflows/deploy-docs.yml)), but its `src`/`resource` paths point into
 `src/TwBlazor` and `docs/TwBlazor.Docs` above.
 
-## CSS
-
-The easiest way to build the Tailwind CSS file(s) for TwBlazor is to use the custom `watch-tailwind.ps1` PowerShell script located in the root of the repository. This script will automatically build the Tailwind CSS file(s) for both the TwBlazor source and documentation site and will continue to watch for changes to the input CSS files and rebuild as necessary.
-
-You can run the script by executing the following command in the root of the repository:
-`.\watch-tailwind.ps1`
-
-You can also manually build the TwBlazor Tailwind CSS file(s) by navigating to the correct directory e.g. 
-
-### TwBlazor:
-
-- `cd ./src/TwBlazor` for the TwBlazor source CSS.
-- `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/twblazor.css --watch`
-
 ---
 
-### TwBlazor Docs:
+## 🧱 Top-Level Folders
 
-- `cd ./docs/TwBlazor.Docs` for the TwBlazor documentation site CSS.
-- `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch`
+- `/src` → the published component library (`TwBlazor`, `TwBlazor.Theme`)
+- `/build` → build-time tooling (`TwBlazor.BuildTools`, `TwBlazor.Docs.Compiler`)
+- `/docs` → documentation content, site hosts, and docfx config (`TwBlazor.Docs`, `TwBlazor.Server`, `TwBlazor.WASM`, `TwBlazor.WasmHost`, `templates/`, `toc.yml`)
+- `/tests` → automated tests (`TwBlazor.Tests`, `TwBlazor.A11yTests`, `vitest.config.js`)
 
-
-**NOTE: You may also have to run a clean and rebuild of the solution to ensure the new CSS file is picked up by the projects if building manually, we advise you use `watch-tailwind.ps1` detailed above.**
-
----
-
-## 📋 Code of Conduct
-Be respectful and constructive. See `CODE_OF_CONDUCT.md`.
-
----
-
-## ⚙️ Prerequisites
-- Latest stable .NET SDK (.NET 10)
+See [Project Structure](#project-structure) above for the full tree.
 
 ---
 
@@ -135,6 +145,118 @@ dotnet run --project build/TwBlazor.BuildTools
 
 ---
 
+## CSS
+
+The easiest way to build the Tailwind CSS file(s) for TwBlazor is to use the custom `watch-tailwind.ps1` PowerShell script located in the root of the repository. This script will automatically build the Tailwind CSS file(s) for both the TwBlazor source and documentation site and will continue to watch for changes to the input CSS files and rebuild as necessary.
+
+You can run the script by executing the following command in the root of the repository:
+`.\watch-tailwind.ps1`
+
+You can also manually build the TwBlazor Tailwind CSS file(s) by navigating to the correct directory e.g. 
+
+### TwBlazor:
+
+- `cd ./src/TwBlazor` for the TwBlazor source CSS.
+- `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/twblazor.css --watch`
+
+---
+
+### TwBlazor Docs:
+
+- `cd ./docs/TwBlazor.Docs` for the TwBlazor documentation site CSS.
+- `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch`
+
+
+**NOTE: You may also have to run a clean and rebuild of the solution to ensure the new CSS file is picked up by the projects if building manually, we advise you use `watch-tailwind.ps1` detailed above.**
+
+---
+
+## 🧑‍💻 Coding Guidelines
+
+### Do:
+- Write clean, readable code
+- Keep components simple and focused
+- Add comments for public APIs
+- Follow existing patterns
+
+### Don't:
+- Put complex logic in property getters/setters
+- Modify component state unpredictably
+- Break existing functionality
+
+---
+
+## 🧩 Component Guidelines (if applicable)
+
+- Keep parameters simple (no hidden side effects)
+- Use clear naming
+- Avoid directly mutating inputs-use events/callbacks instead
+- Keep UI and logic separated where possible
+
+---
+
+## 🆕 Adding a New Component
+
+A new component touches four places: the component itself, its docs page, its
+tests, and an entry in [`components.json`](components.json). Using `TwTreeList`
+as a reference:
+
+1. **Component** - add `src/TwBlazor/Components/<Name>/Tw<Name>.razor` (and
+   `.razor.cs` code-behind). Follow the [Component Guidelines](#-component-guidelines-if-applicable)
+   above.
+2. **Docs page** - add `docs/TwBlazor.Docs/Pages/<Name>/<Name>.razor` showing
+   the component's variants/states. This is the page real users see, and is
+   also what the accessibility tests scan (see below).
+3. **Tests** - add `tests/TwBlazor.Tests/Components/<Name>/Tw<Name>Tests.cs`
+   following the [Testing](#-testing) naming conventions below.
+4. **Register it in `components.json`** - add an entry to the appropriate
+   category array at the repo root:
+
+   ```json
+   { "id": "my-component-navitem", "display": "My Component", "name": "TwMyComponent", "url": "/my-component" }
+   ```
+
+   - `id` - unique DOM/nav id, conventionally `<kebab-name>-navitem`
+   - `display` - label shown in the docs sidebar
+   - `name` - the component's C# type name
+   - `url` - route of the docs page from step 2
+   - `isNew` (optional) - set `true` to show a "New" badge in the sidebar
+
+`components.json` is the single source of truth that indexes every documented
+component, and is consumed in two places:
+
+- **Docs navigation** - [`Navigation.razor.cs`](docs/TwBlazor.Docs/Layout/Navigation.razor.cs)
+  deserializes it (via an embedded resource) to build the sidebar. Category
+  order and item order in the file are exactly the order rendered.
+- **Accessibility tests** - [`AccessibilityRoutes.cs`](tests/TwBlazor.A11yTests/AccessibilityRoutes.cs)
+  reads the same embedded resource to enumerate every component's `url` and
+  runs an axe-core scan against it in both light and dark mode. Adding your
+  component's route to `components.json` is what gets it covered by these
+  tests automatically - no separate test wiring is needed.
+
+Since `components.json` is embedded as a resource in `TwBlazor.Docs.csproj`,
+no project file changes are required beyond editing the JSON itself.
+
+---
+
+## 🧪 Testing
+
+- Add tests for any non-trivial logic
+- Ensure all tests pass before submitting
+- Keep tests:
+  - Small
+  - Independent
+  - Descriptive
+
+### Naming
+- `Subject_Action_ExpectedResult` - use the full component or method name as the subject  
+  **Examples:**
+  - `TwDataTable_Renders_WithEmptyItems`
+  - `TwDataTable_Pageable_ShowsPaginationControls`
+  - `UpdateApplication_DoesNothing_WhenOptionsIsNull`
+
+---
+
 ## 🌿 Branching Strategy
 
 We follow a **develop-main** workflow:
@@ -155,49 +277,6 @@ feature/my-feature  →  develop  →  main
 - ✅ PRs from `feature/*` or `bug/*` → `develop`
 - ✅ PRs from `develop` → `main` (releases only)
 - ❌ Direct PRs to `main` from feature/bug branches are **blocked**
-
----
-
-## 📦 Releasing & Versioning
-
-Versions are not stored in a file: they come entirely from Git tags, read at
-build time by [MinVer](https://github.com/adamralph/minver). You never need to
-bump a version number by hand.
-
-### `develop` → GitHub Packages (preview)
-
-Every push to `develop` builds and publishes a **prerelease** NuGet package to
-the [GitHub Packages feed](https://github.com/TwBlazor/twblazor/pkgs/nuget/TwBlazor)
-automatically, versioned like `1.2.1-preview.4`. This happens on every merge, so
-you don't need to do anything to get a preview package out.
-
-### `develop` → `main` → NuGet.org (release)
-
-A release is just a pull request from `develop` into `main`:
-
-1. Open the PR as usual (see [Pull Requests](#-pull-requests) above).
-2. Check the bump label. **`release:patch` is added automatically** when the PR
-   is opened, so a patch release needs no action. For anything else, remove it
-   and add the one you want:
-   - `release:major`, for breaking changes, e.g. `1.2.3` → `2.0.0`
-   - `release:minor`, for backwards compatible changes, e.g. `1.2.3` → `1.3.0`
-   - `release:patch`, for fixes only, e.g. `1.2.3` → `1.2.4` (the default)
-
-   Exactly one is required. Applying two, say `release:major` alongside
-   `release:minor`, makes the version ambiguous and fails the **Verify Release
-   Bump Label** check, as does removing all of them. Other labels such as `bug`
-   are ignored. A bot comments on the PR with the bump currently selected.
-3. Merge the PR.
-
-Merging automatically:
-- Tags the merge commit with the new version (e.g. `v1.2.0`)
-- Publishes the **stable** package to both GitHub Packages and
-  [NuGet.org](https://www.nuget.org/packages/TwBlazor)
-- Creates a GitHub Release with the packed `.nupkg` attached
-
-There is nothing further to do on `develop` afterwards. Its next build picks
-up the new release tag on its own and continues previewing from there (e.g.
-`1.2.1-preview.0`, then `.1`, and so on).
 
 ---
 
@@ -249,56 +328,46 @@ An unedited template, or a section left as just the placeholder comment, will
 
 ---
 
-## 🧱 Top-Level Folders
+## 📦 Releasing & Versioning
 
-- `/src` → the published component library (`TwBlazor`, `TwBlazor.Theme`)
-- `/build` → build-time tooling (`TwBlazor.BuildTools`, `TwBlazor.Docs.Compiler`)
-- `/docs` → documentation content, site hosts, and docfx config (`TwBlazor.Docs`, `TwBlazor.Server`, `TwBlazor.WASM`, `TwBlazor.WasmHost`, `templates/`, `toc.yml`)
-- `/tests` → automated tests (`TwBlazor.Tests`, `TwBlazor.A11yTests`, `vitest.config.js`)
+Versions are not stored in a file: they come entirely from Git tags, read at
+build time by [MinVer](https://github.com/adamralph/minver). You never need to
+bump a version number by hand.
 
-See [Project Structure](#project-structure) above for the full tree.
+### `develop` → GitHub Packages (preview)
 
----
+Every push to `develop` builds and publishes a **prerelease** NuGet package to
+the [GitHub Packages feed](https://github.com/TwBlazor/twblazor/pkgs/nuget/TwBlazor)
+automatically, versioned like `1.2.1-preview.4`. This happens on every merge, so
+you don't need to do anything to get a preview package out.
 
-## 🧑‍💻 Coding Guidelines
+### `develop` → `main` → NuGet.org (release)
 
-### Do:
-- Write clean, readable code
-- Keep components simple and focused
-- Add comments for public APIs
-- Follow existing patterns
+A release is just a pull request from `develop` into `main`:
 
-### Don’t:
-- Put complex logic in property getters/setters
-- Modify component state unpredictably
-- Break existing functionality
+1. Open the PR as usual (see [Pull Requests](#-pull-requests) above).
+2. Check the bump label. **`release:patch` is added automatically** when the PR
+   is opened, so a patch release needs no action. For anything else, remove it
+   and add the one you want:
+   - `release:major`, for breaking changes, e.g. `1.2.3` → `2.0.0`
+   - `release:minor`, for backwards compatible changes, e.g. `1.2.3` → `1.3.0`
+   - `release:patch`, for fixes only, e.g. `1.2.3` → `1.2.4` (the default)
 
----
+   Exactly one is required. Applying two, say `release:major` alongside
+   `release:minor`, makes the version ambiguous and fails the **Verify Release
+   Bump Label** check, as does removing all of them. Other labels such as `bug`
+   are ignored. A bot comments on the PR with the bump currently selected.
+3. Merge the PR.
 
-## 🧩 Component Guidelines (if applicable)
+Merging automatically:
+- Tags the merge commit with the new version (e.g. `v1.2.0`)
+- Publishes the **stable** package to both GitHub Packages and
+  [NuGet.org](https://www.nuget.org/packages/TwBlazor)
+- Creates a GitHub Release with the packed `.nupkg` attached
 
-- Keep parameters simple (no hidden side effects)
-- Use clear naming
-- Avoid directly mutating inputs—use events/callbacks instead
-- Keep UI and logic separated where possible
-
----
-
-## 🧪 Testing
-
-- Add tests for any non-trivial logic
-- Ensure all tests pass before submitting
-- Keep tests:
-  - Small
-  - Independent
-  - Descriptive
-
-### Naming
-- `Subject_Action_ExpectedResult` — use the full component or method name as the subject  
-  **Examples:**
-  - `TwDataTable_Renders_WithEmptyItems`
-  - `TwDataTable_Pageable_ShowsPaginationControls`
-  - `UpdateApplication_DoesNothing_WhenOptionsIsNull`
+There is nothing further to do on `develop` afterwards. Its next build picks
+up the new release tag on its own and continues previewing from there (e.g.
+`1.2.1-preview.0`, then `.1`, and so on).
 
 ---
 
@@ -311,16 +380,16 @@ See [Project Structure](#project-structure) above for the full tree.
 
 ---
 
+## 💬 Before Large Changes
+
+Open an issue first to discuss your idea.
+
+---
+
 ## 🔄 Keeping Your Branch Updated
 
 - Pull latest changes from the main branch regularly
 - Resolve conflicts early
-
----
-
-## 💬 Before Large Changes
-
-Open an issue first to discuss your idea.
 
 ---
 

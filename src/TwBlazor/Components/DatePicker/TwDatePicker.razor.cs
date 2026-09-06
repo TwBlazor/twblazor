@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
 using TwBlazor.Configuration.Components;
-using TwBlazor.Enums;
 using TwBlazor.Utilities;
 
 namespace TwBlazor.Components;

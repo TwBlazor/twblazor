@@ -1,4 +1,5 @@
 ﻿@namespace TwBlazor.Components
+@using TwBlazor.Enums
 @inherits TwBlazorComponentBase
 
 @if (IsParent)
@@ -18,6 +19,10 @@
 else
 {
     <a id="@Id" href="@Href" class="@classes" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy" aria-current="@(isActive ? "page" : null)">
-        <span>@Label</span>
+        <span>@Label</span> 
+        @if (NavigationItem?.New ?? false)
+        {
+           <TwChip Color="Color.Info" AriaLabel="New component" Variant="ButtonVariant.Outlined" Label="New" Size="ChipSize.Small" Class="h-5 ml-auto" />
+        }
     </a>
 }

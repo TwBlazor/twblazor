@@ -43,6 +43,12 @@ public partial class TwCheckbox<T> : TwBlazorInputComponentBase
     [Parameter] public Color? Color { get; set; }
 
     /// <summary>
+    /// Gets or sets the size of the checkbox and its check/dash icon. Defaults to <see cref="Enums.Size.Md"/>,
+    /// the same dimensions this component has always rendered at.
+    /// </summary>
+    [Parameter] public Size Size { get; set; } = Enums.Size.Md;
+
+    /// <summary>
     /// Gets or sets the current value of the parameter.
     /// </summary>
     [Parameter] public T Value { get; set; } = default!;
@@ -57,10 +63,26 @@ public partial class TwCheckbox<T> : TwBlazorInputComponentBase
 
     private string classes =>
         new ClassBuilder(theme.Base)
+        .AddClass(sizeClasses)
         .AddClass(roundedBuilder.GetRounded())
         .AddClass(GetCheckboxColor(Color))
+        .AddClass(GetIndeterminateCheckboxColor(Color), isIndeterminate)
         .AddClass(Disabled ? theme.Disabled : theme.Hover)
         .AddClass(Class).Build();
+
+    private string sizeClasses => Size switch
+    {
+        Enums.Size.Sm => "h-4 w-4",
+        Enums.Size.Lg => "h-6 w-6",
+        _ => "h-5 w-5"
+    };
+
+    private string iconSizeClasses => Size switch
+    {
+        Enums.Size.Sm => "h-2.5 w-2.5",
+        Enums.Size.Lg => "h-4 w-4",
+        _ => "h-3.5 w-3.5"
+    };
 
     private string labelClasses =>
         new ClassBuilder(theme.LabelBase)
@@ -74,9 +96,30 @@ public partial class TwCheckbox<T> : TwBlazorInputComponentBase
         .AddClass(options.Theme.Colors.TextColors.Medium.Light, Color != Enums.Color.Light)
         .Build();
 
+    private string indeterminateClasses =>
+        new ClassBuilder(theme.IndeterminateIconWrapper)
+        .AddClass(options.Theme.Colors.TextColors.Dark.Dark, Color == Enums.Color.Light)
+        .AddClass(options.Theme.Colors.TextColors.Medium.Light, Color != Enums.Color.Light)
+        .Build();
+
     private bool isChecked => Value is bool boolValue && boolValue;
 
+    /// <summary>
+    /// Gets whether the bound <see cref="Value"/> is indeterminate - only reachable when <typeparamref
+    /// name="T"/> is a nullable type (typically <c>bool?</c>) and the caller binds it to <see langword="null"/>,
+    /// e.g. to reflect a parent selection whose children disagree. A user interacting with the checkbox
+    /// always resolves it to checked or unchecked - there is no click gesture that produces this state.
+    /// </summary>
+    private bool isIndeterminate => Value is null;
+
     private string GetCheckboxColor(Color? color) => ColorBuilder.GetPaletteColor(color, theme.Colors, theme.Colors.Primary);
+
+    /// <summary>
+    /// Gets the same fill/border colors as <see cref="GetCheckboxColor"/>, but without the <c>checked:</c>
+    /// prefix that gates them behind the native DOM <c>checked</c> property. Indeterminate isn't a native
+    /// state this library sets, so it can't rely on that pseudo-class - the fill has to apply unconditionally.
+    /// </summary>
+    private string GetIndeterminateCheckboxColor(Color? color) => GetCheckboxColor(color).Replace("checked:", string.Empty);
 
     private async Task HandleChange(ChangeEventArgs e)
     {

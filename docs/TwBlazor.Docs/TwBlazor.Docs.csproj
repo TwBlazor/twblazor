@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\components.json" Link="components.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\css\codeblockDark.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

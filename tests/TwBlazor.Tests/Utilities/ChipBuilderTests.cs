@@ -13,9 +13,10 @@ public class ChipBuilderTests : TwBlazorTestBase
         var result = ChipBuilder.GetBaseClasses(ChipSize.Small, false, false);
 
         // Assert
-        Assert.Contains("text-xs", result);
-        Assert.Contains("px-2", result);
-        Assert.Contains("h-6", result);
+        Assert.Contains("text-[10px]", result);
+        Assert.Contains("leading-none", result);
+        Assert.Contains("px-1.5", result);
+        Assert.Contains("h-5", result);
     }
 
     [Fact]
@@ -25,8 +26,8 @@ public class ChipBuilderTests : TwBlazorTestBase
         var result = ChipBuilder.GetBaseClasses(ChipSize.Medium, false, false);
 
         // Assert
-        Assert.Contains("text-sm", result);
-        Assert.Contains("h-8", result);
+        Assert.Contains("text-xs", result);
+        Assert.Contains("h-6", result);
     }
 
     [Fact]
@@ -37,7 +38,7 @@ public class ChipBuilderTests : TwBlazorTestBase
 
         // Assert
         Assert.Contains("text-sm", result);
-        Assert.Contains("h-10", result);
+        Assert.Contains("h-8", result);
     }
 
     [Fact]

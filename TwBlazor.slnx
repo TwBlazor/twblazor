@@ -20,6 +20,7 @@
   <Folder Name="/_slnx/">
     <File Path=".editorconfig" />
     <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="components.json" />
     <File Path="CONTRIBUTING.md" />
     <File Path="LICENSE.txt" />
     <File Path="README.md" />

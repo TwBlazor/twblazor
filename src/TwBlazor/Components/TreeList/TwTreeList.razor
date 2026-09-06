@@ -1,0 +1,14 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+<ul id="@Id"
+    class="@rootClasses"
+    style="@Style"
+    @attributes="Attributes"
+    role="tree"
+    aria-label="@AriaLabel"
+    aria-labelledby="@AriaLabelledBy">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</ul>

@@ -1,5 +1,4 @@
 @page "/chip"
-@using TwBlazor
 @using TwBlazor.Components
 @using TwBlazor.Enums
 
@@ -24,6 +23,18 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Sizes">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Use <code>Size</code> to render a smaller or larger chip. Defaults to <code>ChipSize.Medium</code>.</p>
+
+        <CodeExample Name="ChipSizes">
+            <TwChipGroup Class="items-center">
+                <TwChip Label="Small" Color="Color.Primary" Size="ChipSize.Small" />
+                <TwChip Label="Medium" Color="Color.Primary" Size="ChipSize.Medium" />
+                <TwChip Label="Large" Color="Color.Primary" Size="ChipSize.Large" />
+            </TwChipGroup>
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Colors">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Group chips with <code>TwChipGroup</code> for automatic wrapping and layout.</p>
 
@@ -39,7 +50,7 @@
                     }
                     else
                     {
-                        <div class="@(c != Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
+                        <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
                             <TwChip Label="@c.ToString()" Color="@c" />
                         </div>
                     }
