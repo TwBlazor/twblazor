@@ -8,12 +8,12 @@ public class ColorBuilderTests : TwBlazorTestBase
     #region GetTextColor Tests
 
     [Theory]
-    [InlineData(Color.Primary, "text-purple-600", "dark:text-purple-600")]
-    [InlineData(Color.Accent, "text-fuchsia-600", "dark:text-fuchsia-600")]
+    [InlineData(Color.Primary, "text-purple-600", "dark:text-purple-200")]
+    [InlineData(Color.Accent, "text-fuchsia-600", "dark:text-fuchsia-200")]
     [InlineData(Color.Success, "text-green-700", "dark:text-green-600")]
-    [InlineData(Color.Danger, "text-red-600", "dark:text-red-600")]
+    [InlineData(Color.Danger, "text-red-600", "dark:text-red-200")]
     [InlineData(Color.Warning, "text-yellow-700", "dark:text-yellow-600")]
-    [InlineData(Color.Info, "text-blue-600", "dark:text-blue-600")]
+    [InlineData(Color.Info, "text-blue-600", "dark:text-blue-200")]
     [InlineData(Color.Light, "text-white", "dark:text-white")]
     [InlineData(Color.Dark, "text-gray-950", "dark:text-gray-950")]
     public void GetTextColor_ReturnsCorrectClasses_ForEachColor(Color color, string expectedLight, string expectedDark)
