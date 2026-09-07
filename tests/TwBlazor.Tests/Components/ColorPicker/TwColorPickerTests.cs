@@ -1404,4 +1404,34 @@ public class TwColorPickerTests : TwBlazorTestBase
     }
 
     #endregion
+
+    [Fact]
+    public void NormalizeColorValue_ReturnsDefaultColor_WhenInputIsWhitespace()
+    {
+        // Arrange - NormalizeColorValue's own whitespace guard is otherwise unreachable: its only
+        // caller (HandleTextInputChangeAsync) already filters out whitespace before calling it.
+        var cut = TestContext.Render<TwColorPicker>();
+        var method = typeof(TwColorPicker).GetMethod("NormalizeColorValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        var result = method.Invoke(cut.Instance, ["   "]);
+
+        // Assert
+        Assert.Equal("#000000", result);
+    }
+
+    [Fact]
+    public void NormalizeHexValue_ReturnsDefaultColor_WhenInputIsWhitespace()
+    {
+        // Arrange - same as NormalizeColorValue: unreachable via the public API since its only caller
+        // never passes whitespace through.
+        var cut = TestContext.Render<TwColorPicker>();
+        var method = typeof(TwColorPicker).GetMethod("NormalizeHexValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        var result = method.Invoke(cut.Instance, ["   "]);
+
+        // Assert
+        Assert.Equal("#000000", result);
+    }
 }

@@ -635,10 +635,6 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
             {
                 hexInput = $"#{r:X2}{g:X2}{b:X2}";
             }
-            catch (OverflowException)
-            {
-                hexInput = $"#{r:X2}{g:X2}{b:X2}";
-            }
             catch (ArgumentException)
             {
                 // Covers ArgumentOutOfRangeException as well as the plain ArgumentException

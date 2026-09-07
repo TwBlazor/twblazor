@@ -63,7 +63,10 @@ public partial class Navigation : IDisposable
         public string Id { get; set; } = string.Empty;
         public string Display { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
-        public bool IsNew { get; set; } // NOSONAR - populated by JSON deserialization from components.json
+
+#pragma warning disable S3459, S1144 // Populated by JSON deserialization from components.json - the setter has no visible caller for Sonar's static analysis to see
+        public bool IsNew { get; set; }
+#pragma warning restore S3459, S1144
     }
 
     private readonly CancellationTokenSource _cts = new();

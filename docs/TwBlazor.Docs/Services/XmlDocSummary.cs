@@ -32,7 +32,9 @@ internal sealed record DescriptionSegment(string Text, string? Url = null);
 internal static partial class XmlDocSummary
 {
     // The docfx site is published from the repo root under this sub-path (see docfx.json / deploy-docs.yml).
-    public const string ApiBaseUrl = "https://twblazor.github.io/twblazor/"; // NOSONAR: fixed docfx publish location, not environment-specific
+#pragma warning disable S1075 // Fixed docfx publish location, not environment-specific
+    public const string ApiBaseUrl = "https://twblazor.github.io/twblazor/";
+#pragma warning restore S1075
 
     // Relative to the app's own base address - resolve with NavigationManager.ToAbsoluteUri before
     // passing it in, since this class has no DI access of its own to do that itself.
