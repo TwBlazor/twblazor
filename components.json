@@ -13,7 +13,7 @@
       { "id": "alert-navitem", "display": "Alert", "name": "TwAlert", "url": "/alert" },
       { "id": "chip-navitem", "display": "Chip", "name": "TwChip", "url": "/chip" },
       { "id": "icon-navitem", "display": "Icon", "name": "TwIcon", "url": "/icon" },
-      { "id": "progress-navitem", "display": "Progress", "name": "TwProgress", "url": "/progress", "isNew": true },
+      { "id": "progress-navitem", "display": "Progress", "name": "TwProgress", "url": "/progress" },
       { "id": "skeleton-navitem", "display": "Skeleton", "name": "TwSkeleton", "url": "/skeleton", "isNew": true },
       { "id": "spinner-navitem", "display": "Spinner", "name": "TwSpinner", "url": "/spinner", "isNew": true }
     ]
@@ -29,8 +29,8 @@
       { "id": "file-upload-navitem", "display": "File Upload", "name": "TwFileUpload", "url": "/file-upload" },
       { "id": "radio-button-navitem", "display": "Radio Button", "name": "TwRadioButton", "url": "/radio-button" },
       { "id": "select-navitem", "display": "Select", "name": "TwSelect", "url": "/select" },
-      { "id": "slider-navitem", "display": "Slider", "name": "TwSlider", "url": "/slider", "isNew": true },
-      { "id": "switch-navitem", "display": "Switch", "name": "TwSwitch", "url": "/switch", "isNew": true },
+      { "id": "slider-navitem", "display": "Slider", "name": "TwSlider", "url": "/slider" },
+      { "id": "switch-navitem", "display": "Switch", "name": "TwSwitch", "url": "/switch" },
       { "id": "textfield-navitem", "display": "Textfield", "name": "TwTextfield", "url": "/textfield" },
       { "id": "time-picker-navitem", "display": "Time Picker", "name": "TwTimePicker", "url": "/time-picker" }
     ]

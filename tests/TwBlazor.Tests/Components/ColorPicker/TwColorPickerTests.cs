@@ -965,6 +965,67 @@ public class TwColorPickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void PreferNativePickerTrue_OutputFormatRgb_ConvertsNativeHexToRgb()
+    {
+        // Arrange - the native <input type="color"> can only ever emit a plain hex value (iOS/Android
+        // use this path by default), so OutputFormat has to be applied on the way out here too, the
+        // same way TwColorPickerBody's custom dialog already does.
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPicker>(parameters => parameters
+            .Add(p => p.Value, "#3b82f6")
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.OutputFormat, ColorMode.Rgb)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string>(this, v => changedValue = v)));
+
+        // Act
+        var nativeInput = cut.Find("input[type='color']");
+        nativeInput.Change("#ff5733");
+
+        // Assert
+        Assert.Equal("rgb(255, 87, 51)", changedValue);
+        Assert.Equal("rgb(255, 87, 51)", cut.Instance.Value);
+    }
+
+    [Fact]
+    public void PreferNativePickerTrue_OutputFormatHsl_ConvertsNativeHexToHsl()
+    {
+        // Arrange
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPicker>(parameters => parameters
+            .Add(p => p.Value, "#3b82f6")
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.OutputFormat, ColorMode.Hsl)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string>(this, v => changedValue = v)));
+
+        // Act
+        var nativeInput = cut.Find("input[type='color']");
+        nativeInput.Change("#ff5733");
+
+        // Assert
+        Assert.Equal("hsl(11, 100%, 60%)", changedValue);
+    }
+
+    [Fact]
+    public void PreferNativePickerTrue_OutputFormatHex_LeavesNativeHexUnchanged()
+    {
+        // Arrange - explicit ColorMode.Hex (rather than relying on the parameter default) covers the
+        // switch's Hex arm directly.
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPicker>(parameters => parameters
+            .Add(p => p.Value, "#3b82f6")
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.OutputFormat, ColorMode.Hex)
+            .Add(p => p.ValueChanged, EventCallback.Factory.Create<string>(this, v => changedValue = v)));
+
+        // Act
+        var nativeInput = cut.Find("input[type='color']");
+        nativeInput.Change("#ff5733");
+
+        // Assert
+        Assert.Equal("#ff5733", changedValue);
+    }
+
+    [Fact]
     public void PreferNativePickerFalse_RendersPreviewDiv_AndOpensCustomDialogOnClick()
     {
         // Arrange

@@ -914,4 +914,46 @@ describe('twColorPicker', () => {
             expect(window.twColorPicker.getSize(el)).toEqual([240, 32]);
         });
     });
+
+    describe('supportsEyeDropper', () => {
+        afterEach(() => {
+            delete globalThis.EyeDropper;
+        });
+
+        test('returns false when the EyeDropper API is unavailable', () => {
+            expect(window.twColorPicker.supportsEyeDropper()).toBe(false);
+        });
+
+        test('returns true when the EyeDropper API is present', () => {
+            globalThis.EyeDropper = function () {};
+
+            expect(window.twColorPicker.supportsEyeDropper()).toBe(true);
+        });
+    });
+
+    describe('openEyeDropper', () => {
+        afterEach(() => {
+            delete globalThis.EyeDropper;
+        });
+
+        test('returns null when the EyeDropper API is unavailable', async () => {
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+        });
+
+        test('returns the picked color as a hex string', async () => {
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.resolve({ sRGBHex: '#7f56d9' });
+            };
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBe('#7f56d9');
+        });
+
+        test('returns null when the user cancels the pick (AbortError)', async () => {
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.reject(new DOMException('cancelled', 'AbortError'));
+            };
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+        });
+    });
 });
