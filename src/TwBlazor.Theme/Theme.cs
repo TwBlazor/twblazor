@@ -435,19 +435,20 @@ public static class Theme
                 },
                 new TwColorPickerTheme
                 {
-                    Swatch = "h-7 w-7 rounded-md ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm flex-shrink-0 transition-[box-shadow,opacity] duration-200",
+                    Swatch = "block h-7 w-7 ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm flex-shrink-0 transition-[box-shadow,opacity] duration-200",
                     SwatchDisabled = disabledOpacity,
                     SwatchHover = "hover:ring-[oklch(21%_0.006_285.885)]/20 dark:hover:ring-[oklch(97.807%_0.029_256.847)]/25",
                     InputContainer = $"flex items-center {defaultGap}",
                     DialogPosition = "absolute top-full left-0 mt-2 z-50",
-                    DialogSurface = $"tw-color-picker-dialog {neutralSurface.Elevated} rounded-xl shadow-xl ring-1 ring-[oklch(21%_0.006_285.885)]/25 dark:ring-[oklch(97.807%_0.029_256.847)]/20 {comfortablePadding} w-64",
-                    PreviewSwatch = $"w-11 h-11 {roundedLg} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm flex-shrink-0",
-                    SelectorSquare = $"relative w-full h-48 {roundedLg} overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
-                    SelectorThumb = "absolute w-3.5 h-3.5 rounded-full border-2 border-white ring-1 ring-black/20 shadow-md pointer-events-none",
+                    DialogSurface = $"tw-color-picker-dialog {neutralSurface.Background} ring-1 ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 p-3 w-64",
+                    PreviewSwatch = "flex-1 min-w-0 h-6 rounded-full ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 shadow-sm",
+                    SelectorSquare = "relative w-full h-48 overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
+                    SelectorThumb = "absolute w-4 h-4 rounded-full border-2 border-white ring-1 ring-black/10 shadow-lg pointer-events-none",
                     SliderTrack = "w-full h-2.5 rounded-full overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 pointer-events-none",
-                    SliderThumb = "absolute top-1/2 w-4 h-4 rounded-full border-2 border-white ring-1 ring-black/20 shadow-md pointer-events-none",
-                    AlphaLabel = $"text-xs font-medium {neutralText.Secondary} w-10",
-                    ActionBar = $"flex justify-end {defaultGap} pt-3 border-t {neutralSurface.BorderSubtle}"
+                    SliderThumb = "absolute top-1/2 w-4 h-4 rounded-full border-2 border-white ring-1 ring-black/10 shadow-lg pointer-events-none",
+                    AlphaLabel = $"text-xs font-medium {neutralText.Secondary}",
+                    ActionBar = $"flex justify-end {defaultGap} pt-1",
+                    ControlRow = $"flex items-center {defaultGap} {compactPadding} {neutralSurface.BackgroundSubtle}"
                 },
                 new TwDatePickerTheme
                 {
@@ -560,13 +561,14 @@ public static class Theme
                 new TwTreeListTheme
                 {
                     Container = "flex flex-col text-sm",
-                    Group = $"ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} flex flex-col",
-                    Row = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} py-1 text-sm hover:underline group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
+                    Group = $"mt-1 ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} flex flex-col",
+                    Row = $"group/row {defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} px-2 py-1.5 text-sm group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
                     RowDisabled = $"{disabledOpacity} pointer-events-none",
-                    ToggleIcon = "h-4 w-4 shrink-0 transition-transform duration-200",
-                    ToggleIconOpen = "rotate-180",
-                    Label = "truncate",
-                    ItemIcon = $"h-4 w-4 shrink-0 {neutralText.Muted}"
+                    ToggleSlot = "inline-flex h-4 w-4 shrink-0 items-center justify-center",
+                    ToggleIcon = "inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform duration-200",
+                    ToggleIconOpen = "rotate-180 translate-y-px",
+                    Label = "truncate group-hover/row:underline",
+                    ItemIcon = $"inline-flex h-4 w-4 shrink-0 items-center justify-center {neutralText.Muted}"
                 },
                 new TwRadioButtonTheme
                 {

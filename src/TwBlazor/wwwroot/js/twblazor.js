@@ -311,6 +311,30 @@ globalThis.twColorPicker = {
         if (!el) return [0, 0];
         var rect = el.getBoundingClientRect();
         return [rect.width, rect.height];
+    },
+    // Feature-detects the EyeDropper API (Chromium-based browsers only, as of this writing) so the
+    // picker can simply omit its pick-from-screen button where it isn't supported, rather than
+    // showing one that would throw when clicked.
+    supportsEyeDropper: function () {
+        return typeof EyeDropper !== 'undefined';
+    },
+    // Opens the browser's native eyedropper tool and resolves to the picked color as a 6-digit hex
+    // string, or null if the API isn't available or the user cancelled (Escape/click-away raises
+    // EyeDropper's AbortError, which is a normal cancellation here, not a failure worth surfacing).
+    openEyeDropper: async function () {
+        if (typeof EyeDropper === 'undefined') return null;
+        try {
+            var result = await new EyeDropper().open();
+            return result.sRGBHex;
+        } catch (err) {
+            // AbortError means the user cancelled the pick (Escape or clicking away) - expected,
+            // not worth logging. Anything else is unexpected, so surface it like the other catches
+            // in this file do, rather than swallowing it silently.
+            if (err?.name !== 'AbortError') {
+                console.error('twColorPicker.openEyeDropper error', err);
+            }
+            return null;
+        }
     }
 };
 

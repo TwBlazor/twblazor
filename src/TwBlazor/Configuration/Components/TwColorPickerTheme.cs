@@ -77,4 +77,10 @@ public class TwColorPickerTheme
     /// Gets or sets the classes for the action bar containing the Cancel/Confirm buttons.
     /// </summary>
     public required string ActionBar { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the control row holding the pick-from-screen button, the mode
+    /// switch, the live swatch, the current mode's value field, and the alpha percentage readout.
+    /// </summary>
+    public required string ControlRow { get; set; }
 }

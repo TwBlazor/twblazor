@@ -2248,4 +2248,212 @@ public class TwColorPickerBodyTests : TwBlazorTestBase
     }
 
     #endregion
+
+    #region EyeDropper Tests
+
+    [Fact]
+    public void OnAfterRender_DetectsEyeDropperSupport_AndRendersButton()
+    {
+        // Arrange
+        TestContext.JSInterop.Setup<bool>("twColorPicker.supportsEyeDropper").SetResult(true);
+
+        // Act
+        var cut = TestContext.Render<TwColorPickerBody>();
+
+        // Assert
+        var buttons = cut.FindAll("button");
+        Assert.Contains(buttons, b => b.GetAttribute("aria-label") == "Pick color from screen");
+    }
+
+    [Fact]
+    public void OnAfterRender_DoesNotRenderEyeDropperButton_WhenUnsupported()
+    {
+        // Arrange - Loose JSInterop mode (the suite default) returns default(bool) = false when
+        // twColorPicker.supportsEyeDropper isn't explicitly configured, same as an unsupported browser.
+        var cut = TestContext.Render<TwColorPickerBody>();
+
+        // Assert
+        var buttons = cut.FindAll("button");
+        Assert.DoesNotContain(buttons, b => b.GetAttribute("aria-label") == "Pick color from screen");
+    }
+
+    [Fact]
+    public void PickColorFromScreenAsync_AppliesPickedColor()
+    {
+        // Arrange
+        TestContext.JSInterop.Setup<bool>("twColorPicker.supportsEyeDropper").SetResult(true);
+        TestContext.JSInterop.Setup<string?>("twColorPicker.openEyeDropper").SetResult("#7f56d9");
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#000000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        // Act
+        var eyedropperButton = cut.FindAll("button").First(b => b.GetAttribute("aria-label") == "Pick color from screen");
+        eyedropperButton.Click();
+
+        // Assert
+        Assert.Equal("#7F56D9", changedValue);
+    }
+
+    [Fact]
+    public void PickColorFromScreenAsync_DoesNothing_WhenPickedColorIsNull()
+    {
+        // Arrange - twColorPicker.openEyeDropper isn't configured, so Loose mode resolves it to
+        // null, the same result the JS side returns when the API is unsupported or the user cancels.
+        TestContext.JSInterop.Setup<bool>("twColorPicker.supportsEyeDropper").SetResult(true);
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#000000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        // Act
+        var eyedropperButton = cut.FindAll("button").First(b => b.GetAttribute("aria-label") == "Pick color from screen");
+        eyedropperButton.Click();
+
+        // Assert
+        Assert.Null(changedValue);
+    }
+
+    [Fact]
+    public void PickColorFromScreenAsync_DoesNothing_WhenPickedColorIsTooShort()
+    {
+        // Arrange - defends against a malformed/truncated response; the real EyeDropper API always
+        // returns a full 6-digit hex string, but this guards the parsing below regardless.
+        TestContext.JSInterop.Setup<bool>("twColorPicker.supportsEyeDropper").SetResult(true);
+        TestContext.JSInterop.Setup<string?>("twColorPicker.openEyeDropper").SetResult("#abc");
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#000000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        // Act
+        var eyedropperButton = cut.FindAll("button").First(b => b.GetAttribute("aria-label") == "Pick color from screen");
+        eyedropperButton.Click();
+
+        // Assert
+        Assert.Null(changedValue);
+    }
+
+    #endregion
+
+    #region Additional Coverage Gap Tests
+
+    [Fact]
+    public void FormatColorOutput_FallsBackToHex_ForUnrecognizedOutputFormat()
+    {
+        // Arrange - OutputFormat's switch has a defensive discard arm for a value outside the
+        // Hex/Rgb/Hsl enum range, otherwise unreachable through the public API.
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#FF0000")
+            .Add(p => p.OutputFormat, (ColorMode)99)
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        // Act
+        var selector = cut.Find(".relative.w-full.h-48");
+        selector.MouseDown(new MouseEventArgs { OffsetX = 110, OffsetY = 94 });
+
+        // Assert
+        Assert.NotNull(changedValue);
+        Assert.Matches(@"^#[0-9A-F]{6}$", changedValue);
+    }
+
+    [Fact]
+    public void HandleModeSwitch_FallsBackToHex_WhenCurrentModeIsUnrecognized()
+    {
+        // Arrange - currentMode's switch has the same kind of defensive discard arm, reached here by
+        // setting the private field directly since the public API can only ever cycle it through
+        // Hex/Rgb/Hsl.
+        var cut = TestContext.Render<TwColorPickerBody>();
+        var field = typeof(TwColorPickerBody).GetField("currentMode", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        field.SetValue(cut.Instance, (ColorMode)99);
+
+        var method = typeof(TwColorPickerBody).GetMethod("HandleModeSwitch", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        method.Invoke(cut.Instance, null);
+
+        // Assert
+        Assert.Equal(ColorMode.Hex, field.GetValue(cut.Instance));
+    }
+
+    [Fact]
+    public void OnRInputChanged_IgnoresNonNumericInput()
+    {
+        // Arrange - TwTextfield<int> only ever calls this with an already-parsed int.ToString(), so
+        // the invalid-parse branch is otherwise unreachable via normal interaction.
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#FF0000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        var method = typeof(TwColorPickerBody).GetMethod("OnRInputChanged", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        method.Invoke(cut.Instance, ["not-a-number"]);
+
+        // Assert
+        Assert.Null(changedValue);
+    }
+
+    [Fact]
+    public void OnGInputChanged_IgnoresNonNumericInput()
+    {
+        // Arrange
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#FF0000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        var method = typeof(TwColorPickerBody).GetMethod("OnGInputChanged", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        method.Invoke(cut.Instance, ["not-a-number"]);
+
+        // Assert
+        Assert.Null(changedValue);
+    }
+
+    [Fact]
+    public void OnBInputChanged_IgnoresNonNumericInput()
+    {
+        // Arrange
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#FF0000")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        var method = typeof(TwColorPickerBody).GetMethod("OnBInputChanged", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        method.Invoke(cut.Instance, ["not-a-number"]);
+
+        // Assert
+        Assert.Null(changedValue);
+    }
+
+    [Fact]
+    public void OnHexInputCommitted_HandlesNullHexInputField_Gracefully()
+    {
+        // Arrange - hexInput is only ever assigned string literals in practice, so the `?? defaultColor`
+        // fallback is otherwise unreachable; reached here by setting the private field directly.
+        string? changedValue = null;
+        var cut = TestContext.Render<TwColorPickerBody>(parameters => parameters
+            .Add(p => p.Value, "#3b82f6")
+            .Add(p => p.ValueChanged, value => changedValue = value));
+
+        var field = typeof(TwColorPickerBody).GetField("hexInput", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        field.SetValue(cut.Instance, null);
+
+        var method = typeof(TwColorPickerBody).GetMethod("OnHexInputCommitted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        // Act
+        method.Invoke(cut.Instance, null);
+
+        // Assert - falls back to "#000000" and parses successfully
+        Assert.Equal("#000000", changedValue);
+    }
+
+    #endregion
 }

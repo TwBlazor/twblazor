@@ -59,7 +59,25 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
     private TwColorPickerTheme theme => options.Theme.Components.Require<TwColorPickerTheme>();
 
     private string dialogClasses => new ClassBuilder(theme.DialogSurface)
+        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
+        .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(Class)
+        .Build();
+
+    /// <summary>
+    /// The same corner radius as <see cref="dialogClasses"/>, reused on the square-cornered elements
+    /// inside the dialog (the selector square, the control row) so they visually scale with the
+    /// dialog's own rounding instead of a hardcoded radius of their own. The small circular swatch and
+    /// slider thumbs stay "rounded-full" regardless - a circle, not a corner-radius choice.
+    /// </summary>
+    private string roundedClass => roundedBuilder.GetRounded(effectiveRounded);
+
+    private string selectorSquareClasses => new ClassBuilder(theme.SelectorSquare)
+        .AddClass(roundedClass)
+        .Build();
+
+    private string controlRowClasses => new ClassBuilder(theme.ControlRow)
+        .AddClass(roundedClass)
         .Build();
 
     // Color state in HSL format (0-360 for hue, 0-1 for saturation and lightness)
@@ -121,6 +139,13 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
     private double hueSliderWidth = 220;
     private double alphaSliderWidth = 124;
 
+    /// <summary>
+    /// Whether the browser supports the EyeDropper API, detected once via JS interop on first render.
+    /// Gates the pick-from-screen button shown in the control row - browsers without it (Firefox,
+    /// Safari as of this writing) simply never see the button rather than seeing one that errors out.
+    /// </summary>
+    private bool eyeDropperSupported;
+
     protected override void OnParametersSet()
     {
         // Don't re-parse color from value if we're currently interacting with the picker
@@ -145,6 +170,12 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         if (firstRender)
         {
             await MeasureSlidersAsync();
+
+            eyeDropperSupported = await JSRuntime.InvokeAsync<bool>("twColorPicker.supportsEyeDropper");
+            if (eyeDropperSupported)
+            {
+                StateHasChanged();
+            }
         }
 
         await JSRuntime.InvokeVoidAsync("twSlider.preventScrollKeys", selectorRef);
@@ -604,10 +635,6 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
             {
                 hexInput = $"#{r:X2}{g:X2}{b:X2}";
             }
-            catch (OverflowException)
-            {
-                hexInput = $"#{r:X2}{g:X2}{b:X2}";
-            }
             catch (ArgumentException)
             {
                 // Covers ArgumentOutOfRangeException as well as the plain ArgumentException
@@ -616,6 +643,28 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
                 hexInput = $"#{r:X2}{g:X2}{b:X2}";
             }
         }
+    }
+
+    /// <summary>
+    /// Opens the browser's native EyeDropper tool (only rendered when <see cref="eyeDropperSupported"/>
+    /// is true) and applies the picked color. The API always returns an opaque 6-digit hex string, so
+    /// only RGB/HSL are updated - any existing alpha is left untouched, mirroring <see cref="OnRInputChanged"/>
+    /// and friends which likewise only recompute HSL from RGB and notify.
+    /// </summary>
+    private async Task PickColorFromScreenAsync()
+    {
+        var picked = await JSRuntime.InvokeAsync<string?>("twColorPicker.openEyeDropper");
+        if (string.IsNullOrWhiteSpace(picked)) return;
+
+        var hex = picked.TrimStart('#');
+        if (hex.Length < 6) return;
+
+        r = Convert.ToInt32(hex[..2], 16);
+        g = Convert.ToInt32(hex[2..4], 16);
+        b = Convert.ToInt32(hex[4..6], 16);
+        (hue, saturation, lightness) = ColorConverter.RgbToHsl(r, g, b);
+        UpdateInputsFromCurrentColor();
+        UpdateAndNotify();
     }
 
     private void OnCancel() => OnClose.InvokeAsync(false);

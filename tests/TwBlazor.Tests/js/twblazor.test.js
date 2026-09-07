@@ -914,4 +914,60 @@ describe('twColorPicker', () => {
             expect(window.twColorPicker.getSize(el)).toEqual([240, 32]);
         });
     });
+
+    describe('supportsEyeDropper', () => {
+        afterEach(() => {
+            delete globalThis.EyeDropper;
+        });
+
+        test('returns false when the EyeDropper API is unavailable', () => {
+            expect(window.twColorPicker.supportsEyeDropper()).toBe(false);
+        });
+
+        test('returns true when the EyeDropper API is present', () => {
+            globalThis.EyeDropper = function () {};
+
+            expect(window.twColorPicker.supportsEyeDropper()).toBe(true);
+        });
+    });
+
+    describe('openEyeDropper', () => {
+        afterEach(() => {
+            delete globalThis.EyeDropper;
+            vi.restoreAllMocks();
+        });
+
+        test('returns null when the EyeDropper API is unavailable', async () => {
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+        });
+
+        test('returns the picked color as a hex string', async () => {
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.resolve({ sRGBHex: '#7f56d9' });
+            };
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBe('#7f56d9');
+        });
+
+        test('returns null and does not log when the user cancels the pick (AbortError)', async () => {
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.reject(new DOMException('cancelled', 'AbortError'));
+            };
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+            expect(consoleErrorSpy).not.toHaveBeenCalled();
+        });
+
+        test('returns null and logs unexpected errors', async () => {
+            const error = new Error('eyedropper unavailable');
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.reject(error);
+            };
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+            expect(consoleErrorSpy).toHaveBeenCalledWith('twColorPicker.openEyeDropper error', error);
+        });
+    });
 });
