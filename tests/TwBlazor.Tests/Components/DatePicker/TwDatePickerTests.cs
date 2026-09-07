@@ -186,6 +186,66 @@ public class TwDatePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void YearView_HighlightsCurrentYear_DistinctFromSelectedYear()
+    {
+        // Arrange — a SelectedDate several years before today so both the selected year and
+        // today's year fall within the same displayed decade, but remain distinct: the selected
+        // year should keep the existing solid highlight, while today's year gets its own separate
+        // ActiveClass indicator (mirroring the day grid's today-vs-selected distinction), which
+        // didn't exist for the year grid before.
+        var today = DateTime.Today;
+        var selectedYear = today.Year - 5;
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(selectedYear, 6, 15))
+        );
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+
+        var currentYearButton = cut.FindAll("button.year").First(b => b.TextContent.Trim() == today.Year.ToString());
+        var selectedYearButton = cut.FindAll("button.year").First(b => b.TextContent.Trim() == selectedYear.ToString());
+
+        // Assert
+        Assert.Equal("date", currentYearButton.GetAttribute("aria-current"));
+        Assert.Contains(datePickerTheme.ActiveClass, currentYearButton.GetAttribute("class"));
+        Assert.DoesNotContain(Theme.Colors.LightBackground.Light.Primary, currentYearButton.GetAttribute("class"));
+
+        Assert.Null(selectedYearButton.GetAttribute("aria-current"));
+        Assert.Contains(Theme.Colors.LightBackground.Light.Primary, selectedYearButton.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void MonthView_HighlightsCurrentMonth_DistinctFromSelectedMonth()
+    {
+        // Arrange — SelectedDate uses today's year but a different month, so both the current
+        // month and the selected month appear in the same 12-month grid, distinctly highlighted.
+        var today = DateTime.Today;
+        var selectedMonth = today.Month == 1 ? 3 : 1;
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(today.Year, selectedMonth, 15))
+        );
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+
+        var currentMonthButton = cut.FindAll("button.month").First(b => b.TextContent.Trim() == today.ToString("MMM"));
+        var selectedMonthButton = cut.FindAll("button.month").First(b => b.TextContent.Trim() == new DateTime(today.Year, selectedMonth, 1).ToString("MMM"));
+
+        // Assert
+        Assert.Equal("date", currentMonthButton.GetAttribute("aria-current"));
+        Assert.Contains(datePickerTheme.ActiveClass, currentMonthButton.GetAttribute("class"));
+        Assert.DoesNotContain(Theme.Colors.LightBackground.Light.Primary, currentMonthButton.GetAttribute("class"));
+
+        Assert.Null(selectedMonthButton.GetAttribute("aria-current"));
+        Assert.Contains(Theme.Colors.LightBackground.Light.Primary, selectedMonthButton.GetAttribute("class"));
+    }
+
+    [Fact]
     public void NavigationButtons_WorkAcrossMonthYearDecade()
     {
         // Arrange
@@ -213,6 +273,114 @@ public class TwDatePickerTests : TwBlazorTestBase
 
         cut.Find("button.next-btn").Click();
         Assert.Contains((start.Year + 10).ToString(), cut.Markup);
+    }
+
+    [Fact]
+    public void NavigatingMonths_DoesNotChangeSelectedDate_UntilADayIsPicked()
+    {
+        // Arrange — browsing with Next/Previous must not silently change what's actually selected;
+        // only clicking a day (or typing a valid one) should ever fire SelectedDateChanged.
+        var selectedDateChangedInvoked = false;
+        var start = new DateTime(2025, 11, 1);
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, start)
+            .Add(x => x.SelectedDateChanged, EventCallback.Factory.Create<DateTime>(this, _ => selectedDateChangedInvoked = true))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.next-btn").Click();
+        cut.Find("button.next-btn").Click();
+
+        // Assert
+        Assert.False(selectedDateChangedInvoked);
+    }
+
+    [Fact]
+    public void NavigatingToADecadeWithoutTheSelectedYear_DoesNotHighlightAnyYearAsSelected()
+    {
+        // Arrange — this is the bug: navigation used to write directly into SelectedDate, so
+        // whichever decade you paged to always showed its own first year as "selected" (since the
+        // grid's own generation and the isSelectedYear check both read the same, now-drifted,
+        // SelectedDate). With navigation and selection properly separated, paging to a decade that
+        // doesn't contain the real selected year should highlight nothing.
+        var start = new DateTime(2025, 11, 1);
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, start)
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+        cut.Find("button.next-btn").Click(); // 2025-2034 -> 2035-2044, well past the real selection
+
+        // Assert
+        var yearButtons = cut.FindAll("button.year");
+        Assert.All(yearButtons, b => Assert.Equal("false", b.GetAttribute("aria-pressed")));
+    }
+
+    [Fact]
+    public void NavigatingToAYearWithoutTheSelectedMonth_DoesNotHighlightAnyMonthAsSelected()
+    {
+        // Arrange — same bug as the decade case above, one level down: paging the month grid to a
+        // different year must not make that year's months falsely show one as selected.
+        var start = new DateTime(2025, 11, 1);
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, start)
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.next-btn").Click(); // 2025 -> 2026
+
+        // Assert
+        var monthButtons = cut.FindAll("button.month");
+        Assert.All(monthButtons, b => Assert.Equal("false", b.GetAttribute("aria-pressed")));
+    }
+
+    [Fact]
+    public void ClickingDayAfterNavigatingMonths_SelectsTheDayInTheNavigatedMonth()
+    {
+        // Arrange — confirms navigation still correctly feeds into which month a day gets picked
+        // from, despite no longer sharing storage with SelectedDate.
+        DateTime? selectedFromCallback = null;
+        var start = new DateTime(2025, 11, 1);
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, start)
+            .Add(x => x.SelectedDateChanged, EventCallback.Factory.Create<DateTime>(this, d => selectedFromCallback = d))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.next-btn").Click(); // -> December 2025
+        cut.FindAll("button.day").First(b => b.TextContent.Trim() == "10").Click();
+
+        // Assert
+        Assert.Equal(new DateTime(2025, 12, 10), selectedFromCallback);
+    }
+
+    [Fact]
+    public async Task ReopeningPanel_ResetsNavigationBackToSelectedDatesMonth()
+    {
+        // Arrange — browsing away without picking anything shouldn't linger into the next time the
+        // picker is opened; it should always start back at the actual selection's own month.
+        var start = new DateTime(2025, 11, 1);
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, start)
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.next-btn").Click();
+        Assert.Contains("December 2025", cut.Markup);
+
+        await cut.Instance.Close();
+        cut.Find("input").Focus();
+
+        // Assert
+        Assert.Contains("November 2025", cut.Markup);
     }
 
     [Fact]

@@ -173,7 +173,7 @@ public abstract class TwPopoverPickerComponentBase : TwBlazorTextInputComponentB
     /// outside the component. If the component is readonly, disabled, or the native picker is in use,
     /// the custom popover panel will not be shown.
     /// </remarks>
-    protected async Task OnFocusAsync()
+    protected virtual async Task OnFocusAsync()
     {
         if (suppressNextFocusOpen)
         {

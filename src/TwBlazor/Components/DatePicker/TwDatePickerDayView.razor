@@ -1,5 +1,9 @@
 @inherits TwBlazorComponentBase
 
+@if (ShowMonthCaption)
+{
+    <div class="@monthCaptionClasses">@Value.ToString("MMMM yyyy")</div>
+}
 <table class="datepicker-grid w-full border-collapse" role="grid" aria-label="@Value.ToString("MMMM yyyy")" @ref="gridRef" @onkeydown="OnGridKeyDown">
     <thead>
         <tr role="row">
@@ -15,30 +19,56 @@
             <tr role="row">
                 @foreach (var cell in week)
                 {
-                    <td class="p-0.5" role="gridcell">
+                    var isRangeMode = Range.HasValue;
+                    // Key = start, Value = end (see the Range parameter's remarks); defaulted to
+                    // (null, null) when Range itself is null, but never read unless isRangeMode.
+                    var range = Range ?? default;
+                    // Previous-month lead-in cells get a real date too (not just current-month
+                    // cells) so a range that spans the month boundary keeps highlighting visually
+                    // across it instead of appearing to stop dead at day 1 - even though these
+                    // cells stay plain, non-interactive spans (selecting a day still requires
+                    // navigating to the month that actually owns it).
+                    DateTime? thisDate = cell.HasValue
+                        ? (cell.Value.IsCurrentMonth
+                            ? new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified)
+                            : new DateTime(Value.AddMonths(-1).Year, Value.AddMonths(-1).Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified))
+                        : null;
+                    var isRangeStart = isRangeMode && thisDate.HasValue && range.Key.HasValue && thisDate.Value.Date == range.Key.Value.Date;
+                    var isRangeEnd = isRangeMode && thisDate.HasValue && range.Value.HasValue && thisDate.Value.Date == range.Value.Value.Date;
+                    var isInRange = isRangeMode && thisDate.HasValue && IsStrictlyWithinRange(range, thisDate.Value);
+                    // Range-participating cells drop their own horizontal padding so adjacent days in
+                    // the same row touch and read as one merged bar; vertical padding (the rhythm
+                    // between week rows) is kept either way.
+                    var tdClasses = (isRangeStart || isRangeEnd || isInRange) ? "py-0.5 px-0" : "p-0.5";
+
+                    <td class="@tdClasses" role="gridcell">
                         @if (cell is null)
                         {
                             <span aria-hidden="true"></span>
                         }
                         else if (!cell.Value.IsCurrentMonth)
                         {
-                            <span class="day prev w-full h-9 flex items-center justify-center cursor-default rounded-lg text-sm text-gray-400 dark:text-gray-600">
+                            <span class="@GetPrevDayClasses(isRangeStart, isRangeEnd, isInRange)">
                                 @cell.Value.DayNumber
                             </span>
                         }
                         else
                         {
-                            var thisDate = new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified);
-                            var isSelected = cell.Value.DayNumber == Value.Day;
+                            var isSelected = isRangeMode
+                                ? (isRangeStart || isRangeEnd)
+                                : SelectedDate.HasValue && SelectedDate.Value.Date == thisDate!.Value.Date;
+                            var isDisabled = IsDayDisabled(thisDate!.Value);
                             var today = Value.Kind == DateTimeKind.Utc ? DateTime.UtcNow.Date : DateTime.Today;
-                            var isToday = thisDate.Date == today;
-                            <button type="button" class="@GetButtonClasses(isSelected, isToday)"
+                            var isToday = thisDate!.Value.Date == today;
+                            var fullDate = new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, Value.Hour, Value.Minute, Value.Second, Value.Kind);
+                            <button type="button" class="@GetButtonClasses(isSelected, isToday, isRangeStart, isRangeEnd, isInRange, isDisabled)"
                                     tabindex="@(cell.Value.DayNumber == focusedDay ? "0" : "-1")"
-                                    aria-label="@GetDayAriaLabel(thisDate, isSelected)"
+                                    aria-label="@GetDayAriaLabel(thisDate!.Value, isSelected, isRangeStart, isRangeEnd, isInRange)"
                                     aria-pressed="@(isSelected ? "true" : "false")"
                                     aria-current="@(isToday ? "date" : null)"
+                                    aria-disabled="@(isDisabled ? "true" : null)"
                                     @ref="GetDayCellRef(cell.Value.DayNumber).Element"
-                                    @onclick="@(() => SelectDateAsync(new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, Value.Hour, Value.Minute, Value.Second, Value.Kind)))">
+                                    @onclick="@(() => HandleDayClick(fullDate, isDisabled))">
                                 @cell.Value.DayNumber
                             </button>
                         }

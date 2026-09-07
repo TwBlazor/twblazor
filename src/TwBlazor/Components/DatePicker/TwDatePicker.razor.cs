@@ -37,6 +37,23 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     private DatePickerView view { get; set; }
 
     /// <summary>
+    /// The month/year/decade currently displayed - a pure navigation position, independent of
+    /// <see cref="SelectedDate"/>. Browsing with the header's Previous/Next controls (or drilling
+    /// through the year/month quick-pick grids) only moves this; <see cref="SelectedDate"/> itself
+    /// changes only when a day is actually picked (or a valid date is typed). Re-seeded to
+    /// <see cref="SelectedDate"/> every time the panel opens (see the <see cref="OnFocusAsync"/>
+    /// override) so browsing that was abandoned without picking anything doesn't linger into the
+    /// next time the picker is opened.
+    /// </summary>
+    /// <remarks>
+    /// Before this existed, navigation wrote directly into <see cref="SelectedDate"/> itself, which
+    /// made the year/month quick-pick grids always show whatever page they'd been navigated to as
+    /// "selected" - since that page's year/month was, by construction, always equal to the
+    /// (silently drifted) <see cref="SelectedDate"/> being compared against.
+    /// </remarks>
+    private DateTime anchorDate;
+
+    /// <summary>
     /// The placeholder text to display when no date is selected.
     /// </summary>
     /// <remarks>
@@ -152,13 +169,28 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
         .AddClass(BodyClasses).Build();
 
     /// <summary>
+    /// Gets "today" for comparison against the year/month quick-pick grids, honoring
+    /// <see cref="SelectedDate"/>'s <see cref="DateTime.Kind"/> the same way
+    /// <see cref="DatePicker.TwDatePickerDayView"/> does for its own today indicator.
+    /// </summary>
+    private DateTime today => (SelectedDate.Kind == DateTimeKind.Utc ? DateTime.UtcNow : DateTime.Now).Date;
+
+    /// <summary>
     /// Gets the CSS classes for the buttons present in the dialog.
     /// </summary>
-    private string GetButtonClasses(string name, bool isSelected) =>
+    /// <remarks>
+    /// <paramref name="isToday"/> gives the year/month quick-pick grids the same distinct "this is
+    /// the actual current year/month" indicator (<see cref="TwDatePickerTheme.ActiveClass"/>) the
+    /// day grid already has for today's date - previously only the selected year/month was ever
+    /// highlighted here, with nothing marking which one is actually current when browsing away
+    /// from it.
+    /// </remarks>
+    private string GetButtonClasses(string name, bool isSelected, bool isToday) =>
         new ClassBuilder($"{name} cursor-pointer")
         .AddClass(roundedBuilder.GetRounded())
         .AddClass(theme.ButtonClass)
         .AddClass(options.Theme.Colors.HoverColors.Primary)
+        .AddClass($"{theme.ActiveClass} {options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Light.Primary}", isToday && !isSelected)
         .AddClass(options.Theme.Colors.LightBackground.Light.Primary, isSelected)
         .AddClass(options.Theme.Colors.DarkBackground.Light.Primary, isSelected)
         .AddClass(options.Theme.Colors.TextColors.Medium.Primary, isSelected)
@@ -173,7 +205,20 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     {
         ArgumentException.ThrowIfNullOrEmpty(Format);
         base.OnInitialized();
+        anchorDate = SelectedDate;
         Value = SelectedDate.ToString(effectiveFormat, effectiveCulture);
+    }
+
+    /// <summary>
+    /// Re-seeds <see cref="anchorDate"/> to the actual <see cref="SelectedDate"/> every time the
+    /// panel opens, so navigation abandoned without picking anything (browsing to another
+    /// month/year, then clicking away) doesn't linger the next time the picker is opened - it
+    /// always starts back at the real selection's own month.
+    /// </summary>
+    protected override async Task OnFocusAsync()
+    {
+        anchorDate = SelectedDate;
+        await base.OnFocusAsync();
     }
 
     /// <summary>
@@ -288,34 +333,34 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     }
 
     /// <summary>
-    /// Advances the selected date by 10 years.
+    /// Advances the displayed decade by 10 years, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void NextDecade() => SelectedDate = SelectedDate.AddYears(10);
+    private void NextDecade() => anchorDate = anchorDate.AddYears(10);
 
     /// <summary>
-    /// Moves the selected date back by 10 years.
+    /// Moves the displayed decade back by 10 years, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void PreviousDecade() => SelectedDate = SelectedDate.AddYears(-10);
+    private void PreviousDecade() => anchorDate = anchorDate.AddYears(-10);
 
     /// <summary>
-    /// Advances the selected date by one year.
+    /// Advances the displayed year by one, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void NextYear() => SelectedDate = SelectedDate.AddYears(1);
+    private void NextYear() => anchorDate = anchorDate.AddYears(1);
 
     /// <summary>
-    /// Moves the selected date back by one year.
+    /// Moves the displayed year back by one, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void PreviousYear() => SelectedDate = SelectedDate.AddYears(-1);
+    private void PreviousYear() => anchorDate = anchorDate.AddYears(-1);
 
     /// <summary>
-    /// Advances the selected date by one month.
+    /// Advances the displayed month by one, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void NextMonth() => SelectedDate = SelectedDate.AddMonths(1);
+    private void NextMonth() => anchorDate = anchorDate.AddMonths(1);
 
     /// <summary>
-    /// Moves the selected date back by one month.
+    /// Moves the displayed month back by one, without changing <see cref="SelectedDate"/>.
     /// </summary>
-    private void PreviousMonth() => SelectedDate = SelectedDate.AddMonths(-1);
+    private void PreviousMonth() => anchorDate = anchorDate.AddMonths(-1);
 
     /// <summary>
     /// Selects a date and updates both the selected date and its string representation.
@@ -343,6 +388,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
         }
         isFocused = false;
         SelectedDate = dateTime;
+        anchorDate = dateTime;
         Value = SelectedDate.ToString(effectiveFormat, effectiveCulture);
         Invalid = false;
         ErrorMessage = string.Empty;
@@ -375,29 +421,27 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     }
 
     /// <summary>
-    /// Selects a month and switches the view to the day view.
+    /// Navigates the displayed month to <paramref name="selectedMonth"/> and switches to the day
+    /// view - this is further browsing, not a final selection, so it moves <see cref="anchorDate"/>
+    /// rather than <see cref="SelectedDate"/> (which only changes once an actual day is picked).
     /// </summary>
-    /// <param name="selectedMonth">The month to select.</param>
-    /// <remarks>
-    /// Updates the <see cref="SelectedDate"/> to use the selected month while preserving the day, hour, minute, and second components.
-    /// </remarks>
+    /// <param name="selectedMonth">The month to display.</param>
     private void SelectMonth(DateTime selectedMonth)
     {
-        SelectedDate = new DateTime(SelectedDate.Year, selectedMonth.Month, SelectedDate.Day, SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second, SelectedDate.Kind);
+        anchorDate = new DateTime(anchorDate.Year, selectedMonth.Month, anchorDate.Day, anchorDate.Hour, anchorDate.Minute, anchorDate.Second, anchorDate.Kind);
         view = DatePickerView.Day;
         pendingViewFocus = true;
     }
 
     /// <summary>
-    /// Selects a year and switches the view to the month view.
+    /// Navigates the displayed year to <paramref name="selectedYear"/> and switches to the month
+    /// view - see <see cref="SelectMonth"/>'s remarks for why this moves <see cref="anchorDate"/>
+    /// rather than <see cref="SelectedDate"/>.
     /// </summary>
-    /// <param name="selectedYear">The year to select.</param>
-    /// <remarks>
-    /// Updates the <see cref="SelectedDate"/> to use the selected year while preserving the month, day, hour, minute, and second components.
-    /// </remarks>
+    /// <param name="selectedYear">The year to display.</param>
     private void SelectYear(DateTime selectedYear)
     {
-        SelectedDate = new DateTime(selectedYear.Year, SelectedDate.Month, SelectedDate.Day, SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second, SelectedDate.Kind);
+        anchorDate = new DateTime(selectedYear.Year, anchorDate.Month, anchorDate.Day, anchorDate.Hour, anchorDate.Minute, anchorDate.Second, anchorDate.Kind);
         view = DatePickerView.Month;
         pendingViewFocus = true;
     }

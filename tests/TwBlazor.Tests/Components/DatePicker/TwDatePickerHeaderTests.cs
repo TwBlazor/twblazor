@@ -36,4 +36,63 @@ public class TwDatePickerHeaderTests : TwBlazorTestBase
         Assert.True(titleInvoked);
         Assert.True(nextInvoked);
     }
+
+    [Fact]
+    public void PreviousDisabled_RendersPreviousButtonDisabled_AndSuppressesItsClick()
+    {
+        // Arrange
+        var previousInvoked = false;
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerHeader>(p => p
+            .Add(x => x.OnPreviousClick, EventCallback.Factory.Create(this, () => previousInvoked = true))
+            .Add(x => x.PreviousDisabled, true)
+            .AddChildContent("Title")
+        );
+
+        var previousButton = cut.Find(".prev-btn");
+        previousButton.Click();
+
+        // Assert
+        Assert.True(previousButton.HasAttribute("disabled"));
+        Assert.False(previousInvoked);
+    }
+
+    [Fact]
+    public void NextDisabled_RendersNextButtonDisabled_AndSuppressesItsClick()
+    {
+        // Arrange
+        var nextInvoked = false;
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerHeader>(p => p
+            .Add(x => x.OnNextClick, EventCallback.Factory.Create(this, () => nextInvoked = true))
+            .Add(x => x.NextDisabled, true)
+            .AddChildContent("Title")
+        );
+
+        var nextButton = cut.Find(".next-btn");
+        nextButton.Click();
+
+        // Assert
+        Assert.True(nextButton.HasAttribute("disabled"));
+        Assert.False(nextInvoked);
+    }
+
+    [Fact]
+    public void PreviousAndNextDisabled_DefaultToFalse()
+    {
+        // Arrange & Act — existing TwDatePicker usage doesn't set these, so both arrows must stay
+        // enabled by default. OnPreviousClick/OnNextClick need a delegate for TwIcon to render an
+        // actual <button> at all (see TwIcon.razor's OnClick.HasDelegate check).
+        var cut = TestContext.Render<TwDatePickerHeader>(p => p
+            .Add(x => x.OnPreviousClick, EventCallback.Factory.Create(this, () => { }))
+            .Add(x => x.OnNextClick, EventCallback.Factory.Create(this, () => { }))
+            .AddChildContent("Title")
+        );
+
+        // Assert
+        Assert.False(cut.Find(".prev-btn").HasAttribute("disabled"));
+        Assert.False(cut.Find(".next-btn").HasAttribute("disabled"));
+    }
 }
