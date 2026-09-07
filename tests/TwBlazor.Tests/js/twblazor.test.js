@@ -934,6 +934,7 @@ describe('twColorPicker', () => {
     describe('openEyeDropper', () => {
         afterEach(() => {
             delete globalThis.EyeDropper;
+            vi.restoreAllMocks();
         });
 
         test('returns null when the EyeDropper API is unavailable', async () => {
@@ -948,12 +949,25 @@ describe('twColorPicker', () => {
             await expect(window.twColorPicker.openEyeDropper()).resolves.toBe('#7f56d9');
         });
 
-        test('returns null when the user cancels the pick (AbortError)', async () => {
+        test('returns null and does not log when the user cancels the pick (AbortError)', async () => {
             globalThis.EyeDropper = function () {
                 this.open = () => Promise.reject(new DOMException('cancelled', 'AbortError'));
             };
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+            expect(consoleErrorSpy).not.toHaveBeenCalled();
+        });
+
+        test('returns null and logs unexpected errors', async () => {
+            const error = new Error('eyedropper unavailable');
+            globalThis.EyeDropper = function () {
+                this.open = () => Promise.reject(error);
+            };
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+            await expect(window.twColorPicker.openEyeDropper()).resolves.toBeNull();
+            expect(consoleErrorSpy).toHaveBeenCalledWith('twColorPicker.openEyeDropper error', error);
         });
     });
 });

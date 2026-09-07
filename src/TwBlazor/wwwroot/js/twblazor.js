@@ -327,6 +327,12 @@ globalThis.twColorPicker = {
             var result = await new EyeDropper().open();
             return result.sRGBHex;
         } catch (err) {
+            // AbortError means the user cancelled the pick (Escape or clicking away) - expected,
+            // not worth logging. Anything else is unexpected, so surface it like the other catches
+            // in this file do, rather than swallowing it silently.
+            if (err?.name !== 'AbortError') {
+                console.error('twColorPicker.openEyeDropper error', err);
+            }
             return null;
         }
     }
