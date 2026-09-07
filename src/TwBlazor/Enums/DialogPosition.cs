@@ -12,45 +12,37 @@ namespace TwBlazor.Enums;
 public enum DialogPosition
 {
     /// <summary>
-    /// The dialog appears in the center of the screen.
+    /// The dialog appears in the upper-left corner of the screen.
     /// </summary>
-    Center,
-
-    /// <summary>
-    /// The dialog appears vertically centered on the left side of the screen.
-    /// </summary>
-    CenterLeft,
-
-    /// <summary>
-    /// The dialog appears vertically centered on the right side of the screen.
-    /// </summary>
-    CenterRight,
-
+    TopLeft,
     /// <summary>
     /// The dialog appears at the top of the screen, horizontally centered.
     /// </summary>
     TopCenter,
-
-    /// <summary>
-    /// The dialog appears in the upper-left corner of the screen.
-    /// </summary>
-    TopLeft,
-
     /// <summary>
     /// The dialog appears in the upper-right corner of the screen.
     /// </summary>
     TopRight,
-
     /// <summary>
-    /// The dialog appears at the bottom of the screen, horizontally centered.
+    /// The dialog appears vertically centered on the left side of the screen.
     /// </summary>
-    BottomCenter,
-
+    CenterLeft,
+    /// <summary>
+    /// The dialog appears in the center of the screen.
+    /// </summary>
+    Center,
+    /// <summary>
+    /// The dialog appears vertically centered on the right side of the screen.
+    /// </summary>
+    CenterRight,
     /// <summary>
     /// The dialog appears in the lower-left corner of the screen.
     /// </summary>
     BottomLeft,
-
+    /// <summary>
+    /// The dialog appears at the bottom of the screen, horizontally centered.
+    /// </summary>
+    BottomCenter,
     /// <summary>
     /// The dialog appears in the lower-right corner of the screen.
     /// </summary>

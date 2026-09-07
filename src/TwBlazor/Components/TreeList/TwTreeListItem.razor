@@ -16,18 +16,22 @@
     @onkeydown="OnItemKeyDownAsync"
     @onkeydown:stopPropagation="true">
     <div class="@rowClasses">
-        @if (hasChildren)
-        {
-            <TwIcon Icon="TwBlazor.Enums.Icon.Chevron_Down" Class="@toggleIconClasses" />
-        }
+        <span class="@theme.ToggleSlot" aria-hidden="true">
+            @if (hasChildren)
+            {
+                <TwIcon Icon="TwBlazor.Enums.Icon.Chevron_Down" Class="@toggleIconClasses" />
+            }
+        </span>
         @if (showCheckboxes)
         {
-            <span @onclick:stopPropagation="true">
+            <span class="inline-flex h-4 items-center shrink-0" @onclick:stopPropagation="true">
                 <TwCheckbox T="bool?"
+                            RootClass="flex items-center"
                             Value="GetEffectiveChecked()"
                             ValueChanged="@(v => ToggleCheckedAsync(v ?? false))"
                             Disabled="Disabled"
                             Size="Size.Sm"
+                            LabelClass="!min-h-0 !mb-0"
                             AriaLabel="@($"Select {Label}")" />
             </span>
         }
