@@ -3,28 +3,11 @@
 @using TwBlazor.Enums
 
 <div id="@Id" class="@dialogClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
-    <div class="flex flex-col gap-4">
-        <!-- Color Preview and Mode Switch -->
-        <div class="flex items-center gap-3">
-            <div class="@theme.PreviewSwatch" style="@($"background-color: {@GetCurrentColor()}")"></div>
-            @if (ShowModeSwitch)
-            {
-                <TwButton Type="button"
-                          Class="flex-1 tracking-wide"
-                          OnClick="@HandleModeSwitch"
-                          AriaLabel="Toggle color mode"
-                          Variant="ButtonVariant.Outlined"
-                          Color="Color.Primary"
-                          Dense>
-                    @currentMode.ToString().ToUpper()
-                </TwButton>
-            }
-        </div>
-
+    <div class="flex flex-col gap-3">
         @* Saturation/Lightness Selector. Treated as a single ARIA slider (rather than split into two
            separately-focusable elements) to avoid restructuring the mouse-drag square; aria-valuetext
            communicates both axes, and aria-valuenow tracks saturation as the slider's primary value. *@
-        <div class="@theme.SelectorSquare"
+        <div class="@selectorSquareClasses"
              style="background: linear-gradient(to right, white, hsl(@hue, 100%, 50%)), linear-gradient(to top, black, transparent);"
              role="slider"
              tabindex="0"
@@ -78,7 +61,7 @@
         @if (ShowAlpha)
         {
             <div class="flex items-center gap-2">
-                <span class="@theme.AlphaLabel">Alpha</span>
+                <span class="@theme.AlphaLabel sr-only">Alpha</span>
                 <div class="flex-1 relative h-6 flex items-center cursor-pointer"
                      role="slider"
                      tabindex="0"
@@ -104,44 +87,68 @@
                     <div class="@theme.SliderThumb"
                          style="left: @(alpha * 100)%; transform: translate(-50%, -50%);"></div>
                 </div>
-                <span class="@theme.AlphaLabel text-right">@((int)(alpha * 100))%</span>
             </div>
         }
 
-        <!-- Color Mode Inputs -->
-        @switch (currentMode)
+        <!-- Control row: pick-from-screen, mode switch, live swatch, alpha readout -->
+        <div class="@controlRowClasses">
+            @if (eyeDropperSupported)
+            {
+                <TwIcon Icon="Icon.Eyedropper" OnClick="PickColorFromScreenAsync" AriaLabel="Pick color from screen" Color="Color.Primary" ButtonVariant="ButtonVariant.Text" Class="shrink-0" />
+            }
+            @if (ShowModeSwitch)
+            {
+                <TwButton Type="button"
+                          Class="shrink-0 tracking-wide"
+                          OnClick="@HandleModeSwitch"
+                          AriaLabel="Toggle color mode"
+                          Variant="ButtonVariant.Text"
+                          Color="Color.Primary"
+                          StartIcon="Icon.Arrow_Repeat"
+                          Dense>
+                    @currentMode.ToString().ToUpper()
+                </TwButton>
+            }
+            <div class="@theme.PreviewSwatch" style="@($"background-color: {@GetCurrentColor()}")"></div>
+
+            @if (ShowAlpha)
+            {
+                <span class="@theme.AlphaLabel shrink-0 text-right">@((int)(alpha * 100))%</span>
+            }
+        </div>
+
+        <!-- Color mode's value input(s), full width and at the same level as the control row above -->
+        @if (currentMode == ColorMode.Hex)
         {
-            case ColorMode.Hex:
+            <TwTextfield Label="HEX" T="string" Variant="@Variant" @onchange="OnHexInputChanged" @oninput="OnHexInputCommitted" Value="@hexInput" Dense Placeholder="#000000" />
+        }
+        else if (currentMode == ColorMode.Rgb)
+        {
+            <div class="flex gap-2">
                 <div class="flex-1">
-                    <TwTextfield Label="HEX" T="string" Variant="@Variant" @onchange="OnHexInputChanged" @oninput="OnHexInputCommitted" Value="@hexInput" Dense Placeholder="#000000" />
+                    <TwTextfield Label="R" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((r) => OnRInputChanged(r.ToString()))" Value="@r" BindEvent="oninput" Dense />
                 </div>
-                break;
-            case ColorMode.Rgb:
-                <div class="flex gap-2">
-                    <div class="flex-1">
-                        <TwTextfield Label="R" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((r) => OnRInputChanged(r.ToString()))" Value="@r" BindEvent="oninput" Dense />
-                    </div>
-                    <div class="flex-1">
-                        <TwTextfield Label="G" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((g) => OnGInputChanged(g.ToString()))" Value="@g" BindEvent="oninput" Dense />
-                    </div>
-                    <div class="flex-1">
-                        <TwTextfield Label="B" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((b) => OnBInputChanged(b.ToString()))" Value="@b" BindEvent="oninput" Dense />
-                    </div>
+                <div class="flex-1">
+                    <TwTextfield Label="G" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((g) => OnGInputChanged(g.ToString()))" Value="@g" BindEvent="oninput" Dense />
                 </div>
-                break;
-            case ColorMode.Hsl:
-                <div class="flex gap-2">
-                    <div class="flex-1">
-                        <TwTextfield Label="H" T="int" InputType="number" min="0" max="360" Variant="@Variant" ValueChanged="@((h) => OnHInputChanged(h.ToString()))" Value="@h" BindEvent="oninput" Dense />
-                    </div>
-                    <div class="flex-1">
-                        <TwTextfield Label="S" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((s) => OnSInputChanged(s.ToString()))" Value="@s" BindEvent="oninput" Dense />
-                    </div>
-                    <div class="flex-1">
-                        <TwTextfield Label="L" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((l) => OnLInputChanged(l.ToString()))" Value="@l" BindEvent="oninput" Dense />
-                    </div>
+                <div class="flex-1">
+                    <TwTextfield Label="B" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((b) => OnBInputChanged(b.ToString()))" Value="@b" BindEvent="oninput" Dense />
                 </div>
-                break;
+            </div>
+        }
+        else if (currentMode == ColorMode.Hsl)
+        {
+            <div class="flex gap-2">
+                <div class="flex-1">
+                    <TwTextfield Label="H" T="int" InputType="number" min="0" max="360" Variant="@Variant" ValueChanged="@((h) => OnHInputChanged(h.ToString()))" Value="@h" BindEvent="oninput" Dense />
+                </div>
+                <div class="flex-1">
+                    <TwTextfield Label="S" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((s) => OnSInputChanged(s.ToString()))" Value="@s" BindEvent="oninput" Dense />
+                </div>
+                <div class="flex-1">
+                    <TwTextfield Label="L" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((l) => OnLInputChanged(l.ToString()))" Value="@l" BindEvent="oninput" Dense />
+                </div>
+            </div>
         }
 
         <!-- Action Buttons -->

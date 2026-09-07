@@ -14,13 +14,16 @@ namespace TwBlazor.Components;
 /// A color picker component that supports multiple color formats (Hex, RGB, HSL) with optional alpha channel.
 /// Provides both a visual color picker dialog and text input for manual color entry.
 /// </summary>
-public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDisposable
+/// <remarks>
+/// Built on <see cref="TwPopoverPickerComponentBase"/>, the same popover open/close, focus-trap and
+/// outside-click plumbing shared with <see cref="TwDatePicker"/>/<see cref="TwTimePicker"/>. Unlike those
+/// pickers, the popover here opens from a click on the swatch button rather than focusing the trigger
+/// textfield - <see cref="ShowDialogAsync"/> drives the shared <c>isFocused</c>/<c>PendingOpenFocus</c>
+/// state directly instead of going through <see cref="TwPopoverPickerComponentBase.OnFocusAsync"/>.
+/// </remarks>
+public partial class TwColorPicker : TwPopoverPickerComponentBase
 {
     private const string defaultColor = "#000000";
-    /// <summary>
-    /// Gets or sets the JavaScript runtime for interop operations.
-    /// </summary>
-    [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the current color value. Supports Hex, RGB, and HSL formats.
@@ -55,41 +58,7 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
     /// </summary>
     [Parameter] public ColorMode OutputFormat { get; set; } = ColorMode.Hex;
 
-    /// <summary>
-    /// Overrides automatic device detection for whether the browser's native color picker should be used
-    /// instead of the custom popover dialog. Leave unset (<see langword="null"/>) to auto-detect based on
-    /// the client platform (iOS and Android use the native picker by default).
-    /// </summary>
-    [Parameter] public bool? PreferNativePicker { get; set; }
-
-    /// <summary>
-    /// Indicates whether the browser's native color input UI is being used for the swatch preview instead
-    /// of the custom dialog, either because <see cref="PreferNativePicker"/> was explicitly set or because
-    /// the client platform (iOS/Android) was detected via JS interop.
-    /// </summary>
-    private bool useNativePicker;
-
-    private TwInputRoot? inputRoot;
-    private DotNetObjectReference<TwColorPicker>? dotNetRef;
-    private bool registeredOutsideHandler;
     private string displayValue = string.Empty;
-    private bool showDialog = false;
-
-    /// <summary>
-    /// Opaque token (captured via JS interop from the element focused just before the dialog opened,
-    /// almost always the swatch) used to restore focus there once the dialog closes.
-    /// </summary>
-    private string? focusReturnToken;
-
-    /// <summary>
-    /// Reference to the popover dialog wrapper element, used to move focus into it when it opens.
-    /// </summary>
-    private ElementReference panelRef;
-
-    /// <summary>
-    /// Set when the dialog opens so the next <see cref="OnAfterRenderAsync"/> moves focus into it.
-    /// </summary>
-    private bool pendingOpenFocus;
 
     private TwColorPickerTheme colorPickerTheme => options.Theme.Components.Require<TwColorPickerTheme>();
 
@@ -97,6 +66,7 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
         .Build();
 
     private string previewClasses => new ClassBuilder(colorPickerTheme.Swatch)
+        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(Disabled ? colorPickerTheme.SwatchDisabled : colorPickerTheme.SwatchHover)
         .Build();
 
@@ -119,8 +89,9 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
     }
 
     /// <summary>
-    /// Determines, via <see cref="PreferNativePicker"/> or JS-based device detection, whether the browser's
-    /// native color input should be used for the swatch preview instead of the custom dialog.
+    /// Determines, via <see cref="TwPopoverPickerComponentBase.PreferNativePicker"/> or JS-based device
+    /// detection, whether the browser's native color input should be used for the swatch preview instead
+    /// of the custom popover dialog.
     /// </summary>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -128,8 +99,8 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
 
         if (firstRender)
         {
-            useNativePicker = PreferNativePicker ?? await DeviceDetector.PrefersNativePickerAsync(JSRuntime);
-            if (useNativePicker)
+            UseNativePicker = PreferNativePicker ?? await DeviceDetector.PrefersNativePickerAsync(JSRuntime);
+            if (UseNativePicker)
             {
                 StateHasChanged();
             }
@@ -138,25 +109,14 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
         // Move focus into the color picker dialog whenever it opens. Focuses the first focusable
         // element within the dialog (falls back to the dialog surface itself). Also (re-)arm the Tab
         // focus trap and background inert-ing every time the dialog (re)opens.
-        if (showDialog && pendingOpenFocus && panelRef.Context != null)
+        if (isFocused && PendingOpenFocus && PanelRef.Context != null)
         {
-            pendingOpenFocus = false;
-            await JSRuntime.InvokeVoidAsync("twPicker.positionPanel", panelRef);
-            await JSRuntime.InvokeVoidAsync("twDialog.trapFocus", panelRef);
-            await JSRuntime.InvokeVoidAsync("twDialog.setBackgroundInert", inputRoot?.RootRef);
-            await JSRuntime.InvokeVoidAsync("twDialog.focusSurface", panelRef);
+            PendingOpenFocus = false;
+            await JSRuntime.InvokeVoidAsync("twPicker.positionPanel", PanelRef);
+            await JSRuntime.InvokeVoidAsync("twDialog.trapFocus", PanelRef);
+            await JSRuntime.InvokeVoidAsync("twDialog.setBackgroundInert", InputRoot?.RootRef);
+            await JSRuntime.InvokeVoidAsync("twDialog.focusSurface", PanelRef);
         }
-    }
-
-    /// <summary>
-    /// Releases the Tab focus trap and clears background inert-ing. Must be called (and awaited)
-    /// while the dialog is still mounted - i.e. before <see cref="showDialog"/> is set to false -
-    /// since it needs <see cref="panelRef"/> to still resolve to a live DOM node.
-    /// </summary>
-    private async Task ReleasePanelTrapAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("twDialog.releaseFocusTrap", panelRef);
-        await JSRuntime.InvokeVoidAsync("twDialog.clearBackgroundInert");
     }
 
     /// <summary>
@@ -239,57 +199,60 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
         return Value;
     }
 
-    private async Task ShowDialog()
+    /// <summary>
+    /// Opens the color picker dialog when the swatch button is activated. Unlike the textfield-triggered
+    /// popovers (<see cref="TwDatePicker"/>/<see cref="TwTimePicker"/>), this drives the base class's
+    /// shared open state directly rather than through <see cref="TwPopoverPickerComponentBase.OnFocusAsync"/>,
+    /// since the swatch is a plain button rather than the combobox trigger those pickers use.
+    /// </summary>
+    private async Task ShowDialogAsync()
     {
         if (!Disabled && !ReadOnly)
         {
             // Capture whatever currently has focus (almost always the swatch, since clicking or
             // activating it is what triggers this) so it can be restored once the dialog closes.
-            focusReturnToken = await JSRuntime.InvokeAsync<string?>("twDialog.captureFocus");
-            showDialog = true;
-            pendingOpenFocus = true;
+            FocusReturnToken = await JSRuntime.InvokeAsync<string?>("twDialog.captureFocus");
+            isFocused = true;
+            PendingOpenFocus = true;
             await RegisterOutsideClickAsync();
         }
     }
 
     /// <summary>
-    /// Restores focus to whatever element was focused (captured via <see cref="focusReturnToken"/>) right
-    /// before the dialog opened, typically the swatch. No-ops if no token was captured (e.g. the dialog
-    /// is being closed a second time).
-    /// </summary>
-    /// <remarks>
-    /// Unlike <see cref="TwDatePicker"/>/<see cref="TwTimePicker"/>, this component doesn't need a
-    /// "suppress the next focus-triggered reopen" guard: the dialog only ever opens from
-    /// <see cref="ShowDialog"/>, which is wired to the swatch's <c>@onclick</c>/<c>@onkeydown</c>
-    /// (Enter/Space), not an <c>@onfocus</c> handler. The <c>.focus()</c> call this method makes via
-    /// <c>twDialog.restoreFocus</c> therefore can't re-trigger <see cref="ShowDialog"/> the way it
-    /// could re-trigger those other components' focus-driven open handlers.
-    /// </remarks>
-    private async Task RestoreFocusAsync()
-    {
-        if (string.IsNullOrEmpty(focusReturnToken)) return;
-
-        var token = focusReturnToken;
-        focusReturnToken = null;
-        await JSRuntime.InvokeVoidAsync("twDialog.restoreFocus", token);
-    }
-
-    /// <summary>
     /// Handles color changes from the native &lt;input type="color"&gt; swatch, used instead of the custom
-    /// dialog when <see cref="useNativePicker"/> is <see langword="true"/>.
+    /// dialog when <see cref="TwPopoverPickerComponentBase.UseNativePicker"/> is <see langword="true"/>.
     /// </summary>
     private async Task OnNativeColorChangedAsync(ChangeEventArgs e)
     {
         var newValue = e.Value?.ToString();
         if (string.IsNullOrWhiteSpace(newValue)) return;
 
-        Value = newValue;
-        displayValue = newValue;
+        Value = FormatNativeColorOutput(newValue);
+        displayValue = Value;
         if (ValueChanged.HasDelegate)
         {
             await ValueChanged.InvokeAsync(Value);
         }
     }
+
+    /// <summary>
+    /// Converts the plain 6-digit hex value the native &lt;input type="color"&gt; always emits into
+    /// <see cref="OutputFormat"/>, mirroring what <see cref="ColorPicker.TwColorPickerBody"/>'s
+    /// FormatColorOutput does for the custom dialog. Without this, <see cref="OutputFormat"/> was
+    /// silently ignored on platforms that prefer the native picker (iOS/Android): the bound
+    /// <see cref="Value"/> would always come out as hex even when a consumer asked for RGB or HSL,
+    /// which broke anything downstream expecting that format (e.g. re-parsing it).
+    /// </summary>
+    /// <remarks>
+    /// The native picker itself never carries an alpha channel, so there's nothing to preserve there -
+    /// this only ever needs to convert the RGB/HSL channels themselves.
+    /// </remarks>
+    private string FormatNativeColorOutput(string hex) => OutputFormat switch
+    {
+        ColorMode.Rgb => ColorConverter.HexToRgb(hex),
+        ColorMode.Hsl => ColorConverter.HexToHsl(hex),
+        _ => hex
+    };
 
     private async Task OnDialogValueChanged(string newValue)
     {
@@ -305,61 +268,9 @@ public partial class TwColorPicker : TwBlazorTextInputComponentBase, IAsyncDispo
     private async Task OnDialogClose(bool confirmed)
     {
         await ReleasePanelTrapAsync();
-        showDialog = false;
+        isFocused = false;
         await UnregisterOutsideClickAsync();
         await RestoreFocusAsync();
         StateHasChanged();
-    }
-
-    private async Task OnDialogKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Escape")
-        {
-            await ReleasePanelTrapAsync();
-            showDialog = false;
-            await UnregisterOutsideClickAsync();
-            await RestoreFocusAsync();
-            StateHasChanged();
-        }
-    }
-
-    private async Task RegisterOutsideClickAsync()
-    {
-        if (registeredOutsideHandler) return;
-        dotNetRef ??= DotNetObjectReference.Create(this);
-        await JSRuntime.InvokeVoidAsync("twPicker.registerOutsideClick", inputRoot?.RootRef, dotNetRef);
-        registeredOutsideHandler = true;
-    }
-
-    private async Task UnregisterOutsideClickAsync()
-    {
-        if (!registeredOutsideHandler) return;
-        await JSRuntime.InvokeVoidAsync("twPicker.unregisterOutsideClick", inputRoot?.RootRef);
-        dotNetRef?.Dispose();
-        dotNetRef = null;
-        registeredOutsideHandler = false;
-    }
-
-    /// <summary>
-    /// Closes the color picker dialog. This method is invoked from JavaScript when clicking outside the dialog.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous close operation.</returns>
-    [JSInvokable("Close")]
-    public override async Task Close()
-    {
-        if (showDialog)
-        {
-            await ReleasePanelTrapAsync();
-        }
-        showDialog = false;
-        await UnregisterOutsideClickAsync();
-        await RestoreFocusAsync();
-        await InvokeAsync(StateHasChanged);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await UnregisterOutsideClickAsync();
-        GC.SuppressFinalize(this);
     }
 }

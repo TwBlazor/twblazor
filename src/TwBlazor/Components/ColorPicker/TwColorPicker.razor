@@ -1,8 +1,8 @@
 @namespace TwBlazor.Components
 @using TwBlazor.Components.ColorPicker
-@inherits TwBlazorTextInputComponentBase
+@inherits TwPopoverPickerComponentBase
 
-<TwInputRoot @ref="@inputRoot" RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy">
+<TwInputRoot @ref="@InputRoot" RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy">
     @if (!string.IsNullOrWhiteSpace(Label))
     {
         <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClasses" @attributes="@LabelAttributes" />
@@ -10,7 +10,7 @@
 
     <div class="@inputContainerClasses relative">
         <div class="relative shrink-0">
-            @if (useNativePicker)
+            @if (UseNativePicker)
             {
                 <input type="color"
                        class="@previewClasses"
@@ -26,9 +26,9 @@
                         style="background-color: @GetPreviewColor(); cursor:pointer;"
                         disabled="@Disabled"
                         aria-haspopup="dialog"
-                        aria-expanded="@(showDialog ? "true" : "false")"
+                        aria-expanded="@(isFocused ? "true" : "false")"
                         aria-label="@swatchAriaLabel"
-                        @onclick="ShowDialog">
+                        @onclick="ShowDialogAsync">
                 </button>
             }
         </div>
@@ -48,10 +48,10 @@
                      AriaLabel="@AriaLabel"
                      AriaLabelledBy="@AriaLabelledBy" />
 
-        @if (showDialog)
+        @if (isFocused)
         {
-            <div class="@colorPickerTheme.DialogPosition" role="dialog" aria-label="Choose color" @onkeydown="OnDialogKeyDown" tabindex="-1" @ref="panelRef">
-                <TwColorPickerBody Value="@Value" ShowAlpha="@ShowAlpha" ShowModeSwitch="@ShowModeSwitch" OutputFormat="@OutputFormat" ValueChanged="OnDialogValueChanged" OnClose="OnDialogClose" Variant="@effectiveVariant" />
+            <div class="@colorPickerTheme.DialogPosition" role="dialog" aria-label="Choose color" @onkeydown="OnPanelKeyDownAsync" tabindex="-1" @ref="PanelRef">
+                <TwColorPickerBody Value="@Value" ShowAlpha="@ShowAlpha" ShowModeSwitch="@ShowModeSwitch" OutputFormat="@OutputFormat" ValueChanged="OnDialogValueChanged" OnClose="OnDialogClose" Variant="@effectiveVariant" Rounded="@Rounded" Shadow="@Shadow" />
             </div>
         }
     </div>
