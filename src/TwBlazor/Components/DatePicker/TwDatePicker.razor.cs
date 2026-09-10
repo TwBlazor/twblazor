@@ -148,7 +148,13 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     private string textfieldClasses => new ClassBuilder("pl-10 pr-3")
         .AddClass("appearance-none", UseNativePicker).Build();
 
-    private string datepickerContainerClasses => new ClassBuilder()
+    // Caps the panel to the viewport height and lets it scroll vertically if it doesn't fit -
+    // twPicker.positionPanel's flip logic picks the better of "below" or "above" the trigger, but
+    // on a phone with the on-screen keyboard open there may not be enough room on either side, so
+    // this is a safety net that keeps the whole panel reachable regardless (see the matching,
+    // more detailed remarks on TwDateRangePicker.datepickerContainerClasses, where its much taller
+    // two-month panel makes this matter more).
+    private string datepickerContainerClasses => new ClassBuilder("max-h-[calc(100vh-2rem)] overflow-y-auto")
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)

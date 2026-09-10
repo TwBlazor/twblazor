@@ -1,26 +1,73 @@
 // Generic picker (used by datepicker, timepicker, etc.)
 globalThis.twPicker = {
+    // How far (in px) a pointer may travel between down and up and still count as a tap rather
+    // than a scroll/drag. A pointerdown that starts outside the panel looks identical to the
+    // start of a scroll gesture - the same touch that begins scrolling the page also begins
+    // outside the panel - so reacting on pointerdown alone would close the panel the instant a
+    // user tried to scroll to see more of it (a real problem for TwDateRangePicker's tall
+    // two-month panel on mobile, where scrolling to view the rest of it is exactly what a user
+    // needs to do). Waiting for pointerup and checking the distance travelled distinguishes a
+    // genuine tap (closes the panel) from a scroll/drag (does not).
     registerOutsideClick: function (root, dotnetRef) {
         if (!root) return;
-        const handler = function (e) {
+
+        const MOVE_THRESHOLD_PX = 10;
+        let downTarget = null;
+        let downX = 0;
+        let downY = 0;
+
+        const onPointerDown = function (e) {
+            downTarget = e.target;
+            downX = e.clientX ?? 0;
+            downY = e.clientY ?? 0;
+        };
+
+        const onPointerUp = function (e) {
+            if (downTarget === null) return;
+            const target = downTarget;
+            const dx = Math.abs((e.clientX ?? downX) - downX);
+            const dy = Math.abs((e.clientY ?? downY) - downY);
+            downTarget = null;
+
+            if (dx > MOVE_THRESHOLD_PX || dy > MOVE_THRESHOLD_PX) return;
+
             try {
-                if (!root.contains(e.target)) {
+                if (!root.contains(target)) {
                     dotnetRef.invokeMethodAsync('Close');
                 }
             } catch (err) {
                 console.error('twPicker handler error', err);
             }
         };
-        root.__twPickerHandler = handler;
-        document.addEventListener('pointerdown', handler);
+
+        const onPointerCancel = function () {
+            downTarget = null;
+        };
+
+        root.__twPickerPointerDown = onPointerDown;
+        root.__twPickerPointerUp = onPointerUp;
+        root.__twPickerPointerCancel = onPointerCancel;
+        document.addEventListener('pointerdown', onPointerDown);
+        document.addEventListener('pointerup', onPointerUp);
+        document.addEventListener('pointercancel', onPointerCancel);
     },
 
     unregisterOutsideClick: function (root) {
         if (!root) return;
-        const handler = root.__twPickerHandler;
-        if (handler) {
-            document.removeEventListener('pointerdown', handler);
-            try { delete root.__twPickerHandler; } catch { root.__twPickerHandler = undefined; }
+        const onPointerDown = root.__twPickerPointerDown;
+        const onPointerUp = root.__twPickerPointerUp;
+        const onPointerCancel = root.__twPickerPointerCancel;
+        if (onPointerDown) document.removeEventListener('pointerdown', onPointerDown);
+        if (onPointerUp) document.removeEventListener('pointerup', onPointerUp);
+        if (onPointerCancel) document.removeEventListener('pointercancel', onPointerCancel);
+        try {
+            delete root.__twPickerPointerDown;
+            delete root.__twPickerPointerUp;
+            delete root.__twPickerPointerCancel;
+        } catch {
+            root.__twPickerPointerDown = undefined;
+            root.__twPickerPointerUp = undefined;
+            root.__twPickerPointerCancel = undefined;
         }
     },
 
@@ -42,7 +89,15 @@ globalThis.twPicker = {
 
         const rect = panel.getBoundingClientRect();
         const viewportWidth = document.documentElement.clientWidth;
-        const viewportHeight = document.documentElement.clientHeight;
+        // Prefer the visual viewport's height when available. clientHeight reports the full layout
+        // viewport, which does not shrink when a mobile on-screen keyboard opens - so on a phone
+        // with the keyboard up, it would report room below the trigger that's actually covered by
+        // the keyboard, and this method would wrongly leave the panel where it clips off-screen.
+        // visualViewport.height tracks the actually-visible area instead. Not available in jsdom
+        // (or older browsers), so this falls back to the previous behavior there.
+        const viewportHeight = (typeof window !== 'undefined' && window.visualViewport)
+            ? window.visualViewport.height
+            : document.documentElement.clientHeight;
 
         if (rect.right > viewportWidth) {
             panel.style.left = 'auto';

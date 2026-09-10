@@ -13,7 +13,15 @@ describe('twPicker', () => {
     });
 
     describe('registerOutsideClick', () => {
-        test('registers a pointerdown listener on document', () => {
+        // Simulates a full pointerdown -> pointerup gesture on the registered root's handlers.
+        // dx/dy let a test simulate how far the pointer travelled in between, to distinguish a tap
+        // (no/small movement) from a scroll or drag (movement past the threshold).
+        function simulateGesture(root, downTarget, { upTarget = downTarget, dx = 0, dy = 0 } = {}) {
+            root.__twPickerPointerDown({ target: downTarget, clientX: 0, clientY: 0 });
+            root.__twPickerPointerUp({ target: upTarget, clientX: dx, clientY: dy });
+        }
+
+        test('registers pointerdown, pointerup, and pointercancel listeners on document', () => {
             const root = document.createElement('div');
             const dotnetRef = { invokeMethodAsync: vi.fn() };
 
@@ -22,7 +30,11 @@ describe('twPicker', () => {
             window.twPicker.registerOutsideClick(root, dotnetRef);
 
             expect(addSpy).toHaveBeenCalledWith('pointerdown', expect.any(Function));
-            expect(root.__twPickerHandler).toBeDefined();
+            expect(addSpy).toHaveBeenCalledWith('pointerup', expect.any(Function));
+            expect(addSpy).toHaveBeenCalledWith('pointercancel', expect.any(Function));
+            expect(root.__twPickerPointerDown).toBeDefined();
+            expect(root.__twPickerPointerUp).toBeDefined();
+            expect(root.__twPickerPointerCancel).toBeDefined();
 
             window.twPicker.unregisterOutsideClick(root);
         });
@@ -35,7 +47,7 @@ describe('twPicker', () => {
             expect(addSpy).not.toHaveBeenCalled();
         });
 
-        test('calls Close on dotnetRef when click is outside root', () => {
+        test('calls Close on dotnetRef when a tap (minimal movement) lands outside root', () => {
             const root = document.createElement('div');
             document.body.appendChild(root);
             const outside = document.createElement('span');
@@ -44,7 +56,7 @@ describe('twPicker', () => {
             const dotnetRef = { invokeMethodAsync: vi.fn() };
 
             window.twPicker.registerOutsideClick(root, dotnetRef);
-            root.__twPickerHandler({ target: outside });
+            simulateGesture(root, outside);
 
             expect(dotnetRef.invokeMethodAsync).toHaveBeenCalledWith('Close');
 
@@ -53,7 +65,7 @@ describe('twPicker', () => {
             document.body.removeChild(outside);
         });
 
-        test('does not call Close when click is inside root', () => {
+        test('does not call Close when the tap is inside root', () => {
             const root = document.createElement('div');
             const inner = document.createElement('span');
             root.appendChild(inner);
@@ -62,12 +74,71 @@ describe('twPicker', () => {
             const dotnetRef = { invokeMethodAsync: vi.fn() };
 
             window.twPicker.registerOutsideClick(root, dotnetRef);
-            root.__twPickerHandler({ target: inner });
+            simulateGesture(root, inner);
 
             expect(dotnetRef.invokeMethodAsync).not.toHaveBeenCalled();
 
             window.twPicker.unregisterOutsideClick(root);
             document.body.removeChild(root);
+        });
+
+        test('does not call Close when the pointer travels past the move threshold (a scroll/drag, not a tap)', () => {
+            // This is the mobile bug this whole gesture-tracking exists to fix: starting a scroll
+            // by touching outside the panel must not be treated as a dismissing tap, or there'd be
+            // no way to scroll the page to see a panel that's partially off-screen.
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            const outside = document.createElement('span');
+            document.body.appendChild(outside);
+
+            const dotnetRef = { invokeMethodAsync: vi.fn() };
+
+            window.twPicker.registerOutsideClick(root, dotnetRef);
+            simulateGesture(root, outside, { dx: 50, dy: 0 }); // moved 50px horizontally - a drag
+
+            expect(dotnetRef.invokeMethodAsync).not.toHaveBeenCalled();
+
+            window.twPicker.unregisterOutsideClick(root);
+            document.body.removeChild(root);
+            document.body.removeChild(outside);
+        });
+
+        test('does not call Close when only pointerup fires without a preceding pointerdown', () => {
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            const outside = document.createElement('span');
+            document.body.appendChild(outside);
+
+            const dotnetRef = { invokeMethodAsync: vi.fn() };
+
+            window.twPicker.registerOutsideClick(root, dotnetRef);
+            root.__twPickerPointerUp({ target: outside, clientX: 0, clientY: 0 });
+
+            expect(dotnetRef.invokeMethodAsync).not.toHaveBeenCalled();
+
+            window.twPicker.unregisterOutsideClick(root);
+            document.body.removeChild(root);
+            document.body.removeChild(outside);
+        });
+
+        test('pointercancel discards the in-progress gesture, so a later unrelated pointerup does not close', () => {
+            const root = document.createElement('div');
+            document.body.appendChild(root);
+            const outside = document.createElement('span');
+            document.body.appendChild(outside);
+
+            const dotnetRef = { invokeMethodAsync: vi.fn() };
+
+            window.twPicker.registerOutsideClick(root, dotnetRef);
+            root.__twPickerPointerDown({ target: outside, clientX: 0, clientY: 0 });
+            root.__twPickerPointerCancel();
+            root.__twPickerPointerUp({ target: outside, clientX: 0, clientY: 0 });
+
+            expect(dotnetRef.invokeMethodAsync).not.toHaveBeenCalled();
+
+            window.twPicker.unregisterOutsideClick(root);
+            document.body.removeChild(root);
+            document.body.removeChild(outside);
         });
 
         test('swallows errors thrown by invokeMethodAsync', () => {
@@ -84,7 +155,7 @@ describe('twPicker', () => {
 
             window.twPicker.registerOutsideClick(root, dotnetRef);
 
-            expect(() => root.__twPickerHandler({ target: outside })).not.toThrow();
+            expect(() => simulateGesture(root, outside)).not.toThrow();
             expect(consoleErrorSpy).toHaveBeenCalledWith('twPicker handler error', error);
 
             window.twPicker.unregisterOutsideClick(root);
@@ -179,21 +250,53 @@ describe('twPicker', () => {
             expect(panel.style.top).toBe('');
             expect(panel.style.bottom).toBe('');
         });
+
+        test('uses visualViewport.height instead of clientHeight when available (mobile keyboard open)', () => {
+            // clientHeight (the full layout viewport) says there's plenty of room below the trigger,
+            // but visualViewport.height (the actually-visible area once an on-screen keyboard has
+            // covered the bottom of the screen) says there isn't - the panel must flip upward based
+            // on the visible height, not the layout height, or it would clip behind the keyboard.
+            setViewport(1000, 800);
+            vi.stubGlobal('visualViewport', { height: 400 });
+            const panel = mockPanel({ left: 10, right: 200, top: 350, bottom: 450 });
+
+            window.twPicker.positionPanel(panel);
+
+            expect(panel.style.top).toBe('auto');
+            expect(panel.style.bottom).toBe('100%');
+
+            vi.unstubAllGlobals();
+        });
+
+        test('falls back to clientHeight when visualViewport is unavailable', () => {
+            setViewport(1000, 800);
+            const panel = mockPanel({ left: 10, right: 200, top: 700, bottom: 900 });
+
+            window.twPicker.positionPanel(panel);
+
+            // Same case as the "flips upward" test above - confirms the fallback path still works.
+            expect(panel.style.top).toBe('auto');
+            expect(panel.style.bottom).toBe('100%');
+        });
     });
 
     describe('unregisterOutsideClick', () => {
-        test('removes the registered pointerdown listener', () => {
+        test('removes the registered pointerdown, pointerup, and pointercancel listeners', () => {
             const root = document.createElement('div');
             const dotnetRef = { invokeMethodAsync: vi.fn() };
 
             window.twPicker.registerOutsideClick(root, dotnetRef);
 
             const removeSpy = vi.spyOn(document, 'removeEventListener');
-            const handler = root.__twPickerHandler;
+            const onPointerDown = root.__twPickerPointerDown;
+            const onPointerUp = root.__twPickerPointerUp;
+            const onPointerCancel = root.__twPickerPointerCancel;
 
             window.twPicker.unregisterOutsideClick(root);
 
-            expect(removeSpy).toHaveBeenCalledWith('pointerdown', handler);
+            expect(removeSpy).toHaveBeenCalledWith('pointerdown', onPointerDown);
+            expect(removeSpy).toHaveBeenCalledWith('pointerup', onPointerUp);
+            expect(removeSpy).toHaveBeenCalledWith('pointercancel', onPointerCancel);
         });
 
         test('does nothing when root is null', () => {
@@ -204,7 +307,7 @@ describe('twPicker', () => {
             expect(removeSpy).not.toHaveBeenCalled();
         });
 
-        test('does nothing when root has no registered handler', () => {
+        test('does nothing when root has no registered handlers', () => {
             const root = document.createElement('div');
             const removeSpy = vi.spyOn(document, 'removeEventListener');
 
@@ -213,7 +316,7 @@ describe('twPicker', () => {
             expect(removeSpy).not.toHaveBeenCalled();
         });
 
-        test('after unregister, handler is cleared from the element', () => {
+        test('after unregister, handlers are cleared from the element', () => {
             const root = document.createElement('div');
             document.body.appendChild(root);
             const outside = document.createElement('span');
@@ -224,7 +327,9 @@ describe('twPicker', () => {
             window.twPicker.registerOutsideClick(root, dotnetRef);
             window.twPicker.unregisterOutsideClick(root);
 
-            expect(root.__twPickerHandler).toBeUndefined();
+            expect(root.__twPickerPointerDown).toBeUndefined();
+            expect(root.__twPickerPointerUp).toBeUndefined();
+            expect(root.__twPickerPointerCancel).toBeUndefined();
 
             document.body.removeChild(root);
             document.body.removeChild(outside);
