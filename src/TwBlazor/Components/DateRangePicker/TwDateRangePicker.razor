@@ -76,17 +76,11 @@
                             @anchorMonth.ToString("MMMM yyyy") - @anchorMonth.AddMonths(1).ToString("MMMM yyyy")
                         </TwDatePickerHeader>
                         <TwDatePickerBody Class="@bodyClasses">
-                            @* Each TwDatePickerDayView has two root nodes (its optional month caption
-                               and the grid <table>) with nothing wrapping them - inside a flex row
-                               those would become two separate flex items instead of stacking together,
-                               so each grid gets its own single wrapping div here. flex-col (mobile) ->
-                               md:flex-row means both months always render, stacked below each other
-                               when they don't fit side by side rather than one being hidden. *@
                             <div class="flex flex-col md:flex-row gap-4">
-                                <div>
+                                <div class="md:flex-1 md:min-w-0">
                                     <TwDatePickerDayView Value="anchorMonth" Range="SelectedRange" MinDate="MinDate" MaxDate="MaxDate" ShowMonthCaption="true" ValueChanged="SelectRangeDateAsync" />
                                 </div>
-                                <div>
+                                <div class="md:flex-1 md:min-w-0">
                                     <TwDatePickerDayView Value="anchorMonth.AddMonths(1)" Range="SelectedRange" MinDate="MinDate" MaxDate="MaxDate" ShowMonthCaption="true" ValueChanged="SelectRangeDateAsync" />
                                 </div>
                             </div>
