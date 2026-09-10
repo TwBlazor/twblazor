@@ -28,11 +28,20 @@
                     // across it instead of appearing to stop dead at day 1 - even though these
                     // cells stay plain, non-interactive spans (selecting a day still requires
                     // navigating to the month that actually owns it).
-                    DateTime? thisDate = cell.HasValue
-                        ? (cell.Value.IsCurrentMonth
-                            ? new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified)
-                            : new DateTime(Value.AddMonths(-1).Year, Value.AddMonths(-1).Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified))
-                        : null;
+                    DateTime? thisDate;
+                    if (!cell.HasValue)
+                    {
+                        thisDate = null;
+                    }
+                    else if (cell.Value.IsCurrentMonth)
+                    {
+                        thisDate = new DateTime(Value.Year, Value.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified);
+                    }
+                    else
+                    {
+                        var prevMonth = Value.AddMonths(-1);
+                        thisDate = new DateTime(prevMonth.Year, prevMonth.Month, cell.Value.DayNumber, 0, 0, 0, DateTimeKind.Unspecified);
+                    }
                     var isRangeStart = isRangeMode && thisDate.HasValue && range.Key.HasValue && thisDate.Value.Date == range.Key.Value.Date;
                     var isRangeEnd = isRangeMode && thisDate.HasValue && range.Value.HasValue && thisDate.Value.Date == range.Value.Value.Date;
                     var isInRange = isRangeMode && thisDate.HasValue && IsStrictlyWithinRange(range, thisDate.Value);

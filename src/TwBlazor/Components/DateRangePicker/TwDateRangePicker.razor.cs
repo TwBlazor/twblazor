@@ -131,7 +131,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
-    private string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
+    private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
 
     private string panelWidthClasses => new ClassBuilder("w-67")
         .AddClass("md:w-138", view == DateRangePickerView.Day)
@@ -164,7 +164,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// the left-hand displayed month is already at (or before) it.
     /// </summary>
     private bool isPreviousMonthDisabled => MinDate.HasValue
-        && new DateTime(anchorMonth.Year, anchorMonth.Month, 1) <= new DateTime(MinDate.Value.Year, MinDate.Value.Month, 1);
+        && new DateTime(anchorMonth.Year, anchorMonth.Month, 1, 0, 0, 0, DateTimeKind.Unspecified) <= new DateTime(MinDate.Value.Year, MinDate.Value.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 
     /// <summary>
     /// Gets whether the Next month button should be disabled: <see cref="MaxDate"/> is set and the
@@ -176,7 +176,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
         {
             if (!MaxDate.HasValue) return false;
             var rightMonth = anchorMonth.AddMonths(1);
-            return new DateTime(rightMonth.Year, rightMonth.Month, 1) >= new DateTime(MaxDate.Value.Year, MaxDate.Value.Month, 1);
+            return new DateTime(rightMonth.Year, rightMonth.Month, 1, 0, 0, 0, DateTimeKind.Unspecified) >= new DateTime(MaxDate.Value.Year, MaxDate.Value.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
         }
     }
 
@@ -403,11 +403,19 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
         var current = SelectedRange;
         var completesRange = current.Key.HasValue && !current.Value.HasValue;
 
-        var next = completesRange
-            ? (day < current.Key!.Value
-                ? new KeyValuePair<DateTime?, DateTime?>(day, current.Key)
-                : new KeyValuePair<DateTime?, DateTime?>(current.Key, day))
-            : new KeyValuePair<DateTime?, DateTime?>(day, null);
+        KeyValuePair<DateTime?, DateTime?> next;
+        if (!completesRange)
+        {
+            next = new KeyValuePair<DateTime?, DateTime?>(day, null);
+        }
+        else if (day < current.Key!.Value)
+        {
+            next = new KeyValuePair<DateTime?, DateTime?>(day, current.Key);
+        }
+        else
+        {
+            next = new KeyValuePair<DateTime?, DateTime?>(current.Key, day);
+        }
 
         SelectedRange = next;
         Value = FormatRange(next);
