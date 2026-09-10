@@ -40,7 +40,7 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         Assert.Equal(5, rangeFromCallback!.Value.Key!.Value.Day);
         Assert.Equal(15, rangeFromCallback.Value.Value!.Value.Day);
         Assert.NotNull(valueFromCallback);
-        Assert.Contains(" to ", valueFromCallback);
+        Assert.Contains(" - ", valueFromCallback); // default RangeSeparator - locale-neutral, no translation needed
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         );
 
         // Act
-        cut.Find("input").Change("05/11/2025 to 15/11/2025");
+        cut.Find("input").Change("05/11/2025 - 15/11/2025");
 
         // Assert
         Assert.NotNull(rangeFromCallback);
@@ -158,6 +158,119 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         Assert.False(callbackInvoked);
         Assert.True(cut.Instance.Invalid);
         Assert.Equal("Enter a valid date range", cut.Instance.ErrorMessage);
+    }
+
+    [Fact]
+    public void RangeSeparator_DefaultsToDash_NotToWord()
+    {
+        // Arrange & Act — locale-neutral by default: a symbol needs no translation the way an
+        // English word like "to" would.
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+        );
+
+        // Assert
+        Assert.Equal("05/11/2025 - 15/11/2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void CustomRangeSeparator_IsReflectedInDisplayedValue()
+    {
+        // Arrange & Act — whatever separator a consumer overrides RangeSeparator to must show up
+        // in the rendered value, not just the default " - ".
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.RangeSeparator, " | ")
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+        );
+
+        // Assert
+        Assert.Equal("05/11/2025 | 15/11/2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void EffectivePlaceholder_UsesFormatAndDefaultSeparator()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwDateRangePicker>();
+
+        // Assert
+        Assert.Equal("dd/mm/yyyy - dd/mm/yyyy", cut.Find("input").GetAttribute("placeholder"));
+    }
+
+    [Fact]
+    public void CustomFormat_AppliesToBothStartAndEndDate()
+    {
+        // Arrange — Format is passed straight through to both dates, the same way TwDatePicker
+        // uses it for its single date.
+        KeyValuePair<DateTime?, DateTime?>? rangeFromCallback = null;
+
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.Format, "MM/dd/yyyy")
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, r => rangeFromCallback = r))
+        );
+
+        // Act
+        cut.Find("input").Change("12/24/2026 - 01/05/2027");
+
+        // Assert
+        Assert.NotNull(rangeFromCallback);
+        Assert.Equal(new DateTime(2026, 12, 24), rangeFromCallback!.Value.Key);
+        Assert.Equal(new DateTime(2027, 1, 5), rangeFromCallback.Value.Value);
+    }
+
+    [Fact]
+    public void CustomFormat_DisplaysBothDatesInThatPattern()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.Format, "MM/dd/yyyy")
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2026, 12, 24), new DateTime(2027, 1, 5)))
+        );
+
+        // Assert
+        Assert.Equal("12/24/2026 - 01/05/2027", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void DashFormat_WithDefaultSeparator_StillParsesUnambiguously()
+    {
+        // Arrange — the default RangeSeparator (" - ", with surrounding spaces) doesn't collide
+        // with a Format that itself uses "-" without spaces around it (e.g. "dd-MM-yyyy"), so
+        // typed text still splits into exactly two parts.
+        KeyValuePair<DateTime?, DateTime?>? rangeFromCallback = null;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.Format, "dd-MM-yyyy")
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, r => rangeFromCallback = r))
+        );
+
+        // Act
+        cut.Find("input").Change("05-11-2025 - 15-11-2025");
+
+        // Assert
+        Assert.NotNull(rangeFromCallback);
+        Assert.Equal(new DateTime(2025, 11, 5), rangeFromCallback!.Value.Key);
+        Assert.Equal(new DateTime(2025, 11, 15), rangeFromCallback.Value.Value);
+    }
+
+    [Fact]
+    public void FormatEmbeddingSpacedDash_CollidesWithDefaultSeparator()
+    {
+        // Arrange — documents the real remaining tradeoff noted on RangeSeparator's summary: a
+        // Format that itself embeds " - " (spaces around a dash, e.g. "dd - MM - yyyy") does
+        // collide with the default separator, splitting a correctly-typed value into more than
+        // two parts. An everyday dash format without spaces (see the test above) does not.
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.Format, "dd - MM - yyyy")
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, _ => callbackInvoked = true))
+        );
+
+        // Act
+        cut.Find("input").Change("05 - 11 - 2025 - 15 - 11 - 2025");
+
+        // Assert
+        Assert.False(callbackInvoked);
+        Assert.True(cut.Instance.Invalid);
     }
 
     [Fact]
@@ -292,7 +405,7 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         );
 
         // Act
-        cut.Find("input").Change("01/11/2025 to 15/11/2025");
+        cut.Find("input").Change("01/11/2025 - 15/11/2025");
 
         // Assert
         Assert.False(callbackInvoked);

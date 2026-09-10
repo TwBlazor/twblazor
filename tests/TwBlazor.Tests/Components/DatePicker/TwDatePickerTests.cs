@@ -114,6 +114,54 @@ public class TwDatePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void CustomUsStyleFormat_DisplaysAndParsesMonthFirst()
+    {
+        // Arrange — Format is a plain .NET custom date format string, so any pattern works, e.g.
+        // US-style month-first dates.
+        DateTime? selectedFromCallback = null;
+        string? valueFromCallback = null;
+
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2026, 12, 24))
+            .Add(x => x.Format, "MM/dd/yyyy")
+            .Add(x => x.SelectedDateChanged, EventCallback.Factory.Create<DateTime>(this, d => selectedFromCallback = d))
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<string>(this, v => valueFromCallback = v))
+        );
+
+        // Assert initial display
+        Assert.Equal("12/24/2026", cut.Find("input").GetAttribute("value"));
+
+        // Act — type a different date in the same US pattern
+        cut.Find("input").Change("01/05/2027");
+
+        // Assert
+        Assert.Equal(new DateTime(2027, 1, 5).Date, selectedFromCallback!.Value.Date);
+        Assert.Equal("01/05/2027", valueFromCallback);
+    }
+
+    [Fact]
+    public void CustomDashSeparatedFormat_DisplaysAndParses()
+    {
+        // Arrange — a dash-separated pattern, e.g. for locales that don't use "/".
+        DateTime? selectedFromCallback = null;
+
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 12, 20))
+            .Add(x => x.Format, "dd-MM-yyyy")
+            .Add(x => x.SelectedDateChanged, EventCallback.Factory.Create<DateTime>(this, d => selectedFromCallback = d))
+        );
+
+        // Assert initial display
+        Assert.Equal("20-12-2025", cut.Find("input").GetAttribute("value"));
+
+        // Act
+        cut.Find("input").Change("05-01-2026");
+
+        // Assert
+        Assert.Equal(new DateTime(2026, 1, 5).Date, selectedFromCallback!.Value.Date);
+    }
+
+    [Fact]
     public void TypingInvalidDate_InInput_DoesNotSilentlySelectToday_AndShowsError()
     {
         // Arrange

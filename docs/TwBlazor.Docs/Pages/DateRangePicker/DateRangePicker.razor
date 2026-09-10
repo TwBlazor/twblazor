@@ -8,10 +8,20 @@
 
 <PageContainer Title="TwDateRangePicker" ThemeType="typeof(TwDatePickerTheme)">
     <PageCard Title="Basic Date Range Picker">
-        <Description>Bind-SelectedRange. Select a start date, then an end date - the range highlights across both calendar months and survives month navigation. Shares its theme (<code>TwDatePickerTheme</code>) with <a href="/date-picker" class="underline">TwDatePicker</a>.</Description>
+        <Description>Bind <code>SelectedRange</code> for a <code>KeyValuePair&lt;DateTime?, DateTime?&gt;</code> value (<code>Key</code> = start, <code>Value</code> = end). Select a start date, then an end date - the range highlights across both calendar months and survives month navigation. Shares its theme (<code>TwDatePickerTheme</code>) with <a href="/date-picker" class="underline">TwDatePicker</a>.</Description>
         <CodeExample Name="DateRangePickerBasic" CSharpName="DateRangePickerBasicCode">
             <div class="space-y-4">
+                <p><b>@@bind-SelectedRange:</b> @(SelectedRange.Key?.ToShortDateString() ?? "-") to @(SelectedRange.Value?.ToShortDateString() ?? "-")</p>
                 <TwDateRangePicker Id="basic-daterangepicker" @bind-SelectedRange="SelectedRange" Label="Select a date range" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Format">
+        <Description><code>Format</code> is a plain .NET custom date format string applied identically to both the start and end date - the same parameter <a href="/date-picker" class="underline">TwDatePicker</a> uses. The separator between the two dates defaults to <code>" - "</code> and is configurable via <code>RangeSeparator</code>.</Description>
+        <CodeExample Name="DateRangePickerCustomFormat" CSharpName="DateRangePickerBasicCode">
+            <div class="space-y-4">
+                <TwDateRangePicker Id="us-format-daterangepicker" @bind-SelectedRange="SelectedRange" Format="MM/dd/yyyy" Label="US format (MM/dd/yyyy)" Class="mt-3" />
             </div>
         </CodeExample>
     </PageCard>

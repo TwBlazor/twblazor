@@ -91,17 +91,22 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
 
     /// <summary>
-    /// The string format used to display each date in <see cref="SelectedRange"/>, default value
-    /// is 'dd/MM/yyyy'.
+    /// The .NET custom date format string used to display and parse each date in
+    /// <see cref="SelectedRange"/>, applied identically to both the start and the end date -
+    /// default value is 'dd/MM/yyyy'. Any valid pattern works here, e.g. 'MM/dd/yyyy' for US-style
+    /// dates or 'dd-MM-yyyy' for a dash-separated one.
     /// </summary>
     [Parameter] public string Format { get; set; } = "dd/MM/yyyy";
 
     /// <summary>
     /// The separator inserted between the two dates in <see cref="Value"/>, default value is
-    /// " to ". Chosen instead of a hyphen/dash so it can't collide with a <see cref="Format"/>
-    /// that itself uses "-" as a date separator (e.g. "dd-MM-yyyy").
+    /// " - ": a locale-neutral symbol rather than a word like "to" that would need translating for
+    /// non-English users. The surrounding spaces also mean an everyday dash-containing
+    /// <see cref="Format"/> like "dd-MM-yyyy" (no spaces around its own "-") doesn't collide with
+    /// it when typed text is split back apart - only a Format that itself embeds " - " (spaces
+    /// around a dash) would, so avoid that specific combination if you override either parameter.
     /// </summary>
-    [Parameter] public string RangeSeparator { get; set; } = " to ";
+    [Parameter] public string RangeSeparator { get; set; } = " - ";
 
     /// <summary>
     /// The earliest selectable date (inclusive). Days before this are disabled in the calendar and

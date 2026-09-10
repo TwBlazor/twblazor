@@ -19,6 +19,16 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Custom Format">
+        <Description><code>Format</code> accepts any .NET custom date format string and is used for both display and for parsing what's typed - the placeholder updates to match automatically. Use it for US-style month-first dates, dash-separated dates, or any other pattern your locale needs.</Description>
+        <CodeExample Name="DatePickerCustomFormat" CSharpName="DatePickerBasicCode">
+            <div class="space-y-4">
+                <TwDatePicker Id="us-format-datepicker" @bind-SelectedDate="SelectedDate" Format="MM/dd/yyyy" Label="US format (MM/dd/yyyy)" Class="mt-3" />
+                <TwDatePicker Id="dash-format-datepicker" @bind-SelectedDate="SelectedDate" Format="dd-MM-yyyy" Label="Dash format (dd-MM-yyyy)" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Input Variants">
         <Description>The DatePicker supports different visual variants for the input field.</Description>
 
