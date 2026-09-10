@@ -143,6 +143,44 @@ public class TwDateRangePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TypingReversedRangeText_SwapsStartAndEnd()
+    {
+        // Arrange — the later date typed first must still end up as the end (Value), not the start.
+        KeyValuePair<DateTime?, DateTime?>? rangeFromCallback = null;
+
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, r => rangeFromCallback = r))
+        );
+
+        // Act
+        cut.Find("input").Change("15/11/2025 - 05/11/2025");
+
+        // Assert
+        Assert.NotNull(rangeFromCallback);
+        Assert.Equal(new DateTime(2025, 11, 5), rangeFromCallback!.Value.Key);
+        Assert.Equal(new DateTime(2025, 11, 15), rangeFromCallback.Value.Value);
+    }
+
+    [Fact]
+    public void TypingDateAfterMaxDate_ShowsError_DoesNotSelect()
+    {
+        // Arrange — violates only MaxDate (both dates are otherwise within/at MinDate).
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.MinDate, new DateTime(2025, 11, 1))
+            .Add(x => x.MaxDate, new DateTime(2025, 11, 20))
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, _ => callbackInvoked = true))
+        );
+
+        // Act
+        cut.Find("input").Change("05/11/2025 - 25/11/2025");
+
+        // Assert
+        Assert.False(callbackInvoked);
+        Assert.True(cut.Instance.Invalid);
+    }
+
+    [Fact]
     public void TypingInvalidRangeText_ShowsError_DoesNotSelect()
     {
         // Arrange
@@ -195,6 +233,18 @@ public class TwDateRangePickerTests : TwBlazorTestBase
 
         // Assert
         Assert.Equal("dd/mm/yyyy - dd/mm/yyyy", cut.Find("input").GetAttribute("placeholder"));
+    }
+
+    [Fact]
+    public void ExplicitPlaceholder_OverridesTheComputedDefault()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.Placeholder, "Pick a trip")
+        );
+
+        // Assert
+        Assert.Equal("Pick a trip", cut.Find("input").GetAttribute("placeholder"));
     }
 
     [Fact]
@@ -410,6 +460,196 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         // Assert
         Assert.False(callbackInvoked);
         Assert.True(cut.Instance.Invalid);
+    }
+
+    [Fact]
+    public void ClickingNextMonth_WhenNotDisabled_AdvancesBothCalendars()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.next-btn").Click();
+
+        // Assert
+        Assert.Contains("December 2025", cut.Markup);
+        Assert.Contains("January 2026", cut.Markup);
+    }
+
+    [Fact]
+    public void ClickingPreviousMonth_WhenNotDisabled_MovesBothCalendarsBack()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.prev-btn").Click();
+
+        // Assert
+        Assert.Contains("October 2025", cut.Markup);
+        Assert.Contains("November 2025", cut.Markup);
+    }
+
+    [Fact]
+    public void NextMonthButton_IsDisabled_WhenRightCalendarIsMaxDateMonth()
+    {
+        // Arrange — the right-hand calendar shows anchorMonth + 1, so with MaxDate one month after
+        // the range start, the Next button should already be disabled and not move anything.
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.MaxDate, new DateTime(2025, 12, 1))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+        cut.Find("input").Focus();
+
+        // Assert
+        Assert.True(cut.Find(".next-btn").HasAttribute("disabled"));
+
+        // Act — clicking a disabled button should not move the displayed months.
+        cut.Find(".next-btn").Click();
+        Assert.Contains("November 2025", cut.Markup);
+    }
+
+    [Fact]
+    public void PreviousDecadeButton_MovesDisplayedDecadeBackTenYears()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+        cut.Find("button.prev-btn").Click();
+
+        // Assert
+        var yearButtons = cut.FindAll("button.year");
+        Assert.Equal("2015", yearButtons[0].TextContent.Trim());
+    }
+
+    [Fact]
+    public void NextYearButton_MovesDisplayedYearForwardOne()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.next-btn").Click();
+
+        // Assert
+        Assert.Contains("2026", cut.Markup);
+    }
+
+    [Fact]
+    public void SelectingMonth_NavigatesToDayView_ForThatMonth()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        var monthButton = cut.FindAll("button.month").First(b => b.TextContent.Trim() == "Mar");
+        monthButton.Click();
+
+        // Assert — back to Day view, now showing March 2025.
+        Assert.Contains("datepicker-grid", cut.Markup);
+        Assert.Contains("March 2025", cut.Markup);
+    }
+
+    [Fact]
+    public void SelectingYear_NavigatesToMonthView_ForThatYear()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 1), null))
+            .Add(x => x.SelectedRangeChanged, NoOpRangeCallback(this))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+        var yearButton = cut.FindAll("button.year").First(b => b.TextContent.Trim() == "2027");
+        yearButton.Click();
+
+        // Assert
+        Assert.Contains("months-of-the-year", cut.Markup);
+        Assert.Contains("2027", cut.Markup);
+    }
+
+    [Fact]
+    public void TypingRange_WhenReadOnly_DoesNothing()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.ReadOnly, true)
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, _ => callbackInvoked = true))
+        );
+
+        // Act
+        cut.Find("input").Change("05/11/2025 - 15/11/2025");
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TypingWhitespace_DoesNothing()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRangeChanged, EventCallback.Factory.Create<KeyValuePair<DateTime?, DateTime?>>(this, _ => callbackInvoked = true))
+        );
+
+        // Act
+        cut.Find("input").Change("   ");
+
+        // Assert
+        Assert.False(callbackInvoked);
+        Assert.False(cut.Instance.Invalid);
+    }
+
+    [Fact]
+    public void TypingValidRangeText_WhilePanelOpen_ClosesPanelAndInvokesValueChanged()
+    {
+        // Arrange — focusing first opens the panel, so typing a valid value must also release the
+        // focus trap and close it, in addition to firing ValueChanged.
+        string? valueFromCallback = null;
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<string>(this, v => valueFromCallback = v))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        Assert.Contains("datepicker-grid", cut.Markup);
+
+        cut.Find("input").Change("05/11/2025 - 15/11/2025");
+
+        // Assert
+        Assert.DoesNotContain("datepicker-grid", cut.Markup);
+        Assert.Equal("05/11/2025 - 15/11/2025", valueFromCallback);
     }
 
     [Fact]

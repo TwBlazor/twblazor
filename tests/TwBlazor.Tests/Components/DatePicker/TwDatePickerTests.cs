@@ -432,6 +432,84 @@ public class TwDatePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void PreviousDecadeButton_MovesDisplayedDecadeBackTenYears()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 11, 1))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+        cut.Find("button.prev-btn").Click();
+
+        // Assert
+        var yearButtons = cut.FindAll("button.year");
+        Assert.Equal("2015", yearButtons[0].TextContent.Trim());
+    }
+
+    [Fact]
+    public void PreviousYearButton_MovesDisplayedYearBackOne()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 11, 1))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.prev-btn").Click();
+
+        // Assert
+        Assert.Contains("2024", cut.Markup);
+    }
+
+    [Fact]
+    public void SelectingYear_NavigatesToMonthView_ForThatYear()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 11, 1))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+        cut.Find("button.view-switch").Click(); // Month -> Year
+        var yearButton = cut.FindAll("button.year").First(b => b.TextContent.Trim() == "2027");
+        yearButton.Click();
+
+        // Assert — switched to Month view, now showing 2027's months.
+        Assert.Contains("months-of-the-year", cut.Markup);
+        Assert.Contains("2027", cut.Markup);
+    }
+
+    [Fact]
+    public void Today_UsesUtcNow_WhenSelectedDateKindIsUtc()
+    {
+        // Arrange — SelectedDate.Kind determines whether "today" is computed from DateTime.UtcNow
+        // or DateTime.Now; most other tests use an Unspecified-kind date, so this covers the Utc
+        // branch specifically. The displayed year (from anchorDate, seeded from SelectedDate) must
+        // match today's real UTC year for the current-month indicator to be able to appear at all.
+        var utcToday = DateTime.UtcNow.Date;
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, DateTime.SpecifyKind(new DateTime(utcToday.Year, 1, 1), DateTimeKind.Utc))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.Find("button.view-switch").Click(); // Day -> Month
+
+        // Assert — the month matching today's actual UTC month/year is marked current.
+        var monthButtons = cut.FindAll("button.month");
+        var currentMonthButton = monthButtons[utcToday.Month - 1];
+        Assert.Equal("date", currentMonthButton.GetAttribute("aria-current"));
+    }
+
+    [Fact]
     public async Task Close_UnregistersJS_And_HidesPopup()
     {
         // Arrange
