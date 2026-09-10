@@ -1,0 +1,66 @@
+@page "/date-range-picker"
+
+<PageTitle>TwDateRangePicker | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwDateRangePicker is a Blazor date range picker component with a two-month calendar popup, two way binding, min/max date constraints and input variants." />
+    <link rel="canonical" href="https://twblazor.com/date-range-picker" />
+</HeadContent>
+
+<PageContainer Title="TwDateRangePicker" ThemeType="typeof(TwDatePickerTheme)">
+    <PageCard Title="Basic Date Range Picker">
+        <Description>Bind <code>SelectedRange</code> for a <code>KeyValuePair&lt;DateTime?, DateTime?&gt;</code> value (<code>Key</code> = start, <code>Value</code> = end). Select a start date, then an end date - the range highlights across both calendar months and survives month navigation. Shares its theme (<code>TwDatePickerTheme</code>) with <a href="/date-picker" class="underline">TwDatePicker</a>.</Description>
+        <CodeExample Name="DateRangePickerBasic" CSharpName="DateRangePickerBasicCode">
+            <div class="space-y-4">
+                <p><b>@@bind-SelectedRange:</b> @(SelectedRange.Key?.ToShortDateString() ?? "-") to @(SelectedRange.Value?.ToShortDateString() ?? "-")</p>
+                <TwDateRangePicker Id="basic-daterangepicker" @bind-SelectedRange="SelectedRange" Label="Select a date range" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Format">
+        <Description><code>Format</code> is a plain .NET custom date format string applied identically to both the start and end date - the same parameter <a href="/date-picker" class="underline">TwDatePicker</a> uses. The separator between the two dates defaults to <code>" - "</code> and is configurable via <code>RangeSeparator</code>.</Description>
+        <CodeExample Name="DateRangePickerCustomFormat" CSharpName="DateRangePickerBasicCode">
+            <div class="space-y-4">
+                <TwDateRangePicker Id="us-format-daterangepicker" @bind-SelectedRange="SelectedRange" Format="MM/dd/yyyy" Label="US format (MM/dd/yyyy)" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Min and Max Date">
+        <Description>Use the <code>MinDate</code> and <code>MaxDate</code> properties to restrict the selectable range. Out-of-bounds days render disabled and the month navigation arrows stop at the boundary.</Description>
+        <CodeExample Name="DateRangePickerMinMax" CSharpName="DateRangePickerMinMaxCode">
+            <TwDateRangePicker Id="bounded-daterangepicker" @bind-SelectedRange="BoundedRange" MinDate="MinDate" MaxDate="MaxDate" Label="Select within the next 30 days" Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Input Variants">
+        <Description>The date range picker supports the same visual variants as the other text inputs.</Description>
+        <CodeExample Name="DateRangePickerVariants" CSharpName="DateRangePickerBasicCode">
+            <div class="space-y-4">
+                <TwDateRangePicker Id="default-variant" @bind-SelectedRange="SelectedRange" Label="Default Variant" Variant="InputVariant.Default" />
+                <TwDateRangePicker Id="outlined-variant" @bind-SelectedRange="SelectedRange" Label="Outlined Variant" Variant="InputVariant.Outlined" />
+                <TwDateRangePicker Id="filled-variant" @bind-SelectedRange="SelectedRange" Label="Filled Variant" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled and Readonly Date Range Picker">
+        <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the date range picker.</Description>
+        <CodeExample Name="DateRangePickerReadonlyDisabled" CSharpName="DateRangePickerBasicCode">
+            <TwDateRangePicker Id="disabled-daterangepicker" @bind-SelectedRange="SelectedRange" Label="Disabled Date Range Picker" Disabled Class="mt-3" />
+            <TwDateRangePicker Id="readonly-daterangepicker" @bind-SelectedRange="SelectedRange" Label="Readonly Date Range Picker" ReadOnly Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample DateRangePickerBasicCode
+    public KeyValuePair<DateTime?, DateTime?> SelectedRange { get; set; }
+    #endregion
+
+    #region CodeExample DateRangePickerMinMaxCode
+    public KeyValuePair<DateTime?, DateTime?> BoundedRange { get; set; }
+    public DateTime MinDate { get; set; } = DateTime.Today;
+    public DateTime MaxDate { get; set; } = DateTime.Today.AddDays(30);
+    #endregion
+}

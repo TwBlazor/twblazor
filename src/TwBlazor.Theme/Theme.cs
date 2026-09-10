@@ -454,9 +454,12 @@ public static class Theme
                 {
                     Header = $"{neutralSurface.Elevated} text-center font-medium {roundedTopLg} border-b {neutralSurface.BorderStrong}",
                     WeekdaysHeader = $"{position.Center} {text.Medium.Primary} {darkText.Light.Primary} h-8 flex text-xs font-semibold tracking-wide ",
-                    Base = $"absolute {pointerCursor} border-0 text-center text-sm py-2 font-medium transition-colors duration-200 top-full left-0 flex flex-row md:flex-row items-center z-50 mt-1 {neutralSurface.Elevated} {compactPadding} border {neutralSurface.BorderStrong}",
+                    Base = $"absolute {pointerCursor} border-0 text-center text-sm font-medium transition-colors duration-200 top-full left-0 flex flex-row md:flex-row items-center z-50 mt-1 {neutralSurface.Elevated} px-2 pb-2 border {neutralSurface.BorderStrong}",
                     ActiveClass = "bg-purple-50 dark:bg-purple-500/30",
-                    ButtonClass = $"{compactPadding} h-8 flex items-center w-full justify-center"
+                    ButtonClass = $"{compactPadding} h-8 flex items-center w-full justify-center",
+                    RangeClass = "bg-purple-100 dark:bg-purple-500/20",
+                    RangeMonthCaptionClass = $"text-center {text.Medium.Primary} {darkText.Light.Primary} text-sm font-semibold mt-2",
+                    PrevMonthClass = "text-gray-400 dark:text-gray-600"
                 },
                 new TwGroupsTheme
                 {

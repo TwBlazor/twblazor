@@ -43,6 +43,18 @@ public partial class TwDatePickerHeader : TwBlazorComponentBase
     /// </summary>
     [Parameter] public string NextLabel { get; set; } = "Next";
 
+    /// <summary>
+    /// Disables the "previous" navigation button, e.g. once a picker's <c>MinDate</c> boundary is
+    /// reached. Defaults to <see langword="false"/> so existing callers are unaffected.
+    /// </summary>
+    [Parameter] public bool PreviousDisabled { get; set; }
+
+    /// <summary>
+    /// Disables the "next" navigation button, e.g. once a picker's <c>MaxDate</c> boundary is
+    /// reached. Defaults to <see langword="false"/> so existing callers are unaffected.
+    /// </summary>
+    [Parameter] public bool NextDisabled { get; set; }
+
     private string classes => new ClassBuilder("datepicker-header")
         .AddClass(theme.Header).Build();
 

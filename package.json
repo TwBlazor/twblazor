@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/TwBlazor/TwBlazor#readme",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.10",
-    "jsdom": "^29.1.0",
-    "vitest": "^4.1.5"
+    "@vitest/coverage-v8": "^5.0.0",
+    "jsdom": "^30.0.1",
+    "vitest": "^5.0.0"
   }
 }

@@ -261,6 +261,7 @@ public class TwDatePickerDayViewTests : TwBlazorTestBase
         var value = new DateTime(today.Year, today.Month, selectedDay, 0, 0, 0, DateTimeKind.Unspecified);
         var cut = TestContext.Render<TwDatePickerDayView>(p => p
             .Add(x => x.Value, value)
+            .Add(x => x.SelectedDate, value)
             .Add(x => x.ValueChanged, NoOpCallback(this))
         );
 
@@ -369,5 +370,215 @@ public class TwDatePickerDayViewTests : TwBlazorTestBase
         // Act & Assert — should not throw
         await cut.Instance.DisposeAsync();
         Assert.NotNull(cut.Instance);
+    }
+
+    [Fact]
+    public void RangeEndpoints_GetSelectedStyling_AndRangeSpecificAriaLabels()
+    {
+        // Arrange
+        var value = new DateTime(2025, 11, 15);
+        var range = new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 10), new DateTime(2025, 11, 20));
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, value)
+            .Add(x => x.Range, range)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var startButton = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "10");
+        var endButton = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "20");
+
+        // Assert
+        Assert.Contains(Theme.Colors.LightBackground.Light.Primary, startButton.GetAttribute("class"));
+        Assert.Equal("Start of selected range, November 10, 2025", startButton.GetAttribute("aria-label"));
+        Assert.Equal("true", startButton.GetAttribute("aria-pressed"));
+
+        Assert.Contains(Theme.Colors.LightBackground.Light.Primary, endButton.GetAttribute("class"));
+        Assert.Equal("End of selected range, November 20, 2025", endButton.GetAttribute("aria-label"));
+        Assert.Equal("true", endButton.GetAttribute("aria-pressed"));
+    }
+
+    [Fact]
+    public void DayStrictlyBetweenRangeEndpoints_GetsRangeClass_AndInRangeAriaLabel()
+    {
+        // Arrange
+        var value = new DateTime(2025, 11, 15);
+        var range = new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 10), new DateTime(2025, 11, 20));
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, value)
+            .Add(x => x.Range, range)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var midButton = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "15");
+
+        // Assert
+        Assert.Contains(datePickerTheme.RangeClass, midButton.GetAttribute("class"));
+        Assert.Equal("In selected range, November 15, 2025", midButton.GetAttribute("aria-label"));
+        Assert.DoesNotContain(Theme.Colors.LightBackground.Light.Primary, midButton.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void ShowMonthCaption_RendersMonthYearCaption_WhenTrue()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act — the grid's <table aria-label> already always contains "MMMM yyyy" (see the false
+        // case below), so assert on the dedicated caption element/class instead of the raw text.
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, new DateTime(2025, 11, 15))
+            .Add(x => x.ShowMonthCaption, true)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        // Assert
+        Assert.Contains(datePickerTheme.RangeMonthCaptionClass, cut.Markup);
+    }
+
+    [Fact]
+    public void ShowMonthCaption_OmitsCaption_WhenFalse()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act — false is also the default, matching TwDatePicker's existing single-grid usage.
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, new DateTime(2025, 11, 15))
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        // Assert
+        Assert.DoesNotContain(datePickerTheme.RangeMonthCaptionClass, cut.Markup);
+    }
+
+    [Fact]
+    public void DayBeforeMinDate_RendersAriaDisabled_AndClickIsNoOp()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, new DateTime(2025, 11, 15))
+            .Add(x => x.MinDate, new DateTime(2025, 11, 10))
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<DateTime>(this, _ => callbackInvoked = true))
+        );
+
+        var day5 = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "5");
+
+        // Act
+        Assert.Equal("true", day5.GetAttribute("aria-disabled"));
+        day5.Click();
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void DayAfterMaxDate_RendersAriaDisabled_AndClickIsNoOp()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, new DateTime(2025, 11, 15))
+            .Add(x => x.MaxDate, new DateTime(2025, 11, 20))
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<DateTime>(this, _ => callbackInvoked = true))
+        );
+
+        var day25 = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "25");
+
+        // Act
+        Assert.Equal("true", day25.GetAttribute("aria-disabled"));
+        day25.Click();
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void RangeSpanningMonthBoundary_HighlightsPreviousMonthLeadInDays()
+    {
+        // Arrange — Nov 1 2025 is a Saturday, so the lead-in cells before it are Oct 26-31.
+        // A range from Oct 28 to Nov 2 should tint the in-range lead-in days (29, 30, 31) even
+        // though they're plain, non-interactive spans belonging to the previous month.
+        var value = new DateTime(2025, 11, 1);
+        var range = new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 10, 28), new DateTime(2025, 11, 2));
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, value)
+            .Add(x => x.Range, range)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var oct29 = cut.FindAll("span.day.prev").First(s => s.TextContent.Trim() == "29");
+
+        // Assert
+        Assert.Contains(datePickerTheme.RangeClass, oct29.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void RangeSpanningMonthBoundary_HighlightsPreviousMonthStartDay()
+    {
+        // Arrange — the range's own start date (Oct 28) falls among the lead-in days too, and
+        // should be tinted the same way as any other in-range lead-in day.
+        var value = new DateTime(2025, 11, 1);
+        var range = new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 10, 28), new DateTime(2025, 11, 2));
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, value)
+            .Add(x => x.Range, range)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var oct28 = cut.FindAll("span.day.prev").First(s => s.TextContent.Trim() == "28");
+
+        // Assert
+        Assert.Contains(datePickerTheme.RangeClass, oct28.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void LeadInDayOutsideRange_IsNotHighlighted()
+    {
+        // Arrange — Oct 26 is a lead-in day before the range starts (Oct 28), so it should keep
+        // its normal muted styling with no range tint.
+        var value = new DateTime(2025, 11, 1);
+        var range = new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 10, 28), new DateTime(2025, 11, 2));
+        var datePickerTheme = Theme.Components.Require<TwBlazor.Configuration.Components.TwDatePickerTheme>();
+
+        // Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, value)
+            .Add(x => x.Range, range)
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var oct26 = cut.FindAll("span.day.prev").First(s => s.TextContent.Trim() == "26");
+
+        // Assert
+        Assert.DoesNotContain(datePickerTheme.RangeClass, oct26.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void DayWithinMinAndMaxDate_IsNotDisabled()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwDatePickerDayView>(p => p
+            .Add(x => x.Value, new DateTime(2025, 11, 15))
+            .Add(x => x.MinDate, new DateTime(2025, 11, 10))
+            .Add(x => x.MaxDate, new DateTime(2025, 11, 20))
+            .Add(x => x.ValueChanged, NoOpCallback(this))
+        );
+
+        var day15 = cut.FindAll("button.day").First(b => b.TextContent.Trim() == "15");
+
+        // Assert
+        Assert.Null(day15.GetAttribute("aria-disabled"));
     }
 }

@@ -33,52 +33,52 @@
     {
         <div class="@datepickerContainerClasses" role="dialog" aria-label="Choose date" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
             <div class="w-67">
-                @switch (view)
+                @if (view == DatePickerView.Year)
                 {
-                    case DatePickerView.Year:
-                        <TwDatePickerHeader OnPreviousClick="PreviousDecade" OnNextClick="NextDecade" PreviousLabel="Previous decade" NextLabel="Next decade">
-                            @SelectedDate.ToString("yyyy")
-                        </TwDatePickerHeader>
-                        <TwDatePickerBody Class="@bodyClasses">
-                            <div class="years-of-the-decade mt-2 grid w-full grid-cols-5 justify-items-stretch gap-1">
-                                @foreach (var year in Enumerable.Range(SelectedDate.Year, SelectedDate.Year + 10).Take(10))
-                                {
-                                    var yearDate = new DateTime(year, SelectedDate.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
-                                    var isSelectedYear = year == SelectedDate.Year;
-                                    <button type="button" class="@GetButtonClasses("year", isSelectedYear)" aria-pressed="@(isSelectedYear ? "true" : "false")" @onclick="@(() => SelectYear(yearDate))">
-                                        @yearDate.ToString("yyyy")
-                                    </button>
-                                }
-                            </div>
-                        </TwDatePickerBody>
-                        break;
-
-                    case DatePickerView.Month:
-                        <TwDatePickerHeader OnPreviousClick="PreviousYear" OnNextClick="NextYear" OnTitleClick="@(() => SwitchView(DatePickerView.Year))" PreviousLabel="Previous year" NextLabel="Next year">
-                            @SelectedDate.ToString("yyyy")
-                        </TwDatePickerHeader>
-                        <TwDatePickerBody Class="@bodyClasses">
-                            <div class="months-of-the-year mt-2 grid w-full grid-cols-6 justify-items-stretch gap-1">
-                                @foreach (var month in Enumerable.Range(1, 12))
-                                {
-                                    var monthDate = new DateTime(SelectedDate.Year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
-                                    var isSelectedMonth = month == SelectedDate.Month;
-                                    <button type="button" class="@GetButtonClasses("month", isSelectedMonth)" aria-pressed="@(isSelectedMonth ? "true" : "false")" @onclick="@(() => SelectMonth(monthDate))">
-                                        @monthDate.ToString("MMM")
-                                    </button>
-                                }
-                            </div>
-                        </TwDatePickerBody>
-                        break;
-
-                    default:
-                        <TwDatePickerHeader OnPreviousClick="PreviousMonth" OnNextClick="NextMonth" OnTitleClick="@(() => SwitchView(DatePickerView.Month))" PreviousLabel="Previous month" NextLabel="Next month">
-                            @SelectedDate.ToString("MMMM yyyy")
-                        </TwDatePickerHeader>
-                        <TwDatePickerBody Class="@bodyClasses">
-                            <TwDatePickerDayView Value="SelectedDate" ValueChanged="SelectDateAsync" />
-                        </TwDatePickerBody>
-                        break;
+                    <TwDatePickerHeader OnPreviousClick="PreviousDecade" OnNextClick="NextDecade" PreviousLabel="Previous decade" NextLabel="Next decade">
+                        @anchorDate.ToString("yyyy")
+                    </TwDatePickerHeader>
+                    <TwDatePickerBody Class="@bodyClasses">
+                        <div class="years-of-the-decade mt-2 grid w-full grid-cols-5 justify-items-stretch gap-1">
+                            @foreach (var year in Enumerable.Range(anchorDate.Year, anchorDate.Year + 10).Take(10))
+                            {
+                                var yearDate = new DateTime(year, anchorDate.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+                                var isSelectedYear = year == SelectedDate.Year;
+                                var isCurrentYear = year == today.Year;
+                                <button type="button" class="@GetButtonClasses("year", isSelectedYear, isCurrentYear)" aria-pressed="@(isSelectedYear ? "true" : "false")" aria-current="@(isCurrentYear ? "date" : null)" @onclick="@(() => SelectYear(yearDate))">
+                                    @yearDate.ToString("yyyy")
+                                </button>
+                            }
+                        </div>
+                    </TwDatePickerBody>
+                }
+                else if (view == DatePickerView.Month)
+                {
+                    <TwDatePickerHeader OnPreviousClick="PreviousYear" OnNextClick="NextYear" OnTitleClick="@(() => SwitchView(DatePickerView.Year))" PreviousLabel="Previous year" NextLabel="Next year">
+                        @anchorDate.ToString("yyyy")
+                    </TwDatePickerHeader>
+                    <TwDatePickerBody Class="@bodyClasses">
+                        <div class="months-of-the-year mt-2 grid w-full grid-cols-6 justify-items-stretch gap-1">
+                            @foreach (var month in Enumerable.Range(1, 12))
+                            {
+                                var monthDate = new DateTime(anchorDate.Year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+                                var isSelectedMonth = anchorDate.Year == SelectedDate.Year && month == SelectedDate.Month;
+                                var isCurrentMonth = anchorDate.Year == today.Year && month == today.Month;
+                                <button type="button" class="@GetButtonClasses("month", isSelectedMonth, isCurrentMonth)" aria-pressed="@(isSelectedMonth ? "true" : "false")" aria-current="@(isCurrentMonth ? "date" : null)" @onclick="@(() => SelectMonth(monthDate))">
+                                    @monthDate.ToString("MMM")
+                                </button>
+                            }
+                        </div>
+                    </TwDatePickerBody>
+                }
+                else
+                {
+                    <TwDatePickerHeader OnPreviousClick="PreviousMonth" OnNextClick="NextMonth" OnTitleClick="@(() => SwitchView(DatePickerView.Month))" PreviousLabel="Previous month" NextLabel="Next month">
+                        @anchorDate.ToString("MMMM yyyy")
+                    </TwDatePickerHeader>
+                    <TwDatePickerBody Class="@bodyClasses">
+                        <TwDatePickerDayView Value="anchorDate" SelectedDate="SelectedDate" ValueChanged="SelectDateAsync" />
+                    </TwDatePickerBody>
                 }
             </div>
         @if (FocusedChildContent is not null)
