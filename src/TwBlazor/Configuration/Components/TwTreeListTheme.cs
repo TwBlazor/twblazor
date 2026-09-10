@@ -34,6 +34,13 @@ public class TwTreeListTheme
     public required string RowDisabled { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes for the fixed-size slot the expand/collapse chevron renders into. Always
+    /// rendered - even for a leaf node with no chevron of its own - so every row's checkbox/icon/label
+    /// start at the same horizontal position regardless of whether a sibling row has children.
+    /// </summary>
+    public required string ToggleSlot { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes for the expand/collapse chevron icon, before the rotation applied when open.
     /// </summary>
     public required string ToggleIcon { get; set; }

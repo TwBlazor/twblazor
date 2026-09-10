@@ -564,13 +564,14 @@ public static class Theme
                 new TwTreeListTheme
                 {
                     Container = "flex flex-col text-sm",
-                    Group = $"ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} flex flex-col",
-                    Row = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} py-1 text-sm hover:underline group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
+                    Group = $"mt-1 ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} flex flex-col",
+                    Row = $"group/row {defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Heading} px-2 py-1.5 text-sm group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {pointerCursor}",
                     RowDisabled = $"{disabledOpacity} pointer-events-none",
-                    ToggleIcon = "h-4 w-4 shrink-0 transition-transform duration-200",
-                    ToggleIconOpen = "rotate-180",
-                    Label = "truncate",
-                    ItemIcon = $"h-4 w-4 shrink-0 {neutralText.Muted}"
+                    ToggleSlot = "inline-flex h-4 w-4 shrink-0 items-center justify-center",
+                    ToggleIcon = "inline-flex h-4 w-4 shrink-0 items-center justify-center transition-transform duration-200",
+                    ToggleIconOpen = "rotate-180 translate-y-px",
+                    Label = "truncate group-hover/row:underline",
+                    ItemIcon = $"inline-flex h-4 w-4 shrink-0 items-center justify-center {neutralText.Muted}"
                 },
                 new TwRadioButtonTheme
                 {
