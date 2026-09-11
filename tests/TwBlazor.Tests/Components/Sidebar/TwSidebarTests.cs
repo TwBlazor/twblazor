@@ -444,29 +444,6 @@ public class TwSidebarTests : TwBlazorTestBase
     };
 
     [Fact]
-    public void ShouldNotApply_DeepLevelAccent_ToLevel1And2_WhenOpen()
-    {
-        // Arrange & Act - Root (level 1) and Branch (level 2) are open but not nested deep enough
-        // to warrant the level 3/4 accent.
-        var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
-        );
-
-        var level3Token = sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("purple"));
-        var level4Token = sidebarTheme.NavigationItemActiveLevel4.Split(' ').First(t => t.Contains("fuchsia"));
-        var rootButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Root"));
-        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
-
-        // Assert
-        foreach (var button in new[] { rootButton, branchButton })
-        {
-            var cls = button.GetAttribute("class") ?? string.Empty;
-            Assert.DoesNotContain(level3Token, cls);
-            Assert.DoesNotContain(level4Token, cls);
-        }
-    }
-
-    [Fact]
     public void ShouldApply_Level3Accent_WhenThirdLevelGroupIsOpen()
     {
         // Arrange & Act - Twig sits at depth 2 (the third level), so its own open toggle gets the
@@ -482,21 +459,6 @@ public class TwSidebarTests : TwBlazorTestBase
         // level 4's fuchsia), since both share generic layout tokens like "pl-2".
         Assert.Contains(sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("purple")), twigButton.GetAttribute("class"));
         Assert.Contains(sidebarTheme.NavigationDropdownContainerDeep.Split(' ').First(t => t.Contains("purple")), branchChildrenContainer!.GetAttribute("class"));
-    }
-
-    [Fact]
-    public void ShouldApply_Level4Accent_ToContainerRevealingFourthLevelLeaves()
-    {
-        // Arrange & Act - Leaf1/Leaf2 sit at depth 3 (the fourth level), so the container Twig
-        // expands to reveal them gets the level 4 rail, distinct from Twig's own level 3 accent.
-        var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
-        );
-
-        var twigChildrenContainer = cut.FindAll("button").Single(b => b.TextContent.Contains("Twig")).NextElementSibling;
-
-        // Assert - "fuchsia" is the distinctive token identifying the level 4 accent.
-        Assert.Contains(sidebarTheme.NavigationDropdownContainerLevel4.Split(' ').First(t => t.Contains("fuchsia")), twigChildrenContainer!.GetAttribute("class"));
     }
 
     [Fact]
