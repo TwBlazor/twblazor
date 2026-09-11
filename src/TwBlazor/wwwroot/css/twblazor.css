@@ -120,6 +120,7 @@
     --radius-sm: 0.25rem;
     --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
     --radius-2xl: 1rem;
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -396,6 +397,9 @@
   }
   .left-\[38\%\] {
     left: 38%;
+  }
+  .-z-10 {
+    z-index: calc(10 * -1);
   }
   .z-10 {
     z-index: 10;
@@ -1332,6 +1336,12 @@
   .bg-fuchsia-400 {
     background-color: var(--color-fuchsia-400);
   }
+  .bg-fuchsia-400\/50 {
+    background-color: color-mix(in srgb, oklch(74% 0.238 322.16) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-fuchsia-400) 50%, transparent);
+    }
+  }
   .bg-fuchsia-400\/55 {
     background-color: color-mix(in srgb, oklch(74% 0.238 322.16) 55%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1394,6 +1404,12 @@
   }
   .bg-purple-200 {
     background-color: var(--color-purple-200);
+  }
+  .bg-purple-200\/50 {
+    background-color: color-mix(in srgb, oklch(90.2% 0.063 306.703) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-purple-200) 50%, transparent);
+    }
   }
   .bg-purple-200\/55 {
     background-color: color-mix(in srgb, oklch(90.2% 0.063 306.703) 55%, transparent);
@@ -2783,6 +2799,12 @@
       background-color: color-mix(in oklab, var(--color-fuchsia-500) 35%, transparent);
     }
   }
+  .dark\:bg-fuchsia-500\/60:where(.dark, .dark *) {
+    background-color: color-mix(in srgb, oklch(66.7% 0.295 322.15) 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-fuchsia-500) 60%, transparent);
+    }
+  }
   .dark\:bg-fuchsia-600:where(.dark, .dark *) {
     background-color: var(--color-fuchsia-600);
   }
@@ -2844,6 +2866,12 @@
     background-color: color-mix(in srgb, oklch(62.7% 0.265 303.9) 35%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-purple-500) 35%, transparent);
+    }
+  }
+  .dark\:bg-purple-500\/60:where(.dark, .dark *) {
+    background-color: color-mix(in srgb, oklch(62.7% 0.265 303.9) 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-purple-500) 60%, transparent);
     }
   }
   .dark\:bg-purple-600:where(.dark, .dark *) {
