@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
+using TwBlazor.Components.DatePicker;
 using TwBlazor.Configuration.Components;
 using TwBlazor.Utilities;
 
@@ -34,7 +35,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     /// <summary>
     /// Gets or sets the underlying view used to display and interact with the date picker control.
     /// </summary>
-    private DatePickerView view { get; set; }
+    private DatePickerCalendarView view { get; set; }
 
     /// <summary>
     /// The month/year/decade currently displayed - a pure navigation position, independent of
@@ -65,9 +66,9 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
 
     /// <summary>
     /// Gets the placeholder actually rendered: <see cref="Placeholder"/> when explicitly set, otherwise
-    /// <see cref="Format"/> lower-cased.
+    /// <see cref="resolvedFormat"/> lower-cased.
     /// </summary>
-    private string effectivePlaceholder => Placeholder ?? Format.ToLower(effectiveCulture);
+    private string effectivePlaceholder => Placeholder ?? resolvedFormat.ToLower(effectiveCulture);
 
     /// <summary>
     /// The <see cref="DateTime"/> value of the selected date.
@@ -90,9 +91,16 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
 
     /// <summary>
-    /// The string format used to display the <see cref="SelectedDate"/>, default value is 'dd/MM/yyyy'.
+    /// The string format used to display the <see cref="SelectedDate"/>. Leave unset to fall back to
+    /// <see cref="TwDatePickerTheme.DefaultFormat"/> (default 'dd/MM/yyyy').
     /// </summary>
-    [Parameter] public string Format { get; set; } = "dd/MM/yyyy";
+    [Parameter] public string? Format { get; set; }
+
+    /// <summary>
+    /// The format actually used: <see cref="Format"/> when explicitly set, otherwise
+    /// <see cref="TwDatePickerTheme.DefaultFormat"/>.
+    /// </summary>
+    private string resolvedFormat => Format ?? theme.DefaultFormat;
 
     /// <summary>
     /// The HTML input type to use when the native picker is active, default value is 'date'.
@@ -111,7 +119,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     /// Gets the format currently used to parse and render <see cref="Value"/>, switching to
     /// <see cref="NativeFormat"/> when the native picker is active.
     /// </summary>
-    private string effectiveFormat => UseNativePicker ? NativeFormat : Format;
+    private string effectiveFormat => UseNativePicker ? NativeFormat : resolvedFormat;
 
     /// <summary>
     /// Gets the culture used to format/parse <see cref="Value"/>. The native browser date input
@@ -168,48 +176,16 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     /// component's state or context.</remarks>
     [Parameter] public string BodyClasses { get; set; } = string.Empty;
 
-    private string bodyClasses => new ClassBuilder()
-        .AddClass("decade", view == DatePickerView.Year)
-        .AddClass("months", view == DatePickerView.Month)
-        .AddClass("days", view == DatePickerView.Day)
-        .AddClass(BodyClasses).Build();
-
-    /// <summary>
-    /// Gets "today" for comparison against the year/month quick-pick grids, honoring
-    /// <see cref="SelectedDate"/>'s <see cref="DateTime.Kind"/> the same way
-    /// <see cref="DatePicker.TwDatePickerDayView"/> does for its own today indicator.
-    /// </summary>
-    private DateTime today => (SelectedDate.Kind == DateTimeKind.Utc ? DateTime.UtcNow : DateTime.Now).Date;
-
-    /// <summary>
-    /// Gets the CSS classes for the buttons present in the dialog.
-    /// </summary>
-    /// <remarks>
-    /// <paramref name="isToday"/> gives the year/month quick-pick grids the same distinct "this is
-    /// the actual current year/month" indicator (<see cref="TwDatePickerTheme.ActiveClass"/>) the
-    /// day grid already has for today's date - previously only the selected year/month was ever
-    /// highlighted here, with nothing marking which one is actually current when browsing away
-    /// from it.
-    /// </remarks>
-    private string GetButtonClasses(string name, bool isSelected, bool isToday) =>
-        new ClassBuilder($"{name} cursor-pointer")
-        .AddClass(roundedBuilder.GetRounded())
-        .AddClass(theme.ButtonClass)
-        .AddClass(options.Theme.Colors.HoverColors.Primary)
-        .AddClass($"{theme.ActiveClass} {options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Light.Primary}", isToday && !isSelected)
-        .AddClass(options.Theme.Colors.LightBackground.Light.Primary, isSelected)
-        .AddClass(options.Theme.Colors.DarkBackground.Light.Primary, isSelected)
-        .AddClass(options.Theme.Colors.TextColors.Medium.Primary, isSelected)
-        .AddClass(options.Theme.Colors.DarkTextColors.Medium.Primary, isSelected)
-        .Build();
-
     /// <summary>
     /// Initializes the component and sets the initial value from the selected date.
     /// </summary>
-    /// <exception cref="ArgumentException">Thrown when <see cref="Format"/> is null or empty.</exception>
+    /// <exception cref="ArgumentException">Thrown when <see cref="Format"/> is explicitly set to an empty string.</exception>
     protected override void OnInitialized()
     {
-        ArgumentException.ThrowIfNullOrEmpty(Format);
+        if (Format is not null)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(Format);
+        }
         base.OnInitialized();
         anchorDate = SelectedDate;
         Value = SelectedDate.ToString(effectiveFormat, effectiveCulture);
@@ -339,36 +315,6 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     }
 
     /// <summary>
-    /// Advances the displayed decade by 10 years, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void NextDecade() => anchorDate = anchorDate.AddYears(10);
-
-    /// <summary>
-    /// Moves the displayed decade back by 10 years, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void PreviousDecade() => anchorDate = anchorDate.AddYears(-10);
-
-    /// <summary>
-    /// Advances the displayed year by one, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void NextYear() => anchorDate = anchorDate.AddYears(1);
-
-    /// <summary>
-    /// Moves the displayed year back by one, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void PreviousYear() => anchorDate = anchorDate.AddYears(-1);
-
-    /// <summary>
-    /// Advances the displayed month by one, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void NextMonth() => anchorDate = anchorDate.AddMonths(1);
-
-    /// <summary>
-    /// Moves the displayed month back by one, without changing <see cref="SelectedDate"/>.
-    /// </summary>
-    private void PreviousMonth() => anchorDate = anchorDate.AddMonths(-1);
-
-    /// <summary>
     /// Selects a date and updates both the selected date and its string representation.
     /// </summary>
     /// <param name="dateTime">The date to select.</param>
@@ -426,60 +372,4 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
         }
     }
 
-    /// <summary>
-    /// Navigates the displayed month to <paramref name="selectedMonth"/> and switches to the day
-    /// view - this is further browsing, not a final selection, so it moves <see cref="anchorDate"/>
-    /// rather than <see cref="SelectedDate"/> (which only changes once an actual day is picked).
-    /// </summary>
-    /// <param name="selectedMonth">The month to display.</param>
-    private void SelectMonth(DateTime selectedMonth)
-    {
-        anchorDate = new DateTime(anchorDate.Year, selectedMonth.Month, anchorDate.Day, anchorDate.Hour, anchorDate.Minute, anchorDate.Second, anchorDate.Kind);
-        view = DatePickerView.Day;
-        pendingViewFocus = true;
-    }
-
-    /// <summary>
-    /// Navigates the displayed year to <paramref name="selectedYear"/> and switches to the month
-    /// view - see <see cref="SelectMonth"/>'s remarks for why this moves <see cref="anchorDate"/>
-    /// rather than <see cref="SelectedDate"/>.
-    /// </summary>
-    /// <param name="selectedYear">The year to display.</param>
-    private void SelectYear(DateTime selectedYear)
-    {
-        anchorDate = new DateTime(selectedYear.Year, anchorDate.Month, anchorDate.Day, anchorDate.Hour, anchorDate.Minute, anchorDate.Second, anchorDate.Kind);
-        view = DatePickerView.Month;
-        pendingViewFocus = true;
-    }
-
-    /// <summary>
-    /// Switches the date picker to the specified view.
-    /// </summary>
-    /// <param name="datePickerView">The view to switch to.</param>
-    private void SwitchView(DatePickerView datePickerView)
-    {
-        view = datePickerView;
-        pendingViewFocus = true;
-    }
-
-    /// <summary>
-    /// Defines the available views for the date picker component.
-    /// </summary>
-    private enum DatePickerView
-    {
-        /// <summary>
-        /// Day selection view showing a calendar grid of days in a month.
-        /// </summary>
-        Day,
-
-        /// <summary>
-        /// Month selection view showing a grid of months in a year.
-        /// </summary>
-        Month,
-
-        /// <summary>
-        /// Year selection view showing a grid of years in a decade.
-        /// </summary>
-        Year
-    }
 }

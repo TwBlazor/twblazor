@@ -1,6 +1,7 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using TwBlazor.Components;
+using TwBlazor.Configuration.Components;
 
 namespace TwBlazor.Tests.Components.DateRangePicker;
 
@@ -669,5 +670,72 @@ public class TwDateRangePickerTests : TwBlazorTestBase
         // Assert
         Assert.DoesNotContain("datepicker-grid", cut.Markup);
         Assert.Contains(TestContext.JSInterop.Invocations, i => i.Identifier == "twPicker.unregisterOutsideClick");
+    }
+
+    [Fact]
+    public void UnsetFormat_UsesThemeDefaultFormat()
+    {
+        // Arrange - changing the shared theme default (rather than passing Format per instance)
+        // must be picked up when Format is left unset.
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultFormat = "MM/dd/yyyy";
+
+        // Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+        );
+
+        // Assert
+        Assert.Equal("11/05/2025 - 11/15/2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void ExplicitFormat_OverridesThemeDefault()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultFormat = "MM/dd/yyyy";
+
+        // Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+            .Add(x => x.Format, "dd-MM-yyyy")
+        );
+
+        // Assert
+        Assert.Equal("05-11-2025 - 15-11-2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void UnsetRangeSeparator_UsesThemeDefaultSeparator()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultRangeSeparator = " to ";
+
+        // Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+        );
+
+        // Assert
+        Assert.Equal("05/11/2025 to 15/11/2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void ExplicitRangeSeparator_OverridesThemeDefault()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultRangeSeparator = " to ";
+
+        // Act
+        var cut = TestContext.Render<TwDateRangePicker>(p => p
+            .Add(x => x.SelectedRange, new KeyValuePair<DateTime?, DateTime?>(new DateTime(2025, 11, 5), new DateTime(2025, 11, 15)))
+            .Add(x => x.RangeSeparator, " | ")
+        );
+
+        // Assert
+        Assert.Equal("05/11/2025 | 15/11/2025", cut.Find("input").GetAttribute("value"));
     }
 }

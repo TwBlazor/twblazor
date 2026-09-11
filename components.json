@@ -27,6 +27,7 @@
       { "id": "date-picker-navitem", "display": "Date Picker", "name": "TwDatePicker", "url": "/date-picker" },
       { "id": "date-range-picker-navitem", "display": "Date Range Picker", "name": "TwDateRangePicker", "url": "/date-range-picker", "isNew": true },
       { "id": "datetime-picker-navitem", "display": "Datetime Picker", "name": "TwDateTimePicker", "url": "/datetime-picker" },
+      { "id": "datetime-range-picker-navitem", "display": "Datetime Range Picker", "name": "TwDateTimeRangePicker", "url": "/datetime-range-picker", "isNew": true },
       { "id": "file-upload-navitem", "display": "File Upload", "name": "TwFileUpload", "url": "/file-upload" },
       { "id": "radio-button-navitem", "display": "Radio Button", "name": "TwRadioButton", "url": "/radio-button" },
       { "id": "select-navitem", "display": "Select", "name": "TwSelect", "url": "/select" },
