@@ -13,6 +13,25 @@ public static class Theme
     #region CodeExample GetStartedTheme
     public static TwBlazorTheme CreateDefaultTheme()
     {
+        // add tokens for display (block, inline-block, flex) etc, which can be used below.
+
+        // add tokens for flexbox positioning with all the common classes below in a hierachy that is easy to understand e.g. Class Flex => with Class property Justify => with a defintiion of center => "justify-center"; etc this can be done with all flexbox tailwind class items seperate them clearly.
+
+        // add better reusable tokens for borders  borderColors vs neutralSurface.border, neutralSurface is the most important as it keeps shade themeing consistent however borderColors currebntly contains the pallet colors maybe these can be better combined and then reused below where tokens match?
+
+        // defaults like consts below need to go into a better class structure for reuse.
+        // string disabledOpacity = "opacity-40";
+        // const string defaultGap = "gap-2";
+        // const string comfortablePadding = "p-4";
+        // const string compactPadding = "p-2";
+        // const string interactiveRowPadding = "px-4 py-3";
+        // const string roundedLg = "rounded-lg";
+        // const string roundedTopLg = "rounded-t-lg";
+        // const string pointerCursor = "cursor-pointer";
+
+
+        // add rounded and shadows here then also assign them below this then allows the class to be reused in defs below.
+
         var position = new TwPosition
         {
             Center = "items-center justify-center",
@@ -217,11 +236,6 @@ public static class Theme
             BorderStrong = "border-[oklch(21%_0.006_285.885)]/25 dark:border-[oklch(97.807%_0.029_256.847)]/20"
         };
 
-        // Neutral (non-semantic) text tokens - same idea as neutralSurface, but for the default
-        // body/heading text color and its quieter variants. Solid colors, not opacity blends: an
-        // alpha-blended glyph reads as washed-out for small icon glyphs (they have no backdrop of
-        // their own to blend against), so each weight is its own step down the base-content hue,
-        // just less contrasty than Heading rather than literally more transparent.
         var neutralText = new TwNeutralTextPalette
         {
             Heading = "text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)]",
@@ -231,11 +245,6 @@ public static class Theme
         };
 
         const string disabledOpacity = "opacity-40";
-
-        // Small layout/shape tokens repeated identically across otherwise-unrelated components -
-        // reused below so the value only needs to change in one place, and any future drift (like
-        // the disabled-opacity typo above, or Pagination's stray dark:border-gray-800) shows up as a
-        // single wrong assignment here instead of being scattered across the file.
         const string defaultGap = "gap-2";
         const string comfortablePadding = "p-4";
         const string compactPadding = "p-2";
@@ -570,6 +579,8 @@ public static class Theme
                     NavigationItemBase = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Secondary} {neutralSurface.Hover} {interactiveRowPadding} text-sm focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {pointerCursor}",
                     NavigationItemActive = "bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)] font-semibold",
                     NavigationDropdownContainer = neutralSurface.BackgroundSubtle,
+                    NavigationItemActiveLevelDeep = $"border-l-2 {borderColors.Light}",
+                    NavigationDropdownContainerDeep = $"border-l-2 border-b-2 pl-2 {borderColors.Light}",
                     MainContent = "w-full flex-1 overflow-y-auto transition-[margin] duration-200 ease-in-out left-0",
                     MainContentRoot = $"bg-transparent {neutralSurface.Background} h-dvh w-full flex flex-col transition-[margin] duration-300 ease-in-out {neutralText.Heading} overflow-x-hidden"
                 },

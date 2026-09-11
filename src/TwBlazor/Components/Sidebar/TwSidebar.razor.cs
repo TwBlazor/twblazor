@@ -281,17 +281,4 @@ public partial class TwSidebar : TwBlazorComponentBase, IDisposable
         new ClassBuilder(theme.MainContentRoot)
             .AddClass(MainContentRootClass).Build();
 
-    private string GetChildContainerClasses(bool collapsed) =>
-        new ClassBuilder(theme.NavigationDropdownContainer)
-            .AddClass("hidden", collapsed)
-            .AddClass(roundedBuilder.GetRoundedBottom(effectiveRounded), !collapsed)
-            .Build();
-
-    /// <summary>
-    /// Gets a stable identifier for a parent navigation item, used to link the toggle button to its
-    /// collapsible child container via <c>aria-controls</c>. Falls back to a value derived from the item
-    /// instance when <see cref="NavigationItem.Id"/> is not supplied by the consumer.
-    /// </summary>
-    private static string GetParentItemId(NavigationItem item) =>
-        !string.IsNullOrWhiteSpace(item.Id) ? item.Id : $"sidebar-item-{item.GetHashCode()}";
 }

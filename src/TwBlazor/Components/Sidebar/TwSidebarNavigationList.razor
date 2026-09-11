@@ -1,0 +1,46 @@
+@namespace TwBlazor.Components
+@inherits TwBlazorComponentBase
+
+@foreach (var item in Items)
+{
+    if (item.NavigationItems.Count > 0) // is a parent item.
+    {
+        var parentId = GetParentItemId(item);
+        var childrenId = $"{parentId}-children";
+
+        if (IsNested)
+        {
+            <li>
+                <div class="flex flex-col">
+                    <TwSidebarItem NavigationItem="item" Id="@parentId" IsParent IsCollapsed="item.Collapsed" ChildrenId="@childrenId" Depth="Depth" OnClick="@(() => item.Collapsed = !item.Collapsed)" />
+                    <div id="@childrenId" class="@GetChildContainerClasses(item.Collapsed, Depth + 1)">
+                        <ul>
+                            <TwSidebarNavigationList Items="item.NavigationItems" IsNested="true" Depth="Depth + 1" />
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        }
+        else
+        {
+            <div class="flex flex-col">
+                <TwSidebarItem NavigationItem="item" Id="@parentId" IsParent IsCollapsed="item.Collapsed" ChildrenId="@childrenId" Depth="Depth" OnClick="@(() => item.Collapsed = !item.Collapsed)" />
+                <div id="@childrenId" class="@GetChildContainerClasses(item.Collapsed, Depth + 1)">
+                    <ul>
+                        <TwSidebarNavigationList Items="item.NavigationItems" IsNested="true" Depth="Depth + 1" />
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+    else if (IsNested) // is a nested single item.
+    {
+        <li>
+            <TwSidebarItem NavigationItem="item" IsChild IsLastChild="item == Items[^1]" />
+        </li>
+    }
+    else // is a top-level single item.
+    {
+        <TwSidebarItem NavigationItem="item" />
+    }
+}

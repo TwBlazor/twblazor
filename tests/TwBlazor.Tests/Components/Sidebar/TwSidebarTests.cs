@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using TwBlazor.Components;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Models;
 
 namespace TwBlazor.Tests.Components.Sidebar;
 
 public class TwSidebarTests : TwBlazorTestBase
 {
+    private TwSidebarTheme sidebarTheme => Theme.Components.Require<TwSidebarTheme>();
+
     public TwSidebarTests()
     {
         TestContext.JSInterop.Mode = JSRuntimeMode.Loose;
@@ -168,7 +171,7 @@ public class TwSidebarTests : TwBlazorTestBase
     {
         // Arrange & Act - independent of NavigationItems, which populates the sidebar itself.
         var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavbarNavigationItems, new List<NavigationItem>
+            .Add(x => x.NavbarNavigationItems, new()
             {
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Products", Href = "/products" }
@@ -316,6 +319,184 @@ public class TwSidebarTests : TwBlazorTestBase
         Assert.Equal(2, childAnchors.Count);
         Assert.Equal("/c1", childAnchors[0].GetAttribute("href"));
         Assert.Equal("/c2", childAnchors[1].GetAttribute("href"));
+    }
+
+    [Fact]
+    public void ShouldRender_ThreeLevelsDeep_WhenNavigationItemsAreNestedGroups()
+    {
+        // Arrange - TwSidebarNavigationList must recurse to arbitrary depth, e.g. a "Dates & Time"
+        // group nested inside "Forms", itself nested at the sidebar's top level.
+        var grandparent = new NavigationItem
+        {
+            Label = "Forms",
+            Collapsed = false,
+            NavigationItems =
+            [
+                new()
+                {
+                    Label = "Dates & Time",
+                    Collapsed = false,
+                    NavigationItems =
+                    [
+                        new() { Label = "Date Picker", Href = "/date-picker" },
+                        new() { Label = "Time Picker", Href = "/time-picker" }
+                    ]
+                }
+            ]
+        };
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [grandparent])
+        );
+
+        // Act
+        var buttons = cut.FindAll("button").Where(b => b.TextContent.Contains("Forms") || b.TextContent.Contains("Dates & Time")).ToList();
+        var leafAnchors = cut.FindAll("a[href]").Where(a => !a.ClassName!.Contains("sr-only")).ToList();
+
+        // Assert - both group levels render as their own toggle buttons, and both leaves at the
+        // third level render as links.
+        Assert.Equal(2, buttons.Count);
+        Assert.Contains(buttons, b => b.TextContent.Contains("Forms"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Dates & Time"));
+        Assert.Equal(2, leafAnchors.Count);
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/date-picker");
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/time-picker");
+    }
+
+    [Fact]
+    public void ShouldRender_FourLevelsDeep_WhenNavigationItemsAreNestedGroups()
+    {
+        // Arrange - one level deeper still, confirming TwSidebarNavigationList's recursion has no
+        // hardcoded depth limit: Root -> Branch -> Twig -> leaves.
+        var root = new NavigationItem
+        {
+            Label = "Root",
+            Collapsed = false,
+            NavigationItems =
+            [
+                new()
+                {
+                    Label = "Branch",
+                    Collapsed = false,
+                    NavigationItems =
+                    [
+                        new()
+                        {
+                            Label = "Twig",
+                            Collapsed = false,
+                            NavigationItems =
+                            [
+                                new() { Label = "Leaf1", Href = "/leaf1" },
+                                new() { Label = "Leaf2", Href = "/leaf2" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [root])
+        );
+
+        // Act
+        var buttons = cut.FindAll("button")
+            .Where(b => b.TextContent.Contains("Root") || b.TextContent.Contains("Branch") || b.TextContent.Contains("Twig"))
+            .ToList();
+        var leafAnchors = cut.FindAll("a[href]").Where(a => !a.ClassName!.Contains("sr-only")).ToList();
+
+        // Assert - all three group levels render as their own toggle buttons, and both leaves at
+        // the fourth level render as links.
+        Assert.Equal(3, buttons.Count);
+        Assert.Contains(buttons, b => b.TextContent.Contains("Root"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Branch"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Twig"));
+        Assert.Equal(2, leafAnchors.Count);
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/leaf1");
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/leaf2");
+    }
+
+    private static NavigationItem BuildFourLevelTree() => new()
+    {
+        Label = "Root",
+        Collapsed = false,
+        NavigationItems =
+        [
+            new()
+            {
+                Label = "Branch",
+                Collapsed = false,
+                NavigationItems =
+                [
+                    new()
+                    {
+                        Label = "Twig",
+                        Collapsed = false,
+                        NavigationItems =
+                        [
+                            new() { Label = "Leaf1", Href = "/leaf1" },
+                            new() { Label = "Leaf2", Href = "/leaf2" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    [Fact]
+    public void ShouldNotApply_DeepLevelAccent_ToLevel1And2_WhenOpen()
+    {
+        // Arrange & Act - Root (level 1) and Branch (level 2) are open but not nested deep enough
+        // to warrant the level 3/4 accent.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var level3Token = sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("purple"));
+        var level4Token = sidebarTheme.NavigationItemActiveLevel4.Split(' ').First(t => t.Contains("fuchsia"));
+        var rootButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Root"));
+        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
+
+        // Assert
+        foreach (var button in new[] { rootButton, branchButton })
+        {
+            var cls = button.GetAttribute("class") ?? string.Empty;
+            Assert.DoesNotContain(level3Token, cls);
+            Assert.DoesNotContain(level4Token, cls);
+        }
+    }
+
+    [Fact]
+    public void ShouldApply_Level3Accent_WhenThirdLevelGroupIsOpen()
+    {
+        // Arrange & Act - Twig sits at depth 2 (the third level), so its own open toggle gets the
+        // level 3 accent, and the container revealing it (Branch's children) gets the matching rail.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var twigButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Twig"));
+        var branchChildrenContainer = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch")).NextElementSibling;
+
+        // Assert - "purple" is the distinctive token identifying the level 3 accent (as opposed to
+        // level 4's fuchsia), since both share generic layout tokens like "pl-2".
+        Assert.Contains(sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("purple")), twigButton.GetAttribute("class"));
+        Assert.Contains(sidebarTheme.NavigationDropdownContainerDeep.Split(' ').First(t => t.Contains("purple")), branchChildrenContainer!.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void ShouldApply_Level4Accent_ToContainerRevealingFourthLevelLeaves()
+    {
+        // Arrange & Act - Leaf1/Leaf2 sit at depth 3 (the fourth level), so the container Twig
+        // expands to reveal them gets the level 4 rail, distinct from Twig's own level 3 accent.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var twigChildrenContainer = cut.FindAll("button").Single(b => b.TextContent.Contains("Twig")).NextElementSibling;
+
+        // Assert - "fuchsia" is the distinctive token identifying the level 4 accent.
+        Assert.Contains(sidebarTheme.NavigationDropdownContainerLevel4.Split(' ').First(t => t.Contains("fuchsia")), twigChildrenContainer!.GetAttribute("class"));
     }
 
     [Fact]
@@ -611,7 +792,7 @@ public class TwSidebarTests : TwBlazorTestBase
         // Arrange - a layout hosting TwSidebar isn't re-rendered by client-side navigation, so
         // without a LocationChanged subscription the active-link highlight would never refresh.
         var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavigationItems, new List<NavigationItem>
+            .Add(x => x.NavigationItems, new()
             {
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Products", Href = "/products" }

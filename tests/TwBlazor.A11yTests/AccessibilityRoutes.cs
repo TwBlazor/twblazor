@@ -57,8 +57,14 @@ public static class AccessibilityRoutes
             ?? throw new InvalidOperationException("Embedded resource 'components.json' was not found.");
 
         var categories = JsonSerializer.Deserialize<List<ComponentCategory>>(stream, JsonSerializerOptions.Web) ?? [];
-        return categories.SelectMany(c => c.Items).Select(e => e.Url);
+        return categories.SelectMany(c => c.Items).SelectMany(FlattenRoutes);
     }
+
+    // An entry with nested Items (e.g. "Dates & Time" grouping the date/time pickers under "Forms")
+    // has no Url of its own, so it recurses into its children instead - to any nesting depth
+    // components.json uses - rather than yielding an empty route for the group itself.
+    private static IEnumerable<string> FlattenRoutes(ComponentEntry entry) =>
+        entry.Items.Count > 0 ? entry.Items.SelectMany(FlattenRoutes) : [entry.Url];
 
     private sealed class ComponentCategory
     {
@@ -68,5 +74,6 @@ public static class AccessibilityRoutes
     private sealed class ComponentEntry
     {
         public string Url { get; set; } = string.Empty;
+        public List<ComponentEntry> Items { get; set; } = [];
     }
 }

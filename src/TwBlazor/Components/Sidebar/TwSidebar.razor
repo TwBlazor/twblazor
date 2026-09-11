@@ -23,38 +23,8 @@
         }
 
         <div class="mt-3 flex flex-col gap-1 overflow-y-auto pb-6">
-            @if (displayedNavigationItems.Any())
-            {
-                @foreach (var ni in displayedNavigationItems)
-                {
-                    
-                    if (ni.NavigationItems.Any()) // is a parent item.
-                    {
-                        var parentId = GetParentItemId(ni);
-                        var childrenId = $"{parentId}-children";
-                        <div class="flex flex-col">
-                            <TwSidebarItem NavigationItem="ni" Id="@parentId" IsParent IsCollapsed="ni.Collapsed" ChildrenId="@childrenId" OnClick="@(() => ni.Collapsed = !ni.Collapsed)" />
-                            <div id="@childrenId" class="@GetChildContainerClasses(ni.Collapsed)">
-                                <ul>
-                                    @* child items *@
-                                    @{ var childItems = ni.NavigationItems; }
-                                    @foreach (var ci in childItems)
-                                    {
-                                        <li>
-                                            <TwSidebarItem NavigationItem="ci" IsChild IsLastChild="ci == childItems[^1]" />
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                    }
-                    else // is a single item.
-                    {
-                        <TwSidebarItem NavigationItem="ni" />
-                    }
-                }
-            }
-             
+            <TwSidebarNavigationList Items="displayedNavigationItems" />
+
             @SidebarContent
         </div>
     </nav>

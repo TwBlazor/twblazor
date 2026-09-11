@@ -88,4 +88,19 @@ public class TwSidebarTheme
     /// Gets or sets the classes for the dropdown container that holds a navigation item's nested items.
     /// </summary>
     public required string NavigationDropdownContainer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes layered on top of <see cref="NavigationItemActive"/> for an open parent
+    /// item nested three levels deep (e.g. a group nested inside another nested group under a top-level
+    /// category).
+    /// </summary>
+    public required string NavigationItemActiveLevelDeep { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes layered on top of <see cref="NavigationDropdownContainer"/> for the
+    /// collapsible child container of a group nested three levels deep.
+    /// </summary>
+    /// <remarks>Adds a guide rail and extra indentation connecting the open group visually to its own
+    /// children, in the same accent used by <see cref="NavigationItemActiveLevelDeep"/>.</remarks>
+    public required string NavigationDropdownContainerDeep { get; set; }
 }
