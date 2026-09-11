@@ -170,9 +170,19 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
     /// end (<see cref="DateTimeRangePickerStage.End"/>) once a start has been picked, where it's
     /// raised to the start's date so the end can never land before it.
     /// </summary>
-    private DateTime? effectiveMinDate => stage == DateTimeRangePickerStage.End && SelectedRange.Key.HasValue
-        ? (MinDate.HasValue && MinDate.Value.Date > SelectedRange.Key.Value.Date ? MinDate : SelectedRange.Key)
-        : MinDate;
+    private DateTime? effectiveMinDate
+    {
+        get
+        {
+            if (stage != DateTimeRangePickerStage.End || !SelectedRange.Key.HasValue)
+            {
+                return MinDate;
+            }
+
+            var startIsLaterThanMinDate = MinDate.HasValue && MinDate.Value.Date > SelectedRange.Key.Value.Date;
+            return startIsLaterThanMinDate ? MinDate : SelectedRange.Key;
+        }
+    }
 
     private string classes => new ClassBuilder("relative flex flex-col")
         .AddClass(RootClass)
