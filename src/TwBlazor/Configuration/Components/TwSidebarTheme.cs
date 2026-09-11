@@ -18,6 +18,48 @@ public class TwSidebarTheme
     public required string Navbar { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes for the navbar's inner layout container.
+    /// </summary>
+    public required string NavbarContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the navbar brand slot.
+    /// </summary>
+    public required string NavbarBrand { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the navbar navigation slot.
+    /// </summary>
+    public required string NavbarNavigation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the navbar actions slot.
+    /// </summary>
+    public required string NavbarActions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the navbar menu toggle.
+    /// </summary>
+    public required string NavbarToggle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for navbar navigation links.
+    /// </summary>
+    public required string NavbarLink { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the active navbar navigation link.
+    /// </summary>
+    public required string NavbarLinkActive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the mobile dropdown panel shown when the responsive menu is open.
+    /// </summary>
+    /// <remarks>Should include a background that matches (or complements) <see cref="Navbar"/> so that
+    /// <see cref="NavbarLink"/>'s text color stays legible against it.</remarks>
+    public required string NavbarMobileMenu { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes for the sidebar panel itself.
     /// </summary>
     public required string Sidebar { get; set; }

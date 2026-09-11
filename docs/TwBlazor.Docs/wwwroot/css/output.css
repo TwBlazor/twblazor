@@ -422,6 +422,9 @@
   .z-\[110\] {
     z-index: 110;
   }
+  .order-first {
+    order: -9999;
+  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -672,6 +675,9 @@
   .min-h-\[24px\] {
     min-height: 24px;
   }
+  .min-h-\[56px\] {
+    min-height: 56px;
+  }
   .w-1 {
     width: var(--spacing);
   }
@@ -825,6 +831,10 @@
   }
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-y-full {
+    --tw-translate-y: -100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .translate-y-px {
@@ -1459,6 +1469,12 @@
   .bg-white {
     background-color: var(--color-white);
   }
+  .bg-white\/15 {
+    background-color: color-mix(in srgb, #fff 15%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-white) 15%, transparent);
+    }
+  }
   .bg-yellow-200 {
     background-color: var(--color-yellow-200);
   }
@@ -1581,6 +1597,9 @@
   }
   .pt-2 {
     padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-20 {
+    padding-top: calc(var(--spacing) * 20);
   }
   .pr-3 {
     padding-right: calc(var(--spacing) * 3);
@@ -2657,11 +2676,23 @@
     .lg\:relative {
       position: relative;
     }
+    .lg\:static {
+      position: static;
+    }
     .lg\:col-span-2 {
       grid-column: span 2 / span 2;
     }
+    .lg\:flex {
+      display: flex;
+    }
     .lg\:hidden {
       display: none;
+    }
+    .lg\:w-auto {
+      width: auto;
+    }
+    .lg\:flex-1 {
+      flex: 1;
     }
     .lg\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2680,6 +2711,16 @@
     }
     .lg\:flex-row {
       flex-direction: row;
+    }
+    .lg\:bg-transparent {
+      background-color: transparent;
+    }
+    .lg\:p-0 {
+      padding: 0px;
+    }
+    .lg\:shadow-none {
+      --tw-shadow: 0 0 #0000;
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
   .rtl\:text-right:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {

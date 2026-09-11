@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using TwBlazor.Components;
 using TwBlazor.Models;
 
@@ -142,6 +143,42 @@ public class TwSidebarTests : TwBlazorTestBase
         Assert.Contains("hdr", cut.Markup);
         Assert.Contains("navcontent", cut.Markup);
         Assert.Contains("body", cut.Markup);
+    }
+
+    [Fact]
+    public void ShouldPassThrough_NavbarBrandNavigationAndActionsContent_ToEmbeddedNavbar()
+    {
+        // Arrange & Act - these forward straight to the embedded TwNavbar's own slots, distinct from
+        // NavbarContent (which lands in TwNavbar's plain ChildContent alongside the drawer toggle).
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavbarBrandContent, b => b.AddMarkupContent(0, "<strong class=\"brand\">Acme</strong>"))
+            .Add(x => x.NavbarNavigationContent, b => b.AddMarkupContent(0, "<a class=\"navlink\" href=\"/\">Home</a>"))
+            .Add(x => x.NavbarActionsContent, b => b.AddMarkupContent(0, "<button class=\"navaction\">Sign in</button>"))
+        );
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.NotNull(navbar.QuerySelector("strong.brand"));
+        Assert.NotNull(navbar.QuerySelector("a.navlink"));
+        Assert.NotNull(navbar.QuerySelector("button.navaction"));
+    }
+
+    [Fact]
+    public void ShouldPassThrough_NavbarNavigationItems_ToEmbeddedNavbar()
+    {
+        // Arrange & Act - independent of NavigationItems, which populates the sidebar itself.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavbarNavigationItems, new List<NavigationItem>
+            {
+                new() { Label = "Home", Href = "/" },
+                new() { Label = "Products", Href = "/products" }
+            })
+        );
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.NotNull(navbar.QuerySelector("a[href='/']"));
+        Assert.NotNull(navbar.QuerySelector("a[href='/products']"));
     }
 
     [Fact]
@@ -553,6 +590,117 @@ public class TwSidebarTests : TwBlazorTestBase
         // Assert
         Assert.Empty(items);
     }
+
+    [Fact]
+    public void ShouldRender_OnlySidebarDrawerToggle_NotNavbarOwnToggle()
+    {
+        // Arrange & Act - the embedded TwNavbar always has its own responsive toggle disabled, so
+        // the sidebar's own drawer toggle is the only button inside it.
+        var cut = TestContext.Render<TwSidebar>();
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.Single(navbar.QuerySelectorAll("button"));
+    }
+
+    #region Navigation
+
+    [Fact]
+    public void ShouldUpdate_ActiveLink_AfterClientSideNavigation()
+    {
+        // Arrange - a layout hosting TwSidebar isn't re-rendered by client-side navigation, so
+        // without a LocationChanged subscription the active-link highlight would never refresh.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, new List<NavigationItem>
+            {
+                new() { Label = "Home", Href = "/" },
+                new() { Label = "Products", Href = "/products" }
+            }));
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/products");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Equal("page", cut.Find("a[href='/products']").GetAttribute("aria-current")));
+    }
+
+    [Fact]
+    public void ShouldCloseSidebar_OnLocationChanged_WhenMobileViewport()
+    {
+        // Arrange - on mobile, IsSidebarOpen represents a transient overlay that should close once
+        // a link inside it is followed, matching TwNavbar's own close-on-navigate behavior.
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(true);
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Contains("-translate-x-full", cut.Find("nav[aria-label='sidebar navigation']").GetAttribute("class")));
+    }
+
+    [Fact]
+    public void ShouldNotCloseSidebar_OnLocationChanged_WhenDesktopViewport()
+    {
+        // Arrange - on desktop, IsSidebarOpen represents a persistent panel (sidebarClasses has no
+        // lg: reset), so navigating must never auto-close it there.
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(false);
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Contains("translate-x-0", cut.Find("nav[aria-label='sidebar navigation']").GetAttribute("class")));
+    }
+
+    [Fact]
+    public void ShouldInvoke_IsSidebarOpenChanged_WhenClosedByLocationChanged()
+    {
+        // Arrange
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(true);
+
+        var invoked = false;
+        bool? received = null;
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+            .Add(x => x.IsSidebarOpenChanged, EventCallback.Factory.Create(this, (bool v) =>
+            {
+                invoked = true;
+                received = v;
+            }))
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+        {
+            Assert.True(invoked);
+            Assert.False(received);
+        });
+    }
+
+    #endregion
 
     [Fact]
     public void Search_ShouldExcludeItem_WithNullLabel()

@@ -59,7 +59,11 @@
         </div>
     </nav>
     <div id="main-content-root" class="@mainContentRootClasses">
-        <TwNavbar Fixed="IsNavbarFixed" Class="@NavbarClass">
+        <TwNavbar Fixed="IsNavbarFixed" Class="@NavbarClass" DisableResponsiveCollapse
+                  BrandContent="NavbarBrandContent"
+                  NavigationContent="NavbarNavigationContent"
+                  ActionsContent="NavbarActionsContent"
+                  NavigationItems="NavbarNavigationItems">
             <TwIcon Icon="@(IsSidebarOpen? Icon.X: Icon.List)" AriaLabel="@(IsSidebarOpen ? "Close sidebar" : "Open sidebar")" aria-expanded="@(IsSidebarOpen ? "true" : "false")" OnClick="ToggleSidebar" Class="text-xl text-white" />
             @NavbarContent
         </TwNavbar>

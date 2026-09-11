@@ -557,7 +557,15 @@ public static class Theme
                 },
                 new TwSidebarTheme
                 {
-                    Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} shadow-sm p-3 w-full flex items-center flex-shrink-0 z-40 h-[56px]",
+                    Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} shadow-sm p-3 w-full flex items-center flex-shrink-0 z-40 min-h-[56px]",
+                    NavbarContent = "flex w-full flex-wrap items-center gap-4",
+                    NavbarBrand = "shrink-0",
+                    NavbarNavigation = "items-center gap-2",
+                    NavbarActions = "ml-auto flex items-center gap-2",
+                    NavbarToggle = "order-first shrink-0 text-xl text-white lg:hidden",
+                    NavbarLink = $"inline-flex items-center gap-2 px-3 py-2 text-sm {text.Light.Light} hover:bg-white/10 rounded-md transition-colors",
+                    NavbarLinkActive = "bg-white/15 font-semibold",
+                    NavbarMobileMenu = $"{background.Dark.Primary} {darkBackground.Dark.Primary} shadow-lg p-3",
                     Sidebar = $"transition-transform duration-200 shadow-sm h-dvh w-64 flex-shrink-0 {neutralSurface.Background} {comfortablePadding} z-[100] ease-in-out overflow-auto overscroll-contain",
                     NavigationItemBase = $"{defaultGap} min-w-0 transition-colors duration-200 flex items-center {neutralText.Secondary} {neutralSurface.Hover} {interactiveRowPadding} text-sm focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {pointerCursor}",
                     NavigationItemActive = "bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)] font-semibold",

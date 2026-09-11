@@ -1,6 +1,48 @@
 ﻿@namespace TwBlazor.Components
+@using TwBlazor.Enums
 @inherits TwBlazorComponentBase
 
 <nav id="@Id" class="@navbarClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
-    @ChildContent
+    <div class="@theme.NavbarContent">
+        @if (BrandContent is not null)
+        {
+            <div class="@theme.NavbarBrand">@BrandContent</div>
+        }
+
+        @if (!DisableResponsiveCollapse)
+        {
+            <TwIcon Icon="@(isMenuOpen ? Icon.X : Icon.List)"
+                    OnClick="ToggleMenu"
+                    AriaLabel="@(isMenuOpen ? "Close navigation menu" : ToggleAriaLabel)"
+                    aria-expanded="@(isMenuOpen ? "true" : "false")"
+                    aria-controls="@menuId"
+                    Class="@theme.NavbarToggle"
+                    Plain />
+        }
+
+        <div id="@menuId" class="@navigationContainerClasses">
+            @if (NavigationContent is not null)
+            {
+                @NavigationContent
+            }
+            else if (NavigationItems.Count > 0)
+            {
+                @foreach (var item in NavigationItems.Where(item => !item.Hidden))
+                {
+                    <a id="@item.Id" href="@item.Href" class="@GetNavigationItemClasses(item)" aria-current="@(IsActive(item) ? "page" : null)">
+                        @if (item.Icon is not null)
+                        {
+                            <TwIcon Icon="@item.Icon.Value" />
+                        }
+                        <span>@item.Label</span>
+                    </a>
+                }
+            }
+            @ChildContent
+            @if (ActionsContent is not null)
+            {
+                <div class="@theme.NavbarActions">@ActionsContent</div>
+            }
+        </div>
+    </div>
 </nav>
