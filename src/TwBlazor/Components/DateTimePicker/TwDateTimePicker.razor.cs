@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Configuration.Components;
 
 namespace TwBlazor.Components;
 
@@ -15,16 +16,27 @@ namespace TwBlazor.Components;
 /// text can be customized to guide users when no value is selected.</remarks>
 public partial class TwDateTimePicker : TwBlazorTextInputComponentBase
 {
+    private TwDatePickerTheme theme => options.Theme.Components.Require<TwDatePickerTheme>();
+
     /// <summary>
-    /// The string format used to display the <see cref="SelectedDateTime"/>, default value is 'dd/MM/yyyy HH:mm'.
+    /// The .NET custom date/time format string used to display and parse <see cref="SelectedDateTime"/>.
+    /// Leave unset to fall back to <see cref="TwDatePickerTheme.DefaultDateTimeFormat"/> or
+    /// <see cref="TwDatePickerTheme.DefaultDateTimeFormat12Hour"/> depending on <see cref="Is12HourFormat"/>.
     /// </summary>
-    private string format { get; set; }
+    [Parameter] public string? Format { get; set; }
+
+    /// <summary>
+    /// The format actually used: <see cref="Format"/> when explicitly set, otherwise whichever of
+    /// <see cref="TwDatePickerTheme.DefaultDateTimeFormat"/>/<see cref="TwDatePickerTheme.DefaultDateTimeFormat12Hour"/>
+    /// matches <see cref="Is12HourFormat"/>.
+    /// </summary>
+    private string format => Format ?? (Is12HourFormat ? theme.DefaultDateTimeFormat12Hour : theme.DefaultDateTimeFormat);
 
     /// <summary>
     /// Gets or sets a value indicating whether the time should be displayed in 12-hour format.
     /// </summary>
     /// <remarks>Set this property to <see langword="true"/> to use 12-hour time representation (with AM/PM);
-    /// otherwise, 24-hour format will be used.</remarks>
+    /// otherwise, 24-hour format will be used. Has no effect when <see cref="Format"/> is explicitly set.</remarks>
     [Parameter] public bool Is12HourFormat { get; set; }
     /// <summary>
     /// The selected <see cref="DateTime"/> value.
@@ -55,23 +67,39 @@ public partial class TwDateTimePicker : TwBlazorTextInputComponentBase
     [Parameter] public bool? PreferNativePicker { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TwDateTimePicker"/> class.
-    /// </summary>
-    public TwDateTimePicker()
-    {
-        format = "dd/MM/yyyy HH:mm";
-    }
-
-    protected override Task OnParametersSetAsync()
-    {
-        format = Is12HourFormat ? "dd/MM/yyyy hh:mm tt" : "dd/MM/yyyy HH:mm";
-        return base.OnParametersSetAsync();
-    }
-
-    /// <summary>
     /// Gets the time portion of the SelectedDateTime as TimeOnly.
     /// </summary>
     private TimeOnly currentTime => TimeOnly.FromDateTime(SelectedDateTime);
+
+    /// <summary>
+    /// Relays a date picked in the underlying <see cref="TwDatePicker"/> (a calendar day click, or a
+    /// typed/native value) to this component's own <see cref="SelectedDateTimeChanged"/> consumers.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="TwDatePicker.SelectedDateChanged"/> only updates whatever local field it's bound
+    /// to - it does not, by itself, also invoke this component's own <see cref="SelectedDateTimeChanged"/>
+    /// callback for its consumers, so that relay has to happen explicitly here.
+    /// </remarks>
+    private async Task OnDateChangedAsync(DateTime newDate)
+    {
+        SelectedDateTime = newDate;
+
+        if (SelectedDateTimeChanged.HasDelegate)
+            await SelectedDateTimeChanged.InvokeAsync(newDate);
+    }
+
+    /// <summary>
+    /// Relays a new displayed <see cref="Value"/> from the underlying <see cref="TwDatePicker"/> to
+    /// this component's own <see cref="ValueChanged"/> consumers - see <see cref="OnDateChangedAsync"/>'s
+    /// remarks for why this can't just be a plain <c>@bind-Value</c>.
+    /// </summary>
+    private async Task OnValueChangedAsync(string newValue)
+    {
+        Value = newValue;
+
+        if (ValueChanged.HasDelegate)
+            await ValueChanged.InvokeAsync(newValue);
+    }
 
     /// <summary>
     /// Handles time changes from the TwTimePickerBody component.

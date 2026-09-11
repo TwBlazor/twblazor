@@ -55,14 +55,14 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// The placeholder text to display when no range is selected.
     /// </summary>
     /// <remarks>
-    /// If not set, defaults to two lower-cased copies of <see cref="Format"/> joined by
-    /// <see cref="RangeSeparator"/> (e.g. "dd/mm/yyyy to dd/mm/yyyy"), so the placeholder itself
-    /// communicates the exact pattern typed input is parsed against.
+    /// If not set, defaults to two lower-cased copies of <see cref="resolvedFormat"/> joined by
+    /// <see cref="resolvedRangeSeparator"/> (e.g. "dd/mm/yyyy - dd/mm/yyyy"), so the placeholder
+    /// itself communicates the exact pattern typed input is parsed against.
     /// </remarks>
     [Parameter] public string? Placeholder { get; set; }
 
     private string effectivePlaceholder => Placeholder ??
-        $"{Format.ToLower(CultureInfo.CurrentCulture)}{RangeSeparator}{Format.ToLower(CultureInfo.CurrentCulture)}";
+        $"{resolvedFormat.ToLower(CultureInfo.CurrentCulture)}{resolvedRangeSeparator}{resolvedFormat.ToLower(CultureInfo.CurrentCulture)}";
 
     /// <summary>
     /// The selected date range: <c>Key</c> is the start date, <c>Value</c> is the end date. Either
@@ -92,21 +92,35 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
 
     /// <summary>
     /// The .NET custom date format string used to display and parse each date in
-    /// <see cref="SelectedRange"/>, applied identically to both the start and the end date -
-    /// default value is 'dd/MM/yyyy'. Any valid pattern works here, e.g. 'MM/dd/yyyy' for US-style
-    /// dates or 'dd-MM-yyyy' for a dash-separated one.
+    /// <see cref="SelectedRange"/>, applied identically to both the start and the end date. Any
+    /// valid pattern works here, e.g. 'MM/dd/yyyy' for US-style dates or 'dd-MM-yyyy' for a
+    /// dash-separated one. Leave unset to fall back to <see cref="TwDatePickerTheme.DefaultFormat"/>
+    /// (default 'dd/MM/yyyy').
     /// </summary>
-    [Parameter] public string Format { get; set; } = "dd/MM/yyyy";
+    [Parameter] public string? Format { get; set; }
 
     /// <summary>
-    /// The separator inserted between the two dates in <see cref="Value"/>, default value is
-    /// " - ": a locale-neutral symbol rather than a word like "to" that would need translating for
+    /// The format actually used: <see cref="Format"/> when explicitly set, otherwise
+    /// <see cref="TwDatePickerTheme.DefaultFormat"/>.
+    /// </summary>
+    private string resolvedFormat => Format ?? theme.DefaultFormat;
+
+    /// <summary>
+    /// The separator inserted between the two dates in <see cref="Value"/>. A locale-neutral symbol
+    /// (like the default, " - ") reads better than a word like "to" that would need translating for
     /// non-English users. The surrounding spaces also mean an everyday dash-containing
     /// <see cref="Format"/> like "dd-MM-yyyy" (no spaces around its own "-") doesn't collide with
     /// it when typed text is split back apart - only a Format that itself embeds " - " (spaces
     /// around a dash) would, so avoid that specific combination if you override either parameter.
+    /// Leave unset to fall back to <see cref="TwDatePickerTheme.DefaultRangeSeparator"/>.
     /// </summary>
-    [Parameter] public string RangeSeparator { get; set; } = " - ";
+    [Parameter] public string? RangeSeparator { get; set; }
+
+    /// <summary>
+    /// The separator actually used: <see cref="RangeSeparator"/> when explicitly set, otherwise
+    /// <see cref="TwDatePickerTheme.DefaultRangeSeparator"/>.
+    /// </summary>
+    private string resolvedRangeSeparator => RangeSeparator ?? theme.DefaultRangeSeparator;
 
     /// <summary>
     /// The earliest selectable date (inclusive). Days before this are disabled in the calendar and
@@ -197,10 +211,13 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// <summary>
     /// Initializes the component, seeding the displayed month and the trigger's text value.
     /// </summary>
-    /// <exception cref="ArgumentException">Thrown when <see cref="Format"/> is null or empty.</exception>
+    /// <exception cref="ArgumentException">Thrown when <see cref="Format"/> is explicitly set to an empty string.</exception>
     protected override void OnInitialized()
     {
-        ArgumentException.ThrowIfNullOrEmpty(Format);
+        if (Format is not null)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(Format);
+        }
         base.OnInitialized();
         anchorMonth = SelectedRange.Key ?? MinDate ?? DateTime.Today;
         Value = FormatRange(SelectedRange);
@@ -261,12 +278,12 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
             return;
         }
 
-        var parts = text.Split(RangeSeparator, StringSplitOptions.TrimEntries);
+        var parts = text.Split(resolvedRangeSeparator, StringSplitOptions.TrimEntries);
         var start = default(DateTime);
         var end = default(DateTime);
         var success = parts.Length == 2
-            && DateTime.TryParseExact(parts[0], Format, CultureInfo.CurrentCulture, DateTimeStyles.None, out start)
-            && DateTime.TryParseExact(parts[1], Format, CultureInfo.CurrentCulture, DateTimeStyles.None, out end)
+            && DateTime.TryParseExact(parts[0], resolvedFormat, CultureInfo.CurrentCulture, DateTimeStyles.None, out start)
+            && DateTime.TryParseExact(parts[1], resolvedFormat, CultureInfo.CurrentCulture, DateTimeStyles.None, out end)
             && !IsOutOfBounds(start) && !IsOutOfBounds(end);
 
         if (!success)
@@ -306,7 +323,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
 
     /// <summary>
     /// Formats a range for display: empty when no start (<c>Key</c>) is set, just the start when
-    /// the end (<c>Value</c>) isn't picked yet, otherwise both joined by <see cref="RangeSeparator"/>.
+    /// the end (<c>Value</c>) isn't picked yet, otherwise both joined by <see cref="resolvedRangeSeparator"/>.
     /// </summary>
     private string FormatRange(KeyValuePair<DateTime?, DateTime?> range)
     {
@@ -315,13 +332,13 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
             return string.Empty;
         }
 
-        var start = range.Key.Value.ToString(Format, CultureInfo.CurrentCulture);
+        var start = range.Key.Value.ToString(resolvedFormat, CultureInfo.CurrentCulture);
         if (range.Value is null)
         {
             return start;
         }
 
-        return $"{start}{RangeSeparator}{range.Value.Value.ToString(Format, CultureInfo.CurrentCulture)}";
+        return $"{start}{resolvedRangeSeparator}{range.Value.Value.ToString(resolvedFormat, CultureInfo.CurrentCulture)}";
     }
 
     /// <summary>
@@ -357,7 +374,8 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// <summary>
     /// Selects a month and switches the view to the day view. Always normalizes to the 1st of the
     /// month, since <see cref="anchorMonth"/> only ever needs to identify a month, not a specific
-    /// day - unlike <see cref="TwDatePicker.SelectMonth"/>, which preserves the actual selected day.
+    /// day - unlike <see cref="DatePicker.TwDatePickerCalendar.PreserveAnchorDay"/> mode, which
+    /// preserves the actual selected day (used by <see cref="TwDatePicker"/>'s own calendar).
     /// </summary>
     private void SelectMonth(DateTime selectedMonth)
     {

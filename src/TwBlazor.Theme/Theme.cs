@@ -459,7 +459,11 @@ public static class Theme
                     ButtonClass = $"{compactPadding} h-8 flex items-center w-full justify-center",
                     RangeClass = "bg-purple-100 dark:bg-purple-500/20",
                     RangeMonthCaptionClass = $"text-center {text.Medium.Primary} {darkText.Light.Primary} text-sm font-semibold mt-2",
-                    PrevMonthClass = "text-gray-400 dark:text-gray-600"
+                    PrevMonthClass = "text-gray-400 dark:text-gray-600",
+                    DefaultFormat = "dd/MM/yyyy",
+                    DefaultDateTimeFormat = "dd/MM/yyyy HH:mm",
+                    DefaultDateTimeFormat12Hour = "dd/MM/yyyy hh:mm tt",
+                    DefaultRangeSeparator = " - "
                 },
                 new TwGroupsTheme
                 {

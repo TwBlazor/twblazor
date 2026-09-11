@@ -1088,6 +1088,40 @@ public class TwDatePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void UnsetFormat_UsesThemeDefaultFormat()
+    {
+        // Arrange - changing the shared theme default (rather than passing Format per instance)
+        // must be picked up when Format is left unset.
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultFormat = "MM/dd/yyyy";
+
+        // Act
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 11, 24))
+        );
+
+        // Assert
+        Assert.Equal("11/24/2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void ExplicitFormat_OverridesThemeDefault()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultFormat = "MM/dd/yyyy";
+
+        // Act
+        var cut = TestContext.Render<TwDatePicker>(p => p
+            .Add(x => x.SelectedDate, new DateTime(2025, 11, 24))
+            .Add(x => x.Format, "dd-MM-yyyy")
+        );
+
+        // Assert
+        Assert.Equal("24-11-2025", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
     public async Task Close_WhenPanelNeverOpened_SkipsUnregisterAndDoesNotThrow()
     {
         // Arrange — Close() is reachable even if the panel was never focused open (e.g. called

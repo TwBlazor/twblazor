@@ -42,9 +42,9 @@
         <TwChip Label="Accessible" StartIcon="IconEnum.Shield_Check" Color="Color.Primary" Variant="ButtonVariant.Outlined" Size="ChipSize.Small" />
     </div>
 
-    <div class="flex flex-row gap-3 mt-8">
-        <TwButton Id="get-started" Color="Color.Primary" Label="Get Started" StartIcon="IconEnum.Rocket_Takeoff" Href="/get-started" />
-        <TwButton Id="github" Color="Color.Primary" Variant="ButtonVariant.Outlined" Label="View on GitHub" StartIcon="IconEnum.Github" Href="https://github.com/TwBlazor/TwBlazor" Target="_blank" rel="noopener noreferrer" />
+    <div class="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
+        <TwButton Id="get-started" Class="w-full sm:w-auto justify-center" Color="Color.Primary" Label="Get Started" StartIcon="IconEnum.Rocket_Takeoff" Href="/get-started" />
+        <TwButton Id="github" Class="w-full sm:w-auto justify-center" Color="Color.Primary" Variant="ButtonVariant.Outlined" Label="View on GitHub" StartIcon="IconEnum.Github" Href="https://github.com/TwBlazor/TwBlazor" Target="_blank" rel="noopener noreferrer" />
     </div>
 </section>
 
@@ -212,9 +212,9 @@
                 <p class="mt-2 text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
                     Jump into the docs and start assembling your UI with twblazor components.
                 </p>
-                <div class="flex flex-row justify-center gap-3 mt-6">
-                    <TwButton Id="cta-get-started" Color="Color.Primary" Label="Get Started" StartIcon="IconEnum.Rocket_Takeoff" Href="/get-started" />
-                    <TwButton Id="cta-github" Color="Color.Primary" Variant="ButtonVariant.Outlined" Label="Star on GitHub" StartIcon="IconEnum.Github" Href="https://github.com/TwBlazor/TwBlazor" Target="_blank" rel="noopener noreferrer" />
+                <div class="flex flex-col sm:flex-row justify-center gap-3 mt-6">
+                    <TwButton Id="cta-get-started" Class="w-full sm:w-auto justify-center" Color="Color.Primary" Label="Get Started" StartIcon="IconEnum.Rocket_Takeoff" Href="/get-started" />
+                    <TwButton Id="cta-github" Class="w-full sm:w-auto justify-center" Color="Color.Primary" Variant="ButtonVariant.Outlined" Label="Star on GitHub" StartIcon="IconEnum.Github" Href="https://github.com/TwBlazor/TwBlazor" Target="_blank" rel="noopener noreferrer" />
                 </div>
             </div>
         </TwCard>

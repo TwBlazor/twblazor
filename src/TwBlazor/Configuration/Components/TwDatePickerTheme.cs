@@ -58,4 +58,35 @@ public class TwDatePickerTheme
     /// tint instead of fighting it with a second, muted color.
     /// </summary>
     public required string PrevMonthClass { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default .NET custom date format string used by <see cref="TwBlazor.Components.TwDatePicker"/>
+    /// and <see cref="TwBlazor.Components.TwDateRangePicker"/> when their own <c>Format</c> parameter
+    /// isn't explicitly set. Change this to switch the whole app's default date format in one place
+    /// instead of passing <c>Format</c> to every picker individually.
+    /// </summary>
+    public required string DefaultFormat { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default .NET custom date/time format string (24-hour) used by
+    /// <see cref="TwBlazor.Components.TwDateTimePicker"/> and <see cref="TwBlazor.Components.TwDateTimeRangePicker"/>
+    /// when their own <c>Format</c> parameter isn't explicitly set and <c>Is12HourFormat</c> is
+    /// <see langword="false"/>.
+    /// </summary>
+    public required string DefaultDateTimeFormat { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default .NET custom date/time format string (12-hour, with an AM/PM
+    /// designator) used by <see cref="TwBlazor.Components.TwDateTimePicker"/> and
+    /// <see cref="TwBlazor.Components.TwDateTimeRangePicker"/> when their own <c>Format</c> parameter
+    /// isn't explicitly set and <c>Is12HourFormat</c> is <see langword="true"/>.
+    /// </summary>
+    public required string DefaultDateTimeFormat12Hour { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default separator used between the start and end date/time by
+    /// <see cref="TwBlazor.Components.TwDateRangePicker"/> and <see cref="TwBlazor.Components.TwDateTimeRangePicker"/>
+    /// when their own <c>RangeSeparator</c> parameter isn't explicitly set.
+    /// </summary>
+    public required string DefaultRangeSeparator { get; set; }
 }
