@@ -32,7 +32,56 @@ public class TwBlazorTheme
     /// <summary>
     /// Gets or sets the classes for each screen-anchored position (e.g. toasts, dialogs can be positioned using this).
     /// </summary>
-    public required TwPosition Position { get; set; }
+    public required TwAnchorPosition Anchor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the shared CSS "position" utility classes (<c>absolute</c>, <c>relative</c>, etc.)
+    /// reused across component themes. See <see cref="TwBlazorPositioning"/>. For anchoring a floating
+    /// element to a spot on screen, see <see cref="Anchor"/> instead.
+    /// </summary>
+    public TwBlazorPositioning Position { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared CSS display utility classes (e.g. <c>flex</c>, <c>block</c>) reused
+    /// across component themes. See <see cref="TwBlazorDisplay"/>.
+    /// </summary>
+    public TwBlazorDisplay Display { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared flexbox utility classes (direction, wrapping, grow/shrink, and the
+    /// justify/align alignment scales) reused across component themes. See <see cref="TwBlazorFlexbox"/>.
+    /// </summary>
+    public TwBlazorFlexbox Flexbox { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared spacing utility classes (gap and padding presets) reused across
+    /// component themes. See <see cref="TwBlazorSpacing"/>.
+    /// </summary>
+    public TwBlazorSpacing Spacing { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared width/height utility classes (full width/height and the icon size
+    /// scale) reused across component themes. See <see cref="TwBlazorSizing"/>.
+    /// </summary>
+    public TwBlazorSizing Sizing { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared interaction-state classes (cursors and disabled opacity) reused
+    /// across component themes. See <see cref="TwBlazorInteraction"/>.
+    /// </summary>
+    public TwBlazorInteraction Interaction { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the combined border configuration (width, semantic color, and neutral color)
+    /// reused across component themes. See <see cref="TwBlazorBorder"/>.
+    /// </summary>
+    public TwBlazorBorder Border { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared text-transform utility classes (e.g. <c>uppercase</c>) reused across
+    /// component themes. See <see cref="TwBlazorTextTransform"/>.
+    /// </summary>
+    public TwBlazorTextTransform TextTransform { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the per-component theme overrides. See <see cref="TwBlazorComponents"/>.
@@ -72,9 +121,10 @@ public class TwBlazorColor
     public TwBlazorPalette FocusColors { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the color palette applied to borders for both light and dark modes.
+    /// Gets or sets the shared "bg-transparent" class, reused anywhere a transparent background is needed
+    /// (e.g. outlined/text button and surface variants) instead of retyping the literal class.
     /// </summary>
-    public TwBlazorPalette BorderColors { get; set; } = new();
+    public string Transparent { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the background color palette, by weight (light/medium/dark), for dark mode.
@@ -135,6 +185,12 @@ public class TwTextColor
 public class TwBackgroundColor
 {
     /// <summary>
+    /// Gets or sets the color palette for the lightest backgrounds (e.g. the "-50" shade), for subtle
+    /// tints lighter than <see cref="Light"/>.
+    /// </summary>
+    public TwBlazorPalette Lightest { get; set; } = new();
+
+    /// <summary>
     /// Gets or sets the color palette for light-weight backgrounds.
     /// </summary>
     public TwBlazorPalette Light { get; set; } = new();
@@ -148,13 +204,20 @@ public class TwBackgroundColor
     /// Gets or sets the color palette for dark-weight backgrounds.
     /// </summary>
     public TwBlazorPalette Dark { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the color palette for the darkest backgrounds (e.g. the "-950" shade), for deep
+    /// fills darker than <see cref="Dark"/>.
+    /// </summary>
+    public TwBlazorPalette Darkest { get; set; } = new();
 }
 
 /// <summary>
 /// Classes for each screen-anchored position used to place floating elements such as toasts and dialogs.
+/// For the CSS "position" property itself (<c>absolute</c>, <c>relative</c>, etc.), see <see cref="TwBlazorPositioning"/>.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public class TwPosition
+public class TwAnchorPosition
 {
     /// <summary>
     /// Gets or sets the classes for the center position.

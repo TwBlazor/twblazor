@@ -46,7 +46,7 @@ public class DialogBuilderTests : TwBlazorTestBase
     public void GetPositionClasses_ReadsFromTheme_NotHardcoded()
     {
         // Arrange
-        Theme.Position.TopCenter = "custom-top-center-classes";
+        Theme.Anchor.TopCenter = "custom-top-center-classes";
 
         // Act
         var result = dialogBuilder.GetPositionClasses(DialogPosition.TopCenter);

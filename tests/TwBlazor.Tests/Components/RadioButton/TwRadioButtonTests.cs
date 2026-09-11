@@ -185,8 +185,7 @@ public class TwRadioButtonTests : TwBlazorTestBase
         var input = cut.Find("input");
         var classes = input.GetAttribute("class");
         Assert.Contains("peer", classes);
-        Assert.Contains("h-5", classes);
-        Assert.Contains("w-5", classes);
+        Assert.Contains("size-5", classes);
         Assert.Contains("cursor-pointer", classes);
         Assert.Contains("appearance-none", classes);
         Assert.Contains("rounded-full", classes);

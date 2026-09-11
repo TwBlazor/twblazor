@@ -42,6 +42,11 @@ public class TwBlazorShadow
     public string Lg { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the value of the "xl" shadow, which represents an extra-large shadow or elevation.
+    /// </summary>
+    public string Xl { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the hover shadow class for sm shadow level.
     /// </summary>
     public string HoverSm { get; set; } = string.Empty;

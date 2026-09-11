@@ -80,7 +80,7 @@ public class ColorBuilderTests : TwBlazorTestBase
         var result = ColorBuilder.GetBorderColor(null);
 
         // Assert
-        Assert.Equal(Theme.Colors.BorderColors.Primary, result);
+        Assert.Equal(Theme.Border.Colors.Primary, result);
     }
 
     #endregion

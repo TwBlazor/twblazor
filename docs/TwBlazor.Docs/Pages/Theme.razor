@@ -12,7 +12,7 @@
 <PageContainer Title="Theme">
     <PageCard Title="Semantic Colors">
         <Description>
-            Every color-aware component accepts a <code>Color</code> from the <code>Color</code> enum: <code>Primary</code>, <code>Accent</code>, <code>Success</code>, <code>Danger</code>, <code>Warning</code>, <code>Info</code>, <code>Light</code> and <code>Dark</code>. Each button below is rendered with that color, so what you see is exactly what your registered theme produces - the border class underneath is read live from <code>TwBlazorColor.BorderColors</code>.
+            Every color-aware component accepts a <code>Color</code> from the <code>Color</code> enum: <code>Primary</code>, <code>Accent</code>, <code>Success</code>, <code>Danger</code>, <code>Warning</code>, <code>Info</code>, <code>Light</code> and <code>Dark</code>. Each button below is rendered with that color, so what you see is exactly what your registered theme produces - the border class underneath is read live from <code>TwBlazorTheme.Border.Colors</code>.
         </Description>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
@@ -23,7 +23,7 @@
                     @* Light/Dark swatches keep a fixed background regardless of page theme (they're demonstrating
                        what those colors look like on their usual opposite backdrop), so their caption needs a
                        fixed contrasting color too rather than the page-theme-responsive default. *@
-                    <code class="text-[11px] text-center break-all @(c switch { Color.Light => "text-gray-400", Color.Dark => "text-gray-700", _ => "text-gray-500 dark:text-gray-400" })">@Resolve(Options.Theme.Colors.BorderColors, c)</code>
+                    <code class="text-[11px] text-center break-all @(c switch { Color.Light => "text-gray-400", Color.Dark => "text-gray-700", _ => "text-gray-500 dark:text-gray-400" })">@Resolve(Options.Theme.Border.Colors, c)</code>
                 </div>
             }
         </div>
