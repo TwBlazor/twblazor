@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build and Test (push)
     uses: ./.github/workflows/build-and-test.yml
     with:
       configuration: Release

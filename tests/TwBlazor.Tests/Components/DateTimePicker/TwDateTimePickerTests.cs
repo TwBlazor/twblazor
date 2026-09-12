@@ -39,6 +39,35 @@ public class TwDateTimePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void ClickingCalendarDay_InvokesSelectedDateTimeChanged_AndValueChanged()
+    {
+        // Arrange - a calendar day click flows through TwDatePicker's own SelectedDateChanged/
+        // ValueChanged callbacks, which TwDateTimePicker must explicitly relay to its own consumers
+        // (a plain @bind-SelectedDate/@bind-Value only updates TwDateTimePicker's own local field,
+        // it doesn't also invoke TwDateTimePicker's SelectedDateTimeChanged/ValueChanged for callers
+        // bound to this component).
+        DateTime? callbackValue = null;
+        string? valueChanged = null;
+        var start = new DateTime(2025, 11, 24, 11, 30, 0);
+
+        var cut = TestContext.Render<TwDateTimePicker>(p => p
+            .Add(x => x.SelectedDateTime, start)
+            .Add(x => x.SelectedDateTimeChanged, EventCallback.Factory.Create<DateTime>(this, d => callbackValue = d))
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<string>(this, v => valueChanged = v))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+        cut.FindAll("button.day").First(b => b.TextContent.Trim() == "5").Click();
+
+        // Assert
+        Assert.NotNull(callbackValue);
+        Assert.Equal(5, callbackValue!.Value.Day);
+        Assert.NotNull(valueChanged);
+        Assert.Equal(callbackValue.Value.ToString("dd/MM/yyyy HH:mm"), valueChanged);
+    }
+
+    [Fact]
     public void IncrementHour_UpdatesSelectedDateTime_AndValue()
     {
         // Arrange
@@ -259,5 +288,52 @@ public class TwDateTimePickerTests : TwBlazorTestBase
         // Assert
         var input = cut.Find("input");
         Assert.Contains(InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme), input.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void UnsetFormat_UsesThemeDefault24HourFormat()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultDateTimeFormat = "MM/dd/yyyy HH:mm";
+
+        // Act
+        var cut = TestContext.Render<TwDateTimePicker>(p => p
+            .Add(x => x.SelectedDateTime, new DateTime(2025, 11, 24, 14, 30, 0))
+        );
+
+        // Assert
+        Assert.Equal("11/24/2025 14:30", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void UnsetFormat_Is12HourFormat_UsesThemeDefault12HourFormat()
+    {
+        // Arrange
+        var datePickerTheme = Theme.Components.Require<TwDatePickerTheme>();
+        datePickerTheme.DefaultDateTimeFormat12Hour = "MM/dd/yyyy hh:mm tt";
+
+        // Act
+        var cut = TestContext.Render<TwDateTimePicker>(p => p
+            .Add(x => x.SelectedDateTime, new DateTime(2025, 11, 24, 14, 30, 0))
+            .Add(x => x.Is12HourFormat, true)
+        );
+
+        // Assert
+        Assert.Equal("11/24/2025 02:30 PM", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void ExplicitFormat_OverridesThemeDefault_AndIs12HourFormat()
+    {
+        // Arrange - an explicit Format wins regardless of Is12HourFormat.
+        var cut = TestContext.Render<TwDateTimePicker>(p => p
+            .Add(x => x.SelectedDateTime, new DateTime(2025, 11, 24, 14, 30, 0))
+            .Add(x => x.Is12HourFormat, true)
+            .Add(x => x.Format, "yyyy-MM-dd HH:mm")
+        );
+
+        // Assert
+        Assert.Equal("2025-11-24 14:30", cut.Find("input").GetAttribute("value"));
     }
 }

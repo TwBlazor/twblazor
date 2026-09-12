@@ -22,7 +22,7 @@ jobs:
         run: ./scripts/validate-headers.ps1
 
   build-and-test:
-    name: Build and Test
+    name: Build and Test (PR to develop)
     uses: ./.github/workflows/build-and-test.yml
     permissions:
       checks: write

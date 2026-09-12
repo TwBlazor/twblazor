@@ -1,0 +1,88 @@
+@page "/navbar"
+@using TwBlazor.Models
+
+<PageTitle>TwNavbar | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwNavbar is a responsive Blazor navigation bar with slots, data-driven links, and mobile collapse." />
+    <link rel="canonical" href="https://twblazor.com/navbar" />
+</HeadContent>
+
+<PageContainer Title="TwNavbar" ThemeType="typeof(TwSidebarTheme)">
+    <PageCard Title="Structured Navbar">
+        <Description>
+            <code>TwNavbar</code> provides <code>BrandContent</code>, <code>NavigationContent</code>, and <code>ActionsContent</code> slots for hand-written markup. Responsive collapse is enabled by default - shrink the preview to see the mobile toggle appear.
+        </Description>
+        <CodeExample Name="NavbarBasic">
+            <TwNavbar>
+                <BrandContent>
+                    <a href="/" class="flex items-center gap-2 text-white font-bold tracking-tight">
+                        <TwIcon Icon="Icon.Lightning_Charge_Fill" />
+                        Acme
+                    </a>
+                </BrandContent>
+                <NavigationContent>
+                    <a href="/" class="px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">Home</a>
+                    <a href="/products" class="px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">Products</a>
+                    <a href="/pricing" class="px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">Pricing</a>
+                </NavigationContent>
+                <ActionsContent>
+                    <TwButton Label="Sign in" Variant="ButtonVariant.Text" Color="Color.Light" />
+                    <TwButton Label="Get started" Variant="ButtonVariant.Filled" Color="Color.Accent" />
+                </ActionsContent>
+            </TwNavbar>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Data-Driven Links">
+        <Description>
+            Pass <code>NavigationItems</code> instead of hand-written <code>NavigationContent</code> to render links (with optional icons) from a <code>List&lt;NavigationItem&gt;</code>, and mark one active with <code>IsActive</code>. Other slots such as <code>BrandContent</code> and <code>ActionsContent</code> still work alongside it.
+        </Description>
+        <CodeExample Name="NavbarItems" CSharpName="NavbarItemsCode">
+            <TwNavbar NavigationItems="@navigationItems">
+                <BrandContent>
+                    <a href="/" class="flex items-center gap-2 text-white font-bold tracking-tight">
+                        <TwIcon Icon="Icon.Lightning_Charge_Fill" />
+                        Acme
+                    </a>
+                </BrandContent>
+                <ActionsContent>
+                    <TwButton Label="Sign in" Variant="ButtonVariant.Text" Color="Color.Light" />
+                </ActionsContent>
+            </TwNavbar>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disable Responsive Collapse">
+        <Description>
+            Set <code>DisableResponsiveCollapse</code> to keep the navigation and actions slots always visible with no mobile toggle - useful when a parent layout, such as <code>TwSidebar</code>, already owns a mobile toggle. <code>TwSidebar</code> sets this on its embedded navbar for exactly that reason.
+        </Description>
+        <CodeExample Name="NavbarOptions">
+            <TwNavbar DisableResponsiveCollapse>
+                <BrandContent>
+                    <a href="/" class="flex items-center gap-2 text-white font-bold tracking-tight">
+                        <TwIcon Icon="Icon.Lightning_Charge_Fill" />
+                        Acme
+                    </a>
+                </BrandContent>
+                <NavigationContent>
+                    <a href="/" class="px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">Home</a>
+                    <a href="/products" class="px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">Products</a>
+                </NavigationContent>
+                <ActionsContent>
+                    <TwButton Label="Sign in" Variant="ButtonVariant.Text" Color="Color.Light" />
+                </ActionsContent>
+            </TwNavbar>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample NavbarItemsCode
+    private readonly List<NavigationItem> navigationItems =
+    [
+        new() { Label = "Home", Href = "/", Icon = Icon.House_Door_Fill, IsActive = true },
+        new() { Label = "Products", Href = "/products", Icon = Icon.Box_Seam_Fill },
+        new() { Label = "Pricing", Href = "/pricing", Icon = Icon.Tag_Fill }
+    ];
+    #endregion
+}

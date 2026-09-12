@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
 using TwBlazor.Configuration.Components;
 using TwBlazor.Models;
 using TwBlazor.Utilities;
@@ -16,8 +18,11 @@ namespace TwBlazor.Components;
 /// provides properties to control appearance, layout, and interactivity. Sidebar open state and navigation items can be
 /// data-bound for integration with application state. This component is intended for use in Blazor applications and is
 /// designed to be flexible for a variety of layout scenarios.</remarks>
-public partial class TwSidebar : TwBlazorComponentBase
+public partial class TwSidebar : TwBlazorComponentBase, IDisposable
 {
+    [Inject] private NavigationManager navigationManager { get; set; } = null!;
+    [Inject] private IJSRuntime jsRuntime { get; set; } = null!;
+
     private TwSidebarTheme theme => options.Theme.Components.Require<TwSidebarTheme>();
 
     /// <summary>
@@ -52,7 +57,38 @@ public partial class TwSidebar : TwBlazorComponentBase
     /// <summary>
     /// Gets or sets the content to be rendered in the navbar area of the component.
     /// </summary>
+    /// <remarks>Rendered alongside the sidebar's own drawer toggle, in the embedded
+    /// <see cref="TwNavbar"/>'s <see cref="TwNavbar.ChildContent"/> slot. For the navbar's other slots, see
+    /// <see cref="NavbarBrandContent"/>, <see cref="NavbarNavigationContent"/>, <see cref="NavbarActionsContent"/>,
+    /// and <see cref="NavbarNavigationItems"/>.</remarks>
     [Parameter] public RenderFragment? NavbarContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the content rendered in the embedded navbar's brand slot.
+    /// </summary>
+    /// <remarks>Passed straight through to <see cref="TwNavbar.BrandContent"/>.</remarks>
+    [Parameter] public RenderFragment? NavbarBrandContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom content rendered in the embedded navbar in place of
+    /// <see cref="NavbarNavigationItems"/>.
+    /// </summary>
+    /// <remarks>Passed straight through to <see cref="TwNavbar.NavigationContent"/>.</remarks>
+    [Parameter] public RenderFragment? NavbarNavigationContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the content rendered in the embedded navbar's actions slot.
+    /// </summary>
+    /// <remarks>Passed straight through to <see cref="TwNavbar.ActionsContent"/>.</remarks>
+    [Parameter] public RenderFragment? NavbarActionsContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the navigation items rendered in the embedded navbar when
+    /// <see cref="NavbarNavigationContent"/> is not supplied.
+    /// </summary>
+    /// <remarks>Passed straight through to <see cref="TwNavbar.NavigationItems"/>. This is independent of
+    /// <see cref="NavigationItems"/>, which populates the sidebar itself.</remarks>
+    [Parameter] public List<NavigationItem> NavbarNavigationItems { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the content to be rendered in the sidebar area of the component.
@@ -108,6 +144,13 @@ public partial class TwSidebar : TwBlazorComponentBase
     /// </summary>
     [Parameter] public bool IsNavbarFixed { get; set; }
 
+    protected override void OnInitialized()
+    {
+        navigationManager.LocationChanged += OnLocationChanged;
+
+        base.OnInitialized();
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -123,6 +166,43 @@ public partial class TwSidebar : TwBlazorComponentBase
         {
             await IsSidebarOpenChanged.InvokeAsync(IsSidebarOpen);
         }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            navigationManager.LocationChanged -= OnLocationChanged;
+        }
+    }
+
+    // A layout that hosts TwSidebar isn't re-rendered by client-side navigation (only the routed
+    // content is), so without this the active-link highlight in TwSidebarItem would never refresh
+    // to match the new URL. The drawer itself is only auto-closed on a mobile viewport - on desktop
+    // IsSidebarOpen represents a persistent panel (see sidebarClasses, which has no lg: reset), so
+    // closing it there on every navigation would hide the sidebar entirely instead of just the
+    // transient mobile overlay.
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e) => _ = HandleLocationChangedAsync();
+
+    private async Task HandleLocationChangedAsync()
+    {
+        if (IsSidebarOpen && await jsRuntime.InvokeAsync<bool>("twSidebar.isMobileViewport"))
+        {
+            IsSidebarOpen = false;
+
+            if (IsSidebarOpenChanged.HasDelegate)
+            {
+                await IsSidebarOpenChanged.InvokeAsync(false);
+            }
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private string searchTerm { get; set; } = string.Empty;
@@ -213,17 +293,4 @@ public partial class TwSidebar : TwBlazorComponentBase
         new ClassBuilder(theme.MainContentRoot)
             .AddClass(MainContentRootClass).Build();
 
-    private string GetChildContainerClasses(bool collapsed) =>
-        new ClassBuilder(theme.NavigationDropdownContainer)
-            .AddClass("hidden", collapsed)
-            .AddClass(roundedBuilder.GetRoundedBottom(effectiveRounded), !collapsed)
-            .Build();
-
-    /// <summary>
-    /// Gets a stable identifier for a parent navigation item, used to link the toggle button to its
-    /// collapsible child container via <c>aria-controls</c>. Falls back to a value derived from the item
-    /// instance when <see cref="NavigationItem.Id"/> is not supplied by the consumer.
-    /// </summary>
-    private static string GetParentItemId(NavigationItem item) =>
-        !string.IsNullOrWhiteSpace(item.Id) ? item.Id : $"sidebar-item-{item.GetHashCode()}";
 }

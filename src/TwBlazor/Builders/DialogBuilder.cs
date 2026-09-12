@@ -86,15 +86,15 @@ public class DialogBuilder(TwBlazorOptions options, RoundedBuilder roundedBuilde
     /// <param name="position">The screen position of the dialog.</param>
     public string GetPositionClasses(DialogPosition? position) => position switch
     {
-        DialogPosition.Center => options.Theme.Position.Center,
-        DialogPosition.CenterLeft => options.Theme.Position.CenterLeft,
-        DialogPosition.CenterRight => options.Theme.Position.CenterRight,
-        DialogPosition.TopCenter => options.Theme.Position.TopCenter,
-        DialogPosition.TopLeft => options.Theme.Position.TopLeft,
-        DialogPosition.TopRight => options.Theme.Position.TopRight,
-        DialogPosition.BottomCenter => options.Theme.Position.BottomCenter,
-        DialogPosition.BottomLeft => options.Theme.Position.BottomLeft,
-        DialogPosition.BottomRight => options.Theme.Position.BottomRight,
-        _ => options.Theme.Position.Center
+        DialogPosition.Center => options.Theme.Anchor.Center,
+        DialogPosition.CenterLeft => options.Theme.Anchor.CenterLeft,
+        DialogPosition.CenterRight => options.Theme.Anchor.CenterRight,
+        DialogPosition.TopCenter => options.Theme.Anchor.TopCenter,
+        DialogPosition.TopLeft => options.Theme.Anchor.TopLeft,
+        DialogPosition.TopRight => options.Theme.Anchor.TopRight,
+        DialogPosition.BottomCenter => options.Theme.Anchor.BottomCenter,
+        DialogPosition.BottomLeft => options.Theme.Anchor.BottomLeft,
+        DialogPosition.BottomRight => options.Theme.Anchor.BottomRight,
+        _ => options.Theme.Anchor.Center
     };
 }

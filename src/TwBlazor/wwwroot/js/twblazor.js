@@ -1,28 +1,79 @@
 // Generic picker (used by datepicker, timepicker, etc.)
 globalThis.twPicker = {
+    // How far (in px) a pointer may travel between down and up and still count as a tap rather
+    // than a scroll/drag. A pointerdown that starts outside the panel looks identical to the
+    // start of a scroll gesture - the same touch that begins scrolling the page also begins
+    // outside the panel - so reacting on pointerdown alone would close the panel the instant a
+    // user tried to scroll to see more of it (a real problem for TwDateRangePicker's tall
+    // two-month panel on mobile, where scrolling to view the rest of it is exactly what a user
+    // needs to do). Waiting for pointerup and checking the distance travelled distinguishes a
+    // genuine tap (closes the panel) from a scroll/drag (does not).
     registerOutsideClick: function (root, dotnetRef) {
         if (!root) return;
-        const handler = function (e) {
+
+        const MOVE_THRESHOLD_PX = 10;
+        let downTarget = null;
+        let downX = 0;
+        let downY = 0;
+
+        const onPointerDown = function (e) {
+            downTarget = e.target;
+            downX = e.clientX ?? 0;
+            downY = e.clientY ?? 0;
+        };
+
+        const onPointerUp = function (e) {
+            if (downTarget === null) return;
+            const target = downTarget;
+            const dx = Math.abs((e.clientX ?? downX) - downX);
+            const dy = Math.abs((e.clientY ?? downY) - downY);
+            downTarget = null;
+
+            if (dx > MOVE_THRESHOLD_PX || dy > MOVE_THRESHOLD_PX) return;
+
             try {
-                if (!root.contains(e.target)) {
+                if (!root.contains(target)) {
                     dotnetRef.invokeMethodAsync('Close');
                 }
             } catch (err) {
                 console.error('twPicker handler error', err);
             }
         };
-        root.__twPickerHandler = handler;
-        document.addEventListener('pointerdown', handler);
+
+        const onPointerCancel = function () {
+            downTarget = null;
+        };
+
+        root.__twPickerPointerDown = onPointerDown;
+        root.__twPickerPointerUp = onPointerUp;
+        root.__twPickerPointerCancel = onPointerCancel;
+        document.addEventListener('pointerdown', onPointerDown);
+        document.addEventListener('pointerup', onPointerUp);
+        document.addEventListener('pointercancel', onPointerCancel);
     },
 
     unregisterOutsideClick: function (root) {
         if (!root) return;
-        const handler = root.__twPickerHandler;
-        if (handler) {
-            document.removeEventListener('pointerdown', handler);
-            try { delete root.__twPickerHandler; } catch { root.__twPickerHandler = undefined; }
+        const onPointerDown = root.__twPickerPointerDown;
+        const onPointerUp = root.__twPickerPointerUp;
+        const onPointerCancel = root.__twPickerPointerCancel;
+        if (onPointerDown) document.removeEventListener('pointerdown', onPointerDown);
+        if (onPointerUp) document.removeEventListener('pointerup', onPointerUp);
+        if (onPointerCancel) document.removeEventListener('pointercancel', onPointerCancel);
+        try {
+            delete root.__twPickerPointerDown;
+            delete root.__twPickerPointerUp;
+            delete root.__twPickerPointerCancel;
+        } catch {
+            root.__twPickerPointerDown = undefined;
+            root.__twPickerPointerUp = undefined;
+            root.__twPickerPointerCancel = undefined;
         }
     },
+
+    // Small breathing-room gap (px) kept between a clamped panel edge and the viewport edge it's
+    // opening toward - mirrors the 0.5rem gap already applied via marginBottom/mt-1 below.
+    _panelEdgeGapPx: 8,
 
     // Flips a just-opened popover panel (date/color picker dialog, etc.) away from whichever
     // viewport edge it would otherwise overflow, instead of letting it clip off-screen. Panels are
@@ -39,23 +90,56 @@ globalThis.twPicker = {
         panel.style.bottom = '';
         panel.style.marginTop = '';
         panel.style.marginBottom = '';
+        panel.style.maxHeight = '';
 
         const rect = panel.getBoundingClientRect();
         const viewportWidth = document.documentElement.clientWidth;
-        const viewportHeight = document.documentElement.clientHeight;
+        // Prefer the visual viewport's height when available. clientHeight reports the full layout
+        // viewport, which does not shrink when a mobile on-screen keyboard opens - so on a phone
+        // with the keyboard up, it would report room below the trigger that's actually covered by
+        // the keyboard, and this method would wrongly leave the panel where it clips off-screen.
+        // visualViewport.height tracks the actually-visible area instead. Not available in jsdom
+        // (or older browsers), so this falls back to the previous behavior there.
+        const viewportHeight = (typeof window !== 'undefined' && window.visualViewport)
+            ? window.visualViewport.height
+            : document.documentElement.clientHeight;
 
         if (rect.right > viewportWidth) {
             panel.style.left = 'auto';
             panel.style.right = '0';
         }
 
+        // spaceAbove and spaceBelow are both measured from the panel's un-flipped top edge (rect.top,
+        // which sits just below the trigger), so they're directly comparable. Using rect.bottom here
+        // instead of rect.top for spaceBelow was the bug: rect.bottom grows with the panel's own
+        // height, so a tall panel (e.g. TwDateRangePicker's two-month grid) made that side deeply
+        // negative and the check below concluded "more room above" even when the trigger sat right
+        // under a fixed header with almost no room above it at all - flipping the panel upward and
+        // clipping it off the top of the screen instead of leaving it open downward where it fit.
+        const spaceAbove = rect.top;
+        const spaceBelow = viewportHeight - rect.top;
+
         // Only flip to open upward if doing so would actually fit better - i.e. there's more room
         // above the trigger than below it - otherwise flipping would just clip the opposite edge.
-        if (rect.bottom > viewportHeight && rect.top > viewportHeight - rect.bottom) {
+        const flipUp = rect.bottom > viewportHeight && spaceAbove > spaceBelow;
+
+        if (flipUp) {
             panel.style.top = 'auto';
             panel.style.bottom = '100%';
             panel.style.marginTop = '0';
             panel.style.marginBottom = '0.5rem';
+        }
+
+        // Whichever direction it ends up opening in, the panel must never extend past the edge of
+        // the viewport it's opening toward. A static CSS max-height (e.g. a Tailwind 100vh-based
+        // class) can't know which direction was just picked, and on mobile "100vh" itself doesn't
+        // shrink for an on-screen keyboard the way visualViewport.height does - so without this, a
+        // panel taller than the space actually available can still clip off-screen even after
+        // picking the correct direction. Only applied when it would actually constrain the panel, so
+        // panels that already fit are left completely alone (same principle as the flip above).
+        const availableSpace = (flipUp ? spaceAbove : spaceBelow) - globalThis.twPicker._panelEdgeGapPx;
+        if (availableSpace > 0 && rect.height > availableSpace) {
+            panel.style.maxHeight = availableSpace + 'px';
         }
     }
 };

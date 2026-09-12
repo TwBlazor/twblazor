@@ -70,7 +70,7 @@ public partial class TwTimePickerBody
     /// primary color.
     /// </summary>
     private string numberInputClasses => new ClassBuilder(theme.NumberInput)
-        .AddClass(ToHoverVariant(options.Theme.Colors.BorderColors.Primary))
+        .AddClass(ToHoverVariant(options.Theme.Border.Colors.Primary))
         .AddClass(inputTheme.FocusBorder)
         .AddClass(colorBuilder.GetFocusRing(Enums.Color.Primary))
         .Build();

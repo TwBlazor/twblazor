@@ -68,15 +68,15 @@ public class ColorBuilder(TwBlazorOptions options)
     {
         return color switch
         {
-            Color.Primary => options.Theme.Colors.BorderColors.Primary,
-            Color.Accent => options.Theme.Colors.BorderColors.Accent,
-            Color.Success => options.Theme.Colors.BorderColors.Success,
-            Color.Danger => options.Theme.Colors.BorderColors.Danger,
-            Color.Warning => options.Theme.Colors.BorderColors.Warning,
-            Color.Info => options.Theme.Colors.BorderColors.Info,
-            Color.Light => options.Theme.Colors.BorderColors.Light,
-            Color.Dark => options.Theme.Colors.BorderColors.Dark,
-            _ => options.Theme.Colors.BorderColors.Primary,
+            Color.Primary => options.Theme.Border.Colors.Primary,
+            Color.Accent => options.Theme.Border.Colors.Accent,
+            Color.Success => options.Theme.Border.Colors.Success,
+            Color.Danger => options.Theme.Border.Colors.Danger,
+            Color.Warning => options.Theme.Border.Colors.Warning,
+            Color.Info => options.Theme.Border.Colors.Info,
+            Color.Light => options.Theme.Border.Colors.Light,
+            Color.Dark => options.Theme.Border.Colors.Dark,
+            _ => options.Theme.Border.Colors.Primary,
         };
     }
 

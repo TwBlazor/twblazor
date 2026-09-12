@@ -10,9 +10,9 @@ public class ColorBuilderTests : TwBlazorTestBase
     [Theory]
     [InlineData(Color.Primary, "text-purple-600", "dark:text-purple-200")]
     [InlineData(Color.Accent, "text-fuchsia-600", "dark:text-fuchsia-200")]
-    [InlineData(Color.Success, "text-green-700", "dark:text-green-600")]
-    [InlineData(Color.Danger, "text-red-600", "dark:text-red-200")]
-    [InlineData(Color.Warning, "text-yellow-700", "dark:text-yellow-600")]
+    [InlineData(Color.Success, "text-green-800", "dark:text-green-600")]
+    [InlineData(Color.Danger, "text-red-700", "dark:text-red-200")]
+    [InlineData(Color.Warning, "text-yellow-800", "dark:text-yellow-600")]
     [InlineData(Color.Info, "text-blue-600", "dark:text-blue-200")]
     [InlineData(Color.Light, "text-white", "dark:text-white")]
     [InlineData(Color.Dark, "text-gray-950", "dark:text-gray-950")]
@@ -80,7 +80,7 @@ public class ColorBuilderTests : TwBlazorTestBase
         var result = ColorBuilder.GetBorderColor(null);
 
         // Assert
-        Assert.Equal(Theme.Colors.BorderColors.Primary, result);
+        Assert.Equal(Theme.Border.Colors.Primary, result);
     }
 
     #endregion
@@ -140,9 +140,9 @@ public class ColorBuilderTests : TwBlazorTestBase
     [Theory]
     [InlineData(Color.Primary, "border-purple-600", "text-purple-600")]
     [InlineData(Color.Accent, "border-fuchsia-600", "text-fuchsia-600")]
-    [InlineData(Color.Success, "border-green-600", "text-green-700")]
-    [InlineData(Color.Danger, "border-red-600", "text-red-600")]
-    [InlineData(Color.Warning, "border-yellow-600", "text-yellow-700")]
+    [InlineData(Color.Success, "border-green-600", "text-green-800")]
+    [InlineData(Color.Danger, "border-red-600", "text-red-700")]
+    [InlineData(Color.Warning, "border-yellow-600", "text-yellow-800")]
     [InlineData(Color.Info, "border-blue-600", "text-blue-600")]
     [InlineData(Color.Light, "border-gray-100", "text-gray-200")]
     [InlineData(Color.Dark, "border-gray-900", "text-gray-950")]
@@ -195,9 +195,9 @@ public class ColorBuilderTests : TwBlazorTestBase
     [Theory]
     [InlineData(Color.Primary, "text-purple-600")]
     [InlineData(Color.Accent, "text-fuchsia-600")]
-    [InlineData(Color.Success, "text-green-700")]
-    [InlineData(Color.Danger, "text-red-600")]
-    [InlineData(Color.Warning, "text-yellow-700")]
+    [InlineData(Color.Success, "text-green-800")]
+    [InlineData(Color.Danger, "text-red-700")]
+    [InlineData(Color.Warning, "text-yellow-800")]
     [InlineData(Color.Info, "text-blue-600")]
     [InlineData(Color.Light, "text-gray-200")]
     [InlineData(Color.Dark, "text-gray-900")]

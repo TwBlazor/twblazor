@@ -1,0 +1,51 @@
+@page "/time-range-picker"
+
+<PageTitle>TwTimeRangePicker | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwTimeRangePicker is a Blazor component for picking a start and end time-of-day pair from a single popover, switching between them with a Start/End tab." />
+    <link rel="canonical" href="https://twblazor.com/time-range-picker" />
+</HeadContent>
+
+<PageContainer Title="TwTimeRangePicker">
+    <PageCard Title="Basic Time Range Picker">
+        <Description>Bind <code>SelectedRange</code> for a <code>KeyValuePair&lt;TimeOnly?, TimeOnly?&gt;</code> value (<code>Key</code> = start, <code>Value</code> = end). The popover reuses the same hour/minute editor as <a href="/time-picker" class="underline">TwTimePicker</a>, switching between the start and end with the Start/End tab at the top. Unlike the date-based range pickers, an end time earlier than the start is left as-is rather than swapped - it just represents a range that crosses midnight (e.g. an overnight shift).</Description>
+        <CodeExample Name="TimeRangePickerBasic" CSharpName="TimeRangePickerBasicCode">
+            <div class="space-y-4">
+                <p><b>@@bind-SelectedRange:</b> @(SelectedRange.Key?.ToString("t") ?? "-") - @(SelectedRange.Value?.ToString("t") ?? "-")</p>
+                <TwTimeRangePicker Id="basic-timerangepicker" @bind-SelectedRange="SelectedRange" Label="Select a shift" Class="mt-3" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="12-Hour Format">
+        <Description>Set <code>Is12HourFormat</code> to display and edit the time with an AM/PM toggle instead of 24-hour time.</Description>
+        <CodeExample Name="TimeRangePicker12Hour" CSharpName="TimeRangePickerBasicCode">
+            <TwTimeRangePicker Id="12hr-timerangepicker" @bind-SelectedRange="SelectedRange" Is12HourFormat Label="Select a shift" Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Input Variants">
+        <Description>The time range picker supports the same visual variants as the other text inputs.</Description>
+        <CodeExample Name="TimeRangePickerVariants" CSharpName="TimeRangePickerBasicCode">
+            <div class="space-y-4">
+                <TwTimeRangePicker Id="default-variant" @bind-SelectedRange="SelectedRange" Label="Default Variant" Variant="InputVariant.Default" />
+                <TwTimeRangePicker Id="outlined-variant" @bind-SelectedRange="SelectedRange" Label="Outlined Variant" Variant="InputVariant.Outlined" />
+                <TwTimeRangePicker Id="filled-variant" @bind-SelectedRange="SelectedRange" Label="Filled Variant" Variant="InputVariant.Filled" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled and Readonly Time Range Picker">
+        <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the time range picker.</Description>
+        <CodeExample Name="TimeRangePickerReadonlyDisabled" CSharpName="TimeRangePickerBasicCode">
+            <TwTimeRangePicker Id="disabled-timerangepicker" @bind-SelectedRange="SelectedRange" Label="Disabled Time Range Picker" Disabled Class="mt-3" />
+            <TwTimeRangePicker Id="readonly-timerangepicker" @bind-SelectedRange="SelectedRange" Label="Readonly Time Range Picker" ReadOnly Class="mt-3" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample TimeRangePickerBasicCode
+    public KeyValuePair<TimeOnly?, TimeOnly?> SelectedRange { get; set; }
+    #endregion
+}

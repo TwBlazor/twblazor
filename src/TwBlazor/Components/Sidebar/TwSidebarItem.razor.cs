@@ -94,6 +94,12 @@ public partial class TwSidebarItem : TwBlazorComponentBase
     [Parameter] public bool IsLastChild { get; set; }
 
     /// <summary>
+    /// Gets or sets how many levels deep this item is nested (0 for a top-level item, 1 for its
+    /// children, 2 for its grandchildren, and so on).
+    /// </summary>
+    [Parameter] public int Depth { get; set; }
+
+    /// <summary>
     /// Gets or sets the child content to render within the sidebar item.
     /// </summary>
     /// <remarks>
@@ -137,6 +143,7 @@ public partial class TwSidebarItem : TwBlazorComponentBase
     private string parentClasses =>
         new ClassBuilder(theme.NavigationItemBase)
         .AddClass(theme.NavigationItemActive, !IsCollapsed)
+        .AddClass(theme.NavigationItemActiveLevelDeep, !IsCollapsed && Depth >= 2)
         .AddClass(roundedBuilder.GetRounded(effectiveRounded), IsCollapsed)
         .AddClass(roundedBuilder.GetRoundedTop(effectiveRounded), !IsCollapsed)
         .AddClass(options.Theme.Rounded.RoundedBottom.None, !IsCollapsed)
