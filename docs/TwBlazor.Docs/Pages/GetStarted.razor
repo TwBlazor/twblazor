@@ -7,63 +7,253 @@
 </HeadContent>
 
 <PageContainer Title="Get Started">
-    <PageCard Title="1. Add to App.razor">
-        <p Class="mb-3">
-            In your App.razor file, you need to include two stylesheet links along with the default content. The first link is for TwBlazor's core styling. The second is for TwIcon, which uses Bootstrap Icons. Note: While you can link to the Bootstrap Icons CDN directly, we include the icons in our package for convenience.
-        </p>
-        <TwCodeBlock Content="@_appHeadExample" />
-        <p Class="my-3">
-            At the bottom of the body you'll also need to include the links to TwBlazor.js.
-        </p>
-        <TwCodeBlock Content="@_appScriptsExample" />
-    </PageCard>
+    <p Class="mb-3">
+        TwBlazor works the same way in an Interactive Server Blazor Web App or a WebAssembly Blazor Web App. The steps below are identical in spirit for both, but a handful of files end up in a different project depending on which hosting model you pick. Choose a tab and follow its steps in order.
+    </p>
 
-    <PageCard Title="2. Add to Imports.razor">
-        <p Class="mb-3">
-            In Imports.razor you'll need to add references to the following:
-        </p>
-        <TwCodeBlock Content="@_importsExample" />
-    </PageCard>
+    <TwTabContainer>
+        <TwTab Label="Blazor Web App (Server)">
+            <PageCard Title="1. Create the project">
+                <p Class="mb-3">
+                    Scaffold a new Blazor Web App using the default Interactive Server render mode. This creates a single project. Replace <code>{YourProjectName}</code> with your own project's name.
+                </p>
+                <TwCodeBlock Content="@_serverCreateProject" Language="bash" />
+                <p Class="my-3">
+                    This only scaffolds the project itself, so you won't see a <code>.sln</code> file yet - that's expected. If you want one, e.g. to open the project in Visual Studio or Rider, create it with:
+                </p>
+                <TwCodeBlock Content="@_serverCreateSolution" Language="bash" />
+            </PageCard>
 
-    <PageCard Title="3. Adding TwProviders">
-        <p Class="mb-3">TwBlazor toasts and other dialog components require you to add the following to the top of your layout pages (MainLayout.razor) or App.razor.</p>
+            <PageCard Title="2. Install the TwBlazor NuGet package">
+                <p Class="mb-3">
+                    Install the <a href="https://www.nuget.org/packages/TwBlazor" target="_blank">TwBlazor NuGet package</a> in the <code>{YourProjectName}</code> project.
+                </p>
+                <TwCodeBlock Content="@_serverInstallPackage" Language="bash" />
+            </PageCard>
 
-        <TwCodeBlock Content="@CodeExamples.Get("GetStartedProviders")" />
-    </PageCard>
+            <PageCard Title="3. Add to App.razor">
+                <p Class="mb-3">
+                    In <code>{YourProjectName}/Components/App.razor</code>, include three stylesheet links along with the default content. The first link is for TwBlazor's own pre-built styling - note the filename is <code>twblazor.css</code>, not <code>output.css</code>. The second is for TwIcon, which uses Bootstrap Icons. Note: While you can link to the Bootstrap Icons CDN directly, we include the icons in our package for convenience. The third link is for <strong>your own</strong> Tailwind build - a completely separate file from TwBlazor's - which will contain the theme classes you configure in step 6. It doesn't exist yet, so it'll 404 until you build it in step 8; that's expected.
+                </p>
+                <TwCodeBlock Content="@_appHeadExample" />
+                <p Class="my-3">
+                    At the bottom of the body you'll also need to include the links to TwBlazor.js.
+                </p>
+                <TwCodeBlock Content="@_serverAppScriptsExample" />
+            </PageCard>
 
-    <PageCard Title="4. Adding a TwTheme">
-        <p Class="mb-3">TwBlazor requires you to set up a few simple configuration classes for theming. Since Tailwind CSS cannot compile classes from .DLLs, you configure the classes in your own project. This keeps the twblazor.css file minimal while ensuring your Tailwind CSS compilation works correctly.</p>
+            <PageCard Title="4. Add to _Imports.razor">
+                <p Class="mb-3">
+                    In <code>{YourProjectName}/Components/_Imports.razor</code> you'll need to add references to the following:
+                </p>
+                <TwCodeBlock Content="@_importsExample" />
+            </PageCard>
 
-        <TwCodeBlock Content="@CodeExamples.Get("GetStartedTheme")" Language="csharp" Class="max-h-100 overflow-y-scroll" />
-    </PageCard>
+            <PageCard Title="5. Add the TwBlazor providers">
+                <p Class="mb-3">
+                    TwBlazor toasts and dialogs require you to add the following to the top of <code>{YourProjectName}/Components/Layout/MainLayout.razor</code>.
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedProviders")" />
+            </PageCard>
 
-    <PageCard Title="5. Dependency Injection">
-        <p Class="mb-3">
-            Finally set up the dependency injection using the TwTheme you have configured.
-        </p>
+            <PageCard Title="6. Add a TwTheme">
+                <p Class="mb-3">
+                    TwBlazor requires you to set up a few simple configuration classes for theming. Since Tailwind CSS cannot compile classes from .DLLs, you configure the classes in your own project. This keeps the twblazor.css file minimal while ensuring your Tailwind CSS compilation works correctly. Create a <code>Theme.cs</code> file at the root of the <code>{YourProjectName}</code> project.
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedTheme")" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+            </PageCard>
 
-        <TwCodeBlock Content="@CodeExamples.Get("GetStartedDependencyInjection")" Language="csharp" />
-    </PageCard>
+            <PageCard Title="7. Register TwBlazor services">
+                <p Class="mb-3">
+                    In <code>{YourProjectName}/Program.cs</code>, register TwBlazor's services using the theme you just configured.
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedDependencyInjection")" Language="csharp" />
+            </PageCard>
+
+            <PageCard Title="8. Build your Tailwind CSS">
+                <p Class="mb-3">
+                    TwBlazor's own classes ship pre-built, but the classes referenced by the <code>Theme.cs</code> you just wrote live in your project, so Tailwind needs to scan and build them itself. Install the <a href="https://tailwindcss.com/docs/installation/tailwind-cli" target="_blank">Tailwind CLI</a> from the solution root (the folder containing <code>{YourProjectName}.csproj</code>):
+                </p>
+                <TwCodeBlock Content="@_serverTailwindInstall" Language="bash" />
+                <p Class="my-3">
+                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. The <code>@@source</code> directives tell Tailwind to scan your razor components and <code>Theme.cs</code> for classes to generate:
+                </p>
+                <TwCodeBlock Content="@_serverTailwindInput" Language="css" />
+                <p Class="my-3">
+                    Then build it to <code>{YourProjectName}/wwwroot/css/output.css</code>, the file already referenced by the <code>&lt;link&gt;</code> tag you added to App.razor in step 3:
+                </p>
+                <TwCodeBlock Content="@_serverTailwindBuild" Language="bash" />
+            </PageCard>
+
+            <PageCard Title="9. Try it out">
+                <p Class="mb-3">
+                    Add a test page to confirm everything is wired up. Create <code>{YourProjectName}/Components/Pages/ComponentTest.razor</code>:
+                </p>
+                <TwCodeBlock Content="@_serverComponentTestPage" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+                <p Class="my-3">
+                    <code>ShowDialog</code> references a small dialog content component. TwBlazor ships the dialog chrome and service (<code>TwDialog</code>, <code>TwDialogProvider</code>, <code>ITwDialogService</code>), but the dialog's actual content is always your own component. Create <code>{YourProjectName}/Components/SampleConfirmDialog.razor</code>:
+                </p>
+                <TwCodeBlock Content="@_sampleConfirmDialog" Language="csharp" />
+                <p Class="my-3">
+                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, a button that opens a dialog, and three interactive switches.
+                </p>
+            </PageCard>
+        </TwTab>
+
+        <TwTab Label="Blazor Web App (WebAssembly)">
+            <PageCard Title="1. Create the project">
+                <p Class="mb-3">
+                    Scaffold a new Blazor Web App with WebAssembly interactivity. Unlike the Server model, this creates <strong>two</strong> projects side by side. Replace <code>{YourProjectName}</code> with your own project's name.
+                </p>
+                <TwCodeBlock Content="@_wasmCreateProject" Language="bash" />
+                <TwCodeBlock Content="@_wasmProjectStructure" Language="text" Class="my-3" />
+                <p Class="my-3">
+                    Every step below tells you which of the two projects a file belongs in.
+                </p>
+            </PageCard>
+
+            <PageCard Title="2. Install the TwBlazor NuGet package">
+                <p Class="mb-3">
+                    Install the <a href="https://www.nuget.org/packages/TwBlazor" target="_blank">TwBlazor NuGet package</a> in <strong>both</strong> projects. <code>{YourProjectName}.Client</code> needs it because the interactive layout and providers are compiled into it; <code>{YourProjectName}</code> needs it too because it references <code>{YourProjectName}.Client</code>'s <code>Theme</code> class and still renders those components on the server before the WebAssembly bundle takes over.
+                </p>
+                <TwCodeBlock Content="@_wasmInstallPackage" Language="bash" />
+            </PageCard>
+
+            <PageCard Title="3. Add to App.razor">
+                <p Class="mb-3">
+                    App.razor always lives in the host project, even in the WebAssembly model. In <code>{YourProjectName}/Components/App.razor</code>, add the same three stylesheet links as before - TwBlazor's own <code>twblazor.css</code>, the Bootstrap Icons stylesheet, and a link to your own project's Tailwind build, which won't exist until step 8.
+                </p>
+                <TwCodeBlock Content="@_appHeadExample" />
+                <p Class="my-3">
+                    At the bottom of the body, include the TwBlazor.js script. Note the render mode is <code>InteractiveWebAssembly</code> instead of <code>InteractiveServer</code>.
+                </p>
+                <TwCodeBlock Content="@_wasmAppScriptsExample" />
+            </PageCard>
+
+            <PageCard Title="4. Add to _Imports.razor">
+                <p Class="mb-3">
+                    Add the following to <code>{YourProjectName}.Client/_Imports.razor</code>, since that's where your interactive components (like MainLayout.razor) live:
+                </p>
+                <TwCodeBlock Content="@_importsExample" />
+            </PageCard>
+
+            <PageCard Title="5. Add the TwBlazor providers to MainLayout.razor">
+                <p Class="mb-3">
+                    This is the one step that differs structurally from the Server model. TwToastProvider and TwDialogProvider rely on JS interop, so they must run on a component that supports interactive rendering. App.razor is always statically rendered, so the providers can't go there. Instead, add them to the top of <code>{YourProjectName}.Client/Layout/MainLayout.razor</code> - only code compiled into <code>{YourProjectName}.Client</code> can run under WebAssembly.
+                </p>
+                <TwCodeBlock Content="@_wasmMainLayoutExample" />
+            </PageCard>
+
+            <PageCard Title="6. Add a TwTheme">
+                <p Class="mb-3">
+                    Since Tailwind CSS cannot compile classes from .DLLs, you configure the theme's classes in your own project. Create a <code>Theme.cs</code> file at the root of the <code>{YourProjectName}.Client</code> project - not <code>{YourProjectName}</code> - since that's where the components using this theme are compiled.
+                </p>
+                <TwCodeBlock Content="@CodeExamples.Get("GetStartedTheme")" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+            </PageCard>
+
+            <PageCard Title="7. Register TwBlazor services">
+                <p Class="mb-3">
+                    Register TwBlazor's services in <strong>both</strong> Program.cs files, pointing at the <code>Theme</code> class you just created in <code>{YourProjectName}.Client</code>.
+                </p>
+                <p Class="mb-3"><code>{YourProjectName}.Client/Program.cs</code>:</p>
+                <TwCodeBlock Content="@_wasmClientProgramExample" Language="csharp" />
+                <p Class="my-3"><code>{YourProjectName}/Program.cs</code> - since <code>Theme</code> lives in the other project, add a <code>using</code> for it:</p>
+                <TwCodeBlock Content="@_wasmServerProgramExample" Language="csharp" />
+            </PageCard>
+
+            <PageCard Title="8. Build your Tailwind CSS">
+                <p Class="mb-3">
+                    Install the <a href="https://tailwindcss.com/docs/installation/tailwind-cli" target="_blank">Tailwind CLI</a> from the solution root - the outer <code>{YourProjectName}</code> folder that contains both <code>{YourProjectName}/</code> and <code>{YourProjectName}.Client/</code>:
+                </p>
+                <TwCodeBlock Content="@_wasmTailwindInstall" Language="bash" />
+                <p Class="my-3">
+                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. It lives in the host project, since that's what App.razor's <code>&lt;link&gt;</code> tag references, but its <code>@@source</code> directives need to reach into <code>{YourProjectName}.Client</code> too, because that's where MainLayout.razor and Theme.cs live:
+                </p>
+                <TwCodeBlock Content="@_wasmTailwindInput" Language="css" />
+                <p Class="my-3">
+                    Then build it to <code>{YourProjectName}/wwwroot/css/output.css</code>, the file already referenced by the <code>&lt;link&gt;</code> tag you added to App.razor in step 3:
+                </p>
+                <TwCodeBlock Content="@_wasmTailwindBuild" Language="bash" />
+            </PageCard>
+
+            <PageCard Title="9. Try it out">
+                <p Class="mb-3">
+                    Add a test page to confirm everything is wired up. Since it needs to be interactive under WebAssembly, it has to live in the Client project. Create <code>{YourProjectName}.Client/Pages/ComponentTest.razor</code>:
+                </p>
+                <TwCodeBlock Content="@_wasmComponentTestPage" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+                <p Class="my-3">
+                    <code>ShowDialog</code> references a small dialog content component. TwBlazor ships the dialog chrome and service (<code>TwDialog</code>, <code>TwDialogProvider</code>, <code>ITwDialogService</code>), but the dialog's actual content is always your own component. It needs to live alongside the test page, so create <code>{YourProjectName}.Client/SampleConfirmDialog.razor</code>:
+                </p>
+                <TwCodeBlock Content="@_sampleConfirmDialog" Language="csharp" />
+                <p Class="my-3">
+                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, a button that opens a dialog, and three interactive switches.
+                </p>
+            </PageCard>
+        </TwTab>
+    </TwTabContainer>
 </PageContainer>
 
 @code {
-    // These illustrate what to add to a *consuming* app's own App.razor/_Imports.razor -
-    // they intentionally don't match this docs site's own (NuGet-package-relative) copies of
-    // those files, so they're kept here rather than sourced from a real file.
+    // These illustrate what to add to a *consuming* app's own files (Program.cs, App.razor,
+    // _Imports.razor, MainLayout.razor, Theme.cs, input.css) for a project called
+    // "{YourProjectName}" - they intentionally don't match this docs site's own
+    // (NuGet-package-relative) copies of those files, so they're kept here rather than
+    // sourced from a real file.
+
+    private const string _serverCreateProject = """
+        dotnet new blazor -o {YourProjectName}
+        """;
+
+    private const string _serverCreateSolution = """
+        cd {YourProjectName}
+        dotnet new sln
+        dotnet sln add {YourProjectName}.csproj
+        """;
+
+    private const string _serverInstallPackage = """
+        dotnet add package TwBlazor --version 1.7.1
+        """;
+
+    private const string _wasmCreateProject = """
+        dotnet new blazor -o {YourProjectName} --interactivity WebAssembly
+        """;
+
+    private const string _wasmProjectStructure = """
+        {YourProjectName}/
+            {YourProjectName}/            <- ASP.NET Core host project: Program.cs starts the web server
+                                              and serves the WebAssembly payload. App.razor, Routes.razor
+                                              and any statically-rendered pages live here.
+            {YourProjectName}.Client/     <- The Blazor WebAssembly project that actually runs in the
+                                              browser. Program.cs builds a WebAssemblyHost.
+                                              Layout/MainLayout.razor, Layout/NavMenu.razor and any
+                                              interactive pages live here, because only code compiled
+                                              into this project can run client-side.
+        """;
+
+    private const string _wasmInstallPackage = """
+        cd {YourProjectName}
+        dotnet add package TwBlazor --version 1.7.1
+
+        cd ../{YourProjectName}.Client
+        dotnet add package TwBlazor --version 1.7.1
+        """;
+
     private const string _appHeadExample = """
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <!-- ... -->
-            <!-- TwBlazor Styles -->
-            <link rel="stylesheet" href="@Assets["_content/TwBlazor/css/output.css"]" />
+            <!-- TwBlazor's own pre-built styles -->
+            <link rel="stylesheet" href="@Assets["_content/TwBlazor/css/twblazor.css"]" />
             <!-- Bootstrap Icons -->
             <link rel="stylesheet" href="@Assets["_content/TwBlazor/icons/bootstrap-icons.min.css"]">
+            <!-- Your own Tailwind build, generated in step 8. 404s until then - that's expected. -->
+            <link rel="stylesheet" href="@Assets["css/output.css"]" />
             <!-- ... -->
         </head>
         """;
 
-    private const string _appScriptsExample = """
+    private const string _serverAppScriptsExample = """
         <body>
             <Routes @rendermode="InteractiveServer" />
             <ReconnectModal />
@@ -75,9 +265,194 @@
         </body>
         """;
 
+    private const string _wasmAppScriptsExample = """
+        <body>
+            <Routes @rendermode="InteractiveWebAssembly" />
+            <!-- ... -->
+            <!-- TwBlazor Scripts -->
+            <script src="@Assets["_content/TwBlazor/js/twblazor.js"]"></script>
+            <!-- ... -->
+            <script src="@Assets["_framework/blazor.webassembly.js"]"></script>
+        </body>
+        """;
+
     private const string _importsExample = """
         @using TwBlazor.Components
         @using TwBlazor.Enums
         @using TwBlazor
+        """;
+
+    private const string _wasmMainLayoutExample = """
+        @inherits LayoutComponentBase
+
+        <TwToastProvider />
+        <TwDialogProvider />
+
+        @Body
+
+        <div id="blazor-error-ui" data-nosnippet>
+            An unhandled error has occurred.
+            <a href="." class="reload">Reload</a>
+            <span class="dismiss">🗙</span>
+        </div>
+        """;
+
+    private const string _wasmClientProgramExample = """
+        using TwBlazor;
+
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+        // ... existing template code ...
+
+        builder.Services.AddTwBlazor(_ => { }, Theme.CreateDefaultTheme);
+
+        await builder.Build().RunAsync();
+        """;
+
+    private const string _wasmServerProgramExample = """
+        using {YourProjectName}.Client;
+        using TwBlazor;
+
+        var builder = WebApplication.CreateBuilder(args);
+
+        // ... existing template code ...
+
+        builder.Services.AddTwBlazor(_ => { }, Theme.CreateDefaultTheme);
+        """;
+
+    private const string _serverTailwindInstall = """
+        npm init -y
+        npm install tailwindcss @tailwindcss/cli
+        """;
+
+    private const string _serverTailwindInput = """
+        @import "tailwindcss";
+
+        @source "../../**/*.razor";
+        @source "../../Theme.cs";
+        """;
+
+    private const string _serverTailwindBuild = """
+        npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch
+        """;
+
+    private const string _wasmTailwindInstall = """
+        npm init -y
+        npm install tailwindcss @tailwindcss/cli
+        """;
+
+    private const string _wasmTailwindInput = """
+        @import "tailwindcss";
+
+        @source "../../**/*.razor";
+        @source "../../../{YourProjectName}.Client/**/*.razor";
+        @source "../../../{YourProjectName}.Client/Theme.cs";
+        """;
+
+    private const string _wasmTailwindBuild = """
+        npx @tailwindcss/cli -i ./{YourProjectName}/wwwroot/css/input.css -o ./{YourProjectName}/wwwroot/css/output.css --watch
+        """;
+
+    private const string _serverComponentTestPage = """
+        @page "/component-test"
+        @rendermode InteractiveServer
+        @using TwBlazor.Models
+        @using TwBlazor.Services
+
+        <PageTitle>Component Test</PageTitle>
+
+        <h1 class="text-2xl font-bold mb-4">Component Test</h1>
+
+        <TwAlert Color="Color.Success" Class="mb-4">
+            Everything below is wired up and interactive - you're good to go!
+        </TwAlert>
+
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+            <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" />
+            <TwButton Label="Show Dialog" Color="Color.Accent" OnClick="ShowDialog" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <TwSwitch @bind-Value="switchOne" Label="Switch one" Color="Color.Primary" />
+            <TwSwitch @bind-Value="switchTwo" Label="Switch two" Color="Color.Success" />
+            <TwSwitch @bind-Value="switchThree" Label="Switch three" Color="Color.Danger" />
+        </div>
+
+        @code {
+            [Inject] private ITwDialogService DialogService { get; set; } = default!;
+
+            private int count;
+            private bool switchOne;
+            private bool switchTwo = true;
+            private bool switchThree;
+
+            private void Increment() => count++;
+
+            private Task ShowDialog()
+            {
+                return DialogService.ShowAsync<SampleConfirmDialog>("Sample Dialog",
+                    new TwDialogParameters { ["Message"] = "This dialog is opened from a TwButton." });
+            }
+        }
+        """;
+
+    private const string _wasmComponentTestPage = """
+        @page "/component-test"
+        @rendermode InteractiveWebAssembly
+        @using TwBlazor.Models
+        @using TwBlazor.Services
+
+        <PageTitle>Component Test</PageTitle>
+
+        <h1 class="text-2xl font-bold mb-4">Component Test</h1>
+
+        <TwAlert Color="Color.Success" Class="mb-4">
+            Everything below is wired up and interactive - you're good to go!
+        </TwAlert>
+
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+            <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" />
+            <TwButton Label="Show Dialog" Color="Color.Accent" OnClick="ShowDialog" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <TwSwitch @bind-Value="switchOne" Label="Switch one" Color="Color.Primary" />
+            <TwSwitch @bind-Value="switchTwo" Label="Switch two" Color="Color.Success" />
+            <TwSwitch @bind-Value="switchThree" Label="Switch three" Color="Color.Danger" />
+        </div>
+
+        @code {
+            [Inject] private ITwDialogService DialogService { get; set; } = default!;
+
+            private int count;
+            private bool switchOne;
+            private bool switchTwo = true;
+            private bool switchThree;
+
+            private void Increment() => count++;
+
+            private Task ShowDialog()
+            {
+                return DialogService.ShowAsync<SampleConfirmDialog>("Sample Dialog",
+                    new TwDialogParameters { ["Message"] = "This dialog is opened from a TwButton." });
+            }
+        }
+        """;
+
+    private const string _sampleConfirmDialog = """
+        @using TwBlazor.Services
+
+        <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">@Message</p>
+        <div class="flex justify-end gap-2">
+            <TwButton Label="Close" Color="Color.Primary" OnClick="Close" />
+        </div>
+
+        @code {
+            [Parameter] public string Message { get; set; } = string.Empty;
+
+            [CascadingParameter] private TwDialogInstance? DialogInstance { get; set; }
+
+            private void Close() => DialogInstance?.Close(true);
+        }
         """;
 }
