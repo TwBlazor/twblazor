@@ -85,7 +85,7 @@ public class ChipBuilderTests : TwBlazorTestBase
 
         // Assert
         Assert.Contains("border", result);
-        Assert.Contains("text-red-600", result);
+        Assert.Contains("text-red-700", result);
     }
 
     [Fact]

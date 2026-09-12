@@ -24,7 +24,18 @@ public partial class ThemeConfigurationCard : ComponentBase
         typeof(TwBackgroundColor),
         typeof(TwSurfaceColor),
         typeof(TwNeutralTextPalette),
-        typeof(TwPosition),
+        typeof(TwAnchorPosition),
+        typeof(TwBlazorPositioning),
+        typeof(TwBlazorDisplay),
+        typeof(TwBlazorFlexbox),
+        typeof(TwFlexAlignmentScale),
+        typeof(TwBlazorSpacing),
+        typeof(TwBlazorSpacingScale),
+        typeof(TwBlazorInteraction),
+        typeof(TwBlazorBorder),
+        typeof(TwBlazorBorderWidth),
+        typeof(TwBorderNeutralTones),
+        typeof(TwBlazorTextTransform),
     ];
 
     // Theme classes reused verbatim by more than one documented component, keyed by type and valued by the

@@ -71,6 +71,10 @@ globalThis.twPicker = {
         }
     },
 
+    // Small breathing-room gap (px) kept between a clamped panel edge and the viewport edge it's
+    // opening toward - mirrors the 0.5rem gap already applied via marginBottom/mt-1 below.
+    _panelEdgeGapPx: 8,
+
     // Flips a just-opened popover panel (date/color picker dialog, etc.) away from whichever
     // viewport edge it would otherwise overflow, instead of letting it clip off-screen. Panels are
     // positioned by their own "top-full left-0"-style classes by default; this only overrides that
@@ -86,6 +90,7 @@ globalThis.twPicker = {
         panel.style.bottom = '';
         panel.style.marginTop = '';
         panel.style.marginBottom = '';
+        panel.style.maxHeight = '';
 
         const rect = panel.getBoundingClientRect();
         const viewportWidth = document.documentElement.clientWidth;
@@ -104,13 +109,37 @@ globalThis.twPicker = {
             panel.style.right = '0';
         }
 
+        // spaceAbove and spaceBelow are both measured from the panel's un-flipped top edge (rect.top,
+        // which sits just below the trigger), so they're directly comparable. Using rect.bottom here
+        // instead of rect.top for spaceBelow was the bug: rect.bottom grows with the panel's own
+        // height, so a tall panel (e.g. TwDateRangePicker's two-month grid) made that side deeply
+        // negative and the check below concluded "more room above" even when the trigger sat right
+        // under a fixed header with almost no room above it at all - flipping the panel upward and
+        // clipping it off the top of the screen instead of leaving it open downward where it fit.
+        const spaceAbove = rect.top;
+        const spaceBelow = viewportHeight - rect.top;
+
         // Only flip to open upward if doing so would actually fit better - i.e. there's more room
         // above the trigger than below it - otherwise flipping would just clip the opposite edge.
-        if (rect.bottom > viewportHeight && rect.top > viewportHeight - rect.bottom) {
+        const flipUp = rect.bottom > viewportHeight && spaceAbove > spaceBelow;
+
+        if (flipUp) {
             panel.style.top = 'auto';
             panel.style.bottom = '100%';
             panel.style.marginTop = '0';
             panel.style.marginBottom = '0.5rem';
+        }
+
+        // Whichever direction it ends up opening in, the panel must never extend past the edge of
+        // the viewport it's opening toward. A static CSS max-height (e.g. a Tailwind 100vh-based
+        // class) can't know which direction was just picked, and on mobile "100vh" itself doesn't
+        // shrink for an on-screen keyboard the way visualViewport.height does - so without this, a
+        // panel taller than the space actually available can still clip off-screen even after
+        // picking the correct direction. Only applied when it would actually constrain the panel, so
+        // panels that already fit are left completely alone (same principle as the flip above).
+        const availableSpace = (flipUp ? spaceAbove : spaceBelow) - globalThis.twPicker._panelEdgeGapPx;
+        if (availableSpace > 0 && rect.height > availableSpace) {
+            panel.style.maxHeight = availableSpace + 'px';
         }
     }
 };

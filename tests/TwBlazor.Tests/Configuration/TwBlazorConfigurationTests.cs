@@ -342,12 +342,12 @@ public class TwInputThemeTests
     }
 }
 
-public class TwPositionTests
+public class TwAnchorPositionTests
 {
     [Fact]
     public void Properties_RoundTrip_AssignedValues()
     {
-        var position = new TwPosition
+        var anchor = new TwAnchorPosition
         {
             Center = "center",
             CenterLeft = "center-left",
@@ -360,15 +360,15 @@ public class TwPositionTests
             BottomRight = "bottom-right",
         };
 
-        Assert.Equal("center", position.Center);
-        Assert.Equal("center-left", position.CenterLeft);
-        Assert.Equal("center-right", position.CenterRight);
-        Assert.Equal("top-center", position.TopCenter);
-        Assert.Equal("top-left", position.TopLeft);
-        Assert.Equal("top-right", position.TopRight);
-        Assert.Equal("bottom-center", position.BottomCenter);
-        Assert.Equal("bottom-left", position.BottomLeft);
-        Assert.Equal("bottom-right", position.BottomRight);
+        Assert.Equal("center", anchor.Center);
+        Assert.Equal("center-left", anchor.CenterLeft);
+        Assert.Equal("center-right", anchor.CenterRight);
+        Assert.Equal("top-center", anchor.TopCenter);
+        Assert.Equal("top-left", anchor.TopLeft);
+        Assert.Equal("top-right", anchor.TopRight);
+        Assert.Equal("bottom-center", anchor.BottomCenter);
+        Assert.Equal("bottom-left", anchor.BottomLeft);
+        Assert.Equal("bottom-right", anchor.BottomRight);
     }
 }
 
@@ -440,7 +440,7 @@ public class TwBlazorColorTests
         Assert.NotNull(colors.HoverColors);
         Assert.Equal(string.Empty, colors.FocusRingBase);
         Assert.NotNull(colors.FocusColors);
-        Assert.NotNull(colors.BorderColors);
+        Assert.Equal(string.Empty, colors.Transparent);
         Assert.NotNull(colors.DarkBackground);
         Assert.NotNull(colors.LightBackground);
         Assert.NotNull(colors.SurfaceColors);
@@ -453,7 +453,6 @@ public class TwBlazorColorTests
         var darkTextColors = new TwTextColor();
         var hoverColors = new TwBlazorPalette { Primary = "hover:bg-purple-700" };
         var focusColors = new TwBlazorPalette { Primary = "focus:ring-purple-500" };
-        var borderColors = new TwBlazorPalette { Primary = "border-purple-600" };
         var darkBackground = new TwBackgroundColor();
         var lightBackground = new TwBackgroundColor();
         var surfaceColors = new TwSurfaceColor();
@@ -465,7 +464,7 @@ public class TwBlazorColorTests
             HoverColors = hoverColors,
             FocusRingBase = "focus:ring-2",
             FocusColors = focusColors,
-            BorderColors = borderColors,
+            Transparent = "bg-transparent",
             DarkBackground = darkBackground,
             LightBackground = lightBackground,
             SurfaceColors = surfaceColors,
@@ -476,7 +475,7 @@ public class TwBlazorColorTests
         Assert.Same(hoverColors, colors.HoverColors);
         Assert.Equal("focus:ring-2", colors.FocusRingBase);
         Assert.Same(focusColors, colors.FocusColors);
-        Assert.Same(borderColors, colors.BorderColors);
+        Assert.Equal("bg-transparent", colors.Transparent);
         Assert.Same(darkBackground, colors.DarkBackground);
         Assert.Same(lightBackground, colors.LightBackground);
         Assert.Same(surfaceColors, colors.SurfaceColors);
@@ -488,7 +487,7 @@ public class TwBlazorThemeTests
     [Fact]
     public void DefaultValues_SubObjectsAreNonNull()
     {
-        var theme = new TwBlazorTheme { Position = new TwPosition { Center = "", CenterLeft = "", CenterRight = "", TopCenter = "", TopLeft = "", TopRight = "", BottomCenter = "", BottomLeft = "", BottomRight = "" } };
+        var theme = new TwBlazorTheme { Anchor = new TwAnchorPosition { Center = "", CenterLeft = "", CenterRight = "", TopCenter = "", TopLeft = "", TopRight = "", BottomCenter = "", BottomLeft = "", BottomRight = "" } };
 
         Assert.NotNull(theme.Shadows);
         Assert.NotNull(theme.Rounded);
@@ -502,7 +501,7 @@ public class TwBlazorThemeTests
         var shadows = new TwBlazorShadow();
         var rounded = new TwBlazorRounded();
         var colors = new TwBlazorColor();
-        var position = new TwPosition { Center = "center", CenterLeft = "", CenterRight = "", TopCenter = "", TopLeft = "", TopRight = "", BottomCenter = "", BottomLeft = "", BottomRight = "" };
+        var anchor = new TwAnchorPosition { Center = "center", CenterLeft = "", CenterRight = "", TopCenter = "", TopLeft = "", TopRight = "", BottomCenter = "", BottomLeft = "", BottomRight = "" };
         TwBlazorComponents components = [];
 
         var theme = new TwBlazorTheme
@@ -510,14 +509,14 @@ public class TwBlazorThemeTests
             Shadows = shadows,
             Rounded = rounded,
             Colors = colors,
-            Position = position,
+            Anchor = anchor,
             Components = components,
         };
 
         Assert.Same(shadows, theme.Shadows);
         Assert.Same(rounded, theme.Rounded);
         Assert.Same(colors, theme.Colors);
-        Assert.Same(position, theme.Position);
+        Assert.Same(anchor, theme.Anchor);
         Assert.Same(components, theme.Components);
     }
 }

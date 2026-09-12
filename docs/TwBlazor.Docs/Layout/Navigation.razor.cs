@@ -31,10 +31,7 @@ public partial class Navigation : IDisposable
 
         foreach (var category in LoadComponentCategories())
         {
-            var children = category.Items
-                .Select(c => new NavigationItem { Id = c.Id, Label = c.Display, Href = c.Url, New = c.IsNew })
-                .ToList();
-
+            var children = category.Items.Select(BuildNavigationItem).ToList();
             items.Add(new NavigationItem { Id = category.Category.ToLowerInvariant(), Label = category.Category, NavigationItems = children });
         }
 
@@ -42,6 +39,13 @@ public partial class Navigation : IDisposable
 
         return items;
     }
+
+    // An entry with nested Items (e.g. "Dates & Time" grouping the date/time pickers under "Forms")
+    // is itself a group rather than a leaf link, so it recurses - to any depth components.json uses.
+    private static NavigationItem BuildNavigationItem(ComponentNavEntry entry) =>
+        entry.Items.Count > 0
+            ? new NavigationItem { Id = entry.Id, Label = entry.Display, NavigationItems = entry.Items.Select(BuildNavigationItem).ToList() }
+            : new NavigationItem { Id = entry.Id, Label = entry.Display, Href = entry.Url, New = entry.IsNew };
 
     private static List<ComponentCategory> LoadComponentCategories()
     {
@@ -63,6 +67,8 @@ public partial class Navigation : IDisposable
         public string Id { get; set; } = string.Empty;
         public string Display { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
+
+        public List<ComponentNavEntry> Items { get; set; } = [];
 
 #pragma warning disable S3459, S1144 // Populated by JSON deserialization from components.json - the setter has no visible caller for Sonar's static analysis to see
         public bool IsNew { get; set; }

@@ -354,7 +354,11 @@ public class ComponentContractTests : TwBlazorTestBase
                 && t != typeof(TwBlazorComponentBase)
                 // TwDatePickerHeader is an internal DatePicker subcomponent that does not
                 // render its inherited Id/Class/Style/Attributes on the DOM.
-                && t != typeof(TwBlazor.Components.DatePicker.TwDatePickerHeader)),
+                && t != typeof(TwBlazor.Components.DatePicker.TwDatePickerHeader)
+                // TwSidebarNavigationList is an internal Sidebar subcomponent that recursively
+                // renders a list of TwSidebarItems with no root element of its own to carry
+                // Id/Class/Style/Attributes.
+                && t != typeof(TwBlazor.Components.TwSidebarNavigationList)),
         ];
 
         return data;

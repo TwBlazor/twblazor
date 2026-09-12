@@ -1,12 +1,16 @@
 ﻿using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using TwBlazor.Components;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Models;
 
 namespace TwBlazor.Tests.Components.Sidebar;
 
 public class TwSidebarTests : TwBlazorTestBase
 {
+    private TwSidebarTheme sidebarTheme => Theme.Components.Require<TwSidebarTheme>();
+
     public TwSidebarTests()
     {
         TestContext.JSInterop.Mode = JSRuntimeMode.Loose;
@@ -145,6 +149,42 @@ public class TwSidebarTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void ShouldPassThrough_NavbarBrandNavigationAndActionsContent_ToEmbeddedNavbar()
+    {
+        // Arrange & Act - these forward straight to the embedded TwNavbar's own slots, distinct from
+        // NavbarContent (which lands in TwNavbar's plain ChildContent alongside the drawer toggle).
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavbarBrandContent, b => b.AddMarkupContent(0, "<strong class=\"brand\">Acme</strong>"))
+            .Add(x => x.NavbarNavigationContent, b => b.AddMarkupContent(0, "<a class=\"navlink\" href=\"/\">Home</a>"))
+            .Add(x => x.NavbarActionsContent, b => b.AddMarkupContent(0, "<button class=\"navaction\">Sign in</button>"))
+        );
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.NotNull(navbar.QuerySelector("strong.brand"));
+        Assert.NotNull(navbar.QuerySelector("a.navlink"));
+        Assert.NotNull(navbar.QuerySelector("button.navaction"));
+    }
+
+    [Fact]
+    public void ShouldPassThrough_NavbarNavigationItems_ToEmbeddedNavbar()
+    {
+        // Arrange & Act - independent of NavigationItems, which populates the sidebar itself.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavbarNavigationItems,
+            [
+                new() { Label = "Home", Href = "/" },
+                new() { Label = "Products", Href = "/products" }
+            ])
+        );
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.NotNull(navbar.QuerySelector("a[href='/']"));
+        Assert.NotNull(navbar.QuerySelector("a[href='/products']"));
+    }
+
+    [Fact]
     public void ShouldApply_CorrectSidebar_And_Toggle_And_MainClasses_WhenIsSidebarOpen_True()
     {
         // Arrange
@@ -279,6 +319,184 @@ public class TwSidebarTests : TwBlazorTestBase
         Assert.Equal(2, childAnchors.Count);
         Assert.Equal("/c1", childAnchors[0].GetAttribute("href"));
         Assert.Equal("/c2", childAnchors[1].GetAttribute("href"));
+    }
+
+    [Fact]
+    public void ShouldRender_ThreeLevelsDeep_WhenNavigationItemsAreNestedGroups()
+    {
+        // Arrange - TwSidebarNavigationList must recurse to arbitrary depth, e.g. a "Dates & Time"
+        // group nested inside "Forms", itself nested at the sidebar's top level.
+        var grandparent = new NavigationItem
+        {
+            Label = "Forms",
+            Collapsed = false,
+            NavigationItems =
+            [
+                new()
+                {
+                    Label = "Dates & Time",
+                    Collapsed = false,
+                    NavigationItems =
+                    [
+                        new() { Label = "Date Picker", Href = "/date-picker" },
+                        new() { Label = "Time Picker", Href = "/time-picker" }
+                    ]
+                }
+            ]
+        };
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [grandparent])
+        );
+
+        // Act
+        var buttons = cut.FindAll("button").Where(b => b.TextContent.Contains("Forms") || b.TextContent.Contains("Dates & Time")).ToList();
+        var leafAnchors = cut.FindAll("a[href]").Where(a => !a.ClassName!.Contains("sr-only")).ToList();
+
+        // Assert - both group levels render as their own toggle buttons, and both leaves at the
+        // third level render as links.
+        Assert.Equal(2, buttons.Count);
+        Assert.Contains(buttons, b => b.TextContent.Contains("Forms"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Dates & Time"));
+        Assert.Equal(2, leafAnchors.Count);
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/date-picker");
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/time-picker");
+    }
+
+    [Fact]
+    public void ShouldRender_FourLevelsDeep_WhenNavigationItemsAreNestedGroups()
+    {
+        // Arrange - one level deeper still, confirming TwSidebarNavigationList's recursion has no
+        // hardcoded depth limit: Root -> Branch -> Twig -> leaves.
+        var root = new NavigationItem
+        {
+            Label = "Root",
+            Collapsed = false,
+            NavigationItems =
+            [
+                new()
+                {
+                    Label = "Branch",
+                    Collapsed = false,
+                    NavigationItems =
+                    [
+                        new()
+                        {
+                            Label = "Twig",
+                            Collapsed = false,
+                            NavigationItems =
+                            [
+                                new() { Label = "Leaf1", Href = "/leaf1" },
+                                new() { Label = "Leaf2", Href = "/leaf2" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [root])
+        );
+
+        // Act
+        var buttons = cut.FindAll("button")
+            .Where(b => b.TextContent.Contains("Root") || b.TextContent.Contains("Branch") || b.TextContent.Contains("Twig"))
+            .ToList();
+        var leafAnchors = cut.FindAll("a[href]").Where(a => !a.ClassName!.Contains("sr-only")).ToList();
+
+        // Assert - all three group levels render as their own toggle buttons, and both leaves at
+        // the fourth level render as links.
+        Assert.Equal(3, buttons.Count);
+        Assert.Contains(buttons, b => b.TextContent.Contains("Root"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Branch"));
+        Assert.Contains(buttons, b => b.TextContent.Contains("Twig"));
+        Assert.Equal(2, leafAnchors.Count);
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/leaf1");
+        Assert.Contains(leafAnchors, a => a.GetAttribute("href") == "/leaf2");
+    }
+
+    private static NavigationItem BuildFourLevelTree() => new()
+    {
+        Label = "Root",
+        Collapsed = false,
+        NavigationItems =
+        [
+            new()
+            {
+                Label = "Branch",
+                Collapsed = false,
+                NavigationItems =
+                [
+                    new()
+                    {
+                        Label = "Twig",
+                        Collapsed = false,
+                        NavigationItems =
+                        [
+                            new() { Label = "Leaf1", Href = "/leaf1" },
+                            new() { Label = "Leaf2", Href = "/leaf2" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    [Fact]
+    public void ShouldApply_LevelDeepAccent_WhenThirdLevelGroupIsOpen()
+    {
+        // Arrange & Act - Twig sits at depth 2 (the third level), so its own open toggle gets the
+        // deep-level accent.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var twigButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Twig"));
+
+        // Assert - "oklch" is the distinctive token identifying the deep-level accent color, since
+        // "border-l-2" alone is too generic to distinguish it from other border utilities.
+        Assert.Contains(sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("oklch")), twigButton.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void ShouldApply_GroupRail_ToWrapperSpanningParentRowAndDeepChildContainer()
+    {
+        // Arrange & Act - Branch's children (Twig) sit three levels deep, so the wrapper spanning
+        // Branch's own toggle row and its child container should carry the guide rail, connecting the
+        // two visually instead of the rail only starting where the children begin. Root's own children
+        // (Branch) are just one level deep, so Root's wrapper should not.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var rootButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Root"));
+        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
+        var railToken = sidebarTheme.NavigationGroupRailDeep.Split(' ').First(t => t.Contains("oklch"));
+
+        // Assert
+        Assert.Contains(railToken, branchButton.ParentElement!.GetAttribute("class"));
+        Assert.DoesNotContain(railToken, rootButton.ParentElement!.GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public void ShouldNotApply_GroupRail_WhenDeepGroupIsCollapsed()
+    {
+        // Arrange - Branch's children (Twig) still sit three levels deep, but Branch itself is
+        // collapsed, so its child container is hidden and the connecting rail should not show either.
+        var tree = BuildFourLevelTree();
+        tree.NavigationItems[0].Collapsed = true; // Branch
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [tree])
+        );
+
+        // Act
+        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
+        var railToken = sidebarTheme.NavigationGroupRailDeep.Split(' ').First(t => t.Contains("oklch"));
+
+        // Assert
+        Assert.DoesNotContain(railToken, branchButton.ParentElement!.GetAttribute("class") ?? string.Empty);
     }
 
     [Fact]
@@ -553,6 +771,117 @@ public class TwSidebarTests : TwBlazorTestBase
         // Assert
         Assert.Empty(items);
     }
+
+    [Fact]
+    public void ShouldRender_OnlySidebarDrawerToggle_NotNavbarOwnToggle()
+    {
+        // Arrange & Act - the embedded TwNavbar always has its own responsive toggle disabled, so
+        // the sidebar's own drawer toggle is the only button inside it.
+        var cut = TestContext.Render<TwSidebar>();
+
+        // Assert
+        var navbar = cut.Find("nav[aria-label='Top navigation']");
+        Assert.Single(navbar.QuerySelectorAll("button"));
+    }
+
+    #region Navigation
+
+    [Fact]
+    public void ShouldUpdate_ActiveLink_AfterClientSideNavigation()
+    {
+        // Arrange - a layout hosting TwSidebar isn't re-rendered by client-side navigation, so
+        // without a LocationChanged subscription the active-link highlight would never refresh.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems,
+            [
+                new() { Label = "Home", Href = "/" },
+                new() { Label = "Products", Href = "/products" }
+            ]));
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/products");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Equal("page", cut.Find("a[href='/products']").GetAttribute("aria-current")));
+    }
+
+    [Fact]
+    public void ShouldCloseSidebar_OnLocationChanged_WhenMobileViewport()
+    {
+        // Arrange - on mobile, IsSidebarOpen represents a transient overlay that should close once
+        // a link inside it is followed, matching TwNavbar's own close-on-navigate behavior.
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(true);
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Contains("-translate-x-full", cut.Find("nav[aria-label='sidebar navigation']").GetAttribute("class")));
+    }
+
+    [Fact]
+    public void ShouldNotCloseSidebar_OnLocationChanged_WhenDesktopViewport()
+    {
+        // Arrange - on desktop, IsSidebarOpen represents a persistent panel (sidebarClasses has no
+        // lg: reset), so navigating must never auto-close it there.
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(false);
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+            Assert.Contains("translate-x-0", cut.Find("nav[aria-label='sidebar navigation']").GetAttribute("class")));
+    }
+
+    [Fact]
+    public void ShouldInvoke_IsSidebarOpenChanged_WhenClosedByLocationChanged()
+    {
+        // Arrange
+        TestContext.JSInterop.Setup<bool>("twSidebar.isMobileViewport").SetResult(true);
+
+        var invoked = false;
+        bool? received = null;
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.IsSidebarOpen, true)
+            .Add(x => x.IsSidebarOpenChanged, EventCallback.Factory.Create(this, (bool v) =>
+            {
+                invoked = true;
+                received = v;
+            }))
+        );
+
+        var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
+
+        // Act
+        navigationManager.NavigateTo("/some-other-page");
+
+        // Assert
+        cut.WaitForAssertion(() =>
+        {
+            Assert.True(invoked);
+            Assert.False(received);
+        });
+    }
+
+    #endregion
 
     [Fact]
     public void Search_ShouldExcludeItem_WithNullLabel()

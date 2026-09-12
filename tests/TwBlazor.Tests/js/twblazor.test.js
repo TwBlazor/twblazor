@@ -167,7 +167,13 @@ describe('twPicker', () => {
     describe('positionPanel', () => {
         function mockPanel(rect) {
             const panel = document.createElement('div');
-            panel.getBoundingClientRect = () => rect;
+            // Real DOMRect derives width/height from the edges - mirror that here so callers only
+            // need to specify left/right/top/bottom, the way the real getBoundingClientRect works.
+            panel.getBoundingClientRect = () => ({
+                ...rect,
+                width: rect.right - rect.left,
+                height: rect.bottom - rect.top,
+            });
             return panel;
         }
 
@@ -195,6 +201,7 @@ describe('twPicker', () => {
             panel.style.bottom = '100%';
             panel.style.marginTop = '0';
             panel.style.marginBottom = '0.5rem';
+            panel.style.maxHeight = '123px';
 
             window.twPicker.positionPanel(panel);
 
@@ -205,6 +212,7 @@ describe('twPicker', () => {
             expect(panel.style.bottom).toBe('');
             expect(panel.style.marginTop).toBe('');
             expect(panel.style.marginBottom).toBe('');
+            expect(panel.style.maxHeight).toBe('');
         });
 
         test('leaves positioning alone when the panel fits entirely within the viewport', () => {
@@ -215,6 +223,7 @@ describe('twPicker', () => {
 
             expect(panel.style.left).toBe('');
             expect(panel.style.top).toBe('');
+            expect(panel.style.maxHeight).toBe('');
         });
 
         test('flips to the left when the panel overflows the right edge', () => {
@@ -237,6 +246,8 @@ describe('twPicker', () => {
             expect(panel.style.bottom).toBe('100%');
             expect(panel.style.marginTop).toBe('0px'); // jsdom normalizes the '0' length to '0px'
             expect(panel.style.marginBottom).toBe('0.5rem');
+            // Plenty of room above (700px) for a 200px-tall panel, so no clamp is needed.
+            expect(panel.style.maxHeight).toBe('');
         });
 
         test('does not flip upward when overflowing the bottom edge but there is not more room above', () => {
@@ -249,6 +260,54 @@ describe('twPicker', () => {
 
             expect(panel.style.top).toBe('');
             expect(panel.style.bottom).toBe('');
+        });
+
+        test('does not flip upward when a tall panel overflows the bottom edge but the trigger has little room above it', () => {
+            // Regression test: a trigger sitting just below a fixed header (60px of room above) with
+            // a tall two-month range-picker panel (rect.bottom far past the viewport purely because
+            // of the panel's own height) used to flip upward anyway, because the old check compared
+            // rect.top against (viewportHeight - rect.bottom) - and rect.bottom grows with panel
+            // height, so that side went deeply negative and made "more room above" look true even
+            // though there was actually far more room below (740px) than above (60px).
+            setViewport(1000, 800);
+            const panel = mockPanel({ left: 10, right: 200, top: 60, bottom: 960 });
+
+            window.twPicker.positionPanel(panel);
+
+            expect(panel.style.top).toBe('');
+            expect(panel.style.bottom).toBe('');
+        });
+
+        test('clamps panel height to the room available above when flipped upward, so it cannot clip off the top of the viewport', () => {
+            // Regression test for the mobile bug: even once the flip direction itself is correct
+            // (more room above than below, e.g. an on-screen keyboard has covered the bottom of the
+            // screen), a panel taller than that available room would previously still render past
+            // the top edge - nothing capped its height to the space that was actually picked.
+            setViewport(1000, 800);
+            // spaceAbove = 600, spaceBelow = 800 - 600 = 200 - more room above, so it flips up, but
+            // the panel itself is 600px tall, taller than the 600px above once the edge gap is spent.
+            const panel = mockPanel({ left: 10, right: 200, top: 600, bottom: 1200 });
+
+            window.twPicker.positionPanel(panel);
+
+            expect(panel.style.top).toBe('auto');
+            expect(panel.style.bottom).toBe('100%');
+            // 600px available above, minus the 8px edge gap.
+            expect(panel.style.maxHeight).toBe('592px');
+        });
+
+        test('clamps panel height to the room available below when the panel is taller than the space below and there is even less room above', () => {
+            setViewport(1000, 800);
+            // spaceBelow = 800 - 50 = 750, spaceAbove = 50 - so it stays open downward, but the
+            // panel (760px tall) is still taller than the 750px actually available below it.
+            const panel = mockPanel({ left: 10, right: 200, top: 50, bottom: 810 });
+
+            window.twPicker.positionPanel(panel);
+
+            expect(panel.style.top).toBe('');
+            expect(panel.style.bottom).toBe('');
+            // 750px available below, minus the 8px edge gap.
+            expect(panel.style.maxHeight).toBe('742px');
         });
 
         test('uses visualViewport.height instead of clientHeight when available (mobile keyboard open)', () => {
@@ -264,6 +323,26 @@ describe('twPicker', () => {
 
             expect(panel.style.top).toBe('auto');
             expect(panel.style.bottom).toBe('100%');
+            expect(panel.style.maxHeight).toBe(''); // fits within the 350px above, no clamp needed
+
+            vi.unstubAllGlobals();
+        });
+
+        test('clamps to visualViewport.height (not the larger clientHeight) when a keyboard is open and the panel is too tall to fit', () => {
+            // Same on-screen-keyboard scenario as above, but the panel itself (e.g. a two-month
+            // range picker) is taller than the space visualViewport says is actually available -
+            // clamping must use that shrunk height, not the full layout clientHeight, or the panel
+            // would still render past the top of the visible area behind the keyboard.
+            setViewport(1000, 800);
+            vi.stubGlobal('visualViewport', { height: 400 });
+            const panel = mockPanel({ left: 10, right: 200, top: 350, bottom: 700 }); // 350px tall
+
+            window.twPicker.positionPanel(panel);
+
+            expect(panel.style.top).toBe('auto');
+            expect(panel.style.bottom).toBe('100%');
+            // 350px available above (per visualViewport), minus the 8px edge gap.
+            expect(panel.style.maxHeight).toBe('342px');
 
             vi.unstubAllGlobals();
         });
