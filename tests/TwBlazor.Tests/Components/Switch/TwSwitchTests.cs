@@ -190,6 +190,20 @@ public class TwSwitchTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void ShouldRender_Label_WithoutConflictingDisplayClass()
+    {
+        // Act
+        var cut = TestContext.Render<TwSwitch<bool>>(p => p
+            .Add(x => x.Label, "Settings")
+            .Add(x => x.Value, false)
+        );
+
+        // Assert
+        var classList = cut.Find("label").GetAttribute("class")!.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        Assert.DoesNotContain("block", classList);
+    }
+
+    [Fact]
     public void ShouldRender_SwitchVisuals_WithCorrectStructure()
     {
         // Act
