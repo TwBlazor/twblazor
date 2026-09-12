@@ -344,11 +344,9 @@
         npx @tailwindcss/cli -i ./{YourProjectName}/wwwroot/css/input.css -o ./{YourProjectName}/wwwroot/css/output.css --watch
         """;
 
-    private const string _serverComponentTestPage = """
+    private const string _serverComponentTestPageRazor = """
         @page "/component-test"
         @rendermode InteractiveServer
-        @using TwBlazor.Models
-        @using TwBlazor.Services
 
         <PageTitle>Component Test</PageTitle>
 
@@ -358,40 +356,27 @@
             Everything below is wired up and interactive - you're good to go!
         </TwAlert>
 
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-            <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" />
-            <TwButton Label="Show Dialog" Color="Color.Accent" OnClick="ShowDialog" />
-        </div>
+        <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" Class="mb-4" />
 
         <div class="flex flex-col gap-2">
             <TwSwitch @bind-Value="switchOne" Label="Switch one" Color="Color.Primary" />
             <TwSwitch @bind-Value="switchTwo" Label="Switch two" Color="Color.Success" />
             <TwSwitch @bind-Value="switchThree" Label="Switch three" Color="Color.Danger" />
         </div>
-
-        @code {
-            [Inject] private ITwDialogService DialogService { get; set; } = default!;
-
-            private int count;
-            private bool switchOne;
-            private bool switchTwo = true;
-            private bool switchThree;
-
-            private void Increment() => count++;
-
-            private Task ShowDialog()
-            {
-                return DialogService.ShowAsync<SampleConfirmDialog>("Sample Dialog",
-                    new TwDialogParameters { ["Message"] = "This dialog is opened from a TwButton." });
-            }
-        }
         """;
 
-    private const string _wasmComponentTestPage = """
+    private const string _serverComponentTestPageCode = """
+        private int count;
+        private bool switchOne;
+        private bool switchTwo = true;
+        private bool switchThree;
+
+        private void Increment() => count++;
+        """;
+
+    private const string _wasmComponentTestPageRazor = """
         @page "/component-test"
         @rendermode InteractiveWebAssembly
-        @using TwBlazor.Models
-        @using TwBlazor.Services
 
         <PageTitle>Component Test</PageTitle>
 
@@ -401,49 +386,21 @@
             Everything below is wired up and interactive - you're good to go!
         </TwAlert>
 
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-            <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" />
-            <TwButton Label="Show Dialog" Color="Color.Accent" OnClick="ShowDialog" />
-        </div>
+        <TwButton Label="@($"Clicked {count} times")" Color="Color.Primary" OnClick="Increment" Class="mb-4" />
 
         <div class="flex flex-col gap-2">
             <TwSwitch @bind-Value="switchOne" Label="Switch one" Color="Color.Primary" />
             <TwSwitch @bind-Value="switchTwo" Label="Switch two" Color="Color.Success" />
             <TwSwitch @bind-Value="switchThree" Label="Switch three" Color="Color.Danger" />
         </div>
-
-        @code {
-            [Inject] private ITwDialogService DialogService { get; set; } = default!;
-
-            private int count;
-            private bool switchOne;
-            private bool switchTwo = true;
-            private bool switchThree;
-
-            private void Increment() => count++;
-
-            private Task ShowDialog()
-            {
-                return DialogService.ShowAsync<SampleConfirmDialog>("Sample Dialog",
-                    new TwDialogParameters { ["Message"] = "This dialog is opened from a TwButton." });
-            }
-        }
         """;
 
-    private const string _sampleConfirmDialog = """
-        @using TwBlazor.Services
+    private const string _wasmComponentTestPageCode = """
+        private int count;
+        private bool switchOne;
+        private bool switchTwo = true;
+        private bool switchThree;
 
-        <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">@Message</p>
-        <div class="flex justify-end gap-2">
-            <TwButton Label="Close" Color="Color.Primary" OnClick="Close" />
-        </div>
-
-        @code {
-            [Parameter] public string Message { get; set; } = string.Empty;
-
-            [CascadingParameter] private TwDialogInstance? DialogInstance { get; set; }
-
-            private void Close() => DialogInstance?.Close(true);
-        }
+        private void Increment() => count++;
         """;
 }
