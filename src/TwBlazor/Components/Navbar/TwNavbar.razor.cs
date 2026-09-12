@@ -96,7 +96,19 @@ public partial class TwNavbar : TwBlazorComponentBase, IDisposable
 
     private void ToggleMenu() => isMenuOpen = !isMenuOpen;
 
-    public void Dispose() => navigationManager.LocationChanged -= OnLocationChanged;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            navigationManager.LocationChanged -= OnLocationChanged;
+        }
+    }
 
     // "navigation bar" restates the <nav> landmark's own role, which is redundant for assistive
     // technology (already announced as "navigation") and indistinguishable from other <nav> regions

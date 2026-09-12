@@ -103,4 +103,13 @@ public class TwSidebarTheme
     /// <remarks>Adds a guide rail and extra indentation connecting the open group visually to its own
     /// children, in the same accent used by <see cref="NavigationItemActiveLevelDeep"/>.</remarks>
     public required string NavigationDropdownContainerDeep { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the wrapper spanning a parent item's own toggle button
+    /// and its collapsible child container, when that parent's children are nested three levels deep.
+    /// </summary>
+    /// <remarks>Extends the guide rail from <see cref="NavigationDropdownContainerDeep"/> upward so it
+    /// runs the full height of the group, including the parent's own row, rather than starting only
+    /// where the children begin.</remarks>
+    public required string NavigationGroupRailDeep { get; set; }
 }

@@ -48,6 +48,16 @@ public partial class TwSidebarNavigationList : TwBlazorComponentBase
             .Build();
 
     /// <summary>
+    /// Gets the classes for the wrapper spanning a parent item's own toggle button and its collapsible
+    /// child container, extending the deep-nesting guide rail up through the parent's own row when its
+    /// children sit three levels deep and are currently expanded.
+    /// </summary>
+    private string GetParentGroupClasses(bool collapsed, int childDepth) =>
+        new ClassBuilder("flex flex-col")
+            .AddClass(theme.NavigationGroupRailDeep, !collapsed && childDepth >= 2)
+            .Build();
+
+    /// <summary>
     /// Gets a stable identifier for a parent navigation item, used to link the toggle button to its
     /// collapsible child container via <c>aria-controls</c>. Falls back to a value derived from the item
     /// instance when <see cref="NavigationItem.Id"/> is not supplied by the consumer.

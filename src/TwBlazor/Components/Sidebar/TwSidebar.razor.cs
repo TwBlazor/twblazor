@@ -168,7 +168,19 @@ public partial class TwSidebar : TwBlazorComponentBase, IDisposable
         }
     }
 
-    public void Dispose() => navigationManager.LocationChanged -= OnLocationChanged;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            navigationManager.LocationChanged -= OnLocationChanged;
+        }
+    }
 
     // A layout that hosts TwSidebar isn't re-rendered by client-side navigation (only the routed
     // content is), so without this the active-link highlight in TwSidebarItem would never refresh

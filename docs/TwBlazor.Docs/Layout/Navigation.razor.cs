@@ -68,8 +68,6 @@ public partial class Navigation : IDisposable
         public string Display { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
 
-        // A group entry (e.g. "Dates & Time") nests its own leaf entries here instead of a Url;
-        // empty for a leaf entry.
         public List<ComponentNavEntry> Items { get; set; } = [];
 
 #pragma warning disable S3459, S1144 // Populated by JSON deserialization from components.json - the setter has no visible caller for Sonar's static analysis to see

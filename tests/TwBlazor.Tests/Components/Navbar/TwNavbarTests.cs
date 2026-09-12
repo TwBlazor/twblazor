@@ -67,12 +67,12 @@ public class TwNavbarTests : TwBlazorTestBase
     {
         var cut = TestContext.Render<TwNavbar>(p => p
             .Add(x => x.DisableResponsiveCollapse, true)
-            .Add(x => x.NavigationItems, new List<NavigationItem>
-            {
+            .Add(x => x.NavigationItems,
+            [
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Current", Href = "/current", IsActive = true },
                 new() { Label = "Hidden", Href = "/hidden", Hidden = true }
-            }));
+            ]));
 
         Assert.Equal("page", cut.Find("a[href='/current']").GetAttribute("aria-current"));
         Assert.DoesNotContain("Hidden", cut.Markup);
@@ -196,11 +196,11 @@ public class TwNavbarTests : TwBlazorTestBase
         // Arrange
         var cut = TestContext.Render<TwNavbar>(p => p
             .Add(x => x.DisableResponsiveCollapse, true)
-            .Add(x => x.NavigationItems, new List<NavigationItem>
-            {
+            .Add(x => x.NavigationItems,
+            [
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Products", Href = "/products" }
-            }));
+            ]));
 
         var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
 

@@ -11,7 +11,7 @@
         if (IsNested)
         {
             <li>
-                <div class="flex flex-col">
+                <div class="@GetParentGroupClasses(item.Collapsed, Depth + 1)">
                     <TwSidebarItem NavigationItem="item" Id="@parentId" IsParent IsCollapsed="item.Collapsed" ChildrenId="@childrenId" Depth="Depth" OnClick="@(() => item.Collapsed = !item.Collapsed)" />
                     <div id="@childrenId" class="@GetChildContainerClasses(item.Collapsed, Depth + 1)">
                         <ul>
@@ -23,7 +23,7 @@
         }
         else
         {
-            <div class="flex flex-col">
+            <div class="@GetParentGroupClasses(item.Collapsed, Depth + 1)">
                 <TwSidebarItem NavigationItem="item" Id="@parentId" IsParent IsCollapsed="item.Collapsed" ChildrenId="@childrenId" Depth="Depth" OnClick="@(() => item.Collapsed = !item.Collapsed)" />
                 <div id="@childrenId" class="@GetChildContainerClasses(item.Collapsed, Depth + 1)">
                     <ul>

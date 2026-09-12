@@ -171,11 +171,11 @@ public class TwSidebarTests : TwBlazorTestBase
     {
         // Arrange & Act - independent of NavigationItems, which populates the sidebar itself.
         var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavbarNavigationItems, new()
-            {
+            .Add(x => x.NavbarNavigationItems,
+            [
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Products", Href = "/products" }
-            })
+            ])
         );
 
         // Assert
@@ -444,21 +444,59 @@ public class TwSidebarTests : TwBlazorTestBase
     };
 
     [Fact]
-    public void ShouldApply_Level3Accent_WhenThirdLevelGroupIsOpen()
+    public void ShouldApply_LevelDeepAccent_WhenThirdLevelGroupIsOpen()
     {
         // Arrange & Act - Twig sits at depth 2 (the third level), so its own open toggle gets the
-        // level 3 accent, and the container revealing it (Branch's children) gets the matching rail.
+        // deep-level accent.
         var cut = TestContext.Render<TwSidebar>(p => p
             .Add(x => x.NavigationItems, [BuildFourLevelTree()])
         );
 
         var twigButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Twig"));
-        var branchChildrenContainer = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch")).NextElementSibling;
 
-        // Assert - "purple" is the distinctive token identifying the level 3 accent (as opposed to
-        // level 4's fuchsia), since both share generic layout tokens like "pl-2".
-        Assert.Contains(sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("purple")), twigButton.GetAttribute("class"));
-        Assert.Contains(sidebarTheme.NavigationDropdownContainerDeep.Split(' ').First(t => t.Contains("purple")), branchChildrenContainer!.GetAttribute("class"));
+        // Assert - "oklch" is the distinctive token identifying the deep-level accent color, since
+        // "border-l-2" alone is too generic to distinguish it from other border utilities.
+        Assert.Contains(sidebarTheme.NavigationItemActiveLevelDeep.Split(' ').First(t => t.Contains("oklch")), twigButton.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void ShouldApply_GroupRail_ToWrapperSpanningParentRowAndDeepChildContainer()
+    {
+        // Arrange & Act - Branch's children (Twig) sit three levels deep, so the wrapper spanning
+        // Branch's own toggle row and its child container should carry the guide rail, connecting the
+        // two visually instead of the rail only starting where the children begin. Root's own children
+        // (Branch) are just one level deep, so Root's wrapper should not.
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [BuildFourLevelTree()])
+        );
+
+        var rootButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Root"));
+        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
+        var railToken = sidebarTheme.NavigationGroupRailDeep.Split(' ').First(t => t.Contains("oklch"));
+
+        // Assert
+        Assert.Contains(railToken, branchButton.ParentElement!.GetAttribute("class"));
+        Assert.DoesNotContain(railToken, rootButton.ParentElement!.GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public void ShouldNotApply_GroupRail_WhenDeepGroupIsCollapsed()
+    {
+        // Arrange - Branch's children (Twig) still sit three levels deep, but Branch itself is
+        // collapsed, so its child container is hidden and the connecting rail should not show either.
+        var tree = BuildFourLevelTree();
+        tree.NavigationItems[0].Collapsed = true; // Branch
+
+        var cut = TestContext.Render<TwSidebar>(p => p
+            .Add(x => x.NavigationItems, [tree])
+        );
+
+        // Act
+        var branchButton = cut.FindAll("button").Single(b => b.TextContent.Contains("Branch"));
+        var railToken = sidebarTheme.NavigationGroupRailDeep.Split(' ').First(t => t.Contains("oklch"));
+
+        // Assert
+        Assert.DoesNotContain(railToken, branchButton.ParentElement!.GetAttribute("class") ?? string.Empty);
     }
 
     [Fact]
@@ -754,11 +792,11 @@ public class TwSidebarTests : TwBlazorTestBase
         // Arrange - a layout hosting TwSidebar isn't re-rendered by client-side navigation, so
         // without a LocationChanged subscription the active-link highlight would never refresh.
         var cut = TestContext.Render<TwSidebar>(p => p
-            .Add(x => x.NavigationItems, new()
-            {
+            .Add(x => x.NavigationItems,
+            [
                 new() { Label = "Home", Href = "/" },
                 new() { Label = "Products", Href = "/products" }
-            }));
+            ]));
 
         var navigationManager = TestContext.Services.GetRequiredService<NavigationManager>();
 

@@ -34,19 +34,11 @@ public static class AccessibilityRoutes
         "/sidebar/preview-navigation",
     ];
 
-    // Routable pages that aren't a documented component and so have no entry in components.json.
-    private static readonly string[] _nonComponentRoutes =
-    [
-        "/",
-        "/get-started",
-        "/theme",
-    ];
-
     private static readonly string[] _all = BuildAllRoutes();
 
     private static string[] BuildAllRoutes()
     {
-        List<string> routes = [.. _nonComponentRoutes, .. _previewRoutes, .. LoadComponentRoutes()];
+        List<string> routes = [.. _previewRoutes, .. LoadComponentRoutes()];
         return [.. routes.OrderBy(route => route, StringComparer.Ordinal)];
     }
 
