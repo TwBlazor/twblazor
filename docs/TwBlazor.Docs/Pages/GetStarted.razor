@@ -89,13 +89,9 @@
                 <p Class="mb-3">
                     Add a test page to confirm everything is wired up. Create <code>{YourProjectName}/Components/Pages/ComponentTest.razor</code>:
                 </p>
-                <TwCodeBlock Content="@_serverComponentTestPage" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+                <ExampleCodeBlock Razor="@_serverComponentTestPageRazor" CSharp="@_serverComponentTestPageCode" />
                 <p Class="my-3">
-                    <code>ShowDialog</code> references a small dialog content component. TwBlazor ships the dialog chrome and service (<code>TwDialog</code>, <code>TwDialogProvider</code>, <code>ITwDialogService</code>), but the dialog's actual content is always your own component. Create <code>{YourProjectName}/Components/SampleConfirmDialog.razor</code>:
-                </p>
-                <TwCodeBlock Content="@_sampleConfirmDialog" Language="csharp" />
-                <p Class="my-3">
-                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, a button that opens a dialog, and three interactive switches.
+                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, and three interactive switches.
                 </p>
             </PageCard>
         </TwTab>
@@ -180,13 +176,9 @@
                 <p Class="mb-3">
                     Add a test page to confirm everything is wired up. Since it needs to be interactive under WebAssembly, it has to live in the Client project. Create <code>{YourProjectName}.Client/Pages/ComponentTest.razor</code>:
                 </p>
-                <TwCodeBlock Content="@_wasmComponentTestPage" Language="csharp" Class="max-h-100 overflow-y-scroll" />
+                <ExampleCodeBlock Razor="@_wasmComponentTestPageRazor" CSharp="@_wasmComponentTestPageCode" />
                 <p Class="my-3">
-                    <code>ShowDialog</code> references a small dialog content component. TwBlazor ships the dialog chrome and service (<code>TwDialog</code>, <code>TwDialogProvider</code>, <code>ITwDialogService</code>), but the dialog's actual content is always your own component. It needs to live alongside the test page, so create <code>{YourProjectName}.Client/SampleConfirmDialog.razor</code>:
-                </p>
-                <TwCodeBlock Content="@_sampleConfirmDialog" Language="csharp" />
-                <p Class="my-3">
-                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, a button that opens a dialog, and three interactive switches.
+                    Run the app and go to <code>/component-test</code>. You should see a green success alert, a button whose label counts up each click, and three interactive switches.
                 </p>
             </PageCard>
         </TwTab>
@@ -247,7 +239,6 @@
             <link rel="stylesheet" href="@Assets["_content/TwBlazor/css/twblazor.css"]" />
             <!-- Bootstrap Icons -->
             <link rel="stylesheet" href="@Assets["_content/TwBlazor/icons/bootstrap-icons.min.css"]">
-            <!-- Your own Tailwind build, generated in step 8. 404s until then - that's expected. -->
             <link rel="stylesheet" href="@Assets["css/output.css"]" />
             <!-- ... -->
         </head>
