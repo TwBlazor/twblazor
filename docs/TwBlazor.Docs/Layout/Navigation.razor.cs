@@ -3,6 +3,7 @@ using Microsoft.JSInterop;
 using System.Text.Json;
 using TwBlazor.Enums;
 using TwBlazor.Models;
+using TwBlazor.Services;
 
 namespace TwBlazor.Docs.Layout;
 
@@ -11,6 +12,8 @@ public partial class Navigation : IDisposable
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter] public bool MainContentPadding { get; set; }
+    
+    [Inject] private ITwDialogService dialogService { get; set; } = null!;
 
     private Icon themeIcon = Icon.Moon; // NOSONAR - used in Navigation.razor template
 
@@ -101,6 +104,8 @@ public partial class Navigation : IDisposable
         var isDark = await JS.InvokeAsync<bool>("themeToggle.toggle", _cts.Token);
         themeIcon = isDark ? Icon.Sun : Icon.Moon;
     }
+
+    private async Task SearchDialog() => await dialogService.ShowAsync<SearchDisplay>(options: new TwDialogOptions { NoHeader = true });
 
     public void Dispose()
     {

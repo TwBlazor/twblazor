@@ -1,0 +1,11 @@
+﻿@using TwBlazor.Services
+
+<TwTextfield Label="Search" @bind-Value="value" AriaLabel="search documentation" />
+
+@code {
+    [CascadingParameter] private TwDialogInstance? DialogInstance { get; set; }
+
+    private string value = string.Empty;
+
+    private void Cancel() => DialogInstance?.Cancel();
+}

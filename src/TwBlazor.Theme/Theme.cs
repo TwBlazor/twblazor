@@ -631,7 +631,7 @@ public static class Theme
                     SwatchDisabled = interaction.DisabledOpacity,
                     SwatchHover = "hover:ring-[oklch(21%_0.006_285.885)]/20 dark:hover:ring-[oklch(97.807%_0.029_256.847)]/25",
                     InputContainer = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md}",
-                    DialogPosition = $"{positioning.Absolute} top-full left-0 mt-2 z-50",
+                    DialogPosition = $"{positioning.Absolute} top-full left-0 mt-2 z-120",
                     DialogSurface = $"tw-color-picker-dialog {neutralSurface.Background} ring-1 ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {spacing.Padding.Standard} w-64",
                     PreviewSwatch = $"flex-1 min-w-0 h-6 {rounded.Full} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {shadows.Sm}",
                     SelectorSquare = $"{positioning.Relative} {sizing.FullWidth} h-48 overflow-hidden ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
@@ -646,7 +646,7 @@ public static class Theme
                 {
                     Header = $"{neutralSurface.Elevated} text-center font-medium {rounded.RoundedTop.Lg} border-b {neutralSurface.BorderStrong}",
                     WeekdaysHeader = $"{anchor.Center} {text.Medium.Primary} {darkText.Light.Primary} h-8 {display.Flex} text-xs font-semibold tracking-wide ",
-                    Base = $"{positioning.Absolute} {interaction.PointerCursor} {borderWidth.None} text-center text-sm font-medium transition-colors duration-200 top-full left-0 {flexbox.Row} md:flex-row {flexbox.Align.Center} z-50 mt-1 {neutralSurface.Elevated} px-2 pb-2 {borderWidth.Thin} {neutralSurface.BorderStrong}",
+                    Base = $"{positioning.Absolute} {interaction.PointerCursor} {borderWidth.None} text-center text-sm font-medium transition-colors duration-200 top-full left-0 {flexbox.Row} md:flex-row {flexbox.Align.Center} z-120 mt-1 {neutralSurface.Elevated} px-2 pb-2 {borderWidth.Thin} {neutralSurface.BorderStrong}",
                     ActiveClass = "bg-purple-50 dark:bg-purple-500/30",
                     ButtonClass = $"{spacing.Padding.Compact} h-8 {display.Flex} {flexbox.Align.Center} {sizing.FullWidth} {flexbox.Justify.Center}",
                     RangeClass = "bg-purple-100 dark:bg-purple-500/20",

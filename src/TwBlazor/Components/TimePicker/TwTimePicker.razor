@@ -32,7 +32,7 @@
 
         @if (isFocused)
         {
-            <div class="absolute top-full left-0 z-50 mt-2 rounded-lg shadow-lg" role="dialog" aria-label="Choose time" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
+            <div class="absolute top-full left-0 z-120 mt-2 rounded-lg shadow-lg" role="dialog" aria-label="Choose time" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
                 <TwTimePickerBody Class="time bg-white dark:bg-gray-800 p-4 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700 text-center font-medium dark:text-white"
                                     Id="@Id"
                                     Is12HourFormat="@Is12HourFormat"
