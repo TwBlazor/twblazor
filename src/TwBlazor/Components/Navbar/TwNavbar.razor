@@ -21,6 +21,9 @@
         }
 
         <div id="@menuId" class="@navigationContainerClasses">
+            
+            @ChildContent
+            
             @if (NavigationContent is not null)
             {
                 @NavigationContent
@@ -38,7 +41,6 @@
                     </a>
                 }
             }
-            @ChildContent
             @if (ActionsContent is not null)
             {
                 <div class="@theme.NavbarActions">@ActionsContent</div>

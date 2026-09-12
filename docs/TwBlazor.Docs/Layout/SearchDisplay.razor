@@ -1,0 +1,46 @@
+@using TwBlazor.Docs.Services
+@using TwBlazor.Enums
+@using TwBlazor.Services
+
+<div class="w-full">
+    <TwTextfield T="string" Label="Search" Value="@searchTerm" ValueChanged="@((v) => OnSearchInput(v))" BindEvent="oninput" AriaLabel="search documentation" Placeholder="Search components and documentation..." />
+
+    @if (!hasSearched)
+    {
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">Search across TwBlazor components, theme configuration, and API documentation.</p>
+    }
+    else if (componentResults.Count == 0 && themeResults.Count == 0 && documentationResults.Count == 0)
+    {
+        <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-6">No results for "@searchTerm".</p>
+    }
+    else
+    {
+        <div class="mt-4 max-h-96 overflow-y-auto flex flex-col gap-4">
+            @foreach (var section in sections)
+            {
+                <section aria-label="@section.Title">
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">@section.Title</h3>
+                    <div class="flex flex-col gap-2">
+                        @foreach (var result in section.Results)
+                        {
+                            <a @key="result.Url" href="@result.Url"
+                               target="@(result.IsExternal ? "_blank" : null)"
+                               rel="@(result.IsExternal ? "noopener noreferrer" : null)"
+                               @onclick="SelectResult"
+                               class="flex items-center justify-between gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <span class="flex flex-col min-w-0">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white truncate">@result.Title</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400 truncate">@result.Subtitle</span>
+                                </span>
+                                @if (result.IsExternal)
+                                {
+                                    <TwIcon Icon="Icon.Box_Arrow_Up_Right" AriaLabel="Opens in a new window" Class="text-gray-400 dark:text-gray-500 shrink-0" />
+                                }
+                            </a>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+    }
+</div>

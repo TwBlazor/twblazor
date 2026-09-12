@@ -13,6 +13,12 @@ namespace TwBlazor.Docs.Layout;
 /// </summary>
 public partial class ThemeConfigurationCard : ComponentBase
 {
+    /// <summary>
+    /// The DOM id given to this card's <see cref="PageCard"/>, so a link elsewhere on the site (e.g. a
+    /// search result) can deep-link straight to it via a <c>#theme-configuration</c> URL fragment.
+    /// </summary>
+    public const string AnchorId = "theme-configuration";
+
     // Shared, cross-cutting building blocks (colour palettes, screen positions) that several components'
     // themes reuse as-is, rather than defining their own Tailwind classes. Properties of these types read
     // as "global theme configuration" - split into their own table instead of looking component-specific.
