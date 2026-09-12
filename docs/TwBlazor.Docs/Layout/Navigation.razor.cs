@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Text.Json;
+using TwBlazor.Docs.Services;
 using TwBlazor.Enums;
 using TwBlazor.Models;
 using TwBlazor.Services;
@@ -32,7 +32,7 @@ public partial class Navigation : IDisposable
             new() { Id = "get-started", Label = "Get started", Href = "/get-started" },
         ];
 
-        foreach (var category in LoadComponentCategories())
+        foreach (var category in ComponentCatalog.LoadCategories())
         {
             var children = category.Items.Select(BuildNavigationItem).ToList();
             items.Add(new NavigationItem { Id = category.Category.ToLowerInvariant(), Label = category.Category, NavigationItems = children });
@@ -45,38 +45,10 @@ public partial class Navigation : IDisposable
 
     // An entry with nested Items (e.g. "Dates & Time" grouping the date/time pickers under "Forms")
     // is itself a group rather than a leaf link, so it recurses - to any depth components.json uses.
-    private static NavigationItem BuildNavigationItem(ComponentNavEntry entry) =>
+    private static NavigationItem BuildNavigationItem(ComponentEntry entry) =>
         entry.Items.Count > 0
             ? new NavigationItem { Id = entry.Id, Label = entry.Display, NavigationItems = entry.Items.Select(BuildNavigationItem).ToList() }
             : new NavigationItem { Id = entry.Id, Label = entry.Display, Href = entry.Url, New = entry.IsNew };
-
-    private static List<ComponentCategory> LoadComponentCategories()
-    {
-        var assembly = typeof(Navigation).Assembly;
-        using var stream = assembly.GetManifestResourceStream("TwBlazor.Docs.components.json")
-            ?? throw new InvalidOperationException("Embedded resource 'components.json' was not found.");
-
-        return JsonSerializer.Deserialize<List<ComponentCategory>>(stream, JsonSerializerOptions.Web) ?? [];
-    }
-
-    private sealed class ComponentCategory
-    {
-        public string Category { get; set; } = string.Empty;
-        public List<ComponentNavEntry> Items { get; set; } = [];
-    }
-
-    private sealed class ComponentNavEntry
-    {
-        public string Id { get; set; } = string.Empty;
-        public string Display { get; set; } = string.Empty;
-        public string Url { get; set; } = string.Empty;
-
-        public List<ComponentNavEntry> Items { get; set; } = [];
-
-#pragma warning disable S3459, S1144 // Populated by JSON deserialization from components.json - the setter has no visible caller for Sonar's static analysis to see
-        public bool IsNew { get; set; }
-#pragma warning restore S3459, S1144
-    }
 
     private readonly CancellationTokenSource _cts = new();
 

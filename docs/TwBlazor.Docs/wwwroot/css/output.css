@@ -706,6 +706,9 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-96 {
+    max-height: calc(var(--spacing) * 96);
+  }
   .max-h-100 {
     max-height: calc(var(--spacing) * 100);
   }
@@ -1769,6 +1772,9 @@
   }
   .py-5 {
     padding-block: calc(var(--spacing) * 5);
+  }
+  .py-6 {
+    padding-block: calc(var(--spacing) * 6);
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
@@ -3410,6 +3416,14 @@
     }
     .dark\:hover\:bg-gray-700:where(.dark, .dark *):hover {
       background-color: var(--color-gray-700);
+    }
+    .dark\:hover\:bg-gray-700\/50:where(.dark, .dark *):hover {
+      background-color: color-mix(in srgb, oklch(37.3% 0.034 259.733) 50%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .dark\:hover\:bg-gray-700\/50:where(.dark, .dark *):hover {
+        background-color: color-mix(in oklab, var(--color-gray-700) 50%, transparent);
+      }
     }
     .dark\:hover\:bg-gray-800:where(.dark, .dark *):hover {
       background-color: var(--color-gray-800);
