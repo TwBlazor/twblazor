@@ -95,9 +95,9 @@ public static class Theme
             {
                 Primary = "text-purple-600",
                 Accent = "text-fuchsia-600",
-                Success = "text-green-700",
-                Danger = "text-red-600",
-                Warning = "text-yellow-700",
+                Success = "text-green-800",
+                Danger = "text-red-700",
+                Warning = "text-yellow-800",
                 Info = "text-blue-600",
                 Light = "text-gray-100",
                 Dark = "text-gray-950",
