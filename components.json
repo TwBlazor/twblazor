@@ -6,19 +6,22 @@
         "id": "breadcrumb-navitem",
         "display": "Breadcrumb",
         "name": "TwBreadcrumb",
-        "url": "/breadcrumb"
+        "url": "/breadcrumb",
+        "theme": "TwBreadcrumbTheme"
       },
       {
         "id": "card-navitem",
         "display": "Card",
         "name": "TwCard",
-        "url": "/card"
+        "url": "/card",
+        "theme": "TwCardTheme"
       },
       {
         "id": "collapse-navitem",
         "display": "Collapse",
         "name": "TwCollapse",
-        "url": "/collapse"
+        "url": "/collapse",
+        "theme": "TwCollapseTheme"
       },
       {
         "id": "navbar-navitem",
@@ -30,20 +33,23 @@
         "id": "sidebar-navitem",
         "display": "Sidebar",
         "name": "TwSidebar",
-        "url": "/sidebar"
+        "url": "/sidebar",
+        "theme": "TwSidebarTheme"
       },
       {
         "id": "tabs-navitem",
         "display": "Tabs",
         "name": "TwTabContainer",
-        "url": "/tabs"
+        "url": "/tabs",
+        "theme": "TwTabTheme"
       },
       {
         "id": "tree-list-navitem",
         "display": "Tree List",
         "name": "TwTreeList",
         "url": "/tree-list",
-        "isNew": true
+        "isNew": true,
+        "theme": "TwTreeListTheme"
       }
     ]
   },
@@ -54,20 +60,23 @@
         "id": "button-navitem",
         "display": "Button",
         "name": "TwButton",
-        "url": "/button"
+        "url": "/button",
+        "theme": "TwButtonTheme"
       },
       {
         "id": "checkbox-navitem",
         "display": "Checkbox",
         "name": "TwCheckbox",
-        "url": "/checkbox"
+        "url": "/checkbox",
+        "theme": "TwCheckboxTheme"
       },
       {
         "id": "color-picker-navitem",
         "display": "Color Picker",
         "name": "TwColorPicker",
         "url": "/color-picker",
-        "isNew": true
+        "isNew": true,
+        "theme": "TwColorPickerTheme"
       },
       {
         "id": "dates-time-navitem",
@@ -77,7 +86,8 @@
             "id": "date-picker-navitem",
             "display": "Date",
             "name": "TwDatePicker",
-            "url": "/date-picker"
+            "url": "/date-picker",
+            "theme": "TwDatePickerTheme"
           },
           {
             "id": "date-range-picker-navitem",
@@ -103,7 +113,8 @@
             "id": "time-picker-navitem",
             "display": "Time",
             "name": "TwTimePicker",
-            "url": "/time-picker"
+            "url": "/time-picker",
+            "theme": "TwTimePickerTheme"
           },
           {
             "id": "time-range-picker-navitem",
@@ -124,7 +135,8 @@
         "id": "radio-button-navitem",
         "display": "Radio Button",
         "name": "TwRadioButton",
-        "url": "/radio-button"
+        "url": "/radio-button",
+        "theme": "TwRadioButtonTheme"
       },
       {
         "id": "select-navitem",
@@ -136,19 +148,22 @@
         "id": "slider-navitem",
         "display": "Slider",
         "name": "TwSlider",
-        "url": "/slider"
+        "url": "/slider",
+        "theme": "TwSliderTheme"
       },
       {
         "id": "switch-navitem",
         "display": "Switch",
         "name": "TwSwitch",
-        "url": "/switch"
+        "url": "/switch",
+        "theme": "TwSwitchTheme"
       },
       {
         "id": "textfield-navitem",
         "display": "Textfield",
         "name": "TwTextfield",
-        "url": "/textfield"
+        "url": "/textfield",
+        "theme": "TwInputTheme"
       }
     ]
   },
@@ -159,13 +174,15 @@
         "id": "alert-navitem",
         "display": "Alert",
         "name": "TwAlert",
-        "url": "/alert"
+        "url": "/alert",
+        "theme": "TwAlertTheme"
       },
       {
         "id": "chip-navitem",
         "display": "Chip",
         "name": "TwChip",
-        "url": "/chip"
+        "url": "/chip",
+        "theme": "TwChipTheme"
       },
       {
         "id": "icon-navitem",
@@ -177,21 +194,24 @@
         "id": "progress-navitem",
         "display": "Progress",
         "name": "TwProgress",
-        "url": "/progress"
+        "url": "/progress",
+        "theme": "TwProgressTheme"
       },
       {
         "id": "skeleton-navitem",
         "display": "Skeleton",
         "name": "TwSkeleton",
         "url": "/skeleton",
-        "isNew": true
+        "isNew": true,
+        "theme": "TwSkeletonTheme"
       },
       {
         "id": "spinner-navitem",
         "display": "Spinner",
         "name": "TwSpinner",
         "url": "/spinner",
-        "isNew": true
+        "isNew": true,
+        "theme": "TwSpinnerTheme"
       }
     ]
   },
@@ -208,13 +228,15 @@
         "id": "pagination-navitem",
         "display": "Pagination",
         "name": "TwPagination",
-        "url": "/pagination"
+        "url": "/pagination",
+        "theme": "TwPaginationTheme"
       },
       {
         "id": "table-navitem",
         "display": "Table",
         "name": "TwTable",
-        "url": "/table"
+        "url": "/table",
+        "theme": "TwTableTheme"
       }
     ]
   },
@@ -225,13 +247,15 @@
         "id": "dialog-navitem",
         "display": "Dialog Service",
         "name": "TwDialog",
-        "url": "/dialog"
+        "url": "/dialog",
+        "theme": "TwDialogTheme"
       },
       {
         "id": "toast-navitem",
         "display": "Toast Service",
         "name": "TwToastProvider",
-        "url": "/toast"
+        "url": "/toast",
+        "theme": "TwToastTheme"
       }
     ]
   }

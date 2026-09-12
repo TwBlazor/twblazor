@@ -111,7 +111,7 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
 
     private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
 
-    private static string panelPositionClasses => new ClassBuilder("absolute top-full left-0 z-50 mt-2").Build();
+    private static string panelPositionClasses => new ClassBuilder("absolute top-full left-0 z-120 mt-2").Build();
 
     private string panelSurfaceClasses => new ClassBuilder("w-56 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700")
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
