@@ -762,8 +762,8 @@ public static class Theme
                     NavigationItemBase = $"{spacing.Gap.Md} min-w-0 transition-colors duration-200 {display.Flex} {flexbox.Align.Center} {neutralText.Secondary} {neutralSurface.Hover} {spacing.InteractiveRowPadding} text-sm focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {interaction.PointerCursor}",
                     NavigationItemActive = "bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)] font-semibold",
                     NavigationDropdownContainer = neutralSurface.BackgroundSubtle,
-                    NavigationItemActiveLevelDeep = $"border-l-2 {border.Neutral.Base}",
-                    NavigationDropdownContainerDeep = $"border-l-2 border-b-2 pl-2 {border.Neutral.Base}",
+                    NavigationItemActiveLevelDeep = $"border-l-2 {border.Colors.Primary}",
+                    NavigationDropdownContainerDeep = $"border-l-2 border-b-2 pl-2 {border.Colors.Primary}",
                     MainContent = $"{sizing.FullWidth} flex-1 overflow-y-auto transition-[margin] duration-200 ease-in-out left-0",
                     MainContentRoot = $"{transparentBackground} {neutralSurface.Background} h-dvh {sizing.FullWidth} {display.Flex} {flexbox.Col} transition-[margin] duration-300 ease-in-out {neutralText.Heading} overflow-x-hidden"
                 },
