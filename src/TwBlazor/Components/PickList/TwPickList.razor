@@ -1,0 +1,108 @@
+@namespace TwBlazor.Components
+@typeparam TItem
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id"
+     class="@containerClasses"
+     style="@Style"
+     @attributes="@Attributes"
+     aria-label="@AriaLabel"
+     aria-labelledby="@AriaLabelledBy">
+    <div class="@theme.Column">
+        <div class="@theme.ColumnHeader">
+            <span class="@theme.Label">@SourceLabel</span>
+            @if (AllowReorder)
+            {
+                <div class="@theme.ReorderButtons">
+                    <TwIcon Icon="Icon.Chevron_Up" ButtonVariant="ButtonVariant.Text"
+                            Disabled="@(Disabled || selectedSource.Count == 0)"
+                            OnClick="@(() => MoveSelectionAsync(true, true))"
+                            AriaLabel="@($"Move selected {SourceLabel} item up")" />
+                    <TwIcon Icon="Icon.Chevron_Down" ButtonVariant="ButtonVariant.Text"
+                            Disabled="@(Disabled || selectedSource.Count == 0)"
+                            OnClick="@(() => MoveSelectionAsync(true, false))"
+                            AriaLabel="@($"Move selected {SourceLabel} item down")" />
+                </div>
+            }
+        </div>
+        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@SourceLabel">
+            @if (!SourceItems.Any())
+            {
+                <li class="@theme.EmptyState">@EmptyText</li>
+            }
+            @foreach (var item in SourceItems)
+            {
+                <li role="option"
+                    tabindex="@(Disabled ? "-1" : "0")"
+                    aria-selected="@(IsSelected(item, true) ? "true" : "false")"
+                    class="@GetItemClasses(item, true)"
+                    @onclick="@(() => ToggleSelectionAsync(item, true))"
+                    @onkeydown="@((KeyboardEventArgs e) => OnItemKeyDownAsync(e, item, true))">
+                    @GetDisplayText(item)
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="@theme.TransferButtonColumn">
+        <TwIcon Icon="Icon.Chevron_Right" ButtonVariant="ButtonVariant.Outlined"
+                Disabled="@(Disabled || selectedSource.Count == 0)"
+                OnClick="@(() => TransferSelectedAsync(true))"
+                AriaLabel="@($"Move selected items to {TargetLabel}")" />
+        @if (ShowMoveAllButtons)
+        {
+            <TwIcon Icon="Icon.Chevron_Double_Right" ButtonVariant="ButtonVariant.Outlined"
+                    Disabled="@(Disabled || !SourceItems.Any())"
+                    OnClick="@(() => TransferAllAsync(true))"
+                    AriaLabel="@($"Move all items to {TargetLabel}")" />
+        }
+        <TwIcon Icon="Icon.Chevron_Left" ButtonVariant="ButtonVariant.Outlined"
+                Disabled="@(Disabled || selectedTarget.Count == 0)"
+                OnClick="@(() => TransferSelectedAsync(false))"
+                AriaLabel="@($"Move selected items to {SourceLabel}")" />
+        @if (ShowMoveAllButtons)
+        {
+            <TwIcon Icon="Icon.Chevron_Double_Left" ButtonVariant="ButtonVariant.Outlined"
+                    Disabled="@(Disabled || !TargetItems.Any())"
+                    OnClick="@(() => TransferAllAsync(false))"
+                    AriaLabel="@($"Move all items to {SourceLabel}")" />
+        }
+    </div>
+
+    <div class="@theme.Column">
+        <div class="@theme.ColumnHeader">
+            <span class="@theme.Label">@TargetLabel</span>
+            @if (AllowReorder)
+            {
+                <div class="@theme.ReorderButtons">
+                    <TwIcon Icon="Icon.Chevron_Up" ButtonVariant="ButtonVariant.Text"
+                            Disabled="@(Disabled || selectedTarget.Count == 0)"
+                            OnClick="@(() => MoveSelectionAsync(false, true))"
+                            AriaLabel="@($"Move selected {TargetLabel} item up")" />
+                    <TwIcon Icon="Icon.Chevron_Down" ButtonVariant="ButtonVariant.Text"
+                            Disabled="@(Disabled || selectedTarget.Count == 0)"
+                            OnClick="@(() => MoveSelectionAsync(false, false))"
+                            AriaLabel="@($"Move selected {TargetLabel} item down")" />
+                </div>
+            }
+        </div>
+        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@TargetLabel">
+            @if (!TargetItems.Any())
+            {
+                <li class="@theme.EmptyState">@EmptyText</li>
+            }
+            @foreach (var item in TargetItems)
+            {
+                <li role="option"
+                    tabindex="@(Disabled ? "-1" : "0")"
+                    aria-selected="@(IsSelected(item, false) ? "true" : "false")"
+                    class="@GetItemClasses(item, false)"
+                    @onclick="@(() => ToggleSelectionAsync(item, false))"
+                    @onkeydown="@((KeyboardEventArgs e) => OnItemKeyDownAsync(e, item, false))">
+                    @GetDisplayText(item)
+                </li>
+            }
+        </ul>
+    </div>
+</div>

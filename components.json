@@ -232,6 +232,14 @@
         "theme": "TwPaginationTheme"
       },
       {
+        "id": "pick-list-navitem",
+        "display": "Pick List",
+        "name": "TwPickList",
+        "url": "/pick-list",
+        "isNew": true,
+        "theme": "TwPickListTheme"
+      },
+      {
         "id": "table-navitem",
         "display": "Table",
         "name": "TwTable",
