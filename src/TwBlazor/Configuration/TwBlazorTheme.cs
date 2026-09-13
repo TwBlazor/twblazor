@@ -90,6 +90,24 @@ public class TwBlazorTheme
     public TwBlazorTextTransform TextTransform { get; set; } = new();
 
     /// <summary>
+    /// Gets or sets the shared transition utility classes (property, duration, and the common
+    /// pre-combined property+duration classes) reused across component themes. See <see cref="TwBlazorTransition"/>.
+    /// </summary>
+    public TwBlazorTransition Transition { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared typography utility classes (font-size scale, font-weight scale, and
+    /// text alignment) reused across component themes. See <see cref="TwBlazorTypography"/>.
+    /// </summary>
+    public TwBlazorTypography Typography { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the shared CSS overflow utility classes reused across component themes. See
+    /// <see cref="TwBlazorOverflow"/>.
+    /// </summary>
+    public TwBlazorOverflow Overflow { get; set; } = new();
+
+    /// <summary>
     /// Gets or sets the per-component theme overrides. See <see cref="TwBlazorComponents"/>.
     /// </summary>
     public TwBlazorComponents Components { get; set; } = [];

@@ -116,6 +116,9 @@ public class TwBlazorFlexbox
     /// <summary>Gets or sets the class that prevents a flex item from shrinking.</summary>
     public string ShrinkNone { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the "flex-1" shorthand class (grow, shrink, and a zero flex-basis).</summary>
+    public string Flex1 { get; set; } = string.Empty;
+
     /// <summary>Gets or sets the justify-content alignment scale (main-axis alignment).</summary>
     public TwFlexAlignmentScale Justify { get; set; } = new();
 
@@ -230,6 +233,9 @@ public class TwBlazorInteraction
 
     /// <summary>Gets or sets the "pointer-events-none" class used to make an element ignore pointer input.</summary>
     public string PointerEventsNone { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "focus:outline-none" class used to suppress the native focus ring in favour of a custom one.</summary>
+    public string FocusOutlineNone { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -335,6 +341,93 @@ public class TwBlazorInset
 }
 
 /// <summary>
+/// Global configuration for CSS transition utility classes shared by all components: the property
+/// being transitioned, the duration scale, and the common property+duration combinations most
+/// components reach for. Compose a one-off combination from <see cref="Colors"/>/<see cref="Transform"/>,
+/// <see cref="DurationFast"/>/<see cref="DurationSlow"/>, and <see cref="EaseInOut"/> if none of the
+/// pre-combined properties fit.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorTransition
+{
+    /// <summary>Gets or sets the "transition-colors" property class, with no duration applied.</summary>
+    public string Colors { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "transition-transform" property class, with no duration applied.</summary>
+    public string Transform { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "ease-in-out" timing-function class.</summary>
+    public string EaseInOut { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the fast "duration-200" duration class, used for most interactive state changes.</summary>
+    public string DurationFast { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the slow "duration-300" duration class, used for larger movements (panels, indicators).</summary>
+    public string DurationSlow { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the combined "transition-colors" + <see cref="DurationFast"/> class - the most common color transition across interactive components.</summary>
+    public string ColorsFast { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the combined "transition-colors" + <see cref="DurationSlow"/> class.</summary>
+    public string ColorsSlow { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the combined "transition-transform" + <see cref="DurationFast"/> class.</summary>
+    public string TransformFast { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the combined "transition-transform" + <see cref="DurationSlow"/> class.</summary>
+    public string TransformSlow { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// A reusable font-size scale (Tailwind's "text-*" size classes), used by <see cref="TwBlazorTypography.Size"/>.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorFontSizeScale
+{
+    /// <summary>Gets or sets the extra-small text size class.</summary>
+    public string Xs { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the small text size class.</summary>
+    public string Sm { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the base (default) text size class.</summary>
+    public string Base { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the large text size class.</summary>
+    public string Lg { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// A reusable font-weight scale (Tailwind's "font-*" weight classes), used by <see cref="TwBlazorTypography.Weight"/>.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorFontWeightScale
+{
+    /// <summary>Gets or sets the medium font-weight class.</summary>
+    public string Medium { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the semibold font-weight class.</summary>
+    public string Semibold { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Global configuration for shared typography utility classes (font-size scale, font-weight scale,
+/// and text alignment) reused across component themes.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorTypography
+{
+    /// <summary>Gets or sets the font-size scale. See <see cref="TwBlazorFontSizeScale"/>.</summary>
+    public TwBlazorFontSizeScale Size { get; set; } = new();
+
+    /// <summary>Gets or sets the font-weight scale. See <see cref="TwBlazorFontWeightScale"/>.</summary>
+    public TwBlazorFontWeightScale Weight { get; set; } = new();
+
+    /// <summary>Gets or sets the "text-center" text-alignment class.</summary>
+    public string AlignCenter { get; set; } = string.Empty;
+}
+
+/// <summary>
 /// Global configuration for CSS text-transform utility classes shared by all components.
 /// </summary>
 [ExcludeFromCodeCoverage]
@@ -392,6 +485,19 @@ public class TwBlazorSizing
     /// <summary>Gets or sets the combined 100% width and height classes.</summary>
     public string Full { get; set; } = string.Empty;
 
+    /// <summary>Gets or sets the "min-w-0" class used to let a flex/grid child shrink below its content size.</summary>
+    public string MinWidthNone { get; set; } = string.Empty;
+
     /// <summary>Gets or sets the reusable square icon size scale. See <see cref="TwBlazorIconSize"/>.</summary>
     public TwBlazorIconSize Icon { get; set; } = new();
+}
+
+/// <summary>
+/// Global configuration for CSS overflow utility classes shared by all components.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorOverflow
+{
+    /// <summary>Gets or sets the "overflow-hidden" class.</summary>
+    public string Hidden { get; set; } = string.Empty;
 }
