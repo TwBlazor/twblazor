@@ -28,8 +28,8 @@
             </TwStepper>
 
             <div class="flex gap-2 mt-4">
-                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@(basicActiveStep <= 0)" OnClick="@(() => basicStepper.PreviousStep())" />
-                <TwButton Label="Next" Disabled="@(basicActiveStep >= 2)" OnClick="@(() => basicStepper.NextStep())" />
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Color="Color.Primary" Disabled="@(basicActiveStep <= 0)" OnClick="@(() => basicStepper.PreviousStep())" />
+                <TwButton Label="Next" Disabled="@(basicActiveStep >= 2)" Color="Color.Primary" OnClick="@(() => basicStepper.NextStep())" Variant="ButtonVariant.Filled" />
             </div>
         </CodeExample>
     </PageCard>
@@ -49,8 +49,8 @@
             </TwStepper>
 
             <div class="flex gap-2 mt-4">
-                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@(validatedActiveStep <= 0)" OnClick="@(() => validatedStepper.PreviousStep())" />
-                <TwButton Label="Next" Disabled="@(validatedActiveStep >= 1)" OnClick="ValidateAndContinue" />
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Color="Color.Primary" Disabled="@(validatedActiveStep <= 0)" OnClick="@(() => validatedStepper.PreviousStep())" />
+                <TwButton Label="Next" Disabled="@(validatedActiveStep >= 1)" Color="Color.Primary" OnClick="ValidateAndContinue" Variant="ButtonVariant.Filled" />
             </div>
         </CodeExample>
     </PageCard>
@@ -89,8 +89,8 @@
                 <TwStep Label="Verify email" Description="Optional">
                     <p class="mb-3">We've sent a confirmation link to your inbox.</p>
                     <div class="flex gap-2">
-                        <TwButton Label="Back" Variant="ButtonVariant.Outlined" OnClick="@(() => verticalStepper.PreviousStep())" Dense />
-                        <TwButton Label="Continue" OnClick="@(() => verticalStepper.NextStep())" Dense />
+                        <TwButton Label="Back" Variant="ButtonVariant.Outlined" Color="Color.Primary" OnClick="@(() => verticalStepper.PreviousStep())" Dense />
+                        <TwButton Label="Continue" OnClick="@(() => verticalStepper.NextStep())" Color="Color.Primary" Dense Variant="ButtonVariant.Filled" />
                     </div>
                 </TwStep>
                 <TwStep Label="Done">

@@ -1009,7 +1009,7 @@ public static class Theme
                     VerticalIndicatorColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center}",
                     VerticalContentColumn = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {flexbox.Flex1} pt-1",
                     Connector = $"{flexbox.Flex1} h-0.5 mt-4 mx-2 border-t-2 {transition.ColorsSlow}",
-                    VerticalConnector = $"{flexbox.Flex1} w-0 my-1 border-l-2 {transition.ColorsSlow}",
+                    VerticalConnector = $"{flexbox.Flex1} w-0 min-h-8 my-1 border-l-2 {transition.ColorsSlow}",
                     ConnectorNeutral = neutralSurface.Border,
                     Circle = $"{display.Flex} {anchor.Center} shrink-0 {sizing.Icon.Xl} {rounded.Full} {typography.Weight.Semibold} {typography.Size.Sm} {transition.ColorsFast} {interaction.FocusOutlineNone}",
                     CircleUpcoming = $"{neutralSurface.Background} {neutralText.Muted} border-2 {neutralSurface.BorderStrong}",
