@@ -61,6 +61,20 @@ public partial class TwTextfield<T> : TwBlazorTextInputComponentBase
     [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; } = default!;
 
     /// <summary>
+    /// Gets or sets an optional asynchronous validator invoked with the new value whenever it changes.
+    /// </summary>
+    /// <remarks>
+    /// Return <see langword="null"/> or an empty string to mark the value valid. Return a non-empty
+    /// string to mark the field invalid (see <see cref="TwBlazorInputComponentBase.Invalid"/>) and
+    /// display it as the error message below the input (see <see cref="TwBlazorInputComponentBase.ErrorMessage"/>).
+    /// The validator runs after <see cref="ValueChanged"/> is invoked, so consumers of this callback see
+    /// the raw value before validation has been applied. Because the validator returns a
+    /// <see cref="Task{TResult}"/>, it can perform asynchronous work such as an API call (e.g. checking
+    /// whether a username is already taken) without blocking the UI thread.
+    /// </remarks>
+    [Parameter] public Func<T, Task<string?>>? Validator { get; set; }
+
+    /// <summary>
     /// Gets or sets the name of the DOM event that triggers data binding for the associated element.
     /// </summary>
     /// <remarks>The default value is "onchange", which binds on input changes. Set this property to a
@@ -184,7 +198,16 @@ public partial class TwTextfield<T> : TwBlazorTextInputComponentBase
     private async Task OnValueChanged(T value)
     {
         Value = value;
-        if (!ValueChanged.HasDelegate) return;
-        await ValueChanged.InvokeAsync(value);
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(value);
+        }
+
+        if (Validator is not null)
+        {
+            var error = await Validator(value);
+            Invalid = !string.IsNullOrEmpty(error);
+            ErrorMessage = error ?? string.Empty;
+        }
     }
 }
