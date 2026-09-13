@@ -3,7 +3,7 @@
 
 <PageTitle>TwTextfield | twblazor</PageTitle>
 <HeadContent>
-    <meta name="description" content="TwTextfield is a Blazor text input component with outlined and filled variants, several input types and disabled or readonly states." />
+    <meta name="description" content="TwTextfield is a Blazor text input component with outlined and filled variants, several input types, disabled or readonly states, and sync or async validation." />
     <link rel="canonical" href="https://twblazor.com/textfield" />
 </HeadContent>
 
@@ -56,6 +56,24 @@
             </div>
         </CodeExample>
     </PageCard>
+    <PageCard Title="Invalid Textfield">
+        <Description>Set <code>Invalid</code> and <code>ErrorMessage</code> to mark the textfield as failing validation. The message is rendered below the input and associated with it via <code>aria-describedby</code> so assistive technology announces it alongside the field.</Description>
+        <CodeExample Name="TextfieldInvalid">
+            <TwTextfield Label="Email" @bind-Value="InvalidEmail" Placeholder="user@example.com" AriaLabel="Email textfield" Invalid ErrorMessage="Please enter a valid email address." />
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Validation on Change">
+        <Description>Pass a <code>Validator</code> function to have the textfield validate itself whenever its value changes. Return <code>null</code> (or an empty string) when the value is valid, or an error message to automatically mark the field <code>Invalid</code> and display the returned message - no need to manage <code>Invalid</code> or <code>ErrorMessage</code> yourself.</Description>
+        <CodeExample Name="TextfieldValidator" CSharpName="TextfieldValidatorCode">
+            <TwTextfield Label="Username" @bind-Value="Username" Placeholder="Enter a username" AriaLabel="Username textfield" Validator="ValidateUsername" />
+        </CodeExample>
+    </PageCard>
+    <PageCard Title="Asynchronous Validation">
+        <Description><code>Validator</code> returns a <code>Task&lt;string?&gt;</code>, so it can perform asynchronous work such as an API call without blocking the UI. This example simulates checking username availability against a server.</Description>
+        <CodeExample Name="TextfieldAsyncValidator" CSharpName="TextfieldAsyncValidatorCode">
+            <TwTextfield Label="New Username" @bind-Value="NewUsername" Placeholder="Enter a username" AriaLabel="New username textfield" Validator="ValidateUsernameAvailabilityAsync" />
+        </CodeExample>
+    </PageCard>
 </PageContainer>
 
 @code {
@@ -63,4 +81,43 @@
     public string Surname { get; set; } = string.Empty;
     public string Email { get; set; } = "readonly@example.com";
     public string Password { get; set; } = string.Empty;
+    public string InvalidEmail { get; set; } = "not-an-email";
+
+    #region CodeExample TextfieldValidatorCode
+    public string Username { get; set; } = string.Empty;
+
+    private Task<string?> ValidateUsername(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Task.FromResult<string?>("Username is required.");
+        }
+
+        if (value.Length < 3)
+        {
+            return Task.FromResult<string?>("Username must be at least 3 characters.");
+        }
+
+        return Task.FromResult<string?>(null);
+    }
+    #endregion
+
+    #region CodeExample TextfieldAsyncValidatorCode
+    public string NewUsername { get; set; } = string.Empty;
+
+    private readonly HashSet<string> takenUsernames = new(StringComparer.OrdinalIgnoreCase) { "admin", "root", "jack" };
+
+    private async Task<string?> ValidateUsernameAvailabilityAsync(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "Username is required.";
+        }
+
+        // Simulate a network call to check availability against a server.
+        await Task.Delay(300);
+
+        return takenUsernames.Contains(value) ? $"'{value}' is already taken." : null;
+    }
+    #endregion
 }

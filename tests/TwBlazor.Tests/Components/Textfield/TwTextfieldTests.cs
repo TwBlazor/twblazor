@@ -477,4 +477,169 @@ public class TwTextfieldTests : TwBlazorTestBase
         var classes = cut.Find("input").GetAttribute("class");
         Assert.Contains(InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme), classes);
     }
+
+    [Fact]
+    public void TwTextfield_Renders_ErrorMessage_WhenInvalid()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Invalid, true)
+            .Add(p => p.ErrorMessage, "This field is required."));
+
+        // Assert
+        var error = cut.Find("p[role='alert']");
+        Assert.Equal("This field is required.", error.TextContent);
+        Assert.Contains(inputTheme.ErrorMessage, error.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwTextfield_DoesNotAssociateErrorMessage_WhenNotInvalid()
+    {
+        // Arrange & Act - TwInputRoot renders the error text whenever ErrorMessage is set, but the
+        // component only wires up the id/aria-describedby association (via errorId) when Invalid is
+        // also true - so the paragraph exists here but isn't announced against the input.
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.ErrorMessage, "This field is required."));
+
+        // Assert
+        var error = cut.Find("p[role='alert']");
+        Assert.Empty(error.GetAttribute("id") ?? string.Empty);
+        Assert.False(cut.Find("input").HasAttribute("aria-invalid"));
+        Assert.False(cut.Find("input").HasAttribute("aria-describedby"));
+    }
+
+    [Fact]
+    public void TwTextfield_DoesNotRender_ErrorMessage_WhenNeitherInvalidNorErrorMessageSet()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwTextfield<string>>();
+
+        // Assert
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("p[role='alert']"));
+    }
+
+    [Fact]
+    public void TwTextfield_SetsAriaInvalidAndDescribedBy_WhenInvalid()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Id, "email-field")
+            .Add(p => p.Invalid, true)
+            .Add(p => p.ErrorMessage, "Enter a valid email address."));
+
+        // Assert
+        var input = cut.Find("input");
+        var error = cut.Find("p[role='alert']");
+        Assert.Equal("true", input.GetAttribute("aria-invalid"));
+        Assert.Equal("email-field-error", input.GetAttribute("aria-describedby"));
+        Assert.Equal("email-field-error", error.GetAttribute("id"));
+    }
+
+    [Fact]
+    public void TwTextfield_DoesNotSetAriaInvalid_ByDefault()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwTextfield<string>>();
+
+        // Assert
+        var input = cut.Find("input");
+        Assert.False(input.HasAttribute("aria-invalid"));
+        Assert.False(input.HasAttribute("aria-describedby"));
+    }
+
+    [Fact]
+    public void TwTextfield_Validator_MarksInvalid_WhenValidatorReturnsErrorMessage()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Value, string.Empty)
+            .Add(p => p.ValueChanged, _ => { })
+            .Add(p => p.Validator, (string value) => Task.FromResult<string?>(
+                string.IsNullOrWhiteSpace(value) ? "Username is required." : null)));
+
+        // Act
+        cut.Find("input").Change(string.Empty);
+
+        // Assert
+        var error = cut.Find("p[role='alert']");
+        Assert.Equal("Username is required.", error.TextContent);
+        Assert.Equal("true", cut.Find("input").GetAttribute("aria-invalid"));
+    }
+
+    [Fact]
+    public void TwTextfield_Validator_MarksValid_WhenValidatorReturnsNull()
+    {
+        // Arrange - starts invalid, then a passing value should clear both Invalid and ErrorMessage.
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Value, string.Empty)
+            .Add(p => p.ValueChanged, _ => { })
+            .Add(p => p.Invalid, true)
+            .Add(p => p.ErrorMessage, "Username is required.")
+            .Add(p => p.Validator, (string value) => Task.FromResult<string?>(
+                string.IsNullOrWhiteSpace(value) ? "Username is required." : null)));
+
+        // Act
+        cut.Find("input").Change("validusername");
+
+        // Assert
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("p[role='alert']"));
+        Assert.False(cut.Find("input").HasAttribute("aria-invalid"));
+    }
+
+    [Fact]
+    public void TwTextfield_Validator_ReceivesTheChangedValue()
+    {
+        // Arrange
+        string? receivedValue = null;
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Value, "old")
+            .Add(p => p.ValueChanged, _ => { })
+            .Add(p => p.Validator, (string value) =>
+            {
+                receivedValue = value;
+                return Task.FromResult<string?>(null);
+            }));
+
+        // Act
+        cut.Find("input").Change("new");
+
+        // Assert
+        Assert.Equal("new", receivedValue);
+    }
+
+    [Fact]
+    public void TwTextfield_Validator_NotInvoked_WhenNotProvided()
+    {
+        // Arrange & Act - should not throw and should leave Invalid/ErrorMessage untouched.
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Value, string.Empty)
+            .Add(p => p.ValueChanged, _ => { }));
+
+        var exception = Record.Exception(() => cut.Find("input").Change("Changed"));
+
+        // Assert
+        Assert.Null(exception);
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("p[role='alert']"));
+    }
+
+    [Fact]
+    public void TwTextfield_Validator_SupportsAsynchronousValidation()
+    {
+        // Arrange - a validator that doesn't complete synchronously (e.g. simulating a server call)
+        // should still be awaited and its result reflected once it completes.
+        var validationCompletionSource = new TaskCompletionSource<string?>();
+        var cut = TestContext.Render<TwTextfield<string>>(parameters => parameters
+            .Add(p => p.Value, string.Empty)
+            .Add(p => p.ValueChanged, _ => { })
+            .Add(p => p.Validator, (string _) => validationCompletionSource.Task));
+
+        // Act
+        cut.Find("input").Change("taken-username");
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("p[role='alert']"));
+        validationCompletionSource.SetResult("'taken-username' is already taken.");
+
+        // Assert
+        cut.WaitForState(() => cut.FindAll("p[role='alert']").Count > 0);
+        Assert.Equal("'taken-username' is already taken.", cut.Find("p[role='alert']").TextContent);
+    }
 }
