@@ -42,6 +42,11 @@ public partial class TwSwitch<T> : TwBlazorInputComponentBase
     /// change.</remarks>
     [Parameter] public EventCallback<T> ValueChanged { get; set; } = default!;
 
+    private string wrapperClasses =>
+        new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.InlineBlock)
+        .AddClass(theme.WrapperSize).Build();
+
     private string classes =>
         new ClassBuilder(theme.Base)
         .AddClass(Class).Build();

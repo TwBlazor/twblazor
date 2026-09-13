@@ -83,6 +83,11 @@ public class TwButtonTheme
     public required string Typography { get; set; }
 
     /// <summary>
+    /// Gets or sets the size/line-height classes for a button's start/end icon.
+    /// </summary>
+    public required string IconTypography { get; set; }
+
+    /// <summary>
     /// Gets or sets the disabled cursor class.
     /// </summary>
     public required string DisabledCursor { get; set; }

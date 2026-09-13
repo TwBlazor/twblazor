@@ -29,6 +29,11 @@ public class TwSwitchTheme
     public required string Track { get; set; }
 
     /// <summary>
+    /// Gets or sets the size classes for the wrapper span containing the track and toggle.
+    /// </summary>
+    public required string WrapperSize { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes applied to the native (visually hidden) checkbox input.
     /// </summary>
     public required string Base { get; set; }

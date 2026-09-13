@@ -70,16 +70,16 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
         // "focus:" variant (shared with text inputs, where showing the border on click is fine)
         // is rewritten to "focus-visible:" here so the border only appears on keyboard focus.
         .AddClass(inputVariantBuilder.GetClasses(effectiveVariant, theme).Replace("focus:", "focus-visible:", StringComparison.Ordinal))
-        .AddClass("px-3", effectiveVariant == InputVariant.Default)
+        .AddClass(theme.SelectDefaultPadding, effectiveVariant == InputVariant.Default)
         // Default/Outlined variants make the field's own background bg-transparent so it blends
         // with the surrounding page - fine for <input>, but a native <select> popup renders using
         // the element's own background/text colors, so a transparent one falls back to the OS's
         // native (often light) popup surface and can pair unreadable white dark-mode text onto it.
         // The Filled variant already sets a real background, so it's left alone here.
-        .AddClass("!bg-white dark:!bg-gray-800", effectiveVariant != InputVariant.Filled)
-        .AddClass(Disabled ? "opacity-40 cursor-not-allowed" : string.Empty)
-        .AddClass(ReadOnly ? "!bg-none" : string.Empty)
-        .AddClass(ReadOnly && !Disabled ? "pointer-events-none" : string.Empty)
+        .AddClass(theme.SelectNativeBackground, effectiveVariant != InputVariant.Filled)
+        .AddClass(Disabled ? $"{options.Theme.Interaction.DisabledOpacity} {options.Theme.Interaction.DisabledCursor}" : string.Empty)
+        .AddClass(ReadOnly ? theme.SelectReadOnlyBackground : string.Empty)
+        .AddClass(ReadOnly && !Disabled ? options.Theme.Interaction.PointerEventsNone : string.Empty)
         .AddClass(Class)
         .Build();
 

@@ -11,7 +11,7 @@
         <Description>A toggle switch for binary on/off state, bound with <code>@@bind-Value</code>.</Description>
 
         <CodeExample Name="SwitchBasic" CSharpName="SwitchBasicCode">
-            <TwSwitch @bind-Value="notificationsEnabled" Label="Notifications" LabelClass="ms-2" AriaLabel="Toggle notifications" />
+            <TwSwitch @bind-Value="notificationsEnabled" Label="Notifications" AriaLabel="Toggle notifications" />
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Notifications are <strong>@(notificationsEnabled ? "on" : "off")</strong></p>
         </CodeExample>
     </PageCard>
@@ -25,7 +25,7 @@
                 {
                     <div class="block mt-4">
                         <div class="p-3">
-                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" LabelClass="ms-2 mt-2" AriaLabel="@($"{@c.ToString()} switch")" />
+                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" AriaLabel="@($"{@c.ToString()} switch")" />
                         </div>
                     </div>
                 }
@@ -33,7 +33,7 @@
                 {
                     <div class="block mt-4">
                         <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
-                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" LabelClass="@(c == Color.Light ? "mt-2 text-white dark:text-white" : "mt-2 text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} switch")" />
+                            <TwSwitch @bind-Value="exampleSwitch" Label="@c.ToString()" Color="@c" LabelClass="@(c == Color.Light ? "text-white dark:text-white" : "text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} switch")" />
                         </div>
                     </div>
                 }
@@ -46,8 +46,8 @@
 
         <CodeExample Name="SwitchReadonlyDisabled" CSharpName="SwitchReadonlyDisabledCode">
             <div class="space-y-3">
-                <TwSwitch @bind-Value="disabledValue" Label="Disabled Switch" Disabled Color="Color.Primary" LabelClass="ms-2" AriaLabel="Disabled switch" />
-                <TwSwitch @bind-Value="readonlyValue" Label="Readonly Switch" ReadOnly Color="Color.Primary" LabelClass="ms-2" AriaLabel="Readonly switch" />
+                <TwSwitch @bind-Value="disabledValue" Label="Disabled Switch" Disabled Color="Color.Primary" AriaLabel="Disabled switch" />
+                <TwSwitch @bind-Value="readonlyValue" Label="Readonly Switch" ReadOnly Color="Color.Primary" AriaLabel="Readonly switch" />
             </div>
         </CodeExample>
     </PageCard>
@@ -57,9 +57,9 @@
 
         <CodeExample Name="SwitchSettingsPanel" CSharpName="SwitchSettingsPanelCode">
             <div class="space-y-3">
-                <TwSwitch @bind-Value="emailNotifications" Label="Email notifications" LabelClass="ms-2" AriaLabel="Toggle email notifications" />
-                <TwSwitch @bind-Value="smsNotifications" Label="SMS notifications" LabelClass="ms-2" AriaLabel="Toggle SMS notifications" />
-                <TwSwitch @bind-Value="marketingEmails" Label="Marketing emails" LabelClass="ms-2" AriaLabel="Toggle marketing emails" />
+                <TwSwitch @bind-Value="emailNotifications" Label="Email notifications" AriaLabel="Toggle email notifications" />
+                <TwSwitch @bind-Value="smsNotifications" Label="SMS notifications" AriaLabel="Toggle SMS notifications" />
+                <TwSwitch @bind-Value="marketingEmails" Label="Marketing emails" AriaLabel="Toggle marketing emails" />
             </div>
 
             <div class="mt-4 p-3 rounded border border-gray-200 dark:border-gray-600">

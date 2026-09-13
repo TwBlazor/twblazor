@@ -242,7 +242,8 @@ public partial class TwTreeListItem : TwBlazorComponentBase
         };
 
     private string itemClasses =>
-        new ClassBuilder("group outline-none")
+        new ClassBuilder("group")
+            .AddClass(theme.ItemOutline)
             .AddClass(Class)
             .Build();
 

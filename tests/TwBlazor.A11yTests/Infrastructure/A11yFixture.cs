@@ -22,8 +22,8 @@ public sealed class A11yFixture : IAsyncLifetime
         playwright = await Playwright.CreateAsync();
         // --disable-http-cache: TwBlazor.Docs' wwwroot CSS is edited/rebuilt directly on disk between
         // local runs (it's a separate Tailwind CLI build step, not part of `dotnet build`) - without
-        // this flag Chromium can keep serving an HTTP-cached copy of output.css/twblazor.css from
-        // earlier in the run, silently masking real theme changes from the scan.
+        // this flag Chromium can keep serving an HTTP-cached copy of output.css from earlier in the
+        // run, silently masking real theme changes from the scan.
         Browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,

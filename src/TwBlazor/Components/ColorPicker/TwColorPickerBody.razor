@@ -3,7 +3,7 @@
 @using TwBlazor.Enums
 
 <div id="@Id" class="@dialogClasses" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
-    <div class="flex flex-col gap-3">
+    <div class="@theme.Body">
         @* Saturation/Lightness Selector. Treated as a single ARIA slider (rather than split into two
            separately-focusable elements) to avoid restructuring the mouse-drag square; aria-valuetext
            communicates both axes, and aria-valuenow tracks saturation as the slider's primary value. *@
@@ -31,8 +31,8 @@
         </div>
 
         <!-- Hue Slider -->
-        <div class="flex items-center gap-2">
-            <div class="flex-1 relative h-6 flex items-center cursor-pointer touch-none"
+        <div class="@sliderContainerClasses">
+            <div class="@($"{sliderRowClasses} {theme.HueSliderTouch}")"
                  role="slider"
                  tabindex="0"
                  aria-label="Hue"
@@ -60,9 +60,9 @@
         <!-- Alpha Slider -->
         @if (ShowAlpha)
         {
-            <div class="flex items-center gap-2">
-                <span class="@theme.AlphaLabel sr-only">Alpha</span>
-                <div class="flex-1 relative h-6 flex items-center cursor-pointer"
+            <div class="@sliderContainerClasses">
+                <span class="@($"{theme.AlphaLabel} {options.Theme.Display.ScreenReaderOnly}")">Alpha</span>
+                <div class="@sliderRowClasses"
                      role="slider"
                      tabindex="0"
                      aria-label="Alpha"
@@ -82,7 +82,7 @@
                      @ref="alphaRef">
                     <div class="@theme.SliderTrack"
                          style="background-image: linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;">
-                        <div class="w-full h-full" style="background: linear-gradient(to right, transparent, @GetCurrentColorWithoutAlpha());"></div>
+                        <div class="@options.Theme.Sizing.Full" style="background: linear-gradient(to right, transparent, @GetCurrentColorWithoutAlpha());"></div>
                     </div>
                     <div class="@theme.SliderThumb"
                          style="left: @(alpha * 100)%; transform: translate(-50%, -50%);"></div>
@@ -94,12 +94,12 @@
         <div class="@controlRowClasses">
             @if (eyeDropperSupported)
             {
-                <TwIcon Icon="Icon.Eyedropper" OnClick="PickColorFromScreenAsync" AriaLabel="Pick color from screen" Color="Color.Primary" ButtonVariant="ButtonVariant.Text" Class="shrink-0" />
+                <TwIcon Icon="Icon.Eyedropper" OnClick="PickColorFromScreenAsync" AriaLabel="Pick color from screen" Color="Color.Primary" ButtonVariant="ButtonVariant.Text" Class="@options.Theme.Flexbox.ShrinkNone" />
             }
             @if (ShowModeSwitch)
             {
                 <TwButton Type="button"
-                          Class="shrink-0 tracking-wide"
+                          Class="@theme.ModeSwitchButton"
                           OnClick="@HandleModeSwitch"
                           AriaLabel="Toggle color mode"
                           Variant="ButtonVariant.Text"
@@ -113,7 +113,7 @@
 
             @if (ShowAlpha)
             {
-                <span class="@theme.AlphaLabel shrink-0 text-right">@((int)(alpha * 100))%</span>
+                <span class="@alphaReadoutClasses">@((int)(alpha * 100))%</span>
             }
         </div>
 
@@ -124,28 +124,28 @@
         }
         else if (currentMode == ColorMode.Rgb)
         {
-            <div class="flex gap-2">
-                <div class="flex-1">
+            <div class="@inputRowClasses">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="R" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((r) => OnRInputChanged(r.ToString()))" Value="@r" BindEvent="oninput" Dense />
                 </div>
-                <div class="flex-1">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="G" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((g) => OnGInputChanged(g.ToString()))" Value="@g" BindEvent="oninput" Dense />
                 </div>
-                <div class="flex-1">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="B" T="int" InputType="number" min="0" max="255" Variant="@Variant" ValueChanged="@((b) => OnBInputChanged(b.ToString()))" Value="@b" BindEvent="oninput" Dense />
                 </div>
             </div>
         }
         else if (currentMode == ColorMode.Hsl)
         {
-            <div class="flex gap-2">
-                <div class="flex-1">
+            <div class="@inputRowClasses">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="H" T="int" InputType="number" min="0" max="360" Variant="@Variant" ValueChanged="@((h) => OnHInputChanged(h.ToString()))" Value="@h" BindEvent="oninput" Dense />
                 </div>
-                <div class="flex-1">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="S" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((s) => OnSInputChanged(s.ToString()))" Value="@s" BindEvent="oninput" Dense />
                 </div>
-                <div class="flex-1">
+                <div class="@theme.InputColumn">
                     <TwTextfield Label="L" T="int" InputType="number" min="0" max="100" Variant="@Variant" ValueChanged="@((l) => OnLInputChanged(l.ToString()))" Value="@l" BindEvent="oninput" Dense />
                 </div>
             </div>

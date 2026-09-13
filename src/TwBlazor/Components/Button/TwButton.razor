@@ -13,7 +13,7 @@
             AriaLabelledBy="@AriaLabelledBy">
         @if (StartIcon.HasValue)
         {
-            <TwIcon Icon="@StartIcon.Value" Class="text-lg leading-none me-2" />
+            <TwIcon Icon="@StartIcon.Value" Class="@startIconClasses" />
         }
         @if (ChildContent != null)
         {
@@ -25,7 +25,7 @@
         }
         @if (EndIcon.HasValue)
         {
-            <TwIcon Icon="@EndIcon.Value" Class="text-lg leading-none ms-2" />
+            <TwIcon Icon="@EndIcon.Value" Class="@endIconClasses" />
         }
     </TwLink>
 }
@@ -44,7 +44,7 @@ else
             aria-labelledby="@AriaLabelledBy">
         @if (StartIcon.HasValue)
         {
-            <TwIcon Icon="@StartIcon.Value" Class="text-lg leading-none me-2" />
+            <TwIcon Icon="@StartIcon.Value" Class="@startIconClasses" />
         }
         @if (ChildContent != null)
         {
@@ -56,7 +56,7 @@ else
         }
         @if (EndIcon.HasValue)
         {
-            <TwIcon Icon="@EndIcon.Value" Class="text-lg leading-none ms-2" />
+            <TwIcon Icon="@EndIcon.Value" Class="@endIconClasses" />
         }
     </button>
 }

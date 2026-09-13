@@ -43,7 +43,7 @@ public partial class TwSidebarNavigationList : TwBlazorComponentBase
     private string GetChildContainerClasses(bool collapsed, int childDepth) =>
         new ClassBuilder(theme.NavigationDropdownContainer)
             .AddClass(theme.NavigationDropdownContainerDeep, childDepth >= 2)
-            .AddClass("hidden", collapsed)
+            .AddClass(options.Theme.Display.Hidden, collapsed)
             .AddClass(roundedBuilder.GetRoundedBottom(effectiveRounded), !collapsed)
             .Build();
 
@@ -53,7 +53,8 @@ public partial class TwSidebarNavigationList : TwBlazorComponentBase
     /// children sit three levels deep and are currently expanded.
     /// </summary>
     private string GetParentGroupClasses(bool collapsed, int childDepth) =>
-        new ClassBuilder("flex flex-col")
+        new ClassBuilder(options.Theme.Display.Flex)
+            .AddClass(options.Theme.Flexbox.Col)
             .AddClass(theme.NavigationGroupRailDeep, !collapsed && childDepth >= 2)
             .Build();
 

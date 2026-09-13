@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Enums;
 using TwBlazor.Utilities;
 
@@ -9,6 +10,8 @@ namespace TwBlazor.Components;
 
 public partial class TwLink : TwBlazorComponentBase
 {
+    private TwLinkTheme theme => options.Theme.Components.Require<TwLinkTheme>();
+
     /// <summary>
     /// Gets or sets the URL that the hyperlink points to.
     /// </summary>
@@ -49,7 +52,7 @@ public partial class TwLink : TwBlazorComponentBase
     private string? classes => string.IsNullOrEmpty(Class)
         ? new ClassBuilder()
             .AddClass(colorBuilder.GetTextColor(Color ?? Enums.Color.Primary))
-            .AddClass("underline-offset-2 hover:underline transition-colors duration-200")
+            .AddClass(theme.Default)
             .Build()
         : new ClassBuilder(Class).Build();
 }

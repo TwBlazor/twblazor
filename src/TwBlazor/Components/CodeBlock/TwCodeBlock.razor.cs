@@ -4,12 +4,15 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Diagnostics;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Utilities;
 
 namespace TwBlazor.Components;
 
 public partial class TwCodeBlock : TwBlazorComponentBase, IAsyncDisposable
 {
+    private TwCodeBlockTheme theme => options.Theme.Components.Require<TwCodeBlockTheme>();
+
     private CancellationTokenSource? cancellationTokenSource;
 
     [Inject] private IJSRuntime jSRuntime { get; set; } = null!;
@@ -32,7 +35,10 @@ public partial class TwCodeBlock : TwBlazorComponentBase, IAsyncDisposable
         new ClassBuilder(Class)
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
-        .AddClass("relative flex flex-col overflow-hidden bg-gray-900 dark:bg-gray-950").Build();
+        .AddClass(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
+        .AddClass(theme.Container).Build();
 
     private ElementReference codeBlock { get; set; }
 

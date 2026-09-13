@@ -273,20 +273,40 @@ public partial class TwSidebar : TwBlazorComponentBase, IDisposable
     }
 
     private string rootClasses =>
-        new ClassBuilder("relative flex w-full flex-row")
+        new ClassBuilder(options.Theme.Position.Relative)
+            .AddClass(options.Theme.Display.Flex)
+            .AddClass(options.Theme.Sizing.FullWidth)
+            .AddClass(options.Theme.Flexbox.Row)
             .AddClass(Class)
             .Build();
 
+    private string skipLinkClasses =>
+        new ClassBuilder(options.Theme.Display.ScreenReaderOnly)
+            .AddClass(theme.SkipLink).Build();
+
+    private string mobileOverlayClasses =>
+        new ClassBuilder(options.Theme.Position.Fixed)
+            .AddClass(theme.MobileOverlay).Build();
+
+    private string navigationListClasses =>
+        new ClassBuilder(options.Theme.Spacing.MarginTop.Lg)
+            .AddClass(options.Theme.Display.Flex)
+            .AddClass(options.Theme.Flexbox.Col)
+            .AddClass(options.Theme.Spacing.Gap.Sm)
+            .AddClass(theme.NavigationList).Build();
+
     private string sidebarClasses =>
         new ClassBuilder(theme.Sidebar)
-            .AddClass("fixed -translate-x-full", !IsSidebarOpen)
-            .AddClass("fixed lg:relative translate-x-0", IsSidebarOpen)
+            .AddClass(options.Theme.Position.Fixed)
+            .AddClass(theme.MobileClosed, !IsSidebarOpen)
+            .AddClass(theme.MobileOpen, IsSidebarOpen)
             .AddClass(SidebarClass).Build();
 
     private string mainContentClasses =>
         new ClassBuilder(theme.MainContent)
-            .AddClass("absolute h-full", IsNavbarFixed)
-            .AddClass("relative", !IsNavbarFixed)
+            .AddClass(options.Theme.Position.Absolute, IsNavbarFixed)
+            .AddClass(options.Theme.Sizing.FullHeight, IsNavbarFixed)
+            .AddClass(options.Theme.Position.Relative, !IsNavbarFixed)
             .AddClass(MainContentClass).Build();
 
     private string mainContentRootClasses =>

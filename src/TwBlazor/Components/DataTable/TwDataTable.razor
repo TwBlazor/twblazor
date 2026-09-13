@@ -7,20 +7,20 @@
     @* Search *@
     @if (Searchable)
     {
-        <div class="flex justify-end mb-4">
-            <div class="w-full md:w-1/2">
-                <TwTextfield T="string" 
+        <div class="@searchRowClasses">
+            <div class="@searchColumnClasses">
+                <TwTextfield T="string"
                     Id="@($"{Id}-search")"
-                    Class="w-full" 
-                    Label="@SearchLabel" 
-                    Placeholder="@SearchPlaceholder" 
+                    Class="@options.Theme.Sizing.FullWidth"
+                    Label="@SearchLabel"
+                    Placeholder="@SearchPlaceholder"
                     ValueChanged="@OnSearchAsync" />
             </div>
         </div>
     }
 
     @* Announces sort state changes to assistive technology *@
-    <span class="sr-only" aria-live="polite">@sortStatusMessage</span>
+    <span class="@options.Theme.Display.ScreenReaderOnly" aria-live="polite">@sortStatusMessage</span>
 
     @* Table *@
     <TwTable Id="@Id"
@@ -42,12 +42,12 @@
                 <tr class="@headerRowClasses">
                     @foreach (var column in Columns)
                     {
-                        <th scope="col" class="@($"px-6 py-3 {column.HeaderClass}")" aria-sort="@(column.IsSortable ? GetAriaSort(column.Name) : null)">
-                            <div class="flex items-center gap-2">
+                        <th scope="col" class="@($"{theme.HeaderCellPadding} {column.HeaderClass}")" aria-sort="@(column.IsSortable ? GetAriaSort(column.Name) : null)">
+                            <div class="@headerCellRowClasses">
                                 <span>@column.Title</span>
                                 @if (column.IsSortable)
                                 {
-                                    <TwIcon Icon="GetSortIcon(column.Name)" Class="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 ml-auto" OnClick="() => ToggleSort(column.Name)" AriaLabel="@GetSortAriaLabel(column)" />
+                                    <TwIcon Icon="GetSortIcon(column.Name)" Class="@sortIconClasses" OnClick="() => ToggleSort(column.Name)" AriaLabel="@GetSortAriaLabel(column)" />
                                 }
                             </div>
                         </th>
@@ -71,7 +71,7 @@
                         <tr class="@RowClass">
                             @foreach (var column in Columns)
                             {
-                                <td class="@($"px-6 py-4 wrap-break-word {column.CellClass}")">
+                                <td class="@($"{theme.BodyCellPadding} {column.CellClass}")">
                                     @if (column.CellFormatter != null)
                                     {
                                         @column.CellFormatter(row)
@@ -107,7 +107,7 @@
             else
             {
                 <tr>
-                    <td colspan="100" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <td colspan="100" class="@theme.EmptyState">
                         @if (EmptyContent != null)
                         {
                             @EmptyContent
@@ -130,7 +130,7 @@
     @if (Pageable)
     {
         <TwPagination Id="@($"{Id}-pagination")"
-            Class="mt-4 w-full justify-between"
+            Class="@paginationClasses"
             TotalPages="TotalPages()"
             ActivePage="currentPage"
             ActivePageChanged="OnActivePageChanged"

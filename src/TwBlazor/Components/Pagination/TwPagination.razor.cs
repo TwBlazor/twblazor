@@ -47,7 +47,10 @@ public partial class TwPagination : TwBlazorComponentBase
     /// </summary>
     [Parameter] public int[] PageSizeOptions { get; set; } = [5, 10, 25, 50, 100];
 
-    private string rootClasses => new ClassBuilder("flex items-center gap-3").AddClass(Class).Build();
+    private string rootClasses => new ClassBuilder(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Align.Center)
+        .AddClass(options.Theme.Spacing.Gap.Lg)
+        .AddClass(Class).Build();
 
     // The active page is distinguished by more than color alone (font-weight + border-width),
     // so low-vision/color-deficient sighted users have a cue beyond the blue/gray hue difference.
@@ -70,8 +73,8 @@ public partial class TwPagination : TwBlazorComponentBase
 
     private string NavButtonClass(bool disabled, bool isFirst = false, bool isLast = false) =>
         new ClassBuilder(theme.Base)
-        .AddClass("ms-1", isLast)
-        .AddClass("me-1", isFirst)
+        .AddClass(options.Theme.Spacing.MarginStart.Sm, isLast)
+        .AddClass(options.Theme.Spacing.MarginEnd.Sm, isFirst)
         .AddClass(roundedBuilder.GetRounded())
         .AddClass(theme.Buttons, !disabled)
         .Build();

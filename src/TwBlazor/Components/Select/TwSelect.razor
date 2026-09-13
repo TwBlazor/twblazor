@@ -21,11 +21,11 @@
             aria-labelledby="@AriaLabelledBy">
         @if (!Required)
         {
-            <option value="0" class="dark:bg-gray-800 dark:text-white p-3">@Placeholder</option>
+            <option value="0" class="@theme.SelectOption">@Placeholder</option>
         }
         @foreach (var (key, value) in parsedValues)
         {
-            <option value="@key" selected="@(key == selectedValueId)" class="dark:bg-gray-800 dark:text-white p-3">
+            <option value="@key" selected="@(key == selectedValueId)" class="@theme.SelectOption">
                 @GetDisplayText(value)
             </option>
         }

@@ -41,7 +41,7 @@
                 {
                     <div class="block mt-2">
                         <div class="@(c == Color.Light ? "bg-gray-900 p-3 rounded-lg" : "bg-white p-3 rounded-lg")">
-                            <TwRadioButton Label="@c.ToString()" Value="true" Color="c" LabelClass="@(c == Color.Light ? "ms-2 mt-2 text-white dark:text-white" : "ms-2 mt-2 text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} radio button")" SelectedValue="true" />
+                            <TwRadioButton Label="@c.ToString()" Value="true" Color="c" LabelClass="@(c == Color.Light ? "text-white dark:text-white" : "text-gray-900 dark:text-gray-900")" AriaLabel="@($"{@c.ToString()} radio button")" SelectedValue="true" />
                         </div>
                     </div>
                 }
