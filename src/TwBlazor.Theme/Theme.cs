@@ -953,6 +953,32 @@ public static class Theme
                     Thumb = $"{interaction.PointerEventsNone} {positioning.Absolute} top-1/2 z-10 {sizing.Icon.Md} -translate-x-1/2 -translate-y-1/2 {rounded.Full} bg-white dark:bg-gray-100 {borderWidth.Thick} shadow-md ring-1 ring-black/5 transition-transform duration-100 ease-out peer-hover:scale-110 peer-active:scale-95",
                     Bubble = $"{interaction.PointerEventsNone} {positioning.Absolute} bottom-full z-10 -translate-x-1/2 mb-2 whitespace-nowrap rounded-md bg-gray-900 dark:bg-gray-700 px-2 py-1 text-xs font-medium text-white {shadows.Lg} opacity-0 scale-95 transition-[opacity,transform] duration-100 ease-out peer-hover:opacity-100 peer-hover:scale-100 peer-focus-visible:opacity-100 peer-focus-visible:scale-100 tabular-nums"
                 },
+                new TwStepperTheme
+                {
+                    HorizontalList = $"hidden sm:flex sm:items-start {sizing.FullWidth}",
+                    VerticalList = $"{display.Flex} {flexbox.Col} {sizing.FullWidth}",
+                    Step = $"{display.Flex} {flexbox.Align.Start} flex-1",
+                    StepColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {spacing.Gap.Sm} text-center",
+                    VerticalStep = $"{display.Flex} {spacing.Gap.Lg} pb-8 last:pb-0",
+                    VerticalIndicatorColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center}",
+                    VerticalContentColumn = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} flex-1 pt-1",
+                    Connector = "flex-1 h-0.5 mt-4 mx-2 border-t-2 transition-colors duration-300",
+                    VerticalConnector = "flex-1 w-0 border-l-2 my-1 transition-colors duration-300",
+                    ConnectorNeutral = neutralSurface.Border,
+                    Circle = $"{display.Flex} {anchor.Center} shrink-0 {sizing.Icon.Xl} {rounded.Full} font-semibold text-sm transition-colors duration-200 focus:outline-none",
+                    CircleUpcoming = $"{neutralSurface.Background} border-2 {neutralSurface.BorderStrong} {neutralText.Muted}",
+                    CircleDisabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
+                    CircleClickable = interaction.PointerCursor,
+                    CircleIcon = sizing.Icon.Sm,
+                    Label = $"text-sm font-medium {neutralText.Heading}",
+                    LabelUpcoming = $"text-sm font-medium {neutralText.Muted}",
+                    Description = $"text-xs {neutralText.Subtle}",
+                    Content = $"{spacing.MarginTop.Xl} {spacing.Padding.Comfortable} border {neutralSurface.Border} {rounded.Lg}",
+                    VerticalContent = "pt-2",
+                    MobileContainer = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {sizing.FullWidth} sm:hidden",
+                    MobileLabel = $"text-sm font-medium {neutralText.Heading}",
+                    MobileProgressLabel = display.ScreenReaderOnly
+                },
                 new TwSwitchTheme
                 {
                     Colors = new()

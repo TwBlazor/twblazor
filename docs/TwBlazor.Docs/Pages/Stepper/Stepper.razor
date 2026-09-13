@@ -1,0 +1,142 @@
+@page "/stepper"
+@using TwBlazor.Enums
+
+<PageTitle>TwStepper | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwStepper is a Blazor step-by-step progress indicator for multi-step flows, with horizontal and vertical orientations, linear and non-linear navigation, and a mobile-friendly responsive collapse." />
+    <link rel="canonical" href="https://twblazor.com/stepper" />
+</HeadContent>
+
+<PageContainer Title="TwStepper" ThemeType="typeof(TwStepperTheme)">
+    <PageCard Title="Basic Stepper">
+        <Description>
+            Add <code>TwStep</code> children to a <code>TwStepper</code> to declare each step, and bind <code>ActiveStepIndex</code> to control which one is active.
+            Below the "sm" breakpoint the step row automatically collapses into a compact progress bar with a "Step X of N" label, so try resizing your browser to see it adapt.
+        </Description>
+        <CodeExample Name="StepperBasic" CSharpName="StepperBasicCode">
+            <TwStepper @ref="basicStepper" @bind-ActiveStepIndex="basicActiveStep" AriaLabel="Checkout progress">
+                <TwStep Label="Account" Description="Create your login">
+                    <p>Enter your email address and choose a password.</p>
+                </TwStep>
+                <TwStep Label="Address" Description="Where to ship">
+                    <p>Enter the shipping address for your order.</p>
+                </TwStep>
+                <TwStep Label="Review" Description="Confirm and pay">
+                    <p>Review your order details before confirming payment.</p>
+                </TwStep>
+            </TwStepper>
+
+            <div class="flex gap-2 mt-4">
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@basicStepper.IsFirstStep" OnClick="basicStepper.PreviousStep" />
+                <TwButton Label="Next" Disabled="@basicStepper.IsLastStep" OnClick="basicStepper.NextStep" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Validating a Step">
+        <Description>
+            Pass your own validation <code>Task</code> to a "Next" button's click handler and only call <code>NextStep</code> when it passes - the stepper doesn't need to know anything about your validation logic.
+        </Description>
+        <CodeExample Name="StepperValidation" CSharpName="StepperValidationCode">
+            <TwStepper @ref="validatedStepper" @bind-ActiveStepIndex="validatedActiveStep" Linear AriaLabel="Signup progress">
+                <TwStep Label="Email">
+                    <TwTextfield Label="Email address" @bind-Value="signupEmail" Placeholder="user@example.com" AriaLabel="Email address" Invalid="@emailInvalid" ErrorMessage="Please enter a valid email address." />
+                </TwStep>
+                <TwStep Label="Done">
+                    <p>Thanks, @signupEmail is confirmed!</p>
+                </TwStep>
+            </TwStepper>
+
+            <div class="flex gap-2 mt-4">
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@validatedStepper.IsFirstStep" OnClick="validatedStepper.PreviousStep" />
+                <TwButton Label="Next" Disabled="@validatedStepper.IsLastStep" OnClick="ValidateAndContinue" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Non-Linear Stepper">
+        <Description>Set <code>Linear="false"</code> to let users jump straight to any non-disabled step by clicking it, instead of only being able to reach steps they've already visited.</Description>
+        <CodeExample Name="StepperNonLinear">
+            <TwStepper @bind-ActiveStepIndex="nonLinearActiveStep" Linear="false" AriaLabel="Non-linear progress">
+                <TwStep Label="Step 1" />
+                <TwStep Label="Step 2" />
+                <TwStep Label="Step 3" />
+                <TwStep Label="Step 4" />
+            </TwStepper>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled Step">
+        <Description>Set <code>Disabled</code> on a <code>TwStep</code> to prevent it from being navigated to, whether by clicking or via <code>NextStep</code>/<code>PreviousStep</code> (which both skip over it).</Description>
+        <CodeExample Name="StepperDisabled">
+            <TwStepper @bind-ActiveStepIndex="disabledActiveStep" Linear="false" AriaLabel="Progress with a disabled step">
+                <TwStep Label="Details" />
+                <TwStep Label="Shipping" Disabled />
+                <TwStep Label="Payment" />
+            </TwStepper>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Vertical Stepper">
+        <Description>Set <code>Orientation="StepperOrientation.Vertical"</code> to stack steps top-to-bottom, with each step's content shown inline beneath its label while it's active.</Description>
+        <CodeExample Name="StepperVertical" CSharpName="StepperVerticalCode">
+            <TwStepper @ref="verticalStepper" @bind-ActiveStepIndex="verticalActiveStep" Orientation="StepperOrientation.Vertical" AriaLabel="Onboarding progress">
+                <TwStep Label="Create account" Description="A few basic details">
+                    <p class="mb-3">Choose a username and password to get started.</p>
+                    <TwButton Label="Continue" OnClick="verticalStepper.NextStep" Dense />
+                </TwStep>
+                <TwStep Label="Verify email" Description="Optional">
+                    <p class="mb-3">We've sent a confirmation link to your inbox.</p>
+                    <div class="flex gap-2">
+                        <TwButton Label="Back" Variant="ButtonVariant.Outlined" OnClick="verticalStepper.PreviousStep" Dense />
+                        <TwButton Label="Continue" OnClick="verticalStepper.NextStep" Dense />
+                    </div>
+                </TwStep>
+                <TwStep Label="Done">
+                    <p>You're all set!</p>
+                </TwStep>
+            </TwStepper>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Colored Stepper">
+        <Description>Set <code>Color</code> to change the accent used for the active and completed step indicators and connectors.</Description>
+        <CodeExample Name="StepperColor">
+            <TwStepper @bind-ActiveStepIndex="coloredActiveStep" Linear="false" Color="Color.Success" AriaLabel="Success-colored progress">
+                <TwStep Label="Step 1" />
+                <TwStep Label="Step 2" />
+                <TwStep Label="Step 3" />
+            </TwStepper>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample StepperBasicCode
+    private TwStepper basicStepper = null!;
+    private int basicActiveStep;
+    #endregion
+
+    #region CodeExample StepperValidationCode
+    private TwStepper validatedStepper = null!;
+    private int validatedActiveStep;
+    private string signupEmail = string.Empty;
+    private bool emailInvalid;
+
+    private Task ValidateAndContinue()
+    {
+        emailInvalid = string.IsNullOrWhiteSpace(signupEmail) || !signupEmail.Contains('@');
+        return emailInvalid ? Task.CompletedTask : validatedStepper.NextStep();
+    }
+    #endregion
+
+    private int nonLinearActiveStep;
+    private int disabledActiveStep;
+
+    #region CodeExample StepperVerticalCode
+    private TwStepper verticalStepper = null!;
+    private int verticalActiveStep;
+    #endregion
+
+    private int coloredActiveStep;
+}

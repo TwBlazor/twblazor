@@ -37,6 +37,14 @@
         "theme": "TwSidebarTheme"
       },
       {
+        "id": "stepper-navitem",
+        "display": "Stepper",
+        "name": "TwStepper",
+        "url": "/stepper",
+        "isNew": true,
+        "theme": "TwStepperTheme"
+      },
+      {
         "id": "tabs-navitem",
         "display": "Tabs",
         "name": "TwTabContainer",

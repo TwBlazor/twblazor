@@ -1,0 +1,121 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@Class" style="@Style" @attributes="@Attributes">
+    <nav aria-label="@(AriaLabel ?? (AriaLabelledBy == null ? "Progress" : null))" aria-labelledby="@AriaLabelledBy">
+        @if (Orientation == StepperOrientation.Horizontal)
+        {
+            <ol class="@theme.HorizontalList">
+                @for (var i = 0; i < _steps.Count; i++)
+                {
+                    var step = _steps[i];
+                    var status = GetStatus(step);
+                    var index = i;
+                    <li class="@theme.Step">
+                        <div class="@theme.StepColumn">
+                            <button type="button"
+                                    class="@CircleClasses(step, status)"
+                                    disabled="@(!CanActivate(step))"
+                                    aria-current="@(status == StepStatus.Active ? "step" : null)"
+                                    aria-label="@StepAriaLabel(step, index, status)"
+                                    @onclick="() => OnStepClicked(step)">
+                                @if (status == StepStatus.Completed)
+                                {
+                                    <TwIcon Icon="Icon.Check_Lg" Class="@theme.CircleIcon" />
+                                }
+                                else if (step.Icon.HasValue)
+                                {
+                                    <TwIcon Icon="@step.Icon.Value" Class="@theme.CircleIcon" />
+                                }
+                                else
+                                {
+                                    @(index + 1)
+                                }
+                            </button>
+                            <span class="@LabelClasses(status)">@step.Label</span>
+                            @if (!string.IsNullOrWhiteSpace(step.Description))
+                            {
+                                <span class="@theme.Description">@step.Description</span>
+                            }
+                        </div>
+                        @if (i < _steps.Count - 1)
+                        {
+                            <span class="@ConnectorClasses(i)" aria-hidden="true"></span>
+                        }
+                    </li>
+                }
+            </ol>
+
+            <div class="@theme.MobileContainer">
+                <TwProgress T="int" Value="@mobileProgressValue" Max="100" Label="@mobileAriaLabel" LabelClass="@theme.MobileProgressLabel" Color="Color" />
+                @if (ActiveStep != null)
+                {
+                    <p class="@theme.MobileLabel">Step @(ActiveStepIndex + 1) of @_steps.Count: @ActiveStep.Label</p>
+                }
+            </div>
+        }
+        else
+        {
+            <ol class="@theme.VerticalList">
+                @for (var i = 0; i < _steps.Count; i++)
+                {
+                    var step = _steps[i];
+                    var status = GetStatus(step);
+                    var index = i;
+                    <li class="@theme.VerticalStep">
+                        <div class="@theme.VerticalIndicatorColumn">
+                            <button type="button"
+                                    class="@CircleClasses(step, status)"
+                                    disabled="@(!CanActivate(step))"
+                                    aria-current="@(status == StepStatus.Active ? "step" : null)"
+                                    aria-label="@StepAriaLabel(step, index, status)"
+                                    @onclick="() => OnStepClicked(step)">
+                                @if (status == StepStatus.Completed)
+                                {
+                                    <TwIcon Icon="Icon.Check_Lg" Class="@theme.CircleIcon" />
+                                }
+                                else if (step.Icon.HasValue)
+                                {
+                                    <TwIcon Icon="@step.Icon.Value" Class="@theme.CircleIcon" />
+                                }
+                                else
+                                {
+                                    @(index + 1)
+                                }
+                            </button>
+                            @if (i < _steps.Count - 1)
+                            {
+                                <span class="@VerticalConnectorClasses(i)" aria-hidden="true"></span>
+                            }
+                        </div>
+                        <div class="@theme.VerticalContentColumn">
+                            <span class="@LabelClasses(status)">@step.Label</span>
+                            @if (!string.IsNullOrWhiteSpace(step.Description))
+                            {
+                                <span class="@theme.Description">@step.Description</span>
+                            }
+                            @if (status == StepStatus.Active && step.ChildContent != null)
+                            {
+                                <div class="@theme.VerticalContent">
+                                    @step.ChildContent
+                                </div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ol>
+        }
+    </nav>
+
+    @if (Orientation == StepperOrientation.Horizontal && ActiveStep?.ChildContent != null)
+    {
+        <div class="@theme.Content">
+            @ActiveStep.ChildContent
+        </div>
+    }
+</div>
+
+<CascadingValue Value="this" IsFixed="true">
+    @ChildContent
+</CascadingValue>
