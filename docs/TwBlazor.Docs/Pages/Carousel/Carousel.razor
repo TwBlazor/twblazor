@@ -1,0 +1,113 @@
+@page "/carousel"
+
+<PageTitle>TwCarousel | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwCarousel is a Blazor carousel component for cycling through slides, with arrow navigation, indicator dots, swipe gestures, and optional autoplay." />
+    <link rel="canonical" href="https://twblazor.com/carousel" />
+</HeadContent>
+
+<PageContainer Title="TwCarousel" ThemeType="typeof(TwCarouselTheme)">
+    <PageCard Title="Basic Carousel">
+        <Description>Use <code>TwCarousel</code> and <code>TwCarouselItem</code> to cycle through a set of slides. Only the active slide is rendered.</Description>
+        <CodeExample Name="CarouselBasic">
+            <TwCarousel Style="height:240px;">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-fuchsia-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-blue-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Autoplay">
+        <Description>Set <code>AutoPlay</code> to automatically advance slides. A pause/play control is always shown so playback can be stopped, and it also pauses automatically while hovered or focused.</Description>
+        <CodeExample Name="CarouselAutoPlay">
+            <TwCarousel Style="height:240px;" AutoPlay AutoPlayInterval="TimeSpan.FromSeconds(3)">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-green-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-yellow-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-red-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Indicator Color">
+        <Description>Set <code>Color</code> to customize the active slide indicator's color.</Description>
+        <CodeExample Name="CarouselColor">
+            <TwCarousel Style="height:240px;" Color="Color.Success">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-700 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-800 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-900 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Without Arrows or Indicators">
+        <Description>Set <code>ShowArrows</code> and <code>ShowIndicators</code> to <code>false</code> to rely on swipe gestures or programmatic navigation only.</Description>
+        <CodeExample Name="CarouselNoControls">
+            <TwCarousel Style="height:240px;" ShowArrows="false" ShowIndicators="false">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-indigo-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-teal-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Non-Looping">
+        <Description>Set <code>Loop</code> to <code>false</code> to disable the arrow buttons at the first and last slide instead of wrapping around.</Description>
+        <CodeExample Name="CarouselNoLoop">
+            <TwCarousel Style="height:240px;" Loop="false">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-orange-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-pink-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-cyan-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Bound Selected Index">
+        <Description>Bind <code>SelectedIndex</code> to control or observe the active slide from outside the carousel.</Description>
+        <CodeExample Name="CarouselBoundIndex">
+            <p class="mb-2">Selected slide: @(selectedIndex + 1)</p>
+            <TwCarousel Style="height:240px;" @bind-SelectedIndex="selectedIndex">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-700 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-800 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-900 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    private int selectedIndex;
+}

@@ -709,6 +709,21 @@ public static class Theme
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
                     Title = $"{typography.Size.Lg} {typography.Weight.Semibold} wrap-break-word {neutralText.Heading}"
                 },
+                new TwCarouselTheme
+                {
+                    Container = $"{positioning.Relative} {overflow.Hidden} {sizing.FullWidth}",
+                    Viewport = $"{positioning.Relative} {sizing.Full}",
+                    Slide = sizing.Full,
+                    ArrowButton = $"{positioning.Absolute} top-1/2 -translate-y-1/2 z-10 p-2 text-lg leading-none {rounded.Full} bg-white/80 dark:bg-black/60 {neutralText.Heading} {shadows.Md} hover:bg-white dark:hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast}",
+                    ArrowButtonStart = "start-2",
+                    ArrowButtonEnd = "end-2",
+                    ArrowButtonDisabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
+                    PlayPauseButton = $"{positioning.Absolute} top-2 end-2 z-10 p-1.5 text-sm leading-none {rounded.Full} bg-white/80 dark:bg-black/60 {neutralText.Heading} {shadows.Md} hover:bg-white dark:hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast}",
+                    IndicatorContainer = $"{display.Flex} {flexbox.Justify.Center} {flexbox.Align.Center} {spacing.Gap.Sm} {spacing.MarginTop.Lg}",
+                    Indicator = $"size-2.5 {rounded.Full} {interaction.PointerCursor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast}",
+                    IndicatorActive = "bg-purple-600 dark:bg-purple-500",
+                    IndicatorInactive = "bg-[oklch(21%_0.006_285.885)]/20 dark:bg-[oklch(97.807%_0.029_256.847)]/25 hover:bg-[oklch(21%_0.006_285.885)]/40 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/40"
+                },
                 new TwCheckboxTheme
                 {
                     Colors = checkBoxRadioButtonColors,

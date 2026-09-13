@@ -1,0 +1,41 @@
+@namespace TwBlazor.Components
+@using TwBlazor.Enums
+@inherits TwBlazorComponentBase
+
+<div id="@Id" class="@containerClasses" style="@Style" @attributes="@Attributes" role="region" aria-roledescription="carousel" aria-label="@effectiveAriaLabel" aria-labelledby="@AriaLabelledBy" @onkeydown="HandleKeyDown" @onfocusin="HandlePointerEnter" @onfocusout="HandlePointerLeave">
+    <div class="@theme.Viewport" @onmouseenter="HandlePointerEnter" @onmouseleave="HandlePointerLeave" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd">
+        <div class="@theme.Slide" aria-live="@(AutoPlay ? "off" : "polite")">
+            @if (ActiveItem != null)
+            {
+                <div role="group" aria-roledescription="slide" aria-label="@($"{SelectedIndex + 1} of {_items.Count}")">
+                    @ActiveItem.ChildContent
+                </div>
+            }
+        </div>
+
+        @if (ShowArrows && _items.Count > 1)
+        {
+            <TwIcon Id="@($"{Id}-previous")" Icon="Icon.Chevron_Left" Plain Class="@previousArrowClasses" AriaLabel="Previous slide" OnClick="PreviousSlide" Disabled="@(!Loop && IsFirstSlide)" />
+            <TwIcon Id="@($"{Id}-next")" Icon="Icon.Chevron_Right" Plain Class="@nextArrowClasses" AriaLabel="Next slide" OnClick="NextSlide" Disabled="@(!Loop && IsLastSlide)" />
+        }
+
+        @if (AutoPlay)
+        {
+            <TwIcon Id="@($"{Id}-playpause")" Icon="@(isAutoPlayPaused ? Icon.Play_Fill : Icon.Pause_Fill)" Plain Class="@theme.PlayPauseButton" AriaLabel="@(isAutoPlayPaused ? "Play automatic slideshow" : "Pause automatic slideshow")" OnClick="ToggleAutoPlayPaused" />
+        }
+    </div>
+
+    @if (ShowIndicators && _items.Count > 1)
+    {
+        <div class="@theme.IndicatorContainer" role="group" aria-label="Choose slide to display">
+            @foreach (var index in Enumerable.Range(0, _items.Count))
+            {
+                <button type="button" class="@GetIndicatorClasses(index)" aria-label="@($"Slide {index + 1} of {_items.Count}")" aria-current="@(index == SelectedIndex ? "true" : "false")" @onclick="@(() => GoToSlide(index))"></button>
+            }
+        </div>
+    }
+</div>
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
