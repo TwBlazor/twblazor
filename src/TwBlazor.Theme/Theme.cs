@@ -821,6 +821,20 @@ public static class Theme
                     ActiveButton = $"{text.Medium.Primary} {darkText.Medium.Primary} {background.Light.Primary} {darkBackground.Light.Primary} font-bold hover:bg-purple-100 {interaction.PointerCursor}",
                     Buttons = $"{neutralText.Muted} {neutralSurface.Background} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] {interaction.PointerCursor}"
                 },
+                new TwPickListTheme
+                {
+                    Container = $"{display.Flex} {flexbox.Align.Start} {spacing.Gap.Lg}",
+                    Column = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} min-w-0 flex-1",
+                    ColumnHeader = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Sm}",
+                    Label = $"text-sm font-medium {neutralText.Heading}",
+                    ReorderButtons = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Sm}",
+                    TransferButtonColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {flexbox.Justify.Center} {spacing.Gap.Sm} pt-8",
+                    ListBox = $"{sizing.FullWidth} h-64 overflow-y-auto {borderWidth.Thin} {neutralSurface.Border} {neutralSurface.Background} p-1",
+                    ListBoxDisabled = $"{interaction.DisabledOpacity} {interaction.PointerEventsNone}",
+                    Item = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} px-3 py-2 text-sm rounded-md {neutralText.Heading} {interaction.PointerCursor} {neutralSurface.Hover} transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500",
+                    ItemSelected = "bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] font-semibold",
+                    EmptyState = $"{neutralText.Subtle} text-sm italic px-3 py-2"
+                },
                 new TwProgressTheme
                 {
                     Colors = new()

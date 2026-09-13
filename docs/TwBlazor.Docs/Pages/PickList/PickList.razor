@@ -1,0 +1,95 @@
+@page "/pick-list"
+
+<PageTitle>TwPickList | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwPickList is a Blazor dual list-box component for moving items between an available and a selected list, with transfer-all buttons and drag-free keyboard-accessible reordering." />
+    <link rel="canonical" href="https://twblazor.com/pick-list" />
+</HeadContent>
+
+<PageContainer Title="TwPickList" ThemeType="typeof(TwPickListTheme)">
+    <PageCard Title="Basic Usage">
+        <Description>Bind <code>SourceItems</code> and <code>TargetItems</code> to move items between the two lists. Click an item (or press Enter/Space) to select it, then use the chevron buttons to transfer the selection.</Description>
+        <CodeExample Name="PickListBasic" CSharpName="PickListBasicCode">
+            <TwPickList TItem="string"
+                        @bind-SourceItems="@availableFruits"
+                        @bind-TargetItems="@selectedFruits"
+                        SourceLabel="Available Fruits"
+                        TargetLabel="Selected Fruits"
+                        AriaLabel="Fruit picker" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Complex Objects">
+        <Description>Use <code>TextField</code> to display a specific property when binding to a list of complex objects, matching <code>TwSelect</code>'s <code>PropertyName</code>.</Description>
+        <CodeExample Name="PickListComplexObjects" CSharpName="PickListComplexObjectsCode">
+            <TwPickList TItem="Employee"
+                        @bind-SourceItems="@employees"
+                        @bind-TargetItems="@developers"
+                        TextField="@nameof(Employee.Name)"
+                        SourceLabel="Employees"
+                        TargetLabel="Developers"
+                        AriaLabel="Employee assignment" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Without Reordering or Move-All">
+        <Description>Set <code>AllowReorder="false"</code> to hide the up/down buttons, or <code>ShowMoveAllButtons="false"</code> to hide the double-chevron transfer-all buttons.</Description>
+        <CodeExample Name="PickListMinimal">
+            <TwPickList TItem="string"
+                        @bind-SourceItems="@availableColors"
+                        @bind-TargetItems="@selectedColors"
+                        AllowReorder="false"
+                        ShowMoveAllButtons="false"
+                        SourceLabel="Colors"
+                        TargetLabel="Chosen"
+                        AriaLabel="Color picker" />
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Disabled">
+        <Description>Set <code>Disabled</code> to prevent selection, transferring, and reordering.</Description>
+        <CodeExample Name="PickListDisabled">
+            <TwPickList TItem="string"
+                        SourceItems="@disabledSource"
+                        TargetItems="@disabledTarget"
+                        Disabled="true"
+                        SourceLabel="Available"
+                        TargetLabel="Selected"
+                        AriaLabel="Disabled picker" />
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    #region CodeExample PickListBasicCode
+    private IEnumerable<string> availableFruits = ["Apple", "Banana", "Cherry", "Mango", "Peach"];
+    private IEnumerable<string> selectedFruits = ["Strawberry", "Blueberry"];
+    #endregion
+
+    #region CodeExample PickListComplexObjectsCode
+    private sealed class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+
+    private IEnumerable<Employee> employees =
+    [
+        new() { Id = 1, Name = "Alice Johnson" },
+        new() { Id = 2, Name = "Bob Smith" },
+        new() { Id = 3, Name = "Carol Lee" }
+    ];
+
+    private IEnumerable<Employee> developers =
+    [
+        new() { Id = 4, Name = "David Kim" },
+        new() { Id = 5, Name = "Priya Patel" }
+    ];
+    #endregion
+
+    private IEnumerable<string> availableColors = ["Red", "Blue", "Green", "Yellow"];
+    private IEnumerable<string> selectedColors = [];
+
+    private readonly List<string> disabledSource = ["Locked A", "Locked B"];
+    private readonly List<string> disabledTarget = ["Locked C"];
+}
