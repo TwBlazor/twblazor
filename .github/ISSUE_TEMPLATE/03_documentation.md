@@ -1,8 +1,8 @@
 ---
 name: Documentation
 about: Report a problem with, or suggest an improvement to, the TwBlazor docs (twblazor.com).
-title: "[Docs]: "
-labels: documentation
+title: "docs: "
+labels: docs
 ---
 
 ## What kind of issue is this?
