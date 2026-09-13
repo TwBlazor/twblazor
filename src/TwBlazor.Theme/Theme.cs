@@ -687,6 +687,7 @@ public static class Theme
                     ControlRow = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {spacing.Padding.Compact} {neutralSurface.BackgroundSubtle}",
                     Body = $"{display.Flex} {flexbox.Col} {spacing.Gap.Lg}",
                     SliderRow = "flex-1 h-6",
+                    HueSliderTouch = "touch-none",
                     InputColumn = "flex-1",
                     ModeSwitchButton = "shrink-0 tracking-wide"
                 },

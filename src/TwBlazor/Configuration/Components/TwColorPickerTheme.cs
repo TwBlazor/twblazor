@@ -96,6 +96,13 @@ public class TwColorPickerTheme
     public required string SliderRow { get; set; }
 
     /// <summary>
+    /// Gets or sets the extra touch-handling class for the hue slider specifically - unlike the alpha
+    /// slider, it also responds to native touch drag gestures (see <c>OnHueTouchMove</c>), so the
+    /// browser's own touch scrolling/panning needs to be suppressed on it.
+    /// </summary>
+    public required string HueSliderTouch { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes for each equal-width column in the RGB/HSL numeric input row.
     /// </summary>
     public required string InputColumn { get; set; }

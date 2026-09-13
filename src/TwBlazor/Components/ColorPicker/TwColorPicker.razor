@@ -8,8 +8,8 @@
         <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClasses" @attributes="@LabelAttributes" />
     }
 
-    <div class="@inputContainerClasses relative">
-        <div class="relative shrink-0">
+    <div class="@inputContainerClasses @options.Theme.Position.Relative">
+        <div class="@($"{options.Theme.Position.Relative} {options.Theme.Flexbox.ShrinkNone}")">
             @if (UseNativePicker)
             {
                 <input type="color"

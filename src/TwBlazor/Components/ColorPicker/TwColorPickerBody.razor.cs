@@ -80,6 +80,27 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
         .AddClass(roundedClass)
         .Build();
 
+    private string sliderRowClasses => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Align.Center)
+        .AddClass(options.Theme.Interaction.PointerCursor)
+        .AddClass(theme.SliderRow)
+        .Build();
+
+    private string sliderContainerClasses => new ClassBuilder(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Align.Center)
+        .AddClass(options.Theme.Spacing.Gap.Sm)
+        .Build();
+
+    private string inputRowClasses => new ClassBuilder(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Spacing.Gap.Sm)
+        .Build();
+
+    private string alphaReadoutClasses => new ClassBuilder(theme.AlphaLabel)
+        .AddClass(options.Theme.Flexbox.ShrinkNone)
+        .AddClass("text-right")
+        .Build();
+
     // Color state in HSL format (0-360 for hue, 0-1 for saturation and lightness)
     private double hue = 0;
     private double saturation = 1;
