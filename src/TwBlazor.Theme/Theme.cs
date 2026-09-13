@@ -13,6 +13,8 @@ public static class Theme
     #region CodeExample GetStartedTheme
     public static TwBlazorTheme CreateDefaultTheme()
     {
+        #region utility classes
+        
         var flexbox = new TwBlazorFlexbox
         {
             Row = "flex-row",
@@ -576,6 +578,8 @@ public static class Theme
 
         var transparentBackground = "bg-transparent";
 
+        #endregion
+
         return new TwBlazorTheme
         {
             Anchor = anchor,
@@ -668,13 +672,13 @@ public static class Theme
                         Light = $"{background.Light.Light} {darkBackground.Dark.Light} {text.Medium.Dark} {darkText.Medium.Dark} {borderWidth.AccentEdge} {borderColors.Light}",
                         Dark = $"{background.Light.Dark} {darkBackground.Dark.Dark} {text.Medium.Dark} {darkText.Light.Dark} {borderWidth.AccentEdge} {borderColors.Dark}",
                     },
-                    TextWrapper = $"{sizing.MinWidthNone} {flexbox.Flex1} wrap-break-word",
+                    TextWrapper = $"{flexbox.Flex1} {sizing.MinWidthNone} wrap-break-word",
                     Padding = "py-4 px-6",
                     DensePadding = "py-2 px-4",
                     Transition = transition.ColorsSlow,
                     DismissButtonSize = $"{sizing.Icon.Xl} {rounded.Full}",
                     DismissButtonSpacingWithEndIcon = "ml-2",
-                    DismissButtonColor = $"text-current opacity-60 hover:opacity-100 hover:bg-white hover:bg-opacity-20 dark:hover:bg-gray-800 dark:hover:bg-opacity-20 transition-[opacity,background-color] {transition.DurationFast} {interaction.FocusOutlineNone} focus:ring-2 focus:ring-current focus:ring-opacity-50"
+                    DismissButtonColor = $"text-current hover:bg-white hover:bg-opacity-20 dark:hover:bg-gray-800 dark:hover:bg-opacity-20 opacity-60 hover:opacity-100 focus:ring-2 focus:ring-current focus:ring-opacity-50 transition-[opacity,background-color] {transition.DurationFast} {interaction.FocusOutlineNone}"
                 },
                 new TwBreadcrumbTheme
                 {
@@ -685,33 +689,33 @@ public static class Theme
                 },
                 new TwButtonTheme
                 {
-                    Base = $"{anchor.Center} {transition.ColorsFast} {typography.Size.Sm} {display.InlineFlex} h-8 {overflow.Hidden} {interaction.FocusOutlineNone} focus-visible:outline-none touch-manipulation",
+                    Base = $"{display.InlineFlex} {overflow.Hidden} {anchor.Center} h-8 {typography.Size.Sm} {transition.ColorsFast} {interaction.FocusOutlineNone} focus-visible:outline-none touch-manipulation",
                     Padding = "px-6",
                     DensePadding = "px-3 py-1.5",
-                    IconButton = $"{anchor.Center} {rounded.Full} {display.Flex} {interaction.FocusOutlineNone} h-8 w-8 text-sm/6",
+                    IconButton = $"{display.Flex} {anchor.Center} h-8 w-8 text-sm/6 {rounded.Full} {interaction.FocusOutlineNone}",
                     Typography = typography.Weight.Medium,
                     IconTypography = $"{typography.Size.Lg} leading-none",
                     Uppercase = $"{textTransform.Uppercase} tracking-wide",
                     DisabledCursor = interaction.DisabledCursor,
                     ReadonlyCursor = interaction.ReadonlyCursor,
                     DefaultCursor = interaction.PointerCursor,
-                    DisabledFilled = $"bg-[oklch(21%_0.006_285.885)]/15 dark:bg-[oklch(97.807%_0.029_256.847)]/15 text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 {interaction.DisabledCursor} shadow-none",
-                    DisabledOutlined = $"{borderWidth.Thin} border-[oklch(21%_0.006_285.885)]/15 dark:border-[oklch(97.807%_0.029_256.847)]/15 text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 {transparentBackground} {interaction.DisabledCursor}",
+                    DisabledFilled = $"bg-[oklch(21%_0.006_285.885)]/15 dark:bg-[oklch(97.807%_0.029_256.847)]/15 text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 shadow-none {interaction.DisabledCursor}",
+                    DisabledOutlined = $"text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 {transparentBackground} {borderWidth.Thin} border-[oklch(21%_0.006_285.885)]/15 dark:border-[oklch(97.807%_0.029_256.847)]/15 {interaction.DisabledCursor}",
                     DisabledText = $"text-[oklch(21%_0.006_285.885)]/40 dark:text-[oklch(97.807%_0.029_256.847)]/40 {transparentBackground} {interaction.DisabledCursor}"
                 },
                 new TwCardTheme
                 {
                     Container = "px-6 py-5",
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
-                    Title = $"{typography.Size.Lg} {typography.Weight.Semibold} {neutralText.Heading} wrap-break-word"
+                    Title = $"{typography.Size.Lg} {typography.Weight.Semibold} wrap-break-word {neutralText.Heading}"
                 },
                 new TwCheckboxTheme
                 {
                     Colors = checkBoxRadioButtonColors,
-                    Base = $"peer {interaction.PointerCursor} appearance-none {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} {transition.EaseInOut}",
+                    Base = $"peer {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} {transition.EaseInOut} {interaction.PointerCursor} appearance-none",
                     Disabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
-                    Hover = $"{interaction.PointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
-                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md} {inputLabelText}",
+                    Hover = $"hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40 {interaction.PointerCursor}",
+                    LabelBase = $"{display.Flex} {positioning.Relative} {flexbox.Align.Center} {spacing.Gap.Md} min-h-[24px] {inputLabelText} select-none",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity,
@@ -720,11 +724,11 @@ public static class Theme
                 },
                 new TwChipTheme
                 {
-                    Base = $"{anchor.Center} {transition.ColorsFast} {display.InlineFlex} gap-1.5 {typography.Weight.Medium} {shadows.Sm} touch-manipulation",
-                    CloseButton = $"{anchor.Center} {display.Flex} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {rounded.Full} {sizing.Icon.Sm} {typography.AlignCenter}",
-                    Sm = "text-[10px] leading-none px-1.5 py-1 h-5",
-                    Md = $"{typography.Size.Xs} leading-none px-2 py-1 h-6",
-                    Lg = $"{typography.Size.Sm} leading-none px-2.5 py-1.5 h-8"
+                    Base = $"{display.InlineFlex} {anchor.Center} gap-1.5 {typography.Weight.Medium} {shadows.Sm} {transition.ColorsFast} touch-manipulation",
+                    CloseButton = $"{display.Flex} {anchor.Center} {sizing.Icon.Sm} {typography.AlignCenter} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {rounded.Full}",
+                    Sm = "h-5 px-1.5 py-1 text-[10px] leading-none",
+                    Md = $"h-6 px-2 py-1 {typography.Size.Xs} leading-none",
+                    Lg = $"h-8 px-2.5 py-1.5 {typography.Size.Sm} leading-none"
                 },
                 new TwCodeBlockTheme
                 {
@@ -734,23 +738,23 @@ public static class Theme
                 new TwCollapseTheme
                 {
                     Container = $"tw-collapse {borderWidth.Thin} {neutralSurface.Border}",
-                    Trigger = $"{display.Flex} w-full {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Md} {spacing.InteractiveRowPadding} text-left {typography.Weight.Medium} {neutralText.Heading} {transition.ColorsFast} {neutralSurface.Hover} {interaction.FocusOutlineNone} focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 touch-manipulation",
-                    Icon = $"{spacing.PushEnd} {sizing.Icon.Sm} {flexbox.ShrinkNone} {transition.TransformSlow} {display.Flex}",
+                    Trigger = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Md} w-full {spacing.InteractiveRowPadding} text-left {typography.Weight.Medium} {neutralText.Heading} {neutralSurface.Hover} focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 {transition.ColorsFast} {interaction.FocusOutlineNone} touch-manipulation",
+                    Icon = $"{display.Flex} {flexbox.ShrinkNone} {sizing.Icon.Sm} {spacing.PushEnd} {transition.TransformSlow}",
                     IconOpen = "rotate-180",
                     Content = $"{overflow.Hidden} border-t {neutralSurface.Border} {transition.ColorsSlow}"
                 },
                 new TwColorPickerTheme
                 {
-                    Swatch = $"block h-7 w-7 ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {shadows.Sm} flex-shrink-0 transition-[box-shadow,opacity] {transition.DurationFast}",
+                    Swatch = $"block flex-shrink-0 h-7 w-7 ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {shadows.Sm} transition-[box-shadow,opacity] {transition.DurationFast}",
                     SwatchDisabled = interaction.DisabledOpacity,
                     SwatchHover = "hover:ring-[oklch(21%_0.006_285.885)]/20 dark:hover:ring-[oklch(97.807%_0.029_256.847)]/25",
                     InputContainer = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md}",
-                    DialogPosition = $"{positioning.Absolute} top-full left-0 mt-2 z-120",
-                    DialogSurface = $"tw-color-picker-dialog {neutralSurface.Background} ring-1 ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {spacing.Padding.Standard} w-64",
+                    DialogPosition = $"{positioning.Absolute} top-full left-0 z-120 mt-2",
+                    DialogSurface = $"tw-color-picker-dialog w-64 {spacing.Padding.Standard} {neutralSurface.Background} ring-1 ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15",
                     PreviewSwatch = $"{flexbox.Flex1} {sizing.MinWidthNone} h-6 {rounded.Full} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/15 {shadows.Sm}",
-                    SelectorSquare = $"{positioning.Relative} {sizing.FullWidth} h-48 {overflow.Hidden} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
+                    SelectorSquare = $"{positioning.Relative} {overflow.Hidden} {sizing.FullWidth} h-48 ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 cursor-crosshair touch-none",
                     SelectorThumb = $"{positioning.Absolute} {sizing.Icon.Sm} {rounded.Full} border-2 border-white ring-1 ring-black/10 {shadows.Lg} {interaction.PointerEventsNone}",
-                    SliderTrack = $"{sizing.FullWidth} h-2.5 {rounded.Full} {overflow.Hidden} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 {interaction.PointerEventsNone}",
+                    SliderTrack = $"{overflow.Hidden} {sizing.FullWidth} h-2.5 {rounded.Full} ring-1 ring-inset ring-[oklch(21%_0.006_285.885)]/10 dark:ring-[oklch(97.807%_0.029_256.847)]/10 {interaction.PointerEventsNone}",
                     SliderThumb = $"{positioning.Absolute} top-1/2 {sizing.Icon.Sm} {rounded.Full} border-2 border-white ring-1 ring-black/10 {shadows.Lg} {interaction.PointerEventsNone}",
                     AlphaLabel = $"{typography.Size.Xs} {typography.Weight.Medium} {neutralText.Secondary}",
                     ActionBar = $"{display.Flex} {flexbox.Justify.End} {spacing.Gap.Md} pt-1",
@@ -764,27 +768,27 @@ public static class Theme
                 },
                 new TwDatePickerTheme
                 {
-                    Header = $"{neutralSurface.Elevated} {typography.AlignCenter} {typography.Weight.Medium} {rounded.RoundedTop.Lg} border-b {neutralSurface.BorderStrong}",
-                    WeekdaysHeader = $"{anchor.Center} {text.Medium.Primary} {darkText.Light.Primary} h-8 {display.Flex} {typography.Size.Xs} {typography.Weight.Semibold} tracking-wide ",
-                    Base = $"{positioning.Absolute} {interaction.PointerCursor} {borderWidth.None} {typography.AlignCenter} {typography.Size.Sm} {typography.Weight.Medium} {transition.ColorsFast} top-full left-0 {flexbox.Row} md:flex-row {flexbox.Align.Center} z-120 mt-1 {neutralSurface.Elevated} px-2 pb-2 {borderWidth.Thin} {neutralSurface.BorderStrong}",
+                    Header = $"{typography.AlignCenter} {typography.Weight.Medium} {neutralSurface.Elevated} {rounded.RoundedTop.Lg} border-b {neutralSurface.BorderStrong}",
+                    WeekdaysHeader = $"{display.Flex} {anchor.Center} h-8 {typography.Size.Xs} {typography.Weight.Semibold} tracking-wide {text.Medium.Primary} {darkText.Light.Primary}",
+                    Base = $"{positioning.Absolute} top-full left-0 z-120 {flexbox.Row} md:flex-row {flexbox.Align.Center} mt-1 px-2 pb-2 {typography.AlignCenter} {typography.Size.Sm} {typography.Weight.Medium} {neutralSurface.Elevated} {borderWidth.None} {borderWidth.Thin} {neutralSurface.BorderStrong} {transition.ColorsFast} {interaction.PointerCursor}",
                     ActiveClass = "bg-purple-50 dark:bg-purple-500/30",
-                    ButtonClass = $"{spacing.Padding.Compact} h-8 {display.Flex} {flexbox.Align.Center} {sizing.FullWidth} {flexbox.Justify.Center}",
+                    ButtonClass = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Center} h-8 {sizing.FullWidth} {spacing.Padding.Compact}",
                     RangeClass = "bg-purple-100 dark:bg-purple-500/20",
-                    RangeMonthCaptionClass = $"{typography.AlignCenter} {text.Medium.Primary} {darkText.Light.Primary} {typography.Size.Sm} {typography.Weight.Semibold} mt-2",
+                    RangeMonthCaptionClass = $"mt-2 {typography.AlignCenter} {typography.Size.Sm} {typography.Weight.Semibold} {text.Medium.Primary} {darkText.Light.Primary}",
                     PrevMonthClass = "text-gray-400 dark:text-gray-600",
                     DefaultFormat = "dd/MM/yyyy",
                     DefaultDateTimeFormat = "dd/MM/yyyy HH:mm",
                     DefaultDateTimeFormat12Hour = "dd/MM/yyyy hh:mm tt",
                     DefaultRangeSeparator = " - ",
-                    IconTriggerWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {flexbox.Align.Center} {spacing.PaddingStart.Lg} {interaction.PointerCursor}",
-                    IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
+                    IconTriggerWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} {display.Flex} {flexbox.Align.Center} h-10.5 {spacing.PaddingStart.Lg} {interaction.PointerCursor}",
+                    IconGlyph = $"{sizing.Icon.Md} {neutralText.Subtle}",
                     TextfieldPadding = "pl-10 pr-3",
                     NativeInputAppearance = "appearance-none",
                     PanelWidth = "w-67",
                     HeaderControls = $"{display.Flex} {flexbox.Justify.Between} {flexbox.Align.Center} h-9",
                     Body = display.Flex,
-                    YearsGrid = $"{spacing.MarginTop.Md} {display.Grid} {sizing.FullWidth} grid-cols-5 justify-items-stretch {spacing.Gap.Sm}",
-                    MonthsGrid = $"{spacing.MarginTop.Md} {display.Grid} {sizing.FullWidth} grid-cols-6 justify-items-stretch {spacing.Gap.Sm}",
+                    YearsGrid = $"{display.Grid} grid-cols-5 justify-items-stretch {spacing.Gap.Sm} {sizing.FullWidth} {spacing.MarginTop.Md}",
+                    MonthsGrid = $"{display.Grid} grid-cols-6 justify-items-stretch {spacing.Gap.Sm} {sizing.FullWidth} {spacing.MarginTop.Md}",
                     DualMonthLayout = $"{display.Flex} {flexbox.Col} md:flex-row {spacing.Gap.Xl}",
                     DualMonthColumn = "md:flex-1 md:min-w-0",
                     DayGrid = $"{sizing.FullWidth} border-collapse",
@@ -792,11 +796,11 @@ public static class Theme
                     DayAbbreviation = "no-underline",
                     RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.PaddingTop.Md} {spacing.MarginBottom.Md}",
                     RangeStageTabInactive = neutralText.Subtle,
-                    PanelMaxHeight = "max-h-[calc(100vh-2rem)] overflow-y-auto",
-                    PanelMaxWidth = "max-w-[calc(100vw-2rem)] overflow-x-auto",
+                    PanelMaxHeight = "overflow-y-auto max-h-[calc(100vh-2rem)]",
+                    PanelMaxWidth = "overflow-x-auto max-w-[calc(100vw-2rem)]",
                     DualMonthPanelWidth = "md:w-138",
-                    StageTabBase = $"{flexbox.Flex1} {typography.Size.Xs} {typography.Weight.Medium} py-1 {interaction.PointerCursor} {typography.AlignCenter}",
-                    HeaderNavButton = "text-xl py-2 px-4"
+                    StageTabBase = $"{flexbox.Flex1} py-1 {typography.Size.Xs} {typography.Weight.Medium} {typography.AlignCenter} {interaction.PointerCursor}",
+                    HeaderNavButton = "py-2 px-4 text-xl"
                 },
                 new TwFileUploadTheme
                 {
@@ -811,7 +815,7 @@ public static class Theme
                 new TwGroupsTheme
                 {
                     Gap = spacing.Gap.Md,
-                    FieldsetBase = "border-none p-0 m-0",
+                    FieldsetBase = "p-0 m-0 border-none",
                     HorizontalLayout = $"{display.Flex} {flexbox.Row} {flexbox.Wrap}",
                     VerticalLayout = $"{display.Flex} {flexbox.Col}",
                     CheckboxGroupDisabled = $"{interaction.DisabledOpacity} {interaction.PointerEventsNone}",
@@ -828,12 +832,12 @@ public static class Theme
                 },
                 new TwDialogTheme
                 {
-                    Backdrop = $"{positioning.Fixed} inset-0 z-[110] {display.Flex} {spacing.Padding.Comfortable} bg-black/50 overflow-y-auto overscroll-contain",
-                    Surface = $"{positioning.Relative} {display.Flex} {sizing.FullWidth} {flexbox.Col} {neutralText.Heading} {neutralSurface.Background} max-h-[calc(100vh-2rem)]",
-                    Header = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Xl} px-6 py-4 border-b {neutralSurface.Border} flex-shrink-0",
+                    Backdrop = $"{positioning.Fixed} inset-0 z-[110] {display.Flex} overflow-y-auto overscroll-contain {spacing.Padding.Comfortable} bg-black/50",
+                    Surface = $"{positioning.Relative} {display.Flex} {flexbox.Col} {sizing.FullWidth} max-h-[calc(100vh-2rem)] {neutralText.Heading} {neutralSurface.Background}",
+                    Header = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Xl} flex-shrink-0 px-6 py-4 border-b {neutralSurface.Border}",
                     Title = $"{typography.Size.Lg} {typography.Weight.Semibold}",
-                    CloseButton = $"{transition.ColorsFast} {rounded.Lg} {spacing.Padding.Tight} {neutralText.Subtle} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] flex-shrink-0 {interaction.FocusOutlineNone} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-blue-500/20",
-                    Content = "px-6 py-4 overflow-y-auto",
+                    CloseButton = $"flex-shrink-0 {spacing.Padding.Tight} {neutralText.Subtle} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] {rounded.Lg} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-blue-500/20 {transition.ColorsFast} {interaction.FocusOutlineNone}",
+                    Content = "overflow-y-auto px-6 py-4",
                     FullScreen = $"{sizing.Full} max-w-none",
                     FullWidth = sizing.FullWidth,
                     SmallWidth = "sm:max-w-lg",
@@ -843,13 +847,13 @@ public static class Theme
                 new TwInputTheme
                 {
                     DefaultInputVariant = InputVariant.Filled,
-                    TextfieldBase = $"{sizing.FullWidth} {sizing.MinWidthNone} max-w-full {neutralText.Heading} {transition.ColorsFast} {typography.Size.Base} {display.Block} {transition.EaseInOut} placeholder:text-[oklch(21%_0.006_285.885)]/50 dark:placeholder:text-[oklch(97.807%_0.029_256.847)]/50 {interaction.FocusOutlineNone}",
-                    SelectBase = $"{sizing.FullWidth} {neutralText.Heading} {transition.ColorsFast} appearance-none {typography.Size.Base} {display.Block} pr-10 py-2 {interaction.FocusOutlineNone} bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat",
-                    SelectOption = $"dark:bg-gray-800 dark:text-white {spacing.Padding.Standard}",
+                    TextfieldBase = $"{display.Block} {sizing.FullWidth} {sizing.MinWidthNone} max-w-full {typography.Size.Base} {neutralText.Heading} placeholder:text-[oklch(21%_0.006_285.885)]/50 dark:placeholder:text-[oklch(97.807%_0.029_256.847)]/50 {transition.ColorsFast} {transition.EaseInOut} {interaction.FocusOutlineNone}",
+                    SelectBase = $"{display.Block} {sizing.FullWidth} pr-10 py-2 {typography.Size.Base} {neutralText.Heading} bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat {transition.ColorsFast} appearance-none {interaction.FocusOutlineNone}",
+                    SelectOption = $"{spacing.Padding.Standard} dark:bg-gray-800 dark:text-white",
                     SelectNativeBackground = "!bg-white dark:!bg-gray-800",
                     SelectDefaultPadding = "px-3",
                     SelectReadOnlyBackground = "!bg-none",
-                    InputLegendBase = $"{typography.Size.Base} {typography.Weight.Medium} {neutralText.Secondary} mb-3",
+                    InputLegendBase = $"mb-3 {typography.Size.Base} {typography.Weight.Medium} {neutralText.Secondary}",
                     LabelBase = $"{display.Block} mb-2 {inputLabelText}",
                     OutlinedBorder = $"border-1 {neutralSurface.BorderStrong}",
                     FilledBorder = $"border-b-2 {neutralSurface.BorderStrong}",
@@ -860,23 +864,23 @@ public static class Theme
                 new TwPaginationTheme
                 {
                     List = $"{display.Flex} {flexbox.Align.Center} -space-x-px h-10 text-base",
-                    Base = $"{anchor.Center} {display.Flex} h-8 leading-tight select-none border-1 {neutralSurface.Border} px-3 mx-0.5 tabular-nums",
-                    ActiveButton = $"{text.Medium.Primary} {darkText.Medium.Primary} {background.Light.Primary} {darkBackground.Light.Primary} font-bold hover:bg-purple-100 {interaction.PointerCursor}",
+                    Base = $"{display.Flex} {anchor.Center} h-8 px-3 mx-0.5 leading-tight tabular-nums border-1 {neutralSurface.Border} select-none",
+                    ActiveButton = $"font-bold {text.Medium.Primary} {darkText.Medium.Primary} {background.Light.Primary} {darkBackground.Light.Primary} hover:bg-purple-100 {interaction.PointerCursor}",
                     Buttons = $"{neutralText.Muted} {neutralSurface.Background} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] {interaction.PointerCursor}"
                 },
                 new TwPickListTheme
                 {
                     Container = $"{display.Flex} {flexbox.Align.Start} {spacing.Gap.Lg}",
-                    Column = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {sizing.MinWidthNone} {flexbox.Flex1}",
+                    Column = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {flexbox.Flex1} {sizing.MinWidthNone}",
                     ColumnHeader = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Between} {spacing.Gap.Sm}",
                     Label = $"{typography.Size.Sm} {typography.Weight.Medium} {neutralText.Heading}",
                     ReorderButtons = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Sm}",
                     TransferButtonColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {flexbox.Justify.Center} {spacing.Gap.Sm} pt-8",
-                    ListBox = $"{sizing.FullWidth} h-64 overflow-y-auto {borderWidth.Thin} {neutralSurface.Border} {neutralSurface.Background} p-1",
+                    ListBox = $"overflow-y-auto {sizing.FullWidth} h-64 p-1 {neutralSurface.Background} {borderWidth.Thin} {neutralSurface.Border}",
                     ListBoxDisabled = $"{interaction.DisabledOpacity} {interaction.PointerEventsNone}",
-                    Item = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} px-3 py-2 {typography.Size.Sm} rounded-md {neutralText.Heading} {interaction.PointerCursor} {neutralSurface.Hover} transition-colors duration-150 {interaction.FocusOutlineNone} focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500",
-                    ItemSelected = $"bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {typography.Weight.Semibold}",
-                    EmptyState = $"{neutralText.Subtle} {typography.Size.Sm} italic px-3 py-2"
+                    Item = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} px-3 py-2 {typography.Size.Sm} {neutralText.Heading} {neutralSurface.Hover} rounded-md focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 transition-colors duration-150 {interaction.PointerCursor} {interaction.FocusOutlineNone}",
+                    ItemSelected = $"{typography.Weight.Semibold} bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)]",
+                    EmptyState = $"px-3 py-2 {typography.Size.Sm} italic {neutralText.Subtle}"
                 },
                 new TwProgressTheme
                 {
@@ -891,7 +895,7 @@ public static class Theme
                         Light = "[&::-webkit-progress-value]:bg-white dark:[&::-webkit-progress-value]:bg-white [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500",
                         Dark = "[&::-webkit-progress-value]:bg-gray-900 dark:[&::-webkit-progress-value]:bg-gray-900 [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500"
                     },
-                    Base = $"{display.Block} {sizing.FullWidth} {sizing.MinWidthNone} appearance-none {overflow.Hidden} {rounded.Full} border-none bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] indeterminate:animate-pulse tabular-nums [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:{transition.DurationSlow} [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:{transition.DurationSlow}",
+                    Base = $"{display.Block} {overflow.Hidden} {sizing.FullWidth} {sizing.MinWidthNone} tabular-nums bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} border-none indeterminate:animate-pulse appearance-none [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:{transition.DurationSlow} [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:{transition.DurationSlow}",
                     Small = "h-1.5",
                     Medium = "h-2.5",
                     Large = "h-4"
@@ -902,7 +906,7 @@ public static class Theme
                     TabPadding = "py-5 px-6",
                     TabDensePadding = "px-4",
                     ActiveIndicator = "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-current after:scale-x-100 after:transition-transform after:duration-300",
-                    InactiveIndicator = "hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-current after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                    InactiveIndicator = "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] after:bg-current after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
                     DisabledTab = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
                     TabListContainer = $"{display.Flex} {flexbox.Wrap} border-t border-l border-r border-b-2 {neutralSurface.Border} {shadows.Sm}",
                     PanelContainer = $"p-6 border-l border-r border-b {neutralSurface.Border}",
@@ -910,7 +914,7 @@ public static class Theme
                 },
                 new TwSkeletonTheme
                 {
-                    Base = $"{positioning.Relative} {overflow.Hidden} bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {display.Block}",
+                    Base = $"{display.Block} {positioning.Relative} {overflow.Hidden} bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)]",
                     Text = $"{sizing.FullWidth} h-4",
                     Circle = "size-12",
                     Rectangle = $"{sizing.FullWidth} h-24",
@@ -920,61 +924,61 @@ public static class Theme
                 },
                 new TwSidebarTheme
                 {
-                    SkipLink = "focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow-lg dark:focus:bg-gray-800 dark:focus:text-white",
-                    MobileOverlay = "inset-0 bg-black/50 z-[90] lg:hidden",
+                    SkipLink = "focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:bg-white focus:text-gray-900 dark:focus:bg-gray-800 dark:focus:text-white focus:rounded-md focus:shadow-lg",
+                    MobileOverlay = "inset-0 z-[90] lg:hidden bg-black/50",
                     MobileClosed = "-translate-x-full",
                     MobileOpen = "lg:relative translate-x-0",
                     NavigationList = "overflow-y-auto pb-6",
                     NavbarFixedInset = "left-0 right-0",
-                    NavbarNavigationResponsive = "lg:flex-1 lg:flex lg:flex-row lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0",
-                    NavbarNavigationExpanded = "flex-1 flex",
+                    NavbarNavigationResponsive = "lg:flex lg:flex-1 lg:flex-row lg:w-auto lg:p-0 lg:bg-transparent lg:shadow-none",
+                    NavbarNavigationExpanded = "flex flex-1",
                     NavigationItemToggleLabel = "mr-auto text-left",
                     NavigationItemToggleIcon = "transition-transform",
-                    Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Sm} {spacing.Padding.Standard} {sizing.FullWidth} {display.Flex} {flexbox.Align.Center} flex-shrink-0 z-40 min-h-[56px]",
-                    NavbarContent = $"{display.Flex} {sizing.FullWidth} {flexbox.Wrap} {flexbox.Align.Center} {spacing.Gap.Xl}",
+                    Navbar = $"{display.Flex} z-40 {flexbox.Align.Center} flex-shrink-0 {sizing.FullWidth} min-h-[56px] {spacing.Padding.Standard} {background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Sm}",
+                    NavbarContent = $"{display.Flex} {flexbox.Wrap} {flexbox.Align.Center} {spacing.Gap.Xl} {sizing.FullWidth}",
                     NavbarBrand = flexbox.ShrinkNone,
                     NavbarNavigation = $"{flexbox.Align.Center} {spacing.Gap.Md}",
-                    NavbarActions = $"{spacing.PushEnd} {display.Flex} {flexbox.Align.Center} {spacing.Gap.Md}",
-                    NavbarToggle = $"order-first {flexbox.ShrinkNone} text-xl text-white lg:hidden",
+                    NavbarActions = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {spacing.PushEnd}",
+                    NavbarToggle = $"lg:hidden order-first {flexbox.ShrinkNone} text-xl text-white",
                     NavbarToggleIcon = "text-xl text-white",
                     NavbarLink = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} px-3 py-2 {typography.Size.Sm} {text.Light.Light} hover:bg-white/10 rounded-md {transition.Colors}",
-                    NavbarLinkActive = $"bg-white/15 {typography.Weight.Semibold}",
-                    NavbarMobileMenu = $"{background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Lg} {spacing.Padding.Standard}",
-                    Sidebar = $"{transition.TransformFast} {shadows.Sm} h-dvh w-64 flex-shrink-0 {neutralSurface.Background} {spacing.Padding.Comfortable} z-[100] {transition.EaseInOut} overflow-auto overscroll-contain",
-                    NavigationItemBase = $"{spacing.Gap.Md} {sizing.MinWidthNone} {transition.ColorsFast} {display.Flex} {flexbox.Align.Center} {neutralText.Secondary} {neutralSurface.Hover} {spacing.InteractiveRowPadding} {typography.Size.Sm} {interaction.FocusOutlineNone} focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {interaction.PointerCursor}",
-                    NavigationItemActive = $"bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)] {typography.Weight.Semibold}",
+                    NavbarLinkActive = $"{typography.Weight.Semibold} bg-white/15",
+                    NavbarMobileMenu = $"{spacing.Padding.Standard} {background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Lg}",
+                    Sidebar = $"z-[100] overflow-auto overscroll-contain flex-shrink-0 h-dvh w-64 {spacing.Padding.Comfortable} {neutralSurface.Background} {shadows.Sm} {transition.TransformFast} {transition.EaseInOut}",
+                    NavigationItemBase = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {sizing.MinWidthNone} {spacing.InteractiveRowPadding} {typography.Size.Sm} {neutralText.Secondary} {neutralSurface.Hover} focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast} {interaction.FocusOutlineNone} {interaction.PointerCursor}",
+                    NavigationItemActive = $"{typography.Weight.Semibold} bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)]",
                     NavigationDropdownContainer = neutralSurface.BackgroundSubtle,
                     NavigationItemActiveLevelDeep = $"border-l-2 {border.Neutral.Strong}",
                     NavigationDropdownContainerDeep = string.Empty,
                     NavigationGroupRailDeep = $"border-l-2 {border.Neutral.Strong}",
-                    MainContent = $"{sizing.FullWidth} {flexbox.Flex1} overflow-y-auto transition-[margin] {transition.DurationFast} {transition.EaseInOut} left-0",
-                    MainContentRoot = $"{transparentBackground} {neutralSurface.Background} h-dvh {sizing.FullWidth} {display.Flex} {flexbox.Col} transition-[margin] {transition.DurationSlow} {transition.EaseInOut} {neutralText.Heading} overflow-x-hidden"
+                    MainContent = $"overflow-y-auto left-0 {flexbox.Flex1} {sizing.FullWidth} transition-[margin] {transition.DurationFast} {transition.EaseInOut}",
+                    MainContentRoot = $"{display.Flex} overflow-x-hidden {flexbox.Col} h-dvh {sizing.FullWidth} {transparentBackground} {neutralSurface.Background} {neutralText.Heading} transition-[margin] {transition.DurationSlow} {transition.EaseInOut}"
                 },
                 new TwTreeListTheme
                 {
                     Container = $"{display.Flex} {flexbox.Col} {typography.Size.Sm}",
-                    Group = $"mt-1 ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle} {display.Flex} {flexbox.Col}",
-                    Row = $"group/row {spacing.Gap.Md} {sizing.MinWidthNone} {transition.ColorsFast} {display.Flex} {flexbox.Align.Center} {neutralText.Heading} px-2 py-1.5 {typography.Size.Sm} group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {interaction.PointerCursor}",
+                    Group = $"{display.Flex} {flexbox.Col} mt-1 ml-4 pl-2 py-1 {neutralSurface.BackgroundSubtle}",
+                    Row = $"group/row {display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {sizing.MinWidthNone} px-2 py-1.5 {typography.Size.Sm} {neutralText.Heading} group-focus-visible:ring-inset group-focus-visible:ring-2 group-focus-visible:ring-blue-500 {transition.ColorsFast} {interaction.PointerCursor}",
                     RowDisabled = $"{interaction.DisabledOpacity} {interaction.PointerEventsNone}",
-                    ToggleSlot = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center}",
-                    ToggleIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {transition.TransformFast}",
+                    ToggleSlot = $"{display.InlineFlex} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {sizing.Icon.Sm}",
+                    ToggleIcon = $"{display.InlineFlex} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {sizing.Icon.Sm} {transition.TransformFast}",
                     ToggleIconOpen = "rotate-180 translate-y-px",
                     Label = "truncate group-hover/row:underline",
-                    ItemIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {neutralText.Muted}",
-                    CheckboxWrapper = $"{display.InlineFlex} h-4 {flexbox.Align.Center} {flexbox.ShrinkNone}",
+                    ItemIcon = $"{display.InlineFlex} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {sizing.Icon.Sm} {neutralText.Muted}",
+                    CheckboxWrapper = $"{display.InlineFlex} {flexbox.Align.Center} {flexbox.ShrinkNone} h-4",
                     ItemOutline = "outline-none"
                 },
                 new TwRadioButtonTheme
                 {
                     Colors = checkBoxRadioButtonColors,
-                    Base = $"peer {sizing.Icon.Md} {interaction.PointerCursor} appearance-none {rounded.Full} {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} {transition.EaseInOut}",
+                    Base = $"peer {sizing.Icon.Md} {rounded.Full} {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} {transition.EaseInOut} {interaction.PointerCursor} appearance-none",
                     Disabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
-                    Hover = $"{interaction.PointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
-                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md} {inputLabelText}",
+                    Hover = $"hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40 {interaction.PointerCursor}",
+                    LabelBase = $"{display.Flex} {positioning.Relative} {flexbox.Align.Center} {spacing.Gap.Md} min-h-[24px] {inputLabelText} select-none",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity,
-                    IconWrapper = $"{positioning.Absolute} left-0 {sizing.Icon.Md} {display.Flex} {flexbox.Align.Center} {flexbox.Justify.Center} opacity-0 peer-checked:opacity-100 {interaction.PointerEventsNone}"
+                    IconWrapper = $"{positioning.Absolute} left-0 {display.Flex} {flexbox.Align.Center} {flexbox.Justify.Center} {sizing.Icon.Md} opacity-0 peer-checked:opacity-100 {interaction.PointerEventsNone}"
                 },
                 new TwSliderTheme
                 {
@@ -990,11 +994,11 @@ public static class Theme
                         Dark = $"{background.Dark.Dark} {darkBackground.Dark.Dark}",
                     },
                     Wrapper = $"{positioning.Relative} {display.Flex} {flexbox.Align.Center} {sizing.FullWidth} h-6 select-none",
-                    Base = $"peer {positioning.Absolute} inset-0 z-20 {sizing.Full} m-0 appearance-none {transparentBackground} {interaction.PointerCursor} {interaction.FocusOutlineNone} focus-visible:outline-none touch-manipulation",
-                    Track = $"{interaction.PointerEventsNone} {positioning.Absolute} inset-x-0 top-1/2 h-1.5 -translate-y-1/2 {rounded.Full} bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {overflow.Hidden}",
+                    Base = $"peer {positioning.Absolute} inset-0 z-20 {sizing.Full} m-0 {transparentBackground} appearance-none {interaction.PointerCursor} {interaction.FocusOutlineNone} focus-visible:outline-none touch-manipulation",
+                    Track = $"{positioning.Absolute} inset-x-0 top-1/2 {overflow.Hidden} h-1.5 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} -translate-y-1/2 {interaction.PointerEventsNone}",
                     Fill = sizing.FullHeight,
-                    Thumb = $"{interaction.PointerEventsNone} {positioning.Absolute} top-1/2 z-10 {sizing.Icon.Md} -translate-x-1/2 -translate-y-1/2 {rounded.Full} bg-white dark:bg-gray-100 {borderWidth.Thick} shadow-md ring-1 ring-black/5 transition-transform duration-100 ease-out peer-hover:scale-110 peer-active:scale-95",
-                    Bubble = $"{interaction.PointerEventsNone} {positioning.Absolute} bottom-full z-10 -translate-x-1/2 mb-2 whitespace-nowrap rounded-md bg-gray-900 dark:bg-gray-700 px-2 py-1 text-xs font-medium text-white {shadows.Lg} opacity-0 scale-95 transition-[opacity,transform] duration-100 ease-out peer-hover:opacity-100 peer-hover:scale-100 peer-focus-visible:opacity-100 peer-focus-visible:scale-100 tabular-nums"
+                    Thumb = $"{positioning.Absolute} top-1/2 z-10 {sizing.Icon.Md} bg-white dark:bg-gray-100 {rounded.Full} {borderWidth.Thick} -translate-x-1/2 -translate-y-1/2 shadow-md ring-1 ring-black/5 peer-hover:scale-110 peer-active:scale-95 transition-transform duration-100 ease-out {interaction.PointerEventsNone}",
+                    Bubble = $"{positioning.Absolute} bottom-full z-10 mb-2 px-2 py-1 whitespace-nowrap text-xs font-medium tabular-nums bg-gray-900 dark:bg-gray-700 text-white rounded-md -translate-x-1/2 {shadows.Lg} opacity-0 scale-95 peer-hover:opacity-100 peer-hover:scale-100 peer-focus-visible:opacity-100 peer-focus-visible:scale-100 transition-[opacity,transform] duration-100 ease-out {interaction.PointerEventsNone}"
                 },
                 new TwStepperTheme
                 {
@@ -1005,10 +1009,10 @@ public static class Theme
                     VerticalIndicatorColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center}",
                     VerticalContentColumn = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {flexbox.Flex1} pt-1",
                     Connector = $"{flexbox.Flex1} h-0.5 mt-4 mx-2 border-t-2 {transition.ColorsSlow}",
-                    VerticalConnector = $"{flexbox.Flex1} w-0 border-l-2 my-1 {transition.ColorsSlow}",
+                    VerticalConnector = $"{flexbox.Flex1} w-0 my-1 border-l-2 {transition.ColorsSlow}",
                     ConnectorNeutral = neutralSurface.Border,
                     Circle = $"{display.Flex} {anchor.Center} shrink-0 {sizing.Icon.Xl} {rounded.Full} {typography.Weight.Semibold} {typography.Size.Sm} {transition.ColorsFast} {interaction.FocusOutlineNone}",
-                    CircleUpcoming = $"{neutralSurface.Background} border-2 {neutralSurface.BorderStrong} {neutralText.Muted}",
+                    CircleUpcoming = $"{neutralSurface.Background} {neutralText.Muted} border-2 {neutralSurface.BorderStrong}",
                     CircleDisabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
                     CircleClickable = interaction.PointerCursor,
                     CircleIcon = "leading-none",
@@ -1017,7 +1021,7 @@ public static class Theme
                     Description = $"{typography.Size.Xs} {neutralText.Subtle}",
                     Content = $"{spacing.MarginTop.Xl} {spacing.Padding.Comfortable} {borderWidth.Thin} {neutralSurface.Border} {rounded.Lg}",
                     VerticalContent = "pt-2",
-                    MobileContainer = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} {sizing.FullWidth} sm:hidden",
+                    MobileContainer = $"{display.Flex} sm:hidden {flexbox.Col} {spacing.Gap.Sm} {sizing.FullWidth}",
                     MobileLabel = $"{typography.Size.Sm} {typography.Weight.Medium} {neutralText.Heading}",
                     MobileProgressLabel = display.ScreenReaderOnly
                 },
@@ -1034,11 +1038,11 @@ public static class Theme
                         Light = "peer-checked:bg-white dark:peer-checked:bg-gray-300",
                         Dark = "peer-checked:bg-gray-900 dark:peer-checked:bg-gray-800",
                     },
-                    Switch = $"{positioning.Absolute} top-1/2 start-0.5 -translate-y-1/2 {sizing.Icon.Md} bg-gray-100 {rounded.Full} {shadows.Lg} {transition.TransformSlow} {transition.EaseInOut} peer-checked:translate-x-full peer-checked:shadow-lg",
-                    Track = $"{positioning.Absolute} inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} transition-[background-color,opacity] {transition.DurationSlow} {transition.EaseInOut} peer-disabled:{interaction.DisabledOpacity} peer-disabled:pointer-events-none shadow-inner",
+                    Switch = $"{positioning.Absolute} top-1/2 start-0.5 {sizing.Icon.Md} bg-gray-100 {rounded.Full} -translate-y-1/2 {shadows.Lg} peer-checked:translate-x-full peer-checked:shadow-lg {transition.TransformSlow} {transition.EaseInOut}",
+                    Track = $"{positioning.Absolute} inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} shadow-inner peer-disabled:{interaction.DisabledOpacity} transition-[background-color,opacity] {transition.DurationSlow} {transition.EaseInOut} peer-disabled:pointer-events-none",
                     WrapperSize = "w-10 h-6",
                     Base = "peer sr-only",
-                    LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} select-none {inputLabelText}",
+                    LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} {inputLabelText} select-none",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity
@@ -1069,8 +1073,8 @@ public static class Theme
                 new TwTimePickerTheme
                 {
                     PickerRoot = positioning.Relative,
-                    IconWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {anchor.Center} ps-2 w-10 {interaction.PointerCursor}",
-                    IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
+                    IconWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} {display.Flex} {anchor.Center} h-10.5 w-10 ps-2 {interaction.PointerCursor}",
+                    IconGlyph = $"{sizing.Icon.Md} {neutralText.Subtle}",
                     TextfieldPadding = "pl-10 pr-3",
                     NativeInputAppearance = "appearance-none",
                     PanelWrapper = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md}",
@@ -1078,16 +1082,16 @@ public static class Theme
                     RangePanelSurface = $"w-56 {spacing.Padding.Compact} bg-white dark:bg-gray-800 {borderWidth.Thin} border-gray-200 dark:border-gray-700",
                     RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.MarginBottom.Md}",
                     RangeStageTabInactive = neutralText.Subtle,
-                    StageTabBase = $"{flexbox.Flex1} {typography.Size.Xs} {typography.Weight.Medium} py-1 {interaction.PointerCursor} {typography.AlignCenter}",
-                    BodySurface = $"{neutralSurface.Elevated} {spacing.Padding.Comfortable} {shadows.Xl} {rounded.Lg} {borderWidth.Thin} {neutralSurface.BorderStrong} {typography.AlignCenter} {typography.Weight.Medium} {neutralText.Heading}",
+                    StageTabBase = $"{flexbox.Flex1} py-1 {typography.Size.Xs} {typography.Weight.Medium} {typography.AlignCenter} {interaction.PointerCursor}",
+                    BodySurface = $"{spacing.Padding.Comfortable} {typography.AlignCenter} {typography.Weight.Medium} {neutralSurface.Elevated} {neutralText.Heading} {rounded.Lg} {borderWidth.Thin} {neutralSurface.BorderStrong} {shadows.Xl}",
                     BodyRoot = "",
                     BodyInner = $"{spacing.Padding.Compact} {typography.AlignCenter} {typography.Weight.Medium} {neutralText.Heading}",
                     ContentRow = $"{display.Flex} {anchor.Center} {spacing.Gap.Lg}",
                     Column = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {spacing.Gap.Sm}",
-                    StepButton = $"{interaction.PointerCursor} {neutralText.Subtle} hover:text-purple-600 dark:hover:text-purple-400",
+                    StepButton = $"{neutralText.Subtle} hover:text-purple-600 dark:hover:text-purple-400 {interaction.PointerCursor}",
                     NumberWrapper = $"{display.Flex} {flexbox.Align.Center} {flexbox.Justify.Center}",
-                    NumberInput = $"w-12 {transparentBackground} {typography.AlignCenter} {typography.Size.Lg} {typography.Weight.Semibold} {neutralText.Heading} border-b-2 border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} py-1 {interaction.FocusOutlineNone}",
-                    Separator = $"{typography.Size.Lg} {typography.Weight.Semibold} {neutralText.Subtle} px-1 self-center",
+                    NumberInput = $"w-12 py-1 {typography.AlignCenter} {typography.Size.Lg} {typography.Weight.Semibold} {transparentBackground} {neutralText.Heading} border-b-2 border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] {transition.ColorsFast} {interaction.FocusOutlineNone}",
+                    Separator = $"self-center px-1 {typography.Size.Lg} {typography.Weight.Semibold} {neutralText.Subtle}",
                     AmPmWrapper = $"{display.Flex} {flexbox.Align.Center} ml-2",
                     AmPmButtonClass = "min-w-12"
                 },
@@ -1095,9 +1099,9 @@ public static class Theme
                 {
                     Wrapper = "overflow-auto",
                     ContainerClip = overflow.Hidden,
-                    Base = $"{neutralText.Heading} {sizing.FullWidth} {typography.Size.Sm} text-left rtl:text-right",
+                    Base = $"{sizing.FullWidth} {typography.Size.Sm} text-left rtl:text-right {neutralText.Heading}",
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
-                    Header = $"{neutralSurface.BackgroundSubtle} {textTransform.Uppercase} {typography.Size.Xs} {typography.Weight.Semibold} tracking-wide border-b {neutralSurface.Border}",
+                    Header = $"{textTransform.Uppercase} {typography.Size.Xs} {typography.Weight.Semibold} tracking-wide {neutralSurface.BackgroundSubtle} border-b {neutralSurface.Border}",
                     Body = neutralSurface.Background,
                     BodyStriped = "[&>tr:nth-child(even)]:bg-[oklch(98%_0_0)] [&>tr:nth-child(even)]:dark:bg-[oklch(23.26%_0.014_253.1)]",
                     BodyHoverable = "[&>tr:hover]:!bg-purple-50 [&>tr:hover]:dark:!bg-purple-900/20 [&>tr]:transition-colors [&>tr]:duration-200",
@@ -1107,7 +1111,7 @@ public static class Theme
                     SortIcon = $"{typography.Size.Sm} text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200",
                     HeaderCellPadding = "px-6 py-3",
                     BodyCellPadding = "px-6 py-4 wrap-break-word",
-                    EmptyState = $"{typography.AlignCenter} py-8 text-gray-500 dark:text-gray-400"
+                    EmptyState = $"py-8 {typography.AlignCenter} text-gray-500 dark:text-gray-400"
                 },
                 new TwToastTheme
                 {
@@ -1122,15 +1126,15 @@ public static class Theme
                         Light = $"{background.Light.Light} {darkBackground.Light.Light} {text.Dark.Dark} {borderWidth.AccentEdge} {borderColors.Light}",
                         Dark = $"{background.Dark.Dark} {text.Light.Light} {borderWidth.AccentEdge} {borderColors.Dark}"
                     },
-                    HeaderClasses = $"{spacing.Gap.Md} {flexbox.Flex1} {sizing.MinWidthNone} {display.Flex} {flexbox.Col}",
+                    HeaderClasses = $"{display.Flex} {flexbox.Col} {flexbox.Flex1} {spacing.Gap.Md} {sizing.MinWidthNone}",
                     IconContainer = "flex-shrink-0",
                     Title = $"{typography.Weight.Semibold} {typography.Size.Sm} wrap-break-word",
                     Message = $"{typography.Size.Sm} wrap-break-word",
-                    Container = $"{spacing.Gap.Md} {positioning.Fixed} bottom-0 right-4 {spacing.Padding.Comfortable} z-50 {display.Flex} {flexbox.Col} max-w-md",
-                    Toast = $"{spacing.Gap.Md} {shadows.Sm} {transition.ColorsFast} {display.Flex} {flexbox.Align.Start} {spacing.Padding.Comfortable} {transition.EaseInOut}",
+                    Container = $"{positioning.Fixed} bottom-0 right-4 z-50 {display.Flex} {flexbox.Col} {spacing.Gap.Md} max-w-md {spacing.Padding.Comfortable}",
+                    Toast = $"{display.Flex} {flexbox.Align.Start} {spacing.Gap.Md} {spacing.Padding.Comfortable} {shadows.Sm} {transition.ColorsFast} {transition.EaseInOut}",
                     ToastWidth = "max-w-[300px]",
                     Timestamp = $"{typography.Size.Xs} opacity-70",
-                    CloseButton = $"{rounded.Full} flex-shrink-0 {spacing.Padding.Tight} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {transition.Colors} {interaction.FocusOutlineNone} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40"
+                    CloseButton = $"flex-shrink-0 {spacing.Padding.Tight} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {rounded.Full} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40 {transition.Colors} {interaction.FocusOutlineNone}"
                 }
             ]
         };
