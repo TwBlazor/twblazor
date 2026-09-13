@@ -1,24 +1,30 @@
-# Rewrites the install command in README.md's Setup section so it always names
-# the newest published release exactly:
+# Rewrites every "dotnet add package TwBlazor --version" install command in the
+# given file so it always names the newest published release exactly:
 #
 #   dotnet add package TwBlazor --version 1.3.2
 #
-# Every release moves it, patches included, so the README never names a version
-# older than what is on NuGet.
+# Every release moves it, patches included, so neither the README nor the
+# Get Started docs page ever names a version older than what is on NuGet.
+# README.md carries exactly one such line; GetStarted.razor carries two (one
+# per hosting-model tab), so the match count is only required to be at least
+# one, not exactly one - either way, every match in the file is rewritten.
 #
 # Versions live only in Git tags, so the release line comes from the newest
 # stable tag through the shared helper - the same lookup the publish workflows
-# use, so the README cannot name a line that was never released.
+# use, so the file cannot name a line that was never released.
 #
 # -Version names the line explicitly, for the release workflow: at that point
 # the version being cut has been decided but not yet tagged, so the tag lookup
 # would still answer with the *previous* release.
 #
 # Writes "version" and "changed" to $GITHUB_OUTPUT when running under Actions.
+# Call it once per file when more than one needs updating (see
+# publish-release.yml, which runs it for both README.md and GetStarted.razor).
 #
 # Usage:
 #   pwsh ./scripts/update-readme-version.ps1 [-Path README.md] [-TagPrefix v]
 #   pwsh ./scripts/update-readme-version.ps1 -Version 1.4.0
+#   pwsh ./scripts/update-readme-version.ps1 -Path docs/TwBlazor.Docs/Pages/GetStarted.razor -Version 1.4.0
 
 [CmdletBinding()]
 param(
@@ -42,7 +48,7 @@ if ($Version) {
     $release = Get-LatestReleaseTag -TagPrefix $TagPrefix
 
     if ($null -eq $release) {
-        Write-Host "No stable '$TagPrefix<major>.<minor>.<patch>' tag found; leaving the README unchanged."
+        Write-Host "No stable '$TagPrefix<major>.<minor>.<patch>' tag found; leaving $Path unchanged."
         Set-GitHubOutput -Name 'changed' -Value 'false'
         return
     }
@@ -51,25 +57,27 @@ if ($Version) {
     Write-Host "Latest release tag: $($release.Tag) -> --version $installVersion"
 }
 
-$readme = Get-Content -Path $Path -Raw
+$content = Get-Content -Path $Path -Raw
 
 # Deliberately matches whatever the line carries today - the x.x.x placeholder,
 # a pinned version, or an older floating one - so re-running is a no-op.
 $pattern = '(dotnet add package TwBlazor --version )\S+'
-$found = [regex]::Matches($readme, $pattern)
+$found = [regex]::Matches($content, $pattern)
 
 # A silent no-op would be worse than failing: if the install command is ever
-# reworded, this script must say so rather than quietly stop maintaining it.
-if ($found.Count -ne 1) {
-    throw "Expected exactly one 'dotnet add package TwBlazor --version <version>' line in $Path, found $($found.Count). Update `$pattern in this script if the install command was reworded."
+# reworded (or removed entirely), this script must say so rather than quietly
+# stop maintaining it. At least one match, not exactly one, since
+# GetStarted.razor legitimately carries two (Server and WebAssembly tabs).
+if ($found.Count -lt 1) {
+    throw "Expected at least one 'dotnet add package TwBlazor --version <version>' line in $Path, found none. Update `$pattern in this script if the install command was reworded."
 }
 
-$updated = [regex]::Replace($readme, $pattern, "`${1}$installVersion")
+$updated = [regex]::Replace($content, $pattern, "`${1}$installVersion")
 
 Set-GitHubOutput -Name 'version' -Value $installVersion
 
-if ($updated -eq $readme) {
-    Write-Host "README already reads '--version $installVersion'; nothing to do."
+if ($updated -eq $content) {
+    Write-Host "$Path already reads '--version $installVersion'; nothing to do."
     Set-GitHubOutput -Name 'changed' -Value 'false'
     return
 }

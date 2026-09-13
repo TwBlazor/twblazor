@@ -100,7 +100,7 @@ public partial class TwAlert : TwBlazorComponentBase
         .AddClass("text-current opacity-60 hover:opacity-100 hover:bg-white hover:bg-opacity-20 dark:hover:bg-gray-800 dark:hover:bg-opacity-20 transition-[opacity,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-current focus:ring-opacity-50")
         .Build();
 
-    private string GetAlertColor(Color? color) => ColorBuilder.GetPaletteColor(color, theme.Colors, string.Empty);
+    private string GetAlertColor(Color? color) => ColorBuilder.GetPaletteColor(color, theme.Colors, theme.Colors.Primary);
 
     private async Task HandleDismiss()
     {
