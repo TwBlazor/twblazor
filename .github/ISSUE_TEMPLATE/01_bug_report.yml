@@ -1,0 +1,90 @@
+name: Bug Report
+description: Report a problem with a TwBlazor component.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please use
+        [GitHub Discussions](https://github.com/TwBlazor/twblazor/discussions) instead
+        of an issue if you have a question rather than a defect to report.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I have searched existing issues and this hasn't already been reported.
+          required: true
+        - label: I have verified this happens on the latest TwBlazor version.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. Include code samples or screenshots where helpful.
+      placeholder: |
+        What did you expect to happen, and what happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: >
+        Minimal steps to reproduce the issue, ideally linking a small repro
+        (a GitHub repo, gist, or a trimmed-down copy of the
+        [Get Started](https://twblazor.com/get-started) sample).
+      placeholder: |
+        1. Add component '...'
+        2. Set parameter '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: TwBlazor version
+      description: The version of the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) you're using.
+      placeholder: 1.9.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: render-mode
+    attributes:
+      label: Blazor render mode
+      options:
+        - Interactive Server
+        - Interactive WebAssembly
+        - Interactive Auto
+        - Static Server
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browsers
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Safari
+        - Other
+
+  - type: input
+    id: last-working-version
+    attributes:
+      label: Last known working version
+      description: Optional - if this used to work, which version was it last fine on?
+      placeholder: 1.8.2
+    validations:
+      required: false

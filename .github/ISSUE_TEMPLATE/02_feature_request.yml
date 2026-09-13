@@ -1,0 +1,30 @@
+name: Feature Request
+description: Suggest a new feature for TwBlazor.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for suggesting new features. Please use
+        [GitHub Discussions](https://github.com/TwBlazor/twblazor/discussions) instead
+        of an issue if you have a question rather than a suggestion.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Describe your idea
+      description: What would you like TwBlazor to do that it doesn't today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example code and screenshots
+      description: >
+        Optional - link to where you've seen something similar elsewhere, or
+        sketch out the API/usage you'd expect.
+    validations:
+      required: false
