@@ -957,8 +957,7 @@ public static class Theme
                 {
                     HorizontalList = $"hidden sm:flex sm:items-start {sizing.FullWidth}",
                     VerticalList = $"{display.Flex} {flexbox.Col} {sizing.FullWidth}",
-                    Step = $"{display.Flex} {flexbox.Align.Start} flex-1",
-                    StepColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {spacing.Gap.Sm} text-center",
+                    Step = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center} {spacing.Gap.Sm} shrink-0 text-center",
                     VerticalStep = $"{display.Flex} {spacing.Gap.Lg} pb-8 last:pb-0",
                     VerticalIndicatorColumn = $"{display.Flex} {flexbox.Col} {flexbox.Align.Center}",
                     VerticalContentColumn = $"{display.Flex} {flexbox.Col} {spacing.Gap.Sm} flex-1 pt-1",
@@ -969,7 +968,7 @@ public static class Theme
                     CircleUpcoming = $"{neutralSurface.Background} border-2 {neutralSurface.BorderStrong} {neutralText.Muted}",
                     CircleDisabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
                     CircleClickable = interaction.PointerCursor,
-                    CircleIcon = sizing.Icon.Sm,
+                    CircleIcon = "leading-none",
                     Label = $"text-sm font-medium {neutralText.Heading}",
                     LabelUpcoming = $"text-sm font-medium {neutralText.Muted}",
                     Description = $"text-xs {neutralText.Subtle}",

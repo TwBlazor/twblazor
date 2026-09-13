@@ -13,37 +13,35 @@
                     var status = GetStatus(step);
                     var index = i;
                     <li class="@theme.Step">
-                        <div class="@theme.StepColumn">
-                            <button type="button"
-                                    class="@CircleClasses(step, status)"
-                                    disabled="@(!CanActivate(step))"
-                                    aria-current="@(status == StepStatus.Active ? "step" : null)"
-                                    aria-label="@StepAriaLabel(step, index, status)"
-                                    @onclick="() => OnStepClicked(step)">
-                                @if (status == StepStatus.Completed)
-                                {
-                                    <TwIcon Icon="Icon.Check_Lg" Class="@theme.CircleIcon" />
-                                }
-                                else if (step.Icon.HasValue)
-                                {
-                                    <TwIcon Icon="@step.Icon.Value" Class="@theme.CircleIcon" />
-                                }
-                                else
-                                {
-                                    @(index + 1)
-                                }
-                            </button>
-                            <span class="@LabelClasses(status)">@step.Label</span>
-                            @if (!string.IsNullOrWhiteSpace(step.Description))
+                        <button type="button"
+                                class="@CircleClasses(step, status)"
+                                disabled="@(!CanActivate(step))"
+                                aria-current="@(status == StepStatus.Active ? "step" : null)"
+                                aria-label="@StepAriaLabel(step, index, status)"
+                                @onclick="() => OnStepClicked(step)">
+                            @if (status == StepStatus.Completed)
                             {
-                                <span class="@theme.Description">@step.Description</span>
+                                <TwIcon Icon="Icon.Check_Lg" Class="@theme.CircleIcon" />
                             }
-                        </div>
-                        @if (i < _steps.Count - 1)
+                            else if (step.Icon.HasValue)
+                            {
+                                <TwIcon Icon="@step.Icon.Value" Class="@theme.CircleIcon" />
+                            }
+                            else
+                            {
+                                @(index + 1)
+                            }
+                        </button>
+                        <span class="@LabelClasses(status)">@step.Label</span>
+                        @if (!string.IsNullOrWhiteSpace(step.Description))
                         {
-                            <span class="@ConnectorClasses(i)" aria-hidden="true"></span>
+                            <span class="@theme.Description">@step.Description</span>
                         }
                     </li>
+                    @if (i < _steps.Count - 1)
+                    {
+                        <li class="@ConnectorClasses(i)" aria-hidden="true"></li>
+                    }
                 }
             </ol>
 

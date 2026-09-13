@@ -11,6 +11,7 @@
     <PageCard Title="Basic Stepper">
         <Description>
             Add <code>TwStep</code> children to a <code>TwStepper</code> to declare each step, and bind <code>ActiveStepIndex</code> to control which one is active.
+            Wire your own "Back"/"Next" buttons to a component reference's <code>PreviousStep()</code> and <code>NextStep()</code> methods, as shown below.
             Below the "sm" breakpoint the step row automatically collapses into a compact progress bar with a "Step X of N" label, so try resizing your browser to see it adapt.
         </Description>
         <CodeExample Name="StepperBasic" CSharpName="StepperBasicCode">
@@ -27,8 +28,8 @@
             </TwStepper>
 
             <div class="flex gap-2 mt-4">
-                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@basicStepper.IsFirstStep" OnClick="basicStepper.PreviousStep" />
-                <TwButton Label="Next" Disabled="@basicStepper.IsLastStep" OnClick="basicStepper.NextStep" />
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@(basicActiveStep <= 0)" OnClick="@(() => basicStepper.PreviousStep())" />
+                <TwButton Label="Next" Disabled="@(basicActiveStep >= 2)" OnClick="@(() => basicStepper.NextStep())" />
             </div>
         </CodeExample>
     </PageCard>
@@ -48,8 +49,8 @@
             </TwStepper>
 
             <div class="flex gap-2 mt-4">
-                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@validatedStepper.IsFirstStep" OnClick="validatedStepper.PreviousStep" />
-                <TwButton Label="Next" Disabled="@validatedStepper.IsLastStep" OnClick="ValidateAndContinue" />
+                <TwButton Label="Back" Variant="ButtonVariant.Outlined" Disabled="@(validatedActiveStep <= 0)" OnClick="@(() => validatedStepper.PreviousStep())" />
+                <TwButton Label="Next" Disabled="@(validatedActiveStep >= 1)" OnClick="ValidateAndContinue" />
             </div>
         </CodeExample>
     </PageCard>
@@ -83,13 +84,13 @@
             <TwStepper @ref="verticalStepper" @bind-ActiveStepIndex="verticalActiveStep" Orientation="StepperOrientation.Vertical" AriaLabel="Onboarding progress">
                 <TwStep Label="Create account" Description="A few basic details">
                     <p class="mb-3">Choose a username and password to get started.</p>
-                    <TwButton Label="Continue" OnClick="verticalStepper.NextStep" Dense />
+                    <TwButton Label="Continue" OnClick="@(() => verticalStepper.NextStep())" Dense />
                 </TwStep>
                 <TwStep Label="Verify email" Description="Optional">
                     <p class="mb-3">We've sent a confirmation link to your inbox.</p>
                     <div class="flex gap-2">
-                        <TwButton Label="Back" Variant="ButtonVariant.Outlined" OnClick="verticalStepper.PreviousStep" Dense />
-                        <TwButton Label="Continue" OnClick="verticalStepper.NextStep" Dense />
+                        <TwButton Label="Back" Variant="ButtonVariant.Outlined" OnClick="@(() => verticalStepper.PreviousStep())" Dense />
+                        <TwButton Label="Continue" OnClick="@(() => verticalStepper.NextStep())" Dense />
                     </div>
                 </TwStep>
                 <TwStep Label="Done">

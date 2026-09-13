@@ -25,15 +25,11 @@ public class TwStepperTheme
     public required string VerticalList { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes for a single step's <c>&lt;li&gt;</c> in the horizontal orientation:
-    /// an equal-width column holding the circle/label followed by the connector to the next step.
+    /// Gets or sets the classes for a single step's <c>&lt;li&gt;</c> in the horizontal orientation - a
+    /// content-sized column holding the circle, label, and description. Sits alongside separate
+    /// connector <c>&lt;li&gt;</c>s (see <see cref="Connector"/>) which alone stretch to fill the row.
     /// </summary>
     public required string Step { get; set; }
-
-    /// <summary>
-    /// Gets or sets the classes for the circle+label+description column within a horizontal step.
-    /// </summary>
-    public required string StepColumn { get; set; }
 
     /// <summary>
     /// Gets or sets the classes for a single step's <c>&lt;li&gt;</c> in the vertical orientation.
@@ -51,8 +47,10 @@ public class TwStepperTheme
     public required string VerticalContentColumn { get; set; }
 
     /// <summary>
-    /// Gets or sets the structural (colorless) classes for the horizontal connector between two steps.
-    /// Its color comes from <see cref="ConnectorNeutral"/> or the active <see cref="TwBlazor.Enums.Color"/>.
+    /// Gets or sets the structural (colorless) classes for the horizontal connector between two steps -
+    /// a flex-growing <c>&lt;li&gt;</c> sibling to <see cref="Step"/> that alone stretches to fill the
+    /// row, so the (content-sized) steps stay evenly connected regardless of container width. Its color
+    /// comes from <see cref="ConnectorNeutral"/> or the active <see cref="TwBlazor.Enums.Color"/>.
     /// </summary>
     public required string Connector { get; set; }
 
@@ -89,7 +87,9 @@ public class TwStepperTheme
     public required string CircleClickable { get; set; }
 
     /// <summary>
-    /// Gets or sets the size classes for the checkmark/custom icon rendered inside a step's circle.
+    /// Gets or sets the classes for the checkmark/custom icon rendered inside a step's circle. The icon
+    /// is a font glyph, so it's sized via <see cref="Circle"/>'s own font size rather than an explicit
+    /// width/height - this only needs to tighten its line height for centering within the circle.
     /// </summary>
     public required string CircleIcon { get; set; }
 

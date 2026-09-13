@@ -22,27 +22,14 @@ namespace TwBlazor.Components;
 public partial class TwStepper : TwBlazorComponentBase
 {
     /// <summary>
-    /// Distinguishes a step's visual/interactive state, derived from its position relative to
-    /// <see cref="ActiveStepIndex"/> and <see cref="furthestStepIndex"/> - see <see cref="GetStatus"/>.
+    /// Distinguishes a step's visual/interactive state, derived purely from its position relative to
+    /// <see cref="ActiveStepIndex"/> - see <see cref="GetStatus"/>. Navigating back to an earlier step
+    /// re-evaluates every step's status, so a step only stays "completed" while it's still before the
+    /// active one - moving back past it reverts it to "upcoming" again.
     /// </summary>
     private enum StepStatus { Completed, Active, Upcoming }
 
     private readonly List<TwStep> _steps = [];
-
-    /// <summary>
-    /// The furthest step index reached so far. Used instead of <see cref="ActiveStepIndex"/> alone to
-    /// decide which steps count as completed (see <see cref="GetStatus"/>): navigating back to review
-    /// an earlier step shouldn't make already-passed steps look "upcoming" again, and (when
-    /// <see cref="Linear"/> is true) which steps are reachable by clicking - see <see cref="CanActivate"/>.
-    /// </summary>
-    private int furthestStepIndex;
-
-    /// <summary>
-    /// The <see cref="ActiveStepIndex"/> value last seen in <see cref="OnParametersSet"/>, used to
-    /// detect external changes (e.g. a consumer's own <c>@bind-ActiveStepIndex</c> updating it directly)
-    /// so <see cref="furthestStepIndex"/> stays correct no matter how the active index changes.
-    /// </summary>
-    private int previousActiveStepIndex = -1;
 
     private TwStepperTheme theme => options.Theme.Components.Require<TwStepperTheme>();
 
@@ -61,12 +48,12 @@ public partial class TwStepper : TwBlazorComponentBase
     /// Gets or sets whether steps must be completed in order.
     /// </summary>
     /// <remarks>
-    /// When <see langword="true"/> (the default), clicking a step's indicator is only allowed if that
-    /// step has already been reached (see <see cref="furthestStepIndex"/>), preventing the user from
-    /// skipping ahead of steps whose prerequisites haven't been completed. Set to <see langword="false"/>
-    /// to let the user freely jump to any non-disabled step by clicking it. This only restricts
-    /// user-initiated clicks - <see cref="GoToStep"/> can always move programmatically to any
-    /// non-disabled step regardless of this setting.
+    /// When <see langword="true"/> (the default), clicking a step's indicator is only allowed for the
+    /// active step or one before it - i.e. a step the user can already see is completed - preventing
+    /// the user from skipping ahead of steps whose prerequisites haven't been completed. Set to
+    /// <see langword="false"/> to let the user freely jump to any non-disabled step by clicking it. This
+    /// only restricts user-initiated clicks - <see cref="GoToStep"/> can always move programmatically to
+    /// any non-disabled step regardless of this setting.
     /// </remarks>
     [Parameter] public bool Linear { get; set; } = true;
 
@@ -107,21 +94,6 @@ public partial class TwStepper : TwBlazorComponentBase
     private string mobileAriaLabel => ActiveStep != null
         ? $"Step {ActiveStepIndex + 1} of {_steps.Count}: {ActiveStep.Label}"
         : string.Empty;
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-
-        // Track the furthest point reached regardless of how ActiveStepIndex changed - whether via
-        // NextStep/GoToStep below, or because the consumer set it directly through @bind-ActiveStepIndex
-        // - so completed/upcoming status (see GetStatus) stays correct even if the parent manages the
-        // active index itself instead of calling our navigation methods.
-        if (ActiveStepIndex != previousActiveStepIndex)
-        {
-            furthestStepIndex = Math.Max(furthestStepIndex, ActiveStepIndex);
-            previousActiveStepIndex = ActiveStepIndex;
-        }
-    }
 
     internal void RegisterStep(TwStep step)
     {
@@ -183,8 +155,6 @@ public partial class TwStepper : TwBlazorComponentBase
         }
 
         ActiveStepIndex = index;
-        furthestStepIndex = Math.Max(furthestStepIndex, index);
-        previousActiveStepIndex = index;
         await ActiveStepIndexChanged.InvokeAsync(index);
     }
 
@@ -196,7 +166,7 @@ public partial class TwStepper : TwBlazorComponentBase
     /// <summary>
     /// Gets whether <paramref name="step"/> can currently be navigated to by clicking its indicator.
     /// </summary>
-    private bool CanActivate(TwStep step) => !step.Disabled && (!Linear || _steps.IndexOf(step) <= furthestStepIndex);
+    private bool CanActivate(TwStep step) => !step.Disabled && (!Linear || _steps.IndexOf(step) <= ActiveStepIndex);
 
     private StepStatus GetStatus(TwStep step)
     {
@@ -206,7 +176,7 @@ public partial class TwStepper : TwBlazorComponentBase
             return StepStatus.Active;
         }
 
-        return index < furthestStepIndex ? StepStatus.Completed : StepStatus.Upcoming;
+        return index < ActiveStepIndex ? StepStatus.Completed : StepStatus.Upcoming;
     }
 
     private string CircleClasses(TwStep step, StepStatus status) => new ClassBuilder(theme.Circle)
@@ -220,13 +190,13 @@ public partial class TwStepper : TwBlazorComponentBase
     private string LabelClasses(StepStatus status) => status == StepStatus.Upcoming ? theme.LabelUpcoming : theme.Label;
 
     private string ConnectorClasses(int beforeIndex) => new ClassBuilder(theme.Connector)
-        .AddClass(colorBuilder.GetBorderColor(Color), beforeIndex < furthestStepIndex)
-        .AddClass(theme.ConnectorNeutral, beforeIndex >= furthestStepIndex)
+        .AddClass(colorBuilder.GetBorderColor(Color), beforeIndex < ActiveStepIndex)
+        .AddClass(theme.ConnectorNeutral, beforeIndex >= ActiveStepIndex)
         .Build();
 
     private string VerticalConnectorClasses(int beforeIndex) => new ClassBuilder(theme.VerticalConnector)
-        .AddClass(colorBuilder.GetBorderColor(Color), beforeIndex < furthestStepIndex)
-        .AddClass(theme.ConnectorNeutral, beforeIndex >= furthestStepIndex)
+        .AddClass(colorBuilder.GetBorderColor(Color), beforeIndex < ActiveStepIndex)
+        .AddClass(theme.ConnectorNeutral, beforeIndex >= ActiveStepIndex)
         .Build();
 
     private static string StepAriaLabel(TwStep step, int index, StepStatus status)

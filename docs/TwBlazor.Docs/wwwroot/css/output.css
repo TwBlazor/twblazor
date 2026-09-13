@@ -2361,6 +2361,9 @@
     --tw-duration: 300ms;
     transition-duration: 300ms;
   }
+  .last\:justify-end:last-child {
+    justify-content: flex-end;
+  }
   .last\:pb-0:last-child {
     padding-bottom: 0px;
   }
