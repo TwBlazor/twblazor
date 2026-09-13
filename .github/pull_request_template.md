@@ -8,5 +8,6 @@
 
 ## Checklist
 
+- [ ] I have read the [Contributing Guidelines](../CONTRIBUTING.md) and [Code of Conduct](../CODE_OF_CONDUCT.md).
 - [ ] Unit tests updated?
 - [ ] Documentation updated?

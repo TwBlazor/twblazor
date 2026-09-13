@@ -13,7 +13,8 @@
 # Description must follow .github/pull_request_template.md: every required
 # heading present, and each section filled in. A section counts as empty when it
 # holds nothing but the template's HTML comment and whitespace, so submitting the
-# untouched template fails. The checklist needs at least one ticked box.
+# untouched template fails. The checklist must have its "contributing guidelines"
+# item ticked - the other items are left to reviewer judgement.
 #
 # Collects every problem and reports them together, so a contributor fixes one
 # round of errors rather than rediscovering them one at a time.
@@ -29,7 +30,12 @@ param(
     # Must stay in step with the headings in .github/pull_request_template.md.
     [string[]]$RequiredSections = @('Changes', 'Testing', 'Checklist'),
     [int]$MinSubjectLength = 10,
-    [int]$MaxSubjectLength = 100
+    [int]$MaxSubjectLength = 100,
+
+    # Substring (case-insensitive) identifying the checklist line that must be
+    # ticked. Matched by content rather than full text so rewording the link
+    # text in the template doesn't silently break this check.
+    [string]$RequiredChecklistItem = 'contributing guidelines'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -99,9 +105,14 @@ if ([string]::IsNullOrWhiteSpace($normalised)) {
             continue
         }
 
-        # A checklist is template-provided, so unticked boxes are not "filled in".
-        if ($section -ieq 'Checklist' -and $stripped -notmatch '(?im)^\s*[-*]\s*\[x\]') {
-            $errors.Add("Section '## Checklist' has no ticked items. Tick at least one box to confirm you have been through it.")
+        if ($section -ieq 'Checklist') {
+            $requiredLine = ($stripped -split "`n") | Where-Object { $_ -match [regex]::Escape($RequiredChecklistItem) } | Select-Object -First 1
+
+            if ($null -eq $requiredLine) {
+                $errors.Add("Section '## Checklist' is missing the required '$RequiredChecklistItem' item. Restore it from .github/pull_request_template.md.")
+            } elseif ($requiredLine -notmatch '(?im)^\s*[-*]\s*\[x\]') {
+                $errors.Add("You must tick the '$RequiredChecklistItem' checklist item before submitting.")
+            }
         }
     }
 }

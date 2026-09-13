@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Component Documentation
+    url: https://twblazor.com/
+    about: Browse components, usage examples and the Get Started guide
+  - name: GitHub Discussions
+    url: https://github.com/TwBlazor/twblazor/discussions
+    about: Ask questions and discuss ideas with the community
