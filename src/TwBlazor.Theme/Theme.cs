@@ -319,6 +319,12 @@ public static class Theme
             Subtle = "text-[oklch(60%_0.006_285.885)] dark:text-[oklch(68%_0.02_256.847)]"
         };
 
+        // The text treatment every input-family label uses (size, weight, tracking, color) - shared
+        // so TwCheckbox/TwRadioButton/TwSwitch's own flex-laid-out labels read the same as a standalone
+        // TwTextfield/TwSelect label, even though their surrounding layout (inline flex + gap, rather
+        // than block + margin-bottom) is necessarily different.
+        var inputLabelText = $"text-xs font-normal tracking-wide {neutralText.Muted}";
+
         var display = new TwBlazorDisplay
         {
             Block = "block",
@@ -662,7 +668,7 @@ public static class Theme
                     Base = $"peer {interaction.PointerCursor} appearance-none {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] transition-colors duration-200 ease-in-out",
                     Disabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
                     Hover = $"{interaction.PointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
-                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md}",
+                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md} {inputLabelText}",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity,
@@ -801,7 +807,7 @@ public static class Theme
                     SelectDefaultPadding = "px-3",
                     SelectReadOnlyBackground = "!bg-none",
                     InputLegendBase = $"text-base font-medium {neutralText.Secondary} mb-3",
-                    LabelBase = $"{display.Block} mb-2 text-xs font-normal tracking-wide {neutralText.Muted}",
+                    LabelBase = $"{display.Block} mb-2 {inputLabelText}",
                     OutlinedBorder = $"border-1 {neutralSurface.BorderStrong}",
                     FilledBorder = $"border-b-2 {neutralSurface.BorderStrong}",
                     FocusBorder = "focus:border-purple-600 dark:focus:border-purple-500",
@@ -907,7 +913,7 @@ public static class Theme
                     Base = $"peer {sizing.Icon.Md} {interaction.PointerCursor} appearance-none {rounded.Full} {borderWidth.Thick} border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)] transition-colors duration-200 ease-in-out",
                     Disabled = $"{interaction.DisabledOpacity} {interaction.DisabledCursor}",
                     Hover = $"{interaction.PointerCursor} hover:border-[oklch(21%_0.006_285.885)]/40 dark:hover:border-[oklch(97.807%_0.029_256.847)]/40",
-                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md}",
+                    LabelBase = $"{display.Flex} {flexbox.Align.Center} {positioning.Relative} select-none min-h-[24px] {spacing.Gap.Md} {inputLabelText}",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity,
@@ -950,7 +956,7 @@ public static class Theme
                     Track = $"{positioning.Absolute} inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} transition-[background-color,opacity] duration-300 ease-in-out peer-disabled:{interaction.DisabledOpacity} peer-disabled:pointer-events-none shadow-inner",
                     WrapperSize = "w-10 h-6",
                     Base = "peer sr-only",
-                    LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} select-none",
+                    LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} select-none {inputLabelText}",
                     LabelInteractiveCursor = interaction.PointerCursor,
                     LabelNonInteractiveCursor = interaction.PointerEventsNone,
                     LabelDisabled = interaction.DisabledOpacity
