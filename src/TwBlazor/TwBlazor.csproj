@@ -73,8 +73,5 @@
     <Content Update="wwwroot\js\twblazor.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Update="wwwroot\css\output.css">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
   </ItemGroup>
   </Project>
