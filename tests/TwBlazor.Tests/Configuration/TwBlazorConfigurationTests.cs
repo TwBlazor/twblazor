@@ -234,6 +234,7 @@ public class TwButtonThemeTests
         DensePadding = "dense-padding",
         IconButton = "icon-button",
         Typography = "typography",
+        IconTypography = "icon-typography",
         DisabledCursor = "disabled-cursor",
         ReadonlyCursor = "readonly-cursor",
         DefaultCursor = "default-cursor",
@@ -317,6 +318,8 @@ public class TwInputThemeTests
         ErrorMessage = "error-message",
         SelectOption = "select-option",
         SelectNativeBackground = "select-native-bg",
+        SelectDefaultPadding = "select-default-padding",
+        SelectReadOnlyBackground = "select-readonly-bg",
     };
 
     [Fact]
@@ -612,6 +615,7 @@ public class TwBlazorComponentsTests
             DensePadding = "dense-padding",
             IconButton = "icon-button",
             Typography = "typography",
+            IconTypography = "icon-typography",
             DisabledCursor = "disabled-cursor",
             ReadonlyCursor = "readonly-cursor",
             DefaultCursor = "default-cursor",

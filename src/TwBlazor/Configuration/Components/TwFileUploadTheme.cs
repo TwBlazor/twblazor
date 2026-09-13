@@ -22,4 +22,9 @@ public class TwFileUploadTheme
     /// Gets or sets the classes for the list of selected-file chips shown beneath the upload control.
     /// </summary>
     public required string FileList { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text color for a selected-file chip's label.
+    /// </summary>
+    public required string ChipTextColor { get; set; }
 }

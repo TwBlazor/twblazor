@@ -156,7 +156,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     // path that can ignore percentage widths; appearance-none drops it into normal box-model
     // layout without affecting the native picker UI that opens on tap.
     private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding)
-        .AddClass("appearance-none", UseNativePicker).Build();
+        .AddClass(theme.NativeInputAppearance, UseNativePicker).Build();
 
     // Caps the panel to the viewport height and lets it scroll vertically if it doesn't fit -
     // twPicker.positionPanel's flip logic picks the better of "below" or "above" the trigger, but
@@ -164,7 +164,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     // this is a safety net that keeps the whole panel reachable regardless (see the matching,
     // more detailed remarks on TwDateRangePicker.datepickerContainerClasses, where its much taller
     // two-month panel makes this matter more).
-    private string datepickerContainerClasses => new ClassBuilder("max-h-[calc(100vh-2rem)] overflow-y-auto")
+    private string datepickerContainerClasses => new ClassBuilder(theme.PanelMaxHeight)
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)

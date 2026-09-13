@@ -39,6 +39,24 @@ public class TwSidebarTheme
     public required string NavigationList { get; set; }
 
     /// <summary>
+    /// Gets or sets the extra inset classes for a <c>Fixed</c> navbar, layered on top of the shared
+    /// "fixed" position and "top-0" inset.
+    /// </summary>
+    public required string NavbarFixedInset { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsive (desktop, "lg:") layout classes for the navbar's navigation slot,
+    /// used unless <c>DisableResponsiveCollapse</c> is set.
+    /// </summary>
+    public required string NavbarNavigationResponsive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the navigation slot when <c>DisableResponsiveCollapse</c> is set,
+    /// so it always fills the available width instead of collapsing into the mobile menu.
+    /// </summary>
+    public required string NavbarNavigationExpanded { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes for the top navbar.
     /// </summary>
     public required string Navbar { get; set; }
@@ -67,6 +85,11 @@ public class TwSidebarTheme
     /// Gets or sets the classes for the navbar menu toggle.
     /// </summary>
     public required string NavbarToggle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the drawer-toggle icon itself, inside <see cref="NavbarToggle"/>.
+    /// </summary>
+    public required string NavbarToggleIcon { get; set; }
 
     /// <summary>
     /// Gets or sets the classes for navbar navigation links.

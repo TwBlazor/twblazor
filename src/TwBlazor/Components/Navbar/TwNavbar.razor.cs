@@ -63,16 +63,19 @@ public partial class TwNavbar : TwBlazorComponentBase, IDisposable
 
     private string navbarClasses =>
         new ClassBuilder(theme.Navbar)
-            .AddClass("sticky top-0", !Fixed)
-            .AddClass("fixed top-0 left-0 right-0", Fixed)
+            .AddClass(options.Theme.Position.Sticky, !Fixed)
+            .AddClass(options.Theme.Inset.Top, !Fixed)
+            .AddClass(options.Theme.Position.Fixed, Fixed)
+            .AddClass(options.Theme.Inset.Top, Fixed)
+            .AddClass(theme.NavbarFixedInset, Fixed)
             .AddClass(Class).Build();
 
     private string navigationContainerClasses =>
         new ClassBuilder(theme.NavbarNavigation)
-            .AddClass("lg:flex-1 lg:flex lg:flex-row lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0", !DisableResponsiveCollapse)
-            .AddClass("hidden", !DisableResponsiveCollapse && !isMenuOpen)
-            .AddClass($"w-full flex flex-col {theme.NavbarMobileMenu}", !DisableResponsiveCollapse && isMenuOpen)
-            .AddClass("flex-1 flex", DisableResponsiveCollapse)
+            .AddClass(theme.NavbarNavigationResponsive, !DisableResponsiveCollapse)
+            .AddClass(options.Theme.Display.Hidden, !DisableResponsiveCollapse && !isMenuOpen)
+            .AddClass($"{options.Theme.Sizing.FullWidth} {options.Theme.Display.Flex} {options.Theme.Flexbox.Col} {theme.NavbarMobileMenu}", !DisableResponsiveCollapse && isMenuOpen)
+            .AddClass(theme.NavbarNavigationExpanded, DisableResponsiveCollapse)
             .Build();
 
     private string GetNavigationItemClasses(NavigationItem item) =>

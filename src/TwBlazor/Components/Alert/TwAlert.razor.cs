@@ -86,18 +86,23 @@ public partial class TwAlert : TwBlazorComponentBase
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(GetAlertColor(Color))
-        .AddClass("hidden", Dismissed)
-        .AddClass("py-2 px-4", Dense)
-        .AddClass("py-4 px-6", !Dense)
-        .AddClass("flex items-center gap-2 transition-colors duration-300", !Dismissed)
+        .AddClass(options.Theme.Display.Hidden, Dismissed)
+        .AddClass(theme.DensePadding, Dense)
+        .AddClass(theme.Padding, !Dense)
+        .AddClass(options.Theme.Display.Flex, !Dismissed)
+        .AddClass(options.Theme.Flexbox.Align.Center, !Dismissed)
+        .AddClass(options.Theme.Spacing.Gap.Sm, !Dismissed)
+        .AddClass(theme.Transition, !Dismissed)
         .AddClass(Class)
         .Build();
 
     private string dismissButtonClasses =>
-        new ClassBuilder()
-        .AddClass("inline-flex items-center justify-center w-8 h-8 rounded-full")
-        .AddClass(EndIcon is null ? "ml-auto" : "ml-2")
-        .AddClass("text-current opacity-60 hover:opacity-100 hover:bg-white hover:bg-opacity-20 dark:hover:bg-gray-800 dark:hover:bg-opacity-20 transition-[opacity,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-current focus:ring-opacity-50")
+        new ClassBuilder(options.Theme.Display.InlineFlex)
+        .AddClass(options.Theme.Flexbox.Align.Center)
+        .AddClass(options.Theme.Flexbox.Justify.Center)
+        .AddClass(theme.DismissButtonSize)
+        .AddClass(EndIcon is null ? options.Theme.Spacing.PushEnd : theme.DismissButtonSpacingWithEndIcon)
+        .AddClass(theme.DismissButtonColor)
         .Build();
 
     private string GetAlertColor(Color? color) => ColorBuilder.GetPaletteColor(color, theme.Colors, theme.Colors.Primary);

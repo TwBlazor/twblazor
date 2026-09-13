@@ -35,6 +35,12 @@ public class TwTimePickerTheme
     public required string TextfieldPadding { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes suppressing native browser chrome on the trigger field when the
+    /// device's native time picker is active.
+    /// </summary>
+    public required string NativeInputAppearance { get; set; }
+
+    /// <summary>
     /// Gets or sets the positioning classes for the popover panel's wrapper, anchoring it beneath the trigger,
     /// including its own rounded/shadow chrome.
     /// </summary>
@@ -63,6 +69,11 @@ public class TwTimePickerTheme
     /// Gets or sets the text color for an inactive Start/End step tab.
     /// </summary>
     public required string RangeStageTabInactive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the base classes for a Start/End step tab button.
+    /// </summary>
+    public required string StageTabBase { get; set; }
 
     /// <summary>
     /// Gets or sets the classes for the popover panel's surface (background, border, shadow, padding).

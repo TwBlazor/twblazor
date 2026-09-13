@@ -384,6 +384,20 @@ public static class Theme
                 Md = "ps-2",
                 Lg = "ps-3",
                 Xl = "ps-4"
+            },
+            MarginStart = new()
+            {
+                Sm = "ms-1",
+                Md = "ms-2",
+                Lg = "ms-3",
+                Xl = "ms-4"
+            },
+            MarginEnd = new()
+            {
+                Sm = "me-1",
+                Md = "me-2",
+                Lg = "me-3",
+                Xl = "me-4"
             }
         };
 
@@ -606,6 +620,12 @@ public static class Theme
                         Dark = $"{background.Light.Dark} {darkBackground.Dark.Dark} {text.Medium.Dark} {darkText.Light.Dark} {borderWidth.AccentEdge} {borderColors.Dark}",
                     },
                     TextWrapper = "min-w-0 flex-1 wrap-break-word",
+                    Padding = "py-4 px-6",
+                    DensePadding = "py-2 px-4",
+                    Transition = "transition-colors duration-300",
+                    DismissButtonSize = $"{sizing.Icon.Xl} {rounded.Full}",
+                    DismissButtonSpacingWithEndIcon = "ml-2",
+                    DismissButtonColor = "text-current opacity-60 hover:opacity-100 hover:bg-white hover:bg-opacity-20 dark:hover:bg-gray-800 dark:hover:bg-opacity-20 transition-[opacity,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-current focus:ring-opacity-50"
                 },
                 new TwBreadcrumbTheme
                 {
@@ -621,6 +641,7 @@ public static class Theme
                     DensePadding = "px-3 py-1.5",
                     IconButton = $"{anchor.Center} {rounded.Full} {display.Flex} focus:outline-none h-8 w-8 text-sm/6",
                     Typography = "font-medium",
+                    IconTypography = "text-lg leading-none",
                     Uppercase = $"{textTransform.Uppercase} tracking-wide",
                     DisabledCursor = interaction.DisabledCursor,
                     ReadonlyCursor = interaction.ReadonlyCursor,
@@ -689,7 +710,8 @@ public static class Theme
                     SliderRow = "flex-1 h-6",
                     HueSliderTouch = "touch-none",
                     InputColumn = "flex-1",
-                    ModeSwitchButton = "shrink-0 tracking-wide"
+                    ModeSwitchButton = "shrink-0 tracking-wide",
+                    AlphaReadoutAlign = "text-right"
                 },
                 new TwDatePickerTheme
                 {
@@ -708,6 +730,7 @@ public static class Theme
                     IconTriggerWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {flexbox.Align.Center} {spacing.PaddingStart.Lg} {interaction.PointerCursor}",
                     IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
                     TextfieldPadding = "pl-10 pr-3",
+                    NativeInputAppearance = "appearance-none",
                     PanelWidth = "w-67",
                     HeaderControls = $"{display.Flex} {flexbox.Justify.Between} {flexbox.Align.Center} h-9",
                     Body = display.Flex,
@@ -719,12 +742,22 @@ public static class Theme
                     DayHeaderCellPadding = "p-0",
                     DayAbbreviation = "no-underline",
                     RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.PaddingTop.Md} {spacing.MarginBottom.Md}",
-                    RangeStageTabInactive = neutralText.Subtle
+                    RangeStageTabInactive = neutralText.Subtle,
+                    PanelMaxHeight = "max-h-[calc(100vh-2rem)] overflow-y-auto",
+                    PanelMaxWidth = "max-w-[calc(100vw-2rem)] overflow-x-auto",
+                    DualMonthPanelWidth = "md:w-138",
+                    StageTabBase = $"flex-1 text-xs font-medium py-1 {interaction.PointerCursor} text-center",
+                    HeaderNavButton = "text-xl py-2 px-4"
                 },
                 new TwFileUploadTheme
                 {
                     IconSpacing = "me-2",
-                    FileList = "text-sm text-gray-600 dark:text-gray-400"
+                    FileList = "text-sm text-gray-600 dark:text-gray-400",
+                    ChipTextColor = "dark:text-white"
+                },
+                new TwLinkTheme
+                {
+                    Default = "underline-offset-2 hover:underline transition-colors duration-200"
                 },
                 new TwGroupsTheme
                 {
@@ -765,6 +798,8 @@ public static class Theme
                     SelectBase = $"{sizing.FullWidth} {neutralText.Heading} transition-colors duration-200 appearance-none text-base {display.Block} pr-10 py-2 focus:outline-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat",
                     SelectOption = $"dark:bg-gray-800 dark:text-white {spacing.Padding.Standard}",
                     SelectNativeBackground = "!bg-white dark:!bg-gray-800",
+                    SelectDefaultPadding = "px-3",
+                    SelectReadOnlyBackground = "!bg-none",
                     InputLegendBase = $"text-base font-medium {neutralText.Secondary} mb-3",
                     LabelBase = $"{display.Block} mb-2 text-xs font-normal tracking-wide {neutralText.Muted}",
                     OutlinedBorder = $"border-1 {neutralSurface.BorderStrong}",
@@ -793,7 +828,7 @@ public static class Theme
                         Light = "[&::-webkit-progress-value]:bg-white dark:[&::-webkit-progress-value]:bg-white [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500",
                         Dark = "[&::-webkit-progress-value]:bg-gray-900 dark:[&::-webkit-progress-value]:bg-gray-900 [&::-moz-progress-bar]:bg-blue-600 dark:[&::-moz-progress-bar]:bg-blue-500"
                     },
-                    Base = $"{display.Block} {sizing.FullWidth} min-w-0 appearance-none overflow-hidden {rounded.Full} border-none bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] indeterminate:animate-pulse [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:duration-300",
+                    Base = $"{display.Block} {sizing.FullWidth} min-w-0 appearance-none overflow-hidden {rounded.Full} border-none bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] indeterminate:animate-pulse tabular-nums [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:transition-[width] [&::-moz-progress-bar]:duration-300",
                     Small = "h-1.5",
                     Medium = "h-2.5",
                     Large = "h-4"
@@ -827,6 +862,9 @@ public static class Theme
                     MobileClosed = "-translate-x-full",
                     MobileOpen = "lg:relative translate-x-0",
                     NavigationList = "overflow-y-auto pb-6",
+                    NavbarFixedInset = "left-0 right-0",
+                    NavbarNavigationResponsive = "lg:flex-1 lg:flex lg:flex-row lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0",
+                    NavbarNavigationExpanded = "flex-1 flex",
                     NavigationItemToggleLabel = "mr-auto text-left",
                     NavigationItemToggleIcon = "transition-transform",
                     Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Sm} {spacing.Padding.Standard} {sizing.FullWidth} {display.Flex} {flexbox.Align.Center} flex-shrink-0 z-40 min-h-[56px]",
@@ -835,6 +873,7 @@ public static class Theme
                     NavbarNavigation = $"{flexbox.Align.Center} {spacing.Gap.Md}",
                     NavbarActions = $"{spacing.PushEnd} {display.Flex} {flexbox.Align.Center} {spacing.Gap.Md}",
                     NavbarToggle = $"order-first {flexbox.ShrinkNone} text-xl text-white lg:hidden",
+                    NavbarToggleIcon = "text-xl text-white",
                     NavbarLink = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} px-3 py-2 text-sm {text.Light.Light} hover:bg-white/10 rounded-md transition-colors",
                     NavbarLinkActive = "bg-white/15 font-semibold",
                     NavbarMobileMenu = $"{background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Lg} {spacing.Padding.Standard}",
@@ -859,7 +898,8 @@ public static class Theme
                     ToggleIconOpen = "rotate-180 translate-y-px",
                     Label = "truncate group-hover/row:underline",
                     ItemIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {neutralText.Muted}",
-                    CheckboxWrapper = $"{display.InlineFlex} h-4 {flexbox.Align.Center} {flexbox.ShrinkNone}"
+                    CheckboxWrapper = $"{display.InlineFlex} h-4 {flexbox.Align.Center} {flexbox.ShrinkNone}",
+                    ItemOutline = "outline-none"
                 },
                 new TwRadioButtonTheme
                 {
@@ -944,11 +984,13 @@ public static class Theme
                     IconWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {anchor.Center} ps-2 w-10 {interaction.PointerCursor}",
                     IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
                     TextfieldPadding = "pl-10 pr-3",
+                    NativeInputAppearance = "appearance-none",
                     PanelWrapper = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md}",
                     PanelPosition = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md} {rounded.Lg} {shadows.Lg}",
                     RangePanelSurface = $"w-56 {spacing.Padding.Compact} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
                     RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.MarginBottom.Md}",
                     RangeStageTabInactive = neutralText.Subtle,
+                    StageTabBase = $"flex-1 text-xs font-medium py-1 {interaction.PointerCursor} text-center",
                     BodySurface = $"{neutralSurface.Elevated} {spacing.Padding.Comfortable} {shadows.Xl} {rounded.Lg} {borderWidth.Thin} {neutralSurface.BorderStrong} text-center font-medium {neutralText.Heading}",
                     BodyRoot = "",
                     BodyInner = $"{spacing.Padding.Compact} text-center font-medium {neutralText.Heading}",
@@ -964,6 +1006,7 @@ public static class Theme
                 new TwTableTheme
                 {
                     Wrapper = "overflow-auto",
+                    ContainerClip = "overflow-hidden",
                     Base = $"{neutralText.Heading} {sizing.FullWidth} text-sm text-left rtl:text-right",
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
                     Header = $"{neutralSurface.BackgroundSubtle} {textTransform.Uppercase} text-xs font-semibold tracking-wide border-b {neutralSurface.Border}",

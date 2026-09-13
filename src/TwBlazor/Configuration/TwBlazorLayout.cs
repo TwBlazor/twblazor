@@ -202,6 +202,12 @@ public class TwBlazorSpacing
 
     /// <summary>Gets or sets the start-padding scale (Tailwind's "ps-*"), e.g. for clearing a leading icon. See <see cref="TwBlazorGapScale"/>.</summary>
     public TwBlazorGapScale PaddingStart { get; set; } = new();
+
+    /// <summary>Gets or sets the margin-start scale (Tailwind's "ms-*"). See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale MarginStart { get; set; } = new();
+
+    /// <summary>Gets or sets the margin-end scale (Tailwind's "me-*"). See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale MarginEnd { get; set; } = new();
 }
 
 /// <summary>

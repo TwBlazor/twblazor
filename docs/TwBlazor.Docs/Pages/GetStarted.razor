@@ -76,7 +76,7 @@
                 </p>
                 <TwCodeBlock Content="@_serverTailwindInstall" Language="bash" />
                 <p Class="my-3">
-                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. The <code>@@source</code> directives tell Tailwind to scan your razor components and <code>Theme.cs</code> for classes to generate:
+                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. The <code>@@source</code> directives tell Tailwind to scan your razor components and <code>Theme.cs</code> for classes to generate. The keyframes at the bottom power <code>TwSkeleton</code>'s <code>Wave</code> variant - a shimmer effect Tailwind has no utility for, so it has to be real CSS rather than a class Tailwind can generate. Skip it if you don't use that variant:
                 </p>
                 <TwCodeBlock Content="@_serverTailwindInput" Language="css" />
                 <p Class="my-3">
@@ -163,7 +163,7 @@
                 </p>
                 <TwCodeBlock Content="@_wasmTailwindInstall" Language="bash" />
                 <p Class="my-3">
-                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. It lives in the host project, since that's what App.razor's <code>&lt;link&gt;</code> tag references, but its <code>@@source</code> directives need to reach into <code>{YourProjectName}.Client</code> too, because that's where MainLayout.razor and Theme.cs live:
+                    Create an input stylesheet at <code>{YourProjectName}/wwwroot/css/input.css</code>. It lives in the host project, since that's what App.razor's <code>&lt;link&gt;</code> tag references, but its <code>@@source</code> directives need to reach into <code>{YourProjectName}.Client</code> too, because that's where MainLayout.razor and Theme.cs live. The keyframes at the bottom power <code>TwSkeleton</code>'s <code>Wave</code> variant - a shimmer effect Tailwind has no utility for, so it has to be real CSS rather than a class Tailwind can generate. Skip it if you don't use that variant:
                 </p>
                 <TwCodeBlock Content="@_wasmTailwindInput" Language="css" />
                 <p Class="my-3">
@@ -321,6 +321,31 @@
 
         @source "../../**/*.razor";
         @source "../../Theme.cs";
+
+        /* Powers TwSkeleton's Wave variant - a shimmer sweep Tailwind has no utility for. */
+        @keyframes tw-skeleton-wave {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50%,
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .tw-skeleton-wave::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 40%), transparent);
+            animation: tw-skeleton-wave 1.6s linear infinite;
+        }
+
+        .dark .tw-skeleton-wave::after {
+            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+        }
         """;
 
     private const string _serverTailwindBuild = """
@@ -338,6 +363,31 @@
         @source "../../**/*.razor";
         @source "../../../{YourProjectName}.Client/**/*.razor";
         @source "../../../{YourProjectName}.Client/Theme.cs";
+
+        /* Powers TwSkeleton's Wave variant - a shimmer sweep Tailwind has no utility for. */
+        @keyframes tw-skeleton-wave {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50%,
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .tw-skeleton-wave::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 40%), transparent);
+            animation: tw-skeleton-wave 1.6s linear infinite;
+        }
+
+        .dark .tw-skeleton-wave::after {
+            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+        }
         """;
 
     private const string _wasmTailwindBuild = """

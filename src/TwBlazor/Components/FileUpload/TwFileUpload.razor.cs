@@ -95,7 +95,7 @@ public partial class TwFileUpload : TwBlazorInputComponentBase
     private string chipClasses =>
         new ClassBuilder(fileUploadTheme.IconSpacing)
         .AddClass(options.Theme.Spacing.MarginBottom.Md)
-        .AddClass("dark:text-white").Build();
+        .AddClass(fileUploadTheme.ChipTextColor).Build();
 
     /// <summary>
     /// Rewrites a "focus:"-prefixed class string (as returned by <see cref="ColorBuilder.GetFocusRing"/>)

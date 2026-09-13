@@ -199,7 +199,7 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
     // pb-2 spacing so the whole panel reads as evenly padded.
     private string stageTabsClasses => new ClassBuilder(theme.RangeStageTabsContainer).Build();
 
-    private string datepickerContainerClasses => new ClassBuilder("max-h-[calc(100vh-2rem)] overflow-y-auto")
+    private string datepickerContainerClasses => new ClassBuilder(theme.PanelMaxHeight)
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)
@@ -216,7 +216,7 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
     private string GetStageTabClasses(DateTimeRangePickerStage tabStage)
     {
         var isActive = stage == tabStage;
-        return new ClassBuilder("flex-1 text-xs font-medium py-1 cursor-pointer text-center")
+        return new ClassBuilder(theme.StageTabBase)
             .AddClass(roundedBuilder.GetRounded())
             .AddClass(options.Theme.Colors.HoverColors.Primary, !isActive)
             .AddClass(theme.RangeStageTabInactive, !isActive)

@@ -131,7 +131,7 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
     private string GetStageTabClasses(TimeRangePickerStage tabStage)
     {
         var isActive = stage == tabStage;
-        return new ClassBuilder("flex-1 text-xs font-medium py-1 cursor-pointer text-center")
+        return new ClassBuilder(theme.StageTabBase)
             .AddClass(roundedBuilder.GetRounded())
             .AddClass(options.Theme.Colors.HoverColors.Primary, !isActive)
             .AddClass(theme.RangeStageTabInactive, !isActive)

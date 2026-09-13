@@ -75,7 +75,7 @@ public partial class TwCollapse : TwBlazorComponentBase
 
     private string contentClasses =>
         new ClassBuilder(theme.Content)
-        .AddClass("hidden", !IsOpen)
+        .AddClass(options.Theme.Display.Hidden, !IsOpen)
         .Build();
 
     private async Task ToggleAsync()

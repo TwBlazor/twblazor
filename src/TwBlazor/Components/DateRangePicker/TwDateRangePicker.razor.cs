@@ -150,7 +150,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding).Build();
 
     private string panelWidthClasses => new ClassBuilder(theme.PanelWidth)
-        .AddClass("md:w-138", view == DateRangePickerView.Day)
+        .AddClass(theme.DualMonthPanelWidth, view == DateRangePickerView.Day)
         .Build();
 
     // The two-month panel (up to ~552px, see panelWidthClasses) is wider than TwDatePicker's
@@ -158,7 +158,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     // twPicker.positionPanel flips it to the other viewport edge (that check is viewport-relative,
     // not aware of a narrower positioned/overflow ancestor) - capping the width and letting it
     // scroll horizontally keeps it fully reachable instead of silently clipping off-screen.
-    private string datepickerContainerClasses => new ClassBuilder("max-w-[calc(100vw-2rem)] overflow-x-auto max-h-[calc(100vh-2rem)] overflow-y-auto")
+    private string datepickerContainerClasses => new ClassBuilder($"{theme.PanelMaxWidth} {theme.PanelMaxHeight}")
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)

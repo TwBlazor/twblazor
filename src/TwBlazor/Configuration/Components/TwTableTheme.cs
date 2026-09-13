@@ -24,6 +24,11 @@ public class TwTableTheme
     public required string Wrapper { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes that clip the outer container to its rounded corners.
+    /// </summary>
+    public required string ContainerClip { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes applied to the table element itself.
     /// </summary>
     public required string Base { get; set; }

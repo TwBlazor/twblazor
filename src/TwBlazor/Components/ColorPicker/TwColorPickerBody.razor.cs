@@ -98,7 +98,7 @@ public partial class TwColorPickerBody : TwBlazorComponentBase
 
     private string alphaReadoutClasses => new ClassBuilder(theme.AlphaLabel)
         .AddClass(options.Theme.Flexbox.ShrinkNone)
-        .AddClass("text-right")
+        .AddClass(theme.AlphaReadoutAlign)
         .Build();
 
     // Color state in HSL format (0-360 for hue, 0-1 for saturation and lightness)

@@ -108,6 +108,12 @@ public class TwDatePickerTheme
     public required string TextfieldPadding { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes suppressing native browser chrome on the trigger field when the
+    /// device's native date/time picker is active (see remarks on the callers' own <c>textfieldClasses</c>).
+    /// </summary>
+    public required string NativeInputAppearance { get; set; }
+
+    /// <summary>
     /// Gets or sets the width classes for the popover panel's single-month layout, used by
     /// <see cref="TwBlazor.Components.TwDatePicker"/> and <see cref="TwBlazor.Components.TwDateTimeRangePicker"/>.
     /// <see cref="TwBlazor.Components.TwDateRangePicker"/> widens this further for its two-month layout.
@@ -169,4 +175,33 @@ public class TwDatePickerTheme
     /// Gets or sets the text color for an inactive Start/End step tab.
     /// </summary>
     public required string RangeStageTabInactive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the max-height/scroll classes applied to every popover panel, so a tall calendar
+    /// stays reachable when there isn't room to show it in full (e.g. a phone with the keyboard open).
+    /// </summary>
+    public required string PanelMaxHeight { get; set; }
+
+    /// <summary>
+    /// Gets or sets the max-width/scroll classes applied to <see cref="TwBlazor.Components.TwDateRangePicker"/>'s
+    /// wider two-month panel, layered on top of <see cref="PanelMaxHeight"/>.
+    /// </summary>
+    public required string PanelMaxWidth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the extra panel width classes applied only in <see cref="TwBlazor.Components.TwDateRangePicker"/>'s
+    /// day view, where both months are shown side by side.
+    /// </summary>
+    public required string DualMonthPanelWidth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the base classes for a Start/End step tab button, shared with
+    /// <see cref="TwBlazor.Components.TwDateTimeRangePicker"/>'s picker.
+    /// </summary>
+    public required string StageTabBase { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the header's previous/next navigation icon buttons.
+    /// </summary>
+    public required string HeaderNavButton { get; set; }
 }

@@ -47,6 +47,18 @@ public class TwInputTheme
     public required string SelectNativeBackground { get; set; }
 
     /// <summary>
+    /// Gets or sets the horizontal padding applied to a select using the <see cref="Enums.InputVariant.Default"/>
+    /// variant, which otherwise has none of its own (unlike Filled/Outlined).
+    /// </summary>
+    public required string SelectDefaultPadding { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background override applied to a read-only select, suppressing its dropdown
+    /// arrow background image so it doesn't imply the value can still be changed.
+    /// </summary>
+    public required string SelectReadOnlyBackground { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes for input labels.
     /// </summary>
     public required string LabelBase { get; set; }

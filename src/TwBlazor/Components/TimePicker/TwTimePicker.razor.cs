@@ -205,7 +205,7 @@ public partial class TwTimePicker : TwPopoverPickerComponentBase
     // percentage widths; appearance-none drops it into normal box-model layout without
     // affecting the native picker UI that opens on tap.
     private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding)
-        .AddClass("appearance-none", UseNativePicker).Build();
+        .AddClass(theme.NativeInputAppearance, UseNativePicker).Build();
 
     private string bodyClasses => new ClassBuilder("time")
         .AddClass(theme.BodySurface).Build();

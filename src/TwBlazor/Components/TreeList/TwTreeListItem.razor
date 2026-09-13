@@ -26,7 +26,7 @@
         {
             <span class="@theme.CheckboxWrapper" @onclick:stopPropagation="true">
                 <TwCheckbox T="bool?"
-                            RootClass="flex items-center"
+                            RootClass="@($"{options.Theme.Display.Flex} {options.Theme.Flexbox.Align.Center}")"
                             Value="GetEffectiveChecked()"
                             ValueChanged="@(v => ToggleCheckedAsync(v ?? false))"
                             Disabled="Disabled"

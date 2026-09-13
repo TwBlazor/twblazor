@@ -34,7 +34,7 @@
                   NavigationContent="NavbarNavigationContent"
                   ActionsContent="NavbarActionsContent"
                   NavigationItems="NavbarNavigationItems">
-            <TwIcon Icon="@(IsSidebarOpen? Icon.X: Icon.List)" AriaLabel="@(IsSidebarOpen ? "Close sidebar" : "Open sidebar")" aria-expanded="@(IsSidebarOpen ? "true" : "false")" OnClick="ToggleSidebar" Class="text-xl text-white" />
+            <TwIcon Icon="@(IsSidebarOpen? Icon.X: Icon.List)" AriaLabel="@(IsSidebarOpen ? "Close sidebar" : "Open sidebar")" aria-expanded="@(IsSidebarOpen ? "true" : "false")" OnClick="ToggleSidebar" Class="@theme.NavbarToggleIcon" />
             @NavbarContent
         </TwNavbar>
         <div class="@mainContentClasses" tabindex="0">

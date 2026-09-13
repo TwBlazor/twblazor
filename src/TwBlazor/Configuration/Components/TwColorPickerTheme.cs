@@ -111,4 +111,9 @@ public class TwColorPickerTheme
     /// Gets or sets the tracking classes for the mode-switch button's text.
     /// </summary>
     public required string ModeSwitchButton { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text-alignment class for the alpha percentage readout beside the alpha slider.
+    /// </summary>
+    public required string AlphaReadoutAlign { get; set; }
 }

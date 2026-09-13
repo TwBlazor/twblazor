@@ -281,10 +281,11 @@ public partial class TwDatePickerDayView : TwBlazorComponentBase, IAsyncDisposab
     private string GetPrevDayClasses(bool isRangeStart, bool isRangeEnd, bool isInRange)
     {
         var isRangePart = isRangeStart || isRangeEnd || isInRange;
-        return new ClassBuilder("day prev cursor-default")
+        return new ClassBuilder("day prev")
+            .AddClass(options.Theme.Interaction.ReadonlyCursor)
             .AddClass(theme.ButtonClass)
             .AddClass(GetRangeAwareRoundedClass(isRangeStart, isRangeEnd, isInRange), isRangePart)
-            .AddClass("rounded-lg", !isRangePart)
+            .AddClass(options.Theme.Rounded.Lg, !isRangePart)
             .AddClass(theme.RangeClass, isRangePart)
             .AddClass(theme.PrevMonthClass, !isRangePart)
             .Build();
@@ -319,8 +320,9 @@ public partial class TwDatePickerDayView : TwBlazorComponentBase, IAsyncDisposab
     /// </remarks>
     private string GetButtonClasses(bool isSelected, bool isToday, bool isRangeStart, bool isRangeEnd, bool isInRange, bool isDisabled) =>
         new ClassBuilder("day")
-        .AddClass("cursor-pointer", !isDisabled)
-        .AddClass("opacity-40 cursor-not-allowed", isDisabled)
+        .AddClass(options.Theme.Interaction.PointerCursor, !isDisabled)
+        .AddClass(options.Theme.Interaction.DisabledOpacity, isDisabled)
+        .AddClass(options.Theme.Interaction.DisabledCursor, isDisabled)
         .AddClass(GetRangeAwareRoundedClass(isRangeStart, isRangeEnd, isInRange))
         .AddClass(theme.ButtonClass)
         .AddClass(options.Theme.Colors.HoverColors.Primary, !isDisabled)
