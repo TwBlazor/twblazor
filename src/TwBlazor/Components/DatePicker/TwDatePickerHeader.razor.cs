@@ -58,6 +58,9 @@ public partial class TwDatePickerHeader : TwBlazorComponentBase
     private string classes => new ClassBuilder("datepicker-header")
         .AddClass(theme.Header).Build();
 
+    private string headerControlsClasses => new ClassBuilder("datepicker-controls")
+        .AddClass(theme.HeaderControls).Build();
+
     /// <summary>
     /// Gets the classes for the title button that switches between day/month/year views. Uses the
     /// same <see cref="TwBlazor.Configuration.TwBlazorColor.HoverColors"/> primary tint as the day

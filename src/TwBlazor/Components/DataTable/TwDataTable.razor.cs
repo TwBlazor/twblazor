@@ -195,6 +195,24 @@ public partial class TwDataTable<TItem> : TwBlazorComponentBase
         .AddClass(HeaderRowClass ?? string.Empty)
         .Build();
 
+    private string searchRowClasses => new ClassBuilder(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Justify.End)
+        .AddClass(options.Theme.Spacing.MarginBottom.Xl).Build();
+
+    private string searchColumnClasses => new ClassBuilder(options.Theme.Sizing.FullWidth)
+        .AddClass(theme.SearchColumn).Build();
+
+    private string headerCellRowClasses => new ClassBuilder(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Align.Center)
+        .AddClass(options.Theme.Spacing.Gap.Sm).Build();
+
+    private string sortIconClasses => new ClassBuilder(theme.SortIcon)
+        .AddClass(options.Theme.Spacing.PushEnd).Build();
+
+    private string paginationClasses => new ClassBuilder(options.Theme.Spacing.MarginTop.Xl)
+        .AddClass(options.Theme.Sizing.FullWidth)
+        .AddClass(options.Theme.Flexbox.Justify.Between).Build();
+
     protected override void OnInitialized()
     {
         base.OnInitialized();

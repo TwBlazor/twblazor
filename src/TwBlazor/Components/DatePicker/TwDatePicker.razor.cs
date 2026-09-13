@@ -146,14 +146,16 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     private bool pendingViewFocus;
 
     // RootClass and Class are intentionally both applied here rather than split between TwInputRoot and the input.
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
     // Safari (iOS) renders native date/time/datetime-local inputs with a special control
     // path that can ignore percentage widths; appearance-none drops it into normal box-model
     // layout without affecting the native picker UI that opens on tap.
-    private string textfieldClasses => new ClassBuilder("pl-10 pr-3")
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding)
         .AddClass("appearance-none", UseNativePicker).Build();
 
     // Caps the panel to the viewport height and lets it scroll vertically if it doesn't fit -

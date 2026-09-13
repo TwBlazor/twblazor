@@ -17,4 +17,10 @@ public class TwAlertTheme
     /// Gets or sets the color palette applied to alerts.
     /// </summary>
     public required TwBlazorPalette Colors { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the wrapper around the alert's text content, letting it shrink/wrap
+    /// correctly next to the optional start/end icons.
+    /// </summary>
+    public required string TextWrapper { get; set; }
 }

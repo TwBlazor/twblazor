@@ -13,6 +13,32 @@ namespace TwBlazor.Configuration.Components;
 public class TwSidebarTheme
 {
     /// <summary>
+    /// Gets or sets the classes for the "skip to main content" link, visible only while focused.
+    /// </summary>
+    public required string SkipLink { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the mobile backdrop overlay shown behind an open sidebar drawer.
+    /// </summary>
+    public required string MobileOverlay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the sidebar drawer when closed on a mobile viewport.
+    /// </summary>
+    public required string MobileClosed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the sidebar drawer when open (mobile) or always (desktop).
+    /// </summary>
+    public required string MobileOpen { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the scrollable list of navigation items beneath the sidebar's
+    /// optional header/search.
+    /// </summary>
+    public required string NavigationList { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes for the top navbar.
     /// </summary>
     public required string Navbar { get; set; }
@@ -112,4 +138,16 @@ public class TwSidebarTheme
     /// runs the full height of the group, including the parent's own row, rather than starting only
     /// where the children begin.</remarks>
     public required string NavigationGroupRailDeep { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for a parent navigation item's own label span, pushing its trailing
+    /// chevron icon to the end of the row.
+    /// </summary>
+    public required string NavigationItemToggleLabel { get; set; }
+
+    /// <summary>
+    /// Gets or sets the transition classes for a parent navigation item's chevron icon, which rotates
+    /// between the collapsed/expanded states.
+    /// </summary>
+    public required string NavigationItemToggleIcon { get; set; }
 }

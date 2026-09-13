@@ -34,6 +34,19 @@ public class TwInputTheme
     public required string SelectBase { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes applied to each <c>&lt;option&gt;</c> in a select.
+    /// </summary>
+    public required string SelectOption { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background classes forced onto a select using the Default/Outlined variant.
+    /// A native <c>&lt;select&gt;</c> popup renders using the element's own background/text colors, so
+    /// a transparent one (those variants' usual background) falls back to the OS's native, often
+    /// light, popup surface and can pair unreadable white dark-mode text onto it.
+    /// </summary>
+    public required string SelectNativeBackground { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes for input labels.
     /// </summary>
     public required string LabelBase { get; set; }
@@ -62,4 +75,9 @@ public class TwInputTheme
     /// Gets or sets the filled variant background color.
     /// </summary>
     public required string FilledBackgroundColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for an input's validation error message, rendered by <see cref="TwBlazor.Components.TwInputRoot"/>.
+    /// </summary>
+    public required string ErrorMessage { get; set; }
 }

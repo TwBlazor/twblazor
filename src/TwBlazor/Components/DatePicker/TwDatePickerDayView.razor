@@ -4,12 +4,12 @@
 {
     <div class="@monthCaptionClasses">@Value.ToString("MMMM yyyy")</div>
 }
-<table class="datepicker-grid w-full border-collapse" role="grid" aria-label="@Value.ToString("MMMM yyyy")" @ref="gridRef" @onkeydown="OnGridKeyDown">
+<table class="@gridClasses" role="grid" aria-label="@Value.ToString("MMMM yyyy")" @ref="gridRef" @onkeydown="OnGridKeyDown">
     <thead>
         <tr role="row">
             @foreach (var (abbreviation, fullName) in weekdayHeaders)
             {
-                <th scope="col" role="columnheader" class="p-0"><span class="@dayHeaderClasses"><abbr title="@fullName" class="no-underline">@abbreviation</abbr></span></th>
+                <th scope="col" role="columnheader" class="@theme.DayHeaderCellPadding"><span class="@dayHeaderClasses"><abbr title="@fullName" class="@theme.DayAbbreviation">@abbreviation</abbr></span></th>
             }
         </tr>
     </thead>

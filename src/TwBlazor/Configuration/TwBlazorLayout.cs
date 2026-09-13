@@ -37,6 +37,9 @@ public class TwBlazorDisplay
 
     /// <summary>Gets or sets the "contents" display class.</summary>
     public string Contents { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the visually-hidden-but-accessible ("sr-only") class.</summary>
+    public string ScreenReaderOnly { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -187,6 +190,18 @@ public class TwBlazorSpacing
 
     /// <summary>Gets or sets the margin presets used by container-style components.</summary>
     public TwBlazorSpacingScale Margin { get; set; } = new();
+
+    /// <summary>Gets or sets the top-margin scale (Tailwind's "mt-*"). See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale MarginTop { get; set; } = new();
+
+    /// <summary>Gets or sets the bottom-margin scale (Tailwind's "mb-*"). See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale MarginBottom { get; set; } = new();
+
+    /// <summary>Gets or sets the top-padding scale (Tailwind's "pt-*"). See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale PaddingTop { get; set; } = new();
+
+    /// <summary>Gets or sets the start-padding scale (Tailwind's "ps-*"), e.g. for clearing a leading icon. See <see cref="TwBlazorGapScale"/>.</summary>
+    public TwBlazorGapScale PaddingStart { get; set; } = new();
 }
 
 /// <summary>
@@ -289,6 +304,28 @@ public class TwBlazorPositioning
 
     /// <summary>Gets or sets the "sticky" position class.</summary>
     public string Sticky { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Global configuration for CSS inset utility classes (Tailwind's <c>top-*</c>/<c>bottom-*</c>/<c>start-*</c>/<c>end-*</c>),
+/// used to pin a <c>relative</c>/<c>absolute</c>-positioned element to an edge of its container. Kept
+/// separate from <see cref="TwBlazorPositioning"/>, which is only the CSS "position" mode itself
+/// (<c>relative</c>, <c>absolute</c>, etc.) - insets are a distinct CSS concern usually combined with it.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwBlazorInset
+{
+    /// <summary>Gets or sets the "top-0" inset class.</summary>
+    public string Top { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "bottom-0" inset class.</summary>
+    public string Bottom { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "start-0" inset class.</summary>
+    public string Start { get; set; } = string.Empty;
+
+    /// <summary>Gets or sets the "end-0" inset class.</summary>
+    public string End { get; set; } = string.Empty;
 }
 
 /// <summary>

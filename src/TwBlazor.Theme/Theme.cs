@@ -328,7 +328,8 @@ public static class Theme
             Grid = "grid",
             InlineGrid = "inline-grid",
             Hidden = "hidden",
-            Contents = "contents"
+            Contents = "contents",
+            ScreenReaderOnly = "sr-only"
         };
 
         var spacing = new TwBlazorSpacing
@@ -355,6 +356,34 @@ public static class Theme
                 Compact = "m-2",
                 Standard = "m-3",
                 Comfortable = "m-4"
+            },
+            MarginTop = new()
+            {
+                Sm = "mt-1",
+                Md = "mt-2",
+                Lg = "mt-3",
+                Xl = "mt-4"
+            },
+            MarginBottom = new()
+            {
+                Sm = "mb-1",
+                Md = "mb-2",
+                Lg = "mb-3",
+                Xl = "mb-4"
+            },
+            PaddingTop = new()
+            {
+                Sm = "pt-1",
+                Md = "pt-2",
+                Lg = "pt-3",
+                Xl = "pt-4"
+            },
+            PaddingStart = new()
+            {
+                Sm = "ps-1",
+                Md = "ps-2",
+                Lg = "ps-3",
+                Xl = "ps-4"
             }
         };
 
@@ -469,6 +498,14 @@ public static class Theme
             Sticky = "sticky"
         };
 
+        var inset = new TwBlazorInset
+        {
+            Top = "top-0",
+            Bottom = "bottom-0",
+            Start = "start-0",
+            End = "end-0"
+        };
+
         var textTransform = new TwBlazorTextTransform
         {
             Uppercase = "uppercase",
@@ -483,6 +520,7 @@ public static class Theme
         {
             Anchor = anchor,
             Position = positioning,
+            Inset = inset,
             Display = display,
             Flexbox = flexbox,
             Spacing = spacing,
@@ -567,6 +605,7 @@ public static class Theme
                         Light = $"{background.Light.Light} {darkBackground.Dark.Light} {text.Medium.Dark} {darkText.Medium.Dark} {borderWidth.AccentEdge} {borderColors.Light}",
                         Dark = $"{background.Light.Dark} {darkBackground.Dark.Dark} {text.Medium.Dark} {darkText.Light.Dark} {borderWidth.AccentEdge} {borderColors.Dark}",
                     },
+                    TextWrapper = "min-w-0 flex-1 wrap-break-word",
                 },
                 new TwBreadcrumbTheme
                 {
@@ -617,6 +656,11 @@ public static class Theme
                     Md = "text-xs leading-none px-2 py-1 h-6",
                     Lg = "text-sm leading-none px-2.5 py-1.5 h-8"
                 },
+                new TwCodeBlockTheme
+                {
+                    Container = "overflow-hidden bg-gray-900 dark:bg-gray-950",
+                    CopyButtonWrapper = $"{positioning.Absolute} right-3 {spacing.MarginTop.Md}"
+                },
                 new TwCollapseTheme
                 {
                     Container = $"tw-collapse {borderWidth.Thin} {neutralSurface.Border}",
@@ -640,7 +684,11 @@ public static class Theme
                     SliderThumb = $"{positioning.Absolute} top-1/2 {sizing.Icon.Sm} {rounded.Full} border-2 border-white ring-1 ring-black/10 {shadows.Lg} {interaction.PointerEventsNone}",
                     AlphaLabel = $"text-xs font-medium {neutralText.Secondary}",
                     ActionBar = $"{display.Flex} {flexbox.Justify.End} {spacing.Gap.Md} pt-1",
-                    ControlRow = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {spacing.Padding.Compact} {neutralSurface.BackgroundSubtle}"
+                    ControlRow = $"{display.Flex} {flexbox.Align.Center} {spacing.Gap.Md} {spacing.Padding.Compact} {neutralSurface.BackgroundSubtle}",
+                    Body = $"{display.Flex} {flexbox.Col} {spacing.Gap.Lg}",
+                    SliderRow = "flex-1 h-6",
+                    InputColumn = "flex-1",
+                    ModeSwitchButton = "shrink-0 tracking-wide"
                 },
                 new TwDatePickerTheme
                 {
@@ -655,7 +703,27 @@ public static class Theme
                     DefaultFormat = "dd/MM/yyyy",
                     DefaultDateTimeFormat = "dd/MM/yyyy HH:mm",
                     DefaultDateTimeFormat12Hour = "dd/MM/yyyy hh:mm tt",
-                    DefaultRangeSeparator = " - "
+                    DefaultRangeSeparator = " - ",
+                    IconTriggerWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {flexbox.Align.Center} {spacing.PaddingStart.Lg} {interaction.PointerCursor}",
+                    IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
+                    TextfieldPadding = "pl-10 pr-3",
+                    PanelWidth = "w-67",
+                    HeaderControls = $"{display.Flex} {flexbox.Justify.Between} {flexbox.Align.Center} h-9",
+                    Body = display.Flex,
+                    YearsGrid = $"{spacing.MarginTop.Md} {display.Grid} {sizing.FullWidth} grid-cols-5 justify-items-stretch {spacing.Gap.Sm}",
+                    MonthsGrid = $"{spacing.MarginTop.Md} {display.Grid} {sizing.FullWidth} grid-cols-6 justify-items-stretch {spacing.Gap.Sm}",
+                    DualMonthLayout = $"{display.Flex} {flexbox.Col} md:flex-row {spacing.Gap.Xl}",
+                    DualMonthColumn = "md:flex-1 md:min-w-0",
+                    DayGrid = $"{sizing.FullWidth} border-collapse",
+                    DayHeaderCellPadding = "p-0",
+                    DayAbbreviation = "no-underline",
+                    RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.PaddingTop.Md} {spacing.MarginBottom.Md}",
+                    RangeStageTabInactive = neutralText.Subtle
+                },
+                new TwFileUploadTheme
+                {
+                    IconSpacing = "me-2",
+                    FileList = "text-sm text-gray-600 dark:text-gray-400"
                 },
                 new TwGroupsTheme
                 {
@@ -694,15 +762,19 @@ public static class Theme
                     DefaultInputVariant = InputVariant.Filled,
                     TextfieldBase = $"{sizing.FullWidth} min-w-0 max-w-full {neutralText.Heading} transition-colors duration-200 text-base {display.Block} ease-in-out placeholder:text-[oklch(21%_0.006_285.885)]/50 dark:placeholder:text-[oklch(97.807%_0.029_256.847)]/50 focus:outline-none",
                     SelectBase = $"{sizing.FullWidth} {neutralText.Heading} transition-colors duration-200 appearance-none text-base {display.Block} pr-10 py-2 focus:outline-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat",
+                    SelectOption = $"dark:bg-gray-800 dark:text-white {spacing.Padding.Standard}",
+                    SelectNativeBackground = "!bg-white dark:!bg-gray-800",
                     InputLegendBase = $"text-base font-medium {neutralText.Secondary} mb-3",
                     LabelBase = $"{display.Block} mb-2 text-xs font-normal tracking-wide {neutralText.Muted}",
                     OutlinedBorder = $"border-1 {neutralSurface.BorderStrong}",
                     FilledBorder = $"border-b-2 {neutralSurface.BorderStrong}",
                     FocusBorder = "focus:border-purple-600 dark:focus:border-purple-500",
-                    FilledBackgroundColor = neutralSurface.Elevated
+                    FilledBackgroundColor = neutralSurface.Elevated,
+                    ErrorMessage = $"{spacing.MarginTop.Sm} text-xs {text.Medium.Danger} {darkText.Medium.Danger}"
                 },
                 new TwPaginationTheme
                 {
+                    List = $"{display.Flex} {flexbox.Align.Center} -space-x-px h-10 text-base",
                     Base = $"{anchor.Center} {display.Flex} h-8 leading-tight select-none border-1 {neutralSurface.Border} px-3 mx-0.5 tabular-nums",
                     ActiveButton = $"{text.Medium.Primary} {darkText.Medium.Primary} {background.Light.Primary} {darkBackground.Light.Primary} font-bold hover:bg-purple-100 {interaction.PointerCursor}",
                     Buttons = $"{neutralText.Muted} {neutralSurface.Background} {neutralSurface.Hover} hover:text-[oklch(21%_0.006_285.885)] dark:hover:text-[oklch(97.807%_0.029_256.847)] {interaction.PointerCursor}"
@@ -749,6 +821,13 @@ public static class Theme
                 },
                 new TwSidebarTheme
                 {
+                    SkipLink = "focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow-lg dark:focus:bg-gray-800 dark:focus:text-white",
+                    MobileOverlay = "inset-0 bg-black/50 z-[90] lg:hidden",
+                    MobileClosed = "-translate-x-full",
+                    MobileOpen = "lg:relative translate-x-0",
+                    NavigationList = "overflow-y-auto pb-6",
+                    NavigationItemToggleLabel = "mr-auto text-left",
+                    NavigationItemToggleIcon = "transition-transform",
                     Navbar = $"{background.Dark.Primary} {darkBackground.Dark.Primary} {shadows.Sm} {spacing.Padding.Standard} {sizing.FullWidth} {display.Flex} {flexbox.Align.Center} flex-shrink-0 z-40 min-h-[56px]",
                     NavbarContent = $"{display.Flex} {sizing.FullWidth} {flexbox.Wrap} {flexbox.Align.Center} {spacing.Gap.Xl}",
                     NavbarBrand = flexbox.ShrinkNone,
@@ -778,7 +857,8 @@ public static class Theme
                     ToggleIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} transition-transform duration-200",
                     ToggleIconOpen = "rotate-180 translate-y-px",
                     Label = "truncate group-hover/row:underline",
-                    ItemIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {neutralText.Muted}"
+                    ItemIcon = $"{display.InlineFlex} {sizing.Icon.Sm} {flexbox.ShrinkNone} {flexbox.Align.Center} {flexbox.Justify.Center} {neutralText.Muted}",
+                    CheckboxWrapper = $"{display.InlineFlex} h-4 {flexbox.Align.Center} {flexbox.ShrinkNone}"
                 },
                 new TwRadioButtonTheme
                 {
@@ -827,6 +907,7 @@ public static class Theme
                     },
                     Switch = $"{positioning.Absolute} top-1/2 start-0.5 -translate-y-1/2 {sizing.Icon.Md} bg-gray-100 {rounded.Full} {shadows.Lg} transition-transform duration-300 ease-in-out peer-checked:translate-x-full peer-checked:shadow-lg",
                     Track = $"{positioning.Absolute} inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} transition-[background-color,opacity] duration-300 ease-in-out peer-disabled:{interaction.DisabledOpacity} peer-disabled:pointer-events-none shadow-inner",
+                    WrapperSize = "w-10 h-6",
                     Base = "peer sr-only",
                     LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} select-none",
                     LabelInteractiveCursor = interaction.PointerCursor,
@@ -859,10 +940,14 @@ public static class Theme
                 new TwTimePickerTheme
                 {
                     PickerRoot = positioning.Relative,
-                    IconWrapper = $"{positioning.Absolute} top-0 start-0 h-10.5 {display.Flex} {anchor.Center} ps-2 w-10 {interaction.PointerCursor}",
+                    IconWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} h-10.5 {display.Flex} {anchor.Center} ps-2 w-10 {interaction.PointerCursor}",
                     IconGlyph = $"{neutralText.Subtle} {sizing.Icon.Md}",
                     TextfieldPadding = "pl-10 pr-3",
-                    PanelPosition = $"{positioning.Absolute} top-full left-0 z-50 mt-2 {rounded.Lg} {shadows.Lg}",
+                    PanelWrapper = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md}",
+                    PanelPosition = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md} {rounded.Lg} {shadows.Lg}",
+                    RangePanelSurface = $"w-56 {spacing.Padding.Compact} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
+                    RangeStageTabsContainer = $"{display.Flex} {spacing.Gap.Sm} {spacing.MarginBottom.Md}",
+                    RangeStageTabInactive = neutralText.Subtle,
                     BodySurface = $"{neutralSurface.Elevated} {spacing.Padding.Comfortable} {shadows.Xl} {rounded.Lg} {borderWidth.Thin} {neutralSurface.BorderStrong} text-center font-medium {neutralText.Heading}",
                     BodyRoot = "",
                     BodyInner = $"{spacing.Padding.Compact} text-center font-medium {neutralText.Heading}",
@@ -877,6 +962,7 @@ public static class Theme
                 },
                 new TwTableTheme
                 {
+                    Wrapper = "overflow-auto",
                     Base = $"{neutralText.Heading} {sizing.FullWidth} text-sm text-left rtl:text-right",
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
                     Header = $"{neutralSurface.BackgroundSubtle} {textTransform.Uppercase} text-xs font-semibold tracking-wide border-b {neutralSurface.Border}",
@@ -884,7 +970,12 @@ public static class Theme
                     BodyStriped = "[&>tr:nth-child(even)]:bg-[oklch(98%_0_0)] [&>tr:nth-child(even)]:dark:bg-[oklch(23.26%_0.014_253.1)]",
                     BodyHoverable = "[&>tr:hover]:!bg-purple-50 [&>tr:hover]:dark:!bg-purple-900/20 [&>tr]:transition-colors [&>tr]:duration-200",
                     RowDivider = "divide-y divide-[oklch(95%_0_0)] dark:divide-[oklch(21.15%_0.012_254.09)]",
-                    Footer = $"border-t {neutralSurface.Border}"
+                    Footer = $"border-t {neutralSurface.Border}",
+                    SearchColumn = "md:w-1/2",
+                    SortIcon = "text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200",
+                    HeaderCellPadding = "px-6 py-3",
+                    BodyCellPadding = "px-6 py-4 wrap-break-word",
+                    EmptyState = "text-center py-8 text-gray-500 dark:text-gray-400"
                 },
                 new TwToastTheme
                 {

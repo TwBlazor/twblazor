@@ -141,13 +141,15 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// </summary>
     private bool pendingViewFocus;
 
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
-    private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding).Build();
 
-    private string panelWidthClasses => new ClassBuilder("w-67")
+    private string panelWidthClasses => new ClassBuilder(theme.PanelWidth)
         .AddClass("md:w-138", view == DateRangePickerView.Day)
         .Build();
 
@@ -166,6 +168,12 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// Gets or sets the CSS class names to apply to the body element of the component.
     /// </summary>
     [Parameter] public string BodyClasses { get; set; } = string.Empty;
+
+    private string yearsGridClasses => new ClassBuilder("years-of-the-decade")
+        .AddClass(theme.YearsGrid).Build();
+
+    private string monthsGridClasses => new ClassBuilder("months-of-the-year")
+        .AddClass(theme.MonthsGrid).Build();
 
     private string bodyClasses => new ClassBuilder()
         .AddClass("decade", view == DateRangePickerView.Year)

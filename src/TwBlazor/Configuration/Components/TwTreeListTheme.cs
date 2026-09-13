@@ -60,4 +60,9 @@ public class TwTreeListTheme
     /// <see cref="TwBlazor.Components.TwTreeListItem.Icon"/> when set), shown unless <c>HideIcons</c> is set.
     /// </summary>
     public required string ItemIcon { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the wrapper around a node's optional selection checkbox.
+    /// </summary>
+    public required string CheckboxWrapper { get; set; }
 }

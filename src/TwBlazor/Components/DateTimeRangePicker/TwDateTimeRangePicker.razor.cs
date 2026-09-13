@@ -184,18 +184,20 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
         }
     }
 
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
-    private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding).Build();
 
     // The popover's own container (TwDatePickerTheme.Base) only pads its sides and bottom (px-2
     // pb-2) - the top is deliberately left bare so the calendar header can sit flush against it as
     // a title bar. This tab row sits above that header instead, so it needs its own top padding to
     // avoid looking cramped against the popover's top edge; pt-2 matches the container's own px-2/
     // pb-2 spacing so the whole panel reads as evenly padded.
-    private static string stageTabsClasses => new ClassBuilder("flex gap-1 pt-2 mb-2").Build();
+    private string stageTabsClasses => new ClassBuilder(theme.RangeStageTabsContainer).Build();
 
     private string datepickerContainerClasses => new ClassBuilder("max-h-[calc(100vh-2rem)] overflow-y-auto")
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
@@ -217,7 +219,7 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
         return new ClassBuilder("flex-1 text-xs font-medium py-1 cursor-pointer text-center")
             .AddClass(roundedBuilder.GetRounded())
             .AddClass(options.Theme.Colors.HoverColors.Primary, !isActive)
-            .AddClass("text-gray-500 dark:text-gray-400", !isActive)
+            .AddClass(theme.RangeStageTabInactive, !isActive)
             .AddClass(options.Theme.Colors.LightBackground.Light.Primary, isActive)
             .AddClass(options.Theme.Colors.DarkBackground.Light.Primary, isActive)
             .AddClass(options.Theme.Colors.TextColors.Medium.Primary, isActive)

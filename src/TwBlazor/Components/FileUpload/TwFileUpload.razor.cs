@@ -19,6 +19,8 @@ public partial class TwFileUpload : TwBlazorInputComponentBase
 
     private TwButtonTheme theme => options.Theme.Components.Require<TwButtonTheme>();
 
+    private TwFileUploadTheme fileUploadTheme => options.Theme.Components.Require<TwFileUploadTheme>();
+
     /// <summary>
     /// The icon displayed at the start of the input, the default is <see cref="Icon.Cloud_Upload"/>, if you would like this blank explicity set this to null.
     /// </summary>
@@ -71,14 +73,29 @@ public partial class TwFileUpload : TwBlazorInputComponentBase
     // and in the accessibility tree; this visible label doubles as its focus indicator via peer-focus-visible,
     // since the native input's own focus ring would otherwise land somewhere invisible.
     private string classes =>
-        new ClassBuilder("block")
+        new ClassBuilder(options.Theme.Display.Block)
         .AddClass(Class)
         .AddClass(LabelClasses)
         .AddClass(roundedBuilder.GetRounded())
         .AddClass(buttonBuilder.GetVariantClasses(Variant, Color, Disabled))
         .AddClass(shadowBuilder.GetButtonShadow(theme))
         .AddClass(ToPeerFocusVisible(colorBuilder.GetFocusRing(Color)))
-        .AddClass("p-3").Build();
+        .AddClass(options.Theme.Spacing.Padding.Standard).Build();
+
+    private string inputClasses =>
+        new ClassBuilder(options.Theme.Display.ScreenReaderOnly)
+        .AddClass("peer").Build();
+
+    private string fileListClasses =>
+        new ClassBuilder(fileUploadTheme.FileList)
+        .AddClass(options.Theme.Spacing.MarginTop.Lg)
+        .AddClass(options.Theme.Spacing.Gap.Sm)
+        .AddClass(options.Theme.Display.Block).Build();
+
+    private string chipClasses =>
+        new ClassBuilder(fileUploadTheme.IconSpacing)
+        .AddClass(options.Theme.Spacing.MarginBottom.Md)
+        .AddClass("dark:text-white").Build();
 
     /// <summary>
     /// Rewrites a "focus:"-prefixed class string (as returned by <see cref="ColorBuilder.GetFocusRing"/>)

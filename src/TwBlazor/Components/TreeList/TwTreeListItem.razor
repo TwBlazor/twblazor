@@ -24,7 +24,7 @@
         </span>
         @if (showCheckboxes)
         {
-            <span class="inline-flex h-4 items-center shrink-0" @onclick:stopPropagation="true">
+            <span class="@theme.CheckboxWrapper" @onclick:stopPropagation="true">
                 <TwCheckbox T="bool?"
                             RootClass="flex items-center"
                             Value="GetEffectiveChecked()"

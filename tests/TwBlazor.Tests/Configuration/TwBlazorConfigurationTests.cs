@@ -314,6 +314,9 @@ public class TwInputThemeTests
         FilledBorder = "filled-border",
         FocusBorder = "focus-border",
         FilledBackgroundColor = "filled-bg",
+        ErrorMessage = "error-message",
+        SelectOption = "select-option",
+        SelectNativeBackground = "select-native-bg",
     };
 
     [Fact]

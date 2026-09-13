@@ -115,6 +115,12 @@ public partial class TwDatePickerCalendar : TwBlazorComponentBase
     /// </summary>
     [Parameter] public EventCallback Navigated { get; set; }
 
+    private string yearsGridClasses => new ClassBuilder("years-of-the-decade")
+        .AddClass(theme.YearsGrid).Build();
+
+    private string monthsGridClasses => new ClassBuilder("months-of-the-year")
+        .AddClass(theme.MonthsGrid).Build();
+
     private string bodyClasses => new ClassBuilder()
         .AddClass("decade", View == DatePickerCalendarView.Year)
         .AddClass("months", View == DatePickerCalendarView.Month)

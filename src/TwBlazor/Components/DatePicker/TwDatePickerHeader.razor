@@ -2,7 +2,7 @@
 @inherits TwBlazorComponentBase
 
 <div class="@classes">
-    <div class="datepicker-controls flex justify-between items-center h-9">
+    <div class="@headerControlsClasses">
         <TwIcon OnClick="@OnPreviousClick" Icon="Icon.Arrow_Left" RootClass="prev-btn" Class="text-xl py-2 px-4" AriaLabel="@PreviousLabel" Shadow="Enums.Shadow.None" Disabled="@PreviousDisabled" />
 
         <TwButton OnClick="@OnTitleClick" Variant="ButtonVariant.Text" Class="@titleButtonClasses">
@@ -13,5 +13,5 @@
     </div>
     @* Visually-hidden live region so screen readers announce the new month/year/decade whenever
        navigation changes the title above, without altering the visible header's styling. *@
-    <div class="sr-only" aria-live="polite">@ChildContent</div>
+    <div class="@options.Theme.Display.ScreenReaderOnly" aria-live="polite">@ChildContent</div>
 </div>

@@ -8,25 +8,25 @@
     <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" OverrideClass="@classes" @attributes="@LabelAttributes">
         @if (Icon != null)
         {
-            <TwIcon Icon="@((Icon)Icon)" Class="me-2"/>
+            <TwIcon Icon="@((Icon)Icon)" Class="@fileUploadTheme.IconSpacing"/>
         }
 
         @if (Multiple)
         {
-            <InputFile id="@Id" OnChange="@OnUpload" multiple @attributes="@Attributes" disabled="@Disabled" class="sr-only peer" aria-readonly="@(ReadOnly ? "true" : null)" aria-invalid="@(Invalid ? "true" : null)" aria-describedby="@errorId" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy" />
+            <InputFile id="@Id" OnChange="@OnUpload" multiple @attributes="@Attributes" disabled="@Disabled" class="@inputClasses" aria-readonly="@(ReadOnly ? "true" : null)" aria-invalid="@(Invalid ? "true" : null)" aria-describedby="@errorId" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy" />
         }
         else
         {
-            <InputFile id="@Id" OnChange="@OnUpload" @attributes="@Attributes" disabled="@Disabled" class="sr-only peer" aria-readonly="@(ReadOnly ? "true" : null)" aria-invalid="@(Invalid ? "true" : null)" aria-describedby="@errorId" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy" />
+            <InputFile id="@Id" OnChange="@OnUpload" @attributes="@Attributes" disabled="@Disabled" class="@inputClasses" aria-readonly="@(ReadOnly ? "true" : null)" aria-invalid="@(Invalid ? "true" : null)" aria-describedby="@errorId" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy" />
         }
     </TwInputLabel>
-    
+
     @if (selectedFiles.Count > 0)
     {
-        <div class="text-sm text-gray-600 mt-3 gap-2 block">
+        <div class="@fileListClasses">
             @foreach (var f in selectedFiles)
             {
-                <TwChip Label="@f.Name" Closable OnClose="() => RemoveFile(f)" Shadow="Enums.Shadow.None" Class="me-2 mb-2 dark:text-white" />
+                <TwChip Label="@f.Name" Closable OnClose="() => RemoveFile(f)" Shadow="Enums.Shadow.None" Class="@chipClasses" />
             }
         </div>
     }

@@ -83,4 +83,25 @@ public class TwColorPickerTheme
     /// switch, the live swatch, the current mode's value field, and the alpha percentage readout.
     /// </summary>
     public required string ControlRow { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the dialog's outermost vertical layout wrapper.
+    /// </summary>
+    public required string Body { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size classes for a draggable hue/alpha slider's clickable row (excluding
+    /// positioning/layout, which are composed alongside it).
+    /// </summary>
+    public required string SliderRow { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for each equal-width column in the RGB/HSL numeric input row.
+    /// </summary>
+    public required string InputColumn { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tracking classes for the mode-switch button's text.
+    /// </summary>
+    public required string ModeSwitchButton { get; set; }
 }

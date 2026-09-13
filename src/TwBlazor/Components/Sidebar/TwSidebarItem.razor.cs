@@ -140,6 +140,12 @@ public partial class TwSidebarItem : TwBlazorComponentBase
     /// <remarks>
     /// Includes styling for flex layout, spacing, typography, focus states, and dark mode support.
     /// </remarks>
+    private string toggleIconClasses =>
+        new ClassBuilder(options.Theme.Sizing.Icon.Md)
+        .AddClass(theme.NavigationItemToggleIcon)
+        .AddClass(IsCollapsed ? "rotate-0" : "rotate-180")
+        .AddClass(options.Theme.Flexbox.ShrinkNone).Build();
+
     private string parentClasses =>
         new ClassBuilder(theme.NavigationItemBase)
         .AddClass(theme.NavigationItemActive, !IsCollapsed)

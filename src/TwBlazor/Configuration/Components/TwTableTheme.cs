@@ -19,6 +19,11 @@ namespace TwBlazor.Configuration.Components;
 public class TwTableTheme
 {
     /// <summary>
+    /// Gets or sets the classes for the scrollable wrapper around the table element.
+    /// </summary>
+    public required string Wrapper { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes applied to the table element itself.
     /// </summary>
     public required string Base { get; set; }
@@ -68,4 +73,30 @@ public class TwTableTheme
     /// is <c>true</c> - a single divider separating it from the body.
     /// </summary>
     public required string Footer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the width classes for <see cref="TwBlazor.Components.TwDataTable{TItem}"/>'s search
+    /// field column, when <c>Searchable</c> is enabled.
+    /// </summary>
+    public required string SearchColumn { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color classes for an auto-generated column header's sort icon.
+    /// </summary>
+    public required string SortIcon { get; set; }
+
+    /// <summary>
+    /// Gets or sets the padding classes for an auto-generated column header cell.
+    /// </summary>
+    public required string HeaderCellPadding { get; set; }
+
+    /// <summary>
+    /// Gets or sets the padding classes for an auto-generated body cell.
+    /// </summary>
+    public required string BodyCellPadding { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the "no data" row shown when there are no rows to display.
+    /// </summary>
+    public required string EmptyState { get; set; }
 }

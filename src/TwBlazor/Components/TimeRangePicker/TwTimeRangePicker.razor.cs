@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Utilities;
 
 namespace TwBlazor.Components;
@@ -23,6 +24,8 @@ namespace TwBlazor.Components;
 /// </remarks>
 public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
 {
+    private TwTimePickerTheme theme => options.Theme.Components.Require<TwTimePickerTheme>();
+
     /// <summary>
     /// Reference to the trigger <see cref="TwTextfield{T}"/> instance, used to focus its actual
     /// &lt;input&gt; element directly - see <see cref="TwPopoverPickerComponentBase.triggerInputRef"/>.
@@ -105,20 +108,22 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
     private TimeOnly stageTime => (stage == TimeRangePickerStage.Start ? SelectedRange.Key : SelectedRange.Value)
         ?? TimeOnly.FromDateTime(DateTime.Now);
 
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
-    private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding).Build();
 
-    private static string panelPositionClasses => new ClassBuilder("absolute top-full left-0 z-120 mt-2").Build();
+    private string panelPositionClasses => new ClassBuilder(theme.PanelWrapper).Build();
 
-    private string panelSurfaceClasses => new ClassBuilder("w-56 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700")
+    private string panelSurfaceClasses => new ClassBuilder(theme.RangePanelSurface)
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .Build();
 
-    private static string stageTabsClasses => new ClassBuilder("flex gap-1 mb-2").Build();
+    private string stageTabsClasses => new ClassBuilder(theme.RangeStageTabsContainer).Build();
 
     /// <summary>
     /// Gets the CSS classes for the Start/End step tab buttons.
@@ -129,7 +134,7 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
         return new ClassBuilder("flex-1 text-xs font-medium py-1 cursor-pointer text-center")
             .AddClass(roundedBuilder.GetRounded())
             .AddClass(options.Theme.Colors.HoverColors.Primary, !isActive)
-            .AddClass("text-gray-500 dark:text-gray-400", !isActive)
+            .AddClass(theme.RangeStageTabInactive, !isActive)
             .AddClass(options.Theme.Colors.LightBackground.Light.Primary, isActive)
             .AddClass(options.Theme.Colors.DarkBackground.Light.Primary, isActive)
             .AddClass(options.Theme.Colors.TextColors.Medium.Primary, isActive)

@@ -3,7 +3,7 @@
 
 <div class="@rootClasses">
     <nav id="@Id" aria-label="@(AriaLabel ?? "pagination")" aria-labelledby="@AriaLabelledBy" style="@Style" @attributes="@Attributes">
-        <ul class="flex items-center -space-x-px h-10 text-base">
+        <ul class="@theme.List">
             <li>
                 <TwIcon Class="@NavButtonClass(isPreviousDisabled, isFirst: true)" aria-disabled="@(isPreviousDisabled ? "true" : null)" Disabled="@isPreviousDisabled" OnClick="() => OnPageClick(ActivePage - 1)" Icon="Enums.Icon.Chevron_Left" AriaLabel="Previous page" />
             </li>
@@ -12,7 +12,7 @@
             {
                 <li>
                     <TwButton Type="button" Class="@IsActivePage(pageNumber)" Plain OnClick="() => OnPageClick(pageNumber)" aria-current="@(pageNumber == ActivePage ? "page" : null)">
-                        <span class="sr-only">page </span>@pageNumber
+                        <span class="@options.Theme.Display.ScreenReaderOnly">page </span>@pageNumber
                     </TwButton>
                 </li>
             }

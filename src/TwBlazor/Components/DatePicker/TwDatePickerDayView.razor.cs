@@ -65,6 +65,9 @@ public partial class TwDatePickerDayView : TwBlazorComponentBase, IAsyncDisposab
     /// </summary>
     [Parameter] public DateTime? MaxDate { get; set; }
 
+    private string gridClasses => new ClassBuilder("datepicker-grid")
+        .AddClass(theme.DayGrid).Build();
+
     private string dayHeaderClasses => new ClassBuilder(theme.WeekdaysHeader).Build();
 
     private string monthCaptionClasses => new ClassBuilder(theme.RangeMonthCaptionClass).Build();

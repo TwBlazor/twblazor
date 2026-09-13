@@ -35,9 +35,34 @@ public class TwTimePickerTheme
     public required string TextfieldPadding { get; set; }
 
     /// <summary>
-    /// Gets or sets the positioning classes for the popover panel's wrapper, anchoring it beneath the trigger.
+    /// Gets or sets the positioning classes for the popover panel's wrapper, anchoring it beneath the trigger,
+    /// including its own rounded/shadow chrome.
     /// </summary>
     public required string PanelPosition { get; set; }
+
+    /// <summary>
+    /// Gets or sets just the positioning classes for the popover panel's wrapper (no rounded/shadow chrome),
+    /// reused as-is by <see cref="TwBlazor.Components.TwTimeRangePicker"/>, whose panel surface (background,
+    /// border, rounded corners, padding) is applied by a separate inner element (<see cref="RangePanelSurface"/>)
+    /// instead of being folded into this one, the way <see cref="PanelPosition"/> does for the single picker.
+    /// </summary>
+    public required string PanelWrapper { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for <see cref="TwBlazor.Components.TwTimeRangePicker"/>'s popover surface -
+    /// its background, border and sizing.
+    /// </summary>
+    public required string RangePanelSurface { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the Start/End step tab row shown in <see cref="TwBlazor.Components.TwTimeRangePicker"/>'s popover.
+    /// </summary>
+    public required string RangeStageTabsContainer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text color for an inactive Start/End step tab.
+    /// </summary>
+    public required string RangeStageTabInactive { get; set; }
 
     /// <summary>
     /// Gets or sets the classes for the popover panel's surface (background, border, shadow, padding).
