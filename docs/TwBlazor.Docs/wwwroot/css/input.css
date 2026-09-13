@@ -19,9 +19,14 @@ h1, h2, h3, h4, h5, h6 {
     font-style: normal;
 }
 
-/* Hero gradient bubble background: two blurred blobs drifting and pulsing at
-   different, offset speeds so they read as one organic, liquid motion rather
-   than two shapes bobbing in sync. */
+:where(code):not(pre code) {
+    overflow-wrap: anywhere;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
 .hero-blob {
     will-change: transform;
 }
@@ -55,13 +60,6 @@ h1, h2, h3, h4, h5, h6 {
     animation-delay: -2s;
 }
 
-/* Percentage translates are relative to each blob's own box, so the sweep
-   scales with its size instead of a fixed px amount. Each blob gets its own
-   keyframe stop timing (not the same 25/50/75 split), its own mix of
-   translate magnitudes, and a duration/delay that shares no common multiple
-   with any other blob's - deliberately so no two ever fall into a repeating,
-   mirrored rhythm together, and the motion reads as genuinely organic rather
-   than a handful of shapes bobbing in lockstep pairs. */
 @keyframes hero-blob-float-1 {
     0%, 100% { transform: translate(0, 0) scale(1); }
     18% { transform: translate(120%, 45%) scale(1.15); }
@@ -136,4 +134,28 @@ h1, h2, h3, h4, h5, h6 {
     font-style: normal;
     font-weight: 900;
     src: url('../fonts/source-sans-3-v19-latin-900.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* Powers TwSkeleton's Wave variant - a shimmer sweep Tailwind has no utility for. */
+@keyframes tw-skeleton-wave {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50%, 100% {
+        transform: translateX(100%);
+    }
+}
+
+.tw-skeleton-wave::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 40%), transparent);
+    animation: tw-skeleton-wave 1.6s linear infinite;
+}
+
+.dark .tw-skeleton-wave::after {
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
 }

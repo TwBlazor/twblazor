@@ -37,6 +37,14 @@
         "theme": "TwSidebarTheme"
       },
       {
+        "id": "stepper-navitem",
+        "display": "Stepper",
+        "name": "TwStepper",
+        "url": "/stepper",
+        "isNew": true,
+        "theme": "TwStepperTheme"
+      },
+      {
         "id": "tabs-navitem",
         "display": "Tabs",
         "name": "TwTabContainer",
@@ -230,6 +238,14 @@
         "name": "TwPagination",
         "url": "/pagination",
         "theme": "TwPaginationTheme"
+      },
+      {
+        "id": "pick-list-navitem",
+        "display": "Pick List",
+        "name": "TwPickList",
+        "url": "/pick-list",
+        "isNew": true,
+        "theme": "TwPickListTheme"
       },
       {
         "id": "table-navitem",
