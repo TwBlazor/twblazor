@@ -2,15 +2,21 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Configuration;
+using TwBlazor.Configuration.Components;
 
 namespace TwBlazor.Components;
 
 /// <summary>
-/// Used for all input components to wrap the input element and provide a 
+/// Used for all input components to wrap the input element and provide a
 /// consistent root element for styling and attributes.
 /// </summary>
 public partial class TwInputRoot
 {
+    [Inject] private TwBlazorOptions options { get; set; } = null!;
+
+    private TwInputTheme theme => options.Theme.Components.Require<TwInputTheme>();
+
     /// <summary>
     /// The input element is rendered as a child of this component, allowing it to apply consistent 
     /// styling and attributes to the root element. The ChildContent parameter is used to render the

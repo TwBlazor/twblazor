@@ -3,11 +3,15 @@
 
 @source "../../**/*.razor";
 @source "../../**/*.cs";
-@source "../../../TwBlazor.Theme/**/*.cs";
 @source not "../../bin/**";
 @source not "../../obj/**";
-@source not "../../../TwBlazor.Theme/bin/**";
-@source not "../../../TwBlazor.Theme/obj/**";
+
+/* TwBlazor.Theme (the default Theme.cs) is deliberately NOT scanned here. Every class a component
+   needs is either a literal still in this project's own .razor/.cs files (picked up above) or comes
+   from a theme.* property that consumers are expected to supply their own Tailwind build for, via
+   their own copy of Theme.cs (see the "Get Started" docs). Scanning TwBlazor.Theme here would make
+   twblazor.css duplicate that entire default theme's classes, defeating the point of the split - the
+   docs site's own input.css scans it separately, so twblazor.com keeps full styling regardless. */
 
 /* TwSkeleton's Wave animation: Tailwind has no built-in shimmer utility, so this sweeps a translucent
    gradient across the placeholder via ::after. Requires the placeholder itself to be "relative

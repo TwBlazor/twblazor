@@ -147,27 +147,23 @@ dotnet run --project build/TwBlazor.BuildTools
 
 ## CSS
 
-The easiest way to build the Tailwind CSS file(s) for TwBlazor is to use the custom `watch-tailwind.ps1` PowerShell script located in the root of the repository. This script will automatically build the Tailwind CSS file(s) for both the TwBlazor source and documentation site and will continue to watch for changes to the input CSS files and rebuild as necessary.
+TwBlazor itself ships no pre-built stylesheet. Since Tailwind can't compile classes from a .DLL, every
+class TwBlazor's components use is expressed as a literal in [`src/TwBlazor.Theme/Theme.cs`](src/TwBlazor.Theme/Theme.cs)
+instead, and a consuming app builds its own Tailwind output from its own copy of that file - see the
+["Get Started" guide](https://twblazor.com/get-started) for the consumer-facing side of this.
 
-You can run the script by executing the following command in the root of the repository:
+The only CSS actually built inside this repo is the documentation site's own. The easiest way is the
+custom `watch-tailwind.ps1` PowerShell script in the root of the repository, which builds it and
+watches for changes to the input CSS file, rebuilding as necessary:
+
 `.\watch-tailwind.ps1`
 
-You can also manually build the TwBlazor Tailwind CSS file(s) by navigating to the correct directory e.g. 
+You can also build it manually:
 
-### TwBlazor:
-
-- `cd ./src/TwBlazor` for the TwBlazor source CSS.
-- `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/twblazor.css --watch`
-
----
-
-### TwBlazor Docs:
-
-- `cd ./docs/TwBlazor.Docs` for the TwBlazor documentation site CSS.
+- `cd ./docs/TwBlazor.Docs`
 - `npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch`
 
-
-**NOTE: You may also have to run a clean and rebuild of the solution to ensure the new CSS file is picked up by the projects if building manually, we advise you use `watch-tailwind.ps1` detailed above.**
+**NOTE: You may also have to run a clean and rebuild of the solution to ensure the new CSS file is picked up by the project if building manually, we advise you use `watch-tailwind.ps1` detailed above.**
 
 ---
 

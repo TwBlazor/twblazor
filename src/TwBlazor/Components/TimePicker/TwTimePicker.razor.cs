@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Utilities;
 
 namespace TwBlazor.Components;
@@ -17,6 +18,8 @@ namespace TwBlazor.Components;
 /// configured to display time in either 12-hour (AM/PM) or 24-hour format.</remarks>
 public partial class TwTimePicker : TwPopoverPickerComponentBase
 {
+    private TwTimePickerTheme theme => options.Theme.Components.Require<TwTimePickerTheme>();
+
     /// <summary>
     /// The string format used to display the <see cref="SelectedTime"/>, default value is 'HH:mm'.
     /// </summary>
@@ -196,11 +199,14 @@ public partial class TwTimePicker : TwPopoverPickerComponentBase
             await SelectedTimeChanged.InvokeAsync(SelectedTime);
     }
 
-    private string classes => new ClassBuilder("relative").AddClass(Class).Build();
+    private string classes => new ClassBuilder(theme.PickerRoot).AddClass(Class).Build();
 
     // Safari (iOS) renders native time inputs with a special control path that can ignore
     // percentage widths; appearance-none drops it into normal box-model layout without
     // affecting the native picker UI that opens on tap.
-    private string textfieldClasses => new ClassBuilder("pl-10 pr-3")
-        .AddClass("appearance-none", UseNativePicker).Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding)
+        .AddClass(theme.NativeInputAppearance, UseNativePicker).Build();
+
+    private string bodyClasses => new ClassBuilder("time")
+        .AddClass(theme.BodySurface).Build();
 }

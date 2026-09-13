@@ -170,6 +170,12 @@ public partial class TwButton : TwBlazorComponentBase
             .AddClass(Class)
             .Build();
 
+    private string startIconClasses => new ClassBuilder(theme.IconTypography)
+        .AddClass(options.Theme.Spacing.MarginEnd.Md).Build();
+
+    private string endIconClasses => new ClassBuilder(theme.IconTypography)
+        .AddClass(options.Theme.Spacing.MarginStart.Md).Build();
+
     /// <summary>
     /// Handles the click event asynchronously, invoking the associated callback if the component is enabled.
     /// </summary>

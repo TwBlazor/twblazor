@@ -141,14 +141,16 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// </summary>
     private bool pendingViewFocus;
 
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
-    private static string textfieldClasses => new ClassBuilder("pl-10 pr-3").Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding).Build();
 
-    private string panelWidthClasses => new ClassBuilder("w-67")
-        .AddClass("md:w-138", view == DateRangePickerView.Day)
+    private string panelWidthClasses => new ClassBuilder(theme.PanelWidth)
+        .AddClass(theme.DualMonthPanelWidth, view == DateRangePickerView.Day)
         .Build();
 
     // The two-month panel (up to ~552px, see panelWidthClasses) is wider than TwDatePicker's
@@ -156,7 +158,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     // twPicker.positionPanel flips it to the other viewport edge (that check is viewport-relative,
     // not aware of a narrower positioned/overflow ancestor) - capping the width and letting it
     // scroll horizontally keeps it fully reachable instead of silently clipping off-screen.
-    private string datepickerContainerClasses => new ClassBuilder("max-w-[calc(100vw-2rem)] overflow-x-auto max-h-[calc(100vh-2rem)] overflow-y-auto")
+    private string datepickerContainerClasses => new ClassBuilder($"{theme.PanelMaxWidth} {theme.PanelMaxHeight}")
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)
@@ -166,6 +168,12 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     /// Gets or sets the CSS class names to apply to the body element of the component.
     /// </summary>
     [Parameter] public string BodyClasses { get; set; } = string.Empty;
+
+    private string yearsGridClasses => new ClassBuilder("years-of-the-decade")
+        .AddClass(theme.YearsGrid).Build();
+
+    private string monthsGridClasses => new ClassBuilder("months-of-the-year")
+        .AddClass(theme.MonthsGrid).Build();
 
     private string bodyClasses => new ClassBuilder()
         .AddClass("decade", view == DateRangePickerView.Year)

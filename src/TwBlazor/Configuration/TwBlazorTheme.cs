@@ -42,6 +42,12 @@ public class TwBlazorTheme
     public TwBlazorPositioning Position { get; set; } = new();
 
     /// <summary>
+    /// Gets or sets the shared CSS inset utility classes (<c>top-0</c>, <c>start-0</c>, etc.), used to
+    /// pin a positioned element to an edge of its container. See <see cref="TwBlazorInset"/>.
+    /// </summary>
+    public TwBlazorInset Inset { get; set; } = new();
+
+    /// <summary>
     /// Gets or sets the shared CSS display utility classes (e.g. <c>flex</c>, <c>block</c>) reused
     /// across component themes. See <see cref="TwBlazorDisplay"/>.
     /// </summary>

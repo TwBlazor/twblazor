@@ -146,15 +146,17 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     private bool pendingViewFocus;
 
     // RootClass and Class are intentionally both applied here rather than split between TwInputRoot and the input.
-    private string classes => new ClassBuilder("relative flex flex-col")
+    private string classes => new ClassBuilder(options.Theme.Position.Relative)
+        .AddClass(options.Theme.Display.Flex)
+        .AddClass(options.Theme.Flexbox.Col)
         .AddClass(RootClass)
         .AddClass(Class).Build();
 
     // Safari (iOS) renders native date/time/datetime-local inputs with a special control
     // path that can ignore percentage widths; appearance-none drops it into normal box-model
     // layout without affecting the native picker UI that opens on tap.
-    private string textfieldClasses => new ClassBuilder("pl-10 pr-3")
-        .AddClass("appearance-none", UseNativePicker).Build();
+    private string textfieldClasses => new ClassBuilder(theme.TextfieldPadding)
+        .AddClass(theme.NativeInputAppearance, UseNativePicker).Build();
 
     // Caps the panel to the viewport height and lets it scroll vertically if it doesn't fit -
     // twPicker.positionPanel's flip logic picks the better of "below" or "above" the trigger, but
@@ -162,7 +164,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     // this is a safety net that keeps the whole panel reachable regardless (see the matching,
     // more detailed remarks on TwDateRangePicker.datepickerContainerClasses, where its much taller
     // two-month panel makes this matter more).
-    private string datepickerContainerClasses => new ClassBuilder("max-h-[calc(100vh-2rem)] overflow-y-auto")
+    private string datepickerContainerClasses => new ClassBuilder(theme.PanelMaxHeight)
         .AddClass(shadowBuilder.GetShadow(effectiveShadow))
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
         .AddClass(theme.Base)

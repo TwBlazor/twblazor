@@ -114,7 +114,7 @@ public partial class TwTable : TwBlazorComponentBase
     /// </remarks>
     private string containerClasses => new ClassBuilder()
         .AddClass(roundedBuilder.GetRounded(effectiveRounded))
-        .AddClass("overflow-hidden")
+        .AddClass(theme.ContainerClip)
         .AddClass(theme.Body)
         .AddClass(theme.Bordered, !NoBorder)
         .AddClass(Class)
@@ -138,7 +138,7 @@ public partial class TwTable : TwBlazorComponentBase
         .Build();
 
     private string captionClasses => new ClassBuilder()
-        .AddClass("sr-only", !CaptionVisible)
+        .AddClass(options.Theme.Display.ScreenReaderOnly, !CaptionVisible)
         .Build();
 
     private string footerClasses => new ClassBuilder()

@@ -48,14 +48,6 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Build Tailwind CSS (minified)
-        shell: pwsh
-        run: |
-          $version = "v4.1.18"
-          Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/download/$version/tailwindcss-linux-x64" -OutFile ./tailwindcss
-          chmod +x ./tailwindcss
-          ./tailwindcss -i src/TwBlazor/wwwroot/css/input.css -o src/TwBlazor/wwwroot/css/twblazor.css --minify
-
       - name: Build
         run: dotnet build src/TwBlazor/TwBlazor.csproj --configuration Release --no-restore -p:MinVerVersionOverride=${{ steps.version.outputs.version }}
 

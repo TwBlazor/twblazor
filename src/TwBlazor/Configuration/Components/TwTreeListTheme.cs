@@ -60,4 +60,15 @@ public class TwTreeListTheme
     /// <see cref="TwBlazor.Components.TwTreeListItem.Icon"/> when set), shown unless <c>HideIcons</c> is set.
     /// </summary>
     public required string ItemIcon { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the wrapper around a node's optional selection checkbox.
+    /// </summary>
+    public required string CheckboxWrapper { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes suppressing the default focus outline on a node's row, which handles
+    /// its own focus-visible styling via <see cref="Row"/> instead.
+    /// </summary>
+    public required string ItemOutline { get; set; }
 }

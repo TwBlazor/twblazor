@@ -13,6 +13,11 @@ namespace TwBlazor.Configuration.Components;
 public class TwPaginationTheme
 {
     /// <summary>
+    /// Gets or sets the classes for the root <c>&lt;ul&gt;</c> element listing the pagination buttons.
+    /// </summary>
+    public required string List { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes applied to all pagination buttons.
     /// </summary>
     public required string Base { get; set; }

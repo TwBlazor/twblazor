@@ -115,8 +115,7 @@ public partial class TwProgress<T> : TwBlazorInputComponentBase
     private string classes => new ClassBuilder(theme.Base)
         .AddClass(sizeClasses)
         .AddClass(GetProgressColor(Color))
-        .AddClass("opacity-40", Disabled)
-        .AddClass("tabular-nums")
+        .AddClass(options.Theme.Interaction.DisabledOpacity, Disabled)
         .AddClass(Class)
         .Build();
 
