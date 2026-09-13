@@ -319,7 +319,7 @@ public static class Theme
             Heading = "text-[oklch(21%_0.006_285.885)] dark:text-[oklch(97.807%_0.029_256.847)]",
             Secondary = "text-[oklch(40%_0.006_285.885)] dark:text-[oklch(88%_0.02_256.847)]",
             Muted = "text-[oklch(50%_0.006_285.885)] dark:text-[oklch(78%_0.02_256.847)]",
-            Subtle = "text-[oklch(60%_0.006_285.885)] dark:text-[oklch(68%_0.02_256.847)]"
+            Subtle = "text-[oklch(55%_0.006_285.885)] dark:text-[oklch(68%_0.02_256.847)]"
         };
 
         // The text treatment every input-family label uses (size, weight, tracking, color) - shared
