@@ -26,16 +26,17 @@
                 </div>
             }
         </div>
-        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@SourceLabel">
+        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@SourceLabel" aria-disabled="@(Disabled ? "true" : null)">
             @if (!SourceItems.Any())
             {
-                <li class="@theme.EmptyState">@EmptyText</li>
+                <li class="@theme.EmptyState" role="option" aria-disabled="true" aria-selected="false" tabindex="-1">@EmptyText</li>
             }
             @foreach (var item in SourceItems)
             {
                 <li role="option"
                     tabindex="@(Disabled ? "-1" : "0")"
                     aria-selected="@(IsSelected(item, true) ? "true" : "false")"
+                    aria-disabled="@(Disabled ? "true" : null)"
                     class="@GetItemClasses(item, true)"
                     @onclick="@(() => ToggleSelectionAsync(item, true))"
                     @onkeydown="@((KeyboardEventArgs e) => OnItemKeyDownAsync(e, item, true))">
@@ -87,16 +88,17 @@
                 </div>
             }
         </div>
-        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@TargetLabel">
+        <ul class="@GetListBoxClasses()" role="listbox" aria-multiselectable="true" aria-label="@TargetLabel" aria-disabled="@(Disabled ? "true" : null)">
             @if (!TargetItems.Any())
             {
-                <li class="@theme.EmptyState">@EmptyText</li>
+                <li class="@theme.EmptyState" role="option" aria-disabled="true" aria-selected="false" tabindex="-1">@EmptyText</li>
             }
             @foreach (var item in TargetItems)
             {
                 <li role="option"
                     tabindex="@(Disabled ? "-1" : "0")"
                     aria-selected="@(IsSelected(item, false) ? "true" : "false")"
+                    aria-disabled="@(Disabled ? "true" : null)"
                     class="@GetItemClasses(item, false)"
                     @onclick="@(() => ToggleSelectionAsync(item, false))"
                     @onkeydown="@((KeyboardEventArgs e) => OnItemKeyDownAsync(e, item, false))">

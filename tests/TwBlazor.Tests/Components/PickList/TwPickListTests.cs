@@ -57,10 +57,12 @@ public class TwPickListTests : TwBlazorTestBase
         var cut = TestContext.Render<TwPickList<string>>(parameters => parameters
             .Add(p => p.EmptyText, "Nothing here"));
 
-        // Assert
-        var emptyStates = cut.FindAll("li[role='option']");
-        Assert.Empty(emptyStates);
-        Assert.Contains("Nothing here", cut.Markup);
+        // Assert - the empty-state row is rendered as a disabled, non-selectable option (rather than
+        // role="presentation") so the surrounding role="listbox" always has a valid "option" child;
+        // see the remarks on aria-required-children in TwPickList.razor.
+        var placeholders = cut.FindAll("li[role='option'][aria-disabled='true']");
+        Assert.Equal(2, placeholders.Count);
+        Assert.All(placeholders, p => Assert.Equal("Nothing here", p.TextContent.Trim()));
     }
 
     [Fact]
@@ -168,8 +170,9 @@ public class TwPickListTests : TwBlazorTestBase
             .Add(p => p.TargetItemsChanged, EventCallback.Factory.Create<IEnumerable<string>>(
                 this, values => newTarget = values.ToList())));
 
-        // Act
-        cut.Find("li[role='option']").Click(); // select "Cherry" in target list
+        // Act - the source list is empty, so scope the query to the target list to avoid matching
+        // its disabled placeholder option instead of "Cherry".
+        cut.Find("ul[aria-label='Target'] li[role='option']").Click();
         cut.Find("button[aria-label='Move selected items to Source']").Click();
 
         // Assert
@@ -263,8 +266,9 @@ public class TwPickListTests : TwBlazorTestBase
             .Add(p => p.TargetItemsChanged, EventCallback.Factory.Create<IEnumerable<string>>(
                 this, values => newTarget = values.ToList())));
 
-        // Act - select "Apple" (first item) and move it down
-        cut.FindAll("li[role='option']")[0].Click();
+        // Act - select "Apple" (first item); the source list is empty, so scope the query to the
+        // target list to avoid matching its disabled placeholder option.
+        cut.FindAll("ul[aria-label='Target'] li[role='option']")[0].Click();
         cut.Find("button[aria-label='Move selected Target item down']").Click();
 
         // Assert
