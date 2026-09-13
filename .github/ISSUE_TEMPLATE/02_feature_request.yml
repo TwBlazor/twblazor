@@ -1,8 +1,8 @@
 name: Feature Request
 description: Suggest a new feature for TwBlazor.
-title: "[Feature]: "
+title: "feat: "
 labels:
-  - enhancement
+  - feat
 body:
   - type: markdown
     attributes:
