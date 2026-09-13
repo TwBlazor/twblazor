@@ -124,13 +124,18 @@ jobs:
         shell: pwsh
         run: ./scripts/update-readme-version.ps1 -Version '${{ steps.version.outputs.version }}'
 
-      - name: Commit README
-        if: steps.readme.outputs.changed == 'true'
+      - name: Point Get Started docs install commands at this release
+        id: getstarted
+        shell: pwsh
+        run: ./scripts/update-readme-version.ps1 -Path docs/TwBlazor.Docs/Pages/GetStarted.razor -Version '${{ steps.version.outputs.version }}'
+
+      - name: Commit docs version bump
+        if: steps.readme.outputs.changed == 'true' || steps.getstarted.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
-          VERSION: ${{ steps.readme.outputs.version }}
+          VERSION: ${{ steps.version.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
@@ -144,14 +149,29 @@ jobs:
           # unlike GITHUB_TOKEN's. Without it this re-triggers this workflow on
           # a commit with no pull request behind it, so "Determine version
           # bump" would fail and redden every release.
-          BLOB="$(gh api "repos/$REPO/contents/README.md?ref=$BRANCH" --jq .sha)"
-          NEW="$(gh api -X PUT "repos/$REPO/contents/README.md" \
-            -f message="docs: point README install command at $VERSION [skip ci]" \
-            -f content="$(base64 -w0 README.md)" \
-            -f sha="$BLOB" \
-            -f branch="$BRANCH" \
-            --jq .commit.sha)"
-          echo "Created signed commit $NEW on $BRANCH."
+          #
+          # The Contents API commits one file per call, so each changed file
+          # gets its own commit, chained on the branch in turn - $NEW ends up
+          # holding whichever ran last, which is all that matters since the
+          # git reset below only needs a HEAD that has both in its ancestry.
+          commit_file() {
+            local path="$1" changed="$2"
+            if [ "$changed" != "true" ]; then
+              return
+            fi
+            local blob
+            blob="$(gh api "repos/$REPO/contents/$path?ref=$BRANCH" --jq .sha)"
+            NEW="$(gh api -X PUT "repos/$REPO/contents/$path" \
+              -f message="docs: point $path install command at $VERSION [skip ci]" \
+              -f content="$(base64 -w0 "$path")" \
+              -f sha="$blob" \
+              -f branch="$BRANCH" \
+              --jq .commit.sha)"
+            echo "Created signed commit $NEW on $BRANCH for $path."
+          }
+
+          commit_file "README.md" "${{ steps.readme.outputs.changed }}"
+          commit_file "docs/TwBlazor.Docs/Pages/GetStarted.razor" "${{ steps.getstarted.outputs.changed }}"
 
           # That commit only exists on the server, so HEAD is still the merge
           # commit. The tag below has to land on the new commit, and MinVer
