@@ -622,7 +622,7 @@ public static class Theme
                     {
                         Primary = $"{background.Medium.Primary} hover:bg-purple-700 active:bg-purple-800 {text.Medium.Light}",
                         Accent = "bg-fuchsia-700 hover:bg-fuchsia-800 active:bg-fuchsia-900 text-gray-100",
-                        Success = $"{background.Medium.Success} hover:bg-green-700 active:bg-green-800 {text.Medium.Light}",
+                        Success = $"{background.Medium.Success} hover:bg-green-700 active:bg-green-800 text-white",
                         Danger = "bg-red-700 hover:bg-red-800 active:bg-red-900 text-gray-100",
                         Warning = $"{background.Medium.Warning} hover:bg-yellow-600 active:bg-yellow-700 {text.Medium.Dark}",
                         Info = $"{background.Medium.Info} hover:bg-blue-700 active:bg-blue-800 {text.Medium.Light}",

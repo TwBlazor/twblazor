@@ -249,7 +249,7 @@ public class ColorBuilderTests : TwBlazorTestBase
     [Theory]
     [InlineData(Color.Primary, "bg-purple-600", "text-gray-100")]
     [InlineData(Color.Accent, "bg-fuchsia-700", "text-gray-100")]
-    [InlineData(Color.Success, "bg-green-700", "text-gray-100")]
+    [InlineData(Color.Success, "bg-green-700", "text-white")]
     [InlineData(Color.Danger, "bg-red-700", "text-gray-100")]
     [InlineData(Color.Warning, "bg-yellow-600", "text-gray-950")]
     [InlineData(Color.Info, "bg-blue-600", "text-gray-100")]
