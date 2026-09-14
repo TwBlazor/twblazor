@@ -22,6 +22,18 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Icon Buttons">
+        <Description>Passing <code>OnClick</code> wraps the icon in a circular button. It gets a hover state-layer and a press "pulse" automatically, even without a <code>Color</code> set.</Description>
+        <CodeExample Name="IconButtons">
+            <div class="d-flex gap-3 align-items-center mb-3">
+                <TwIcon Icon="Icon.Trash" Class="text-xl p-2" OnClick="DeleteIconClicked" AriaLabel="Delete" />
+                <TwIcon Icon="Icon.Github" Class="text-xl p-2 text-purple-600" OnClick="GithubIconClicked" AriaLabel="View on GitHub" />
+                <TwIcon Icon="Icon.Heart_Fill" Class="text-xl p-2 text-red-600" OnClick="LikeIconClicked" AriaLabel="Like" />
+                <TwIcon Icon="Icon.Share" Class="text-xl p-2" OnClick="ShareIconClicked" AriaLabel="Share" />
+            </div>
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Icon Size">
         <Description>You can control icon sizes using <a href="https://tailwindcss.com/docs/font-size" target="_blank">Tailwind CSS font size</a> classes or passing in your owm.</Description>
         <CodeExample Name="IconSize">

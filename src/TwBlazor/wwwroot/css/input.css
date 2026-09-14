@@ -39,3 +39,32 @@
 .dark .tw-skeleton-wave::after {
     background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
 }
+
+/* Powers TwIcon's icon-button "pulse" (TwIconTheme.Pulse). CSS can't read click coordinates without
+   JS, so this blooms a currentColor circle from the button's own center on press rather than tracking
+   the pointer like a true MudBlazor ripple. Growing in uses a fast transition (set on the :active rule)
+   and fading back out on release uses a slow one (set on the base rule, which is what applies once
+   :active no longer matches) - independent of how briefly the button was pressed. */
+.tw-icon-pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 500ms ease-out, opacity 450ms ease-out;
+    pointer-events: none;
+}
+
+.tw-icon-pulse:active::after {
+    opacity: 0.25;
+    transform: scale(1);
+    transition: transform 120ms ease-out, opacity 80ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tw-icon-pulse::after {
+        transition: none;
+    }
+}

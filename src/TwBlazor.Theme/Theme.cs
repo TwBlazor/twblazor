@@ -808,6 +808,11 @@ public static class Theme
                     FileList = $"{typography.Size.Sm} text-gray-600 dark:text-gray-400",
                     ChipTextColor = "dark:text-white"
                 },
+                new TwIconTheme
+                {
+                    HoverBackground = "hover:bg-current/10 dark:hover:bg-current/15",
+                    Pulse = "relative tw-icon-pulse"
+                },
                 new TwLinkTheme
                 {
                     Default = $"underline-offset-2 hover:underline {transition.ColorsFast}"

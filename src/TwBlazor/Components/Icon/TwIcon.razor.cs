@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Enums;
 using TwBlazor.Extensions;
 using TwBlazor.Utilities;
@@ -17,6 +18,8 @@ namespace TwBlazor.Components;
 /// </remarks>
 public partial class TwIcon : TwBlazorComponentBase
 {
+    private TwIconTheme iconTheme => options.Theme.Components.Require<TwIconTheme>();
+
     /// <summary>
     /// Gets or sets the callback that is invoked when the icon is clicked.
     /// </summary>
@@ -98,8 +101,13 @@ public partial class TwIcon : TwBlazorComponentBase
     /// <see cref="TwBlazorComponentBase.Class"/> is treated as styling for the interactive element (padding, hover, focus, etc.),
     /// not the icon glyph itself, so it is combined here with <see cref="RootClass"/> rather than applied
     /// to the inner &lt;i&gt; - otherwise the button's clickable/focusable area wouldn't match its visual size.
+    /// The hover state-layer and press pulse are skipped for <see cref="Plain"/> icon buttons - Plain hands the
+    /// caller full control of appearance (e.g. a chip's close button already themes its own hover), and for
+    /// <see cref="Disabled"/> ones, which shouldn't hint at interactivity they don't have.
     /// </remarks>
     private string buttonClasses => new ClassBuilder(RootClass)
+        .AddClass(iconTheme.HoverBackground, !Plain && !Disabled)
+        .AddClass(iconTheme.Pulse, !Plain && !Disabled)
         .AddClass(Class)
         .Build();
 

@@ -35,6 +35,21 @@ public partial class Icons
         toastService.Show("Clicked like icon!", "Welcome to TwBlazor", Color.Danger, Enums.Icon.Heart);
     }
 
+    private void DeleteIconClicked()
+    {
+        toastService.Show("Clicked delete icon!", "Welcome to TwBlazor", Color.Danger, Enums.Icon.Trash);
+    }
+
+    private void GithubIconClicked()
+    {
+        toastService.Show("Clicked GitHub icon!", "Welcome to TwBlazor", Color.Primary, Enums.Icon.Github);
+    }
+
+    private void ShareIconClicked()
+    {
+        toastService.Show("Clicked share icon!", "Welcome to TwBlazor", Color.Info, Enums.Icon.Share);
+    }
+
     private const int displayCountIncrement = 40;
     private int displayCount { get; set; } = displayCountIncrement;
     private void LoadMoreIcons() => displayCount += displayCountIncrement;
