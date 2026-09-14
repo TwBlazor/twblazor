@@ -40,11 +40,6 @@
     background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
 }
 
-/* Powers TwIcon's icon-button "pulse" (TwIconTheme.Pulse). CSS can't read click coordinates without
-   JS, so this blooms a currentColor circle from the button's own center on press rather than tracking
-   the pointer like a true MudBlazor ripple. Growing in uses a fast transition (set on the :active rule)
-   and fading back out on release uses a slow one (set on the base rule, which is what applies once
-   :active no longer matches) - independent of how briefly the button was pressed. */
 .tw-icon-pulse::after {
     content: "";
     position: absolute;

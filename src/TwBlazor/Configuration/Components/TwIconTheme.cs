@@ -18,7 +18,7 @@ public class TwIconTheme
     /// </summary>
     /// <remarks>
     /// Tints the button's already-circular <c>rounded-full</c> shape with <c>currentColor</c> on hover, matching
-    /// the Material/MudBlazor icon button convention, instead of relying on the button's Color/Variant classes
+    /// the Material icon button convention, instead of relying on the button's Color/Variant classes
     /// (which are empty for the common colorless, text-variant icon button).
     /// </remarks>
     public required string HoverBackground { get; set; }
@@ -30,8 +30,7 @@ public class TwIconTheme
     /// Applies <c>position: relative</c> (the button's own <c>overflow-hidden</c> already comes from
     /// <see cref="TwButtonTheme.Base"/>) plus the <c>tw-icon-pulse</c> marker class defined in <c>input.css</c>,
     /// which blooms a <c>currentColor</c> circle from the button's center on <c>:active</c> and fades it back out
-    /// on release. A real MudBlazor-style ripple tracks the pointer's click coordinates via JS; this is a
-    /// CSS-only approximation centered on the button instead.
+    /// on release.
     /// </remarks>
     public required string Pulse { get; set; }
 }

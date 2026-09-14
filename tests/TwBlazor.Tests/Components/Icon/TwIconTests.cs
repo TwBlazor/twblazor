@@ -357,7 +357,7 @@ public class TwIconTests : TwBlazorTestBase
             .Add(p => p.Icon, Icons.Trash)
             .Add(p => p.OnClick, () => { }));
 
-        // Assert - default (non-Plain, non-Disabled) icon buttons get the MudBlazor-style circular
+        // Assert - default (non-Plain, non-Disabled) icon buttons get the circular
         // hover state-layer and press pulse, even with no Color set (where the button's own
         // variant/color classes are empty).
         var button = cut.Find("button");
