@@ -367,6 +367,27 @@ public class TwIconTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TwIcon_RendersButton_WithAbsoluteRootClass_OmitsConflictingRelative()
+    {
+        // Arrange & Act - RootClass positioning callers (e.g. TwCodeBlock's copy button, which passes
+        // "absolute right-3 mt-2") must keep their own "absolute": Tailwind's ".relative" and
+        // ".absolute" rules have equal specificity, so if the pulse's own "relative" were kept
+        // alongside it, whichever rule is later in the generated stylesheet would silently win and
+        // could break the caller's intended overlay positioning.
+        var cut = TestContext.Render<TwIcon>(parameters => parameters
+            .Add(p => p.Icon, Icons.Copy)
+            .Add(p => p.RootClass, "absolute right-3 mt-2")
+            .Add(p => p.OnClick, () => { }));
+
+        // Assert
+        var button = cut.Find("button");
+        var classes = button.GetAttribute("class");
+        Assert.Contains("absolute", classes);
+        Assert.Contains("tw-icon-pulse", classes);
+        Assert.DoesNotContain("relative", classes);
+    }
+
+    [Fact]
     public void TwIcon_RendersButton_Plain_OmitsHoverAndPulseClasses()
     {
         // Arrange & Act - Plain hands full control of appearance to the caller (e.g. a chip's close
