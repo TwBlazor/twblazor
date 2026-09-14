@@ -205,7 +205,14 @@ public partial class TwChip : TwBlazorComponentBase
             _ => "w-4 h-4 text-[10px]"
         };
 
-        return $"inline-flex items-center justify-center rounded-full bg-current/10 {sizeClass} font-semibold -ml-1";
+        // Outlined/Text chips render currentColor as saturated text on a light/transparent chip
+        // background, so a currentColor-tinted circle stays light and reads fine against it.
+        // Filled/Elevated chips render currentColor as light text on a saturated background - the
+        // same currentColor tint there produces near-white initials on a near-white circle, so a
+        // dark overlay is used instead to keep the initials legible.
+        var avatarBackground = Variant is ButtonVariant.Outlined or ButtonVariant.Text ? "bg-current/10" : "bg-black/20";
+
+        return $"inline-flex items-center justify-center rounded-full {avatarBackground} {sizeClass} font-semibold -ml-1";
     }
 
     /// <summary>
