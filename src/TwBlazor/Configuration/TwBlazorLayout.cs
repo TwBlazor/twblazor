@@ -245,16 +245,29 @@ public class TwBlazorInteraction
 [ExcludeFromCodeCoverage]
 public class TwBlazorBorderWidth
 {
-    /// <summary>Gets or sets the "border-0" (no border) width class.</summary>
+    /// <summary>
+    /// Gets or sets the "border-0" (no border) width class.
+    /// </summary>
     public string None { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the default 1px "border" width class.</summary>
+    /// <summary>
+    /// Gets or sets the default 1px "border" width class.
+    /// </summary>
     public string Thin { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the 2px "border-2" width class.</summary>
+    /// <summary>
+    /// Gets or sets the default 1.5px "border" width class.
+    /// </summary>
+    public string Medium { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the 2px "border-2" width class.
+    /// </summary>
     public string Thick { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the thick leading-edge border class used for accent bars (e.g. alerts, toasts).</summary>
+    /// <summary>
+    /// Gets or sets the thick leading-edge border class used for accent bars (e.g. alerts, toasts).
+    /// </summary>
     public string AccentEdge { get; set; } = string.Empty;
 }
 

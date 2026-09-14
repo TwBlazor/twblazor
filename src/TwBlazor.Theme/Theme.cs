@@ -533,6 +533,7 @@ public static class Theme
         {
             None = "border-0",
             Thin = "border",
+            Medium = "border-[1.5px]",
             Thick = "border-2",
             AccentEdge = "border-l-4"
         };
@@ -630,14 +631,14 @@ public static class Theme
                     },
                     Outlined = new()
                     {
-                        Primary = $"{text.Medium.Primary} {darkText.Light.Primary} {transparentBackground} {hoverColors.Primary} {borderWidth.Thick} {borderColors.Primary}",
-                        Accent = $"{text.Medium.Accent} {darkText.Light.Accent} {transparentBackground} {hoverColors.Accent} {borderWidth.Thick} {borderColors.Accent}",
-                        Success = $"{text.Medium.Success} {darkText.Light.Success} {transparentBackground} {hoverColors.Success} {borderWidth.Thick} {borderColors.Success}",
-                        Danger = $"{text.Medium.Danger} {darkText.Light.Danger} {transparentBackground} {hoverColors.Danger} {borderWidth.Thick} {borderColors.Danger}",
-                        Warning = $"{text.Medium.Warning} {darkText.Light.Warning} {transparentBackground} {hoverColors.Warning} {borderWidth.Thick} {borderColors.Warning}",
-                        Info = $"{text.Medium.Info} {darkText.Light.Info} {transparentBackground} {hoverColors.Info} {borderWidth.Thick} {borderColors.Info}",
-                        Light = $"{text.Light.Dark} {transparentBackground} {hoverColors.Light} {borderWidth.Thick} {borderColors.Light}",
-                        Dark = $"{text.Medium.Dark} {transparentBackground} {hoverColors.Dark} {borderWidth.Thick} {borderColors.Dark}",
+                        Primary = $"{text.Medium.Primary} {darkText.Light.Primary} {transparentBackground} {hoverColors.Primary} {borderWidth.Medium} {borderColors.Primary}",
+                        Accent = $"{text.Medium.Accent} {darkText.Light.Accent} {transparentBackground} {hoverColors.Accent} {borderWidth.Medium} {borderColors.Accent}",
+                        Success = $"{text.Medium.Success} {darkText.Light.Success} {transparentBackground} {hoverColors.Success} {borderWidth.Medium} {borderColors.Success}",
+                        Danger = $"{text.Medium.Danger} {darkText.Light.Danger} {transparentBackground} {hoverColors.Danger} {borderWidth.Medium} {borderColors.Danger}",
+                        Warning = $"{text.Medium.Warning} {darkText.Light.Warning} {transparentBackground} {hoverColors.Warning} {borderWidth.Medium} {borderColors.Warning}",
+                        Info = $"{text.Medium.Info} {darkText.Light.Info} {transparentBackground} {hoverColors.Info} {borderWidth.Medium} {borderColors.Info}",
+                        Light = $"{text.Light.Dark} {transparentBackground} {hoverColors.Light} {borderWidth.Medium} {borderColors.Light}",
+                        Dark = $"{text.Medium.Dark} {transparentBackground} {hoverColors.Dark} {borderWidth.Medium} {borderColors.Dark}",
                     },
                     Text = new()
                     {

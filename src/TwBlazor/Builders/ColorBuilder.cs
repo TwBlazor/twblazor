@@ -55,7 +55,7 @@ public class ColorBuilder(TwBlazorOptions options)
             Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Light.Info}",
             Color.Light => $"{options.Theme.Colors.TextColors.Medium.Light} {options.Theme.Colors.DarkTextColors.Medium.Light}",
             Color.Dark => $"{options.Theme.Colors.TextColors.Medium.Dark} {options.Theme.Colors.DarkTextColors.Medium.Dark}",
-            _ => $"{options.Theme.Colors.TextColors.Medium.Primary} {options.Theme.Colors.DarkTextColors.Light.Primary}"
+            _ => string.Empty
         };
     }
 

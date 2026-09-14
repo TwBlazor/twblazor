@@ -35,7 +35,7 @@ public partial class TwChip : TwBlazorComponentBase
     /// <summary>
     /// Gets or sets the color theme of the chip.
     /// </summary>
-    [Parameter] public Color Color { get; set; } = Enums.Color.Primary;
+    [Parameter] public Color Color { get; set; } = Color.Primary;
 
     /// <summary>
     /// Gets or sets the chip variant.
