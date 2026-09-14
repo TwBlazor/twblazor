@@ -5,11 +5,11 @@
 <div id="@Id" class="@classes" style="@Style" @attributes="Attributes" aria-label="@AriaLabel" aria-labelledby="@AriaLabelledBy">
     @if (copied)
     {
-        <TwIcon OnClick="@Copy" Icon="Icon.Check2" Class="@options.Theme.Spacing.Padding.Standard" RootClass="@theme.CopyButtonWrapper" AriaLabel="Copied" />
+        <TwIcon OnClick="@Copy" Icon="Icon.Check2" Class="@options.Theme.Spacing.Padding.Lg" RootClass="@theme.CopyButtonWrapper" AriaLabel="Copied" />
     }
     else
     {
-        <TwIcon OnClick="@Copy" Icon="Icon.Copy" Class="@options.Theme.Spacing.Padding.Standard" RootClass="@theme.CopyButtonWrapper" AriaLabel="Copy code" />
+        <TwIcon OnClick="@Copy" Icon="Icon.Copy" Class="@options.Theme.Spacing.Padding.Lg" RootClass="@theme.CopyButtonWrapper" AriaLabel="Copy code" />
     }
     <span class="@options.Theme.Display.ScreenReaderOnly" aria-live="polite">@statusMessage</span>
     <pre>

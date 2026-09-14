@@ -141,16 +141,16 @@ public class TwBlazorFlexbox
 public class TwBlazorSpacingScale
 {
     /// <summary>Gets or sets the tightest preset, used for the smallest touch targets.</summary>
-    public string Tight { get; set; } = string.Empty;
+    public string Sm { get; set; } = string.Empty;
 
     /// <summary>Gets or sets the compact preset, used for dense controls.</summary>
-    public string Compact { get; set; } = string.Empty;
+    public string Md { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the standard preset, a step up from <see cref="Compact"/>.</summary>
-    public string Standard { get; set; } = string.Empty;
+    /// <summary>Gets or sets the standard preset, a step up from <see cref="Md"/>.</summary>
+    public string Lg { get; set; } = string.Empty;
 
     /// <summary>Gets or sets the comfortable preset, used for cards, dialogs, and toasts.</summary>
-    public string Comfortable { get; set; } = string.Empty;
+    public string Xl { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -417,14 +417,25 @@ public class TwBlazorFontWeightScale
 [ExcludeFromCodeCoverage]
 public class TwBlazorTypography
 {
-    /// <summary>Gets or sets the font-size scale. See <see cref="TwBlazorFontSizeScale"/>.</summary>
+    /// <summary>
+    /// Gets or sets the font-size scale. See <see cref="TwBlazorFontSizeScale"/>.
+    /// </summary>
     public TwBlazorFontSizeScale Size { get; set; } = new();
 
-    /// <summary>Gets or sets the font-weight scale. See <see cref="TwBlazorFontWeightScale"/>.</summary>
+    /// <summary>
+    /// Gets or sets the font-weight scale. See <see cref="TwBlazorFontWeightScale"/>.
+    /// </summary>
     public TwBlazorFontWeightScale Weight { get; set; } = new();
 
-    /// <summary>Gets or sets the "text-center" text-alignment class.</summary>
+    /// <summary>
+    /// Gets or sets the "text-center" text-alignment class.
+    /// </summary>
     public string AlignCenter { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the "wrap-break-word" text-alignment class.
+    /// </summary>
+    public string WrapBreakWord { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -476,20 +487,64 @@ public class TwBlazorIconSize
 [ExcludeFromCodeCoverage]
 public class TwBlazorSizing
 {
-    /// <summary>Gets or sets the "w-full" (100% width) class.</summary>
+    
+
+    /// <summary>
+    /// Gets or sets the "w-full" (100% width) class.
+    /// </summary>
     public string FullWidth { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the "h-full" (100% height) class.</summary>
+    /// <summary>
+    /// Gets or sets the "h-full" (100% height) class.
+    /// </summary>
     public string FullHeight { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the combined 100% width and height classes.</summary>
+    /// <summary>
+    /// Gets or sets the combined 100% width and height classes.
+    /// </summary>
     public string Full { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the "min-w-0" class used to let a flex/grid child shrink below its content size.</summary>
+    /// <summary>
+    /// Gets or sets the "min-w-0" class used to let a flex/grid child shrink below its content size.
+    /// </summary>
     public string MinWidthNone { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets the reusable square icon size scale. See <see cref="TwBlazorIconSize"/>.</summary>
+    /// <summary>
+    /// Gets or sets the reusable square icon size scale. See <see cref="TwBlazorIconSize"/>.
+    /// </summary>
     public TwBlazorIconSize Icon { get; set; } = new();
+}
+
+public class TwBlazorHeight
+{
+    /// <summary>
+    /// Gets or sets the "sm" height class.
+    /// </summary>
+    public string Sm { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the "md" height class.
+    /// </summary>
+    public string Md { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the "lg" height class.
+    /// </summary>
+    public string Lg{ get; set; } = string.Empty;
+}
+
+public class TwBlazorWidth
+{
+    /// <summary>
+    /// Gets or sets the "sm" width class.
+    /// </summary>
+    public string Sm { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the "md" width class.
+    /// </summary>
+    public string Md { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the "lg" width class.
+    /// </summary>
+    public string Lg{ get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -498,6 +553,8 @@ public class TwBlazorSizing
 [ExcludeFromCodeCoverage]
 public class TwBlazorOverflow
 {
-    /// <summary>Gets or sets the "overflow-hidden" class.</summary>
+    /// <summary>
+    /// Gets or sets the "overflow-hidden" class.
+    /// </summary>
     public string Hidden { get; set; } = string.Empty;
 }

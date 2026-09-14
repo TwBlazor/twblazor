@@ -28,6 +28,7 @@
     --color-yellow-950: oklch(28.6% 0.066 53.813);
     --color-green-50: oklch(98.2% 0.018 155.826);
     --color-green-200: oklch(92.5% 0.084 155.995);
+    --color-green-300: oklch(87.1% 0.15 154.449);
     --color-green-400: oklch(79.2% 0.209 151.711);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -859,9 +860,6 @@
   .flex-shrink {
     flex-shrink: 1;
   }
-  .flex-shrink-0 {
-    flex-shrink: 0;
-  }
   .shrink {
     flex-shrink: 1;
   }
@@ -1543,8 +1541,14 @@
   .bg-green-200 {
     background-color: var(--color-green-200);
   }
+  .bg-green-300 {
+    background-color: var(--color-green-300);
+  }
   .bg-green-600 {
     background-color: var(--color-green-600);
+  }
+  .bg-green-700 {
+    background-color: var(--color-green-700);
   }
   .bg-green-900 {
     background-color: var(--color-green-900);
@@ -1795,9 +1799,6 @@
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
   }
-  .pt-8 {
-    padding-top: calc(var(--spacing) * 8);
-  }
   .pr-3 {
     padding-right: calc(var(--spacing) * 3);
   }
@@ -1964,9 +1965,6 @@
   }
   .text-\[oklch\(55\%_0\.006_285\.885\)\] {
     color: oklch(55% 0.006 285.885);
-  }
-  .text-\[oklch\(60\%_0\.006_285\.885\)\] {
-    color: oklch(60% 0.006 285.885);
   }
   .text-black {
     color: var(--color-black);
@@ -2432,9 +2430,6 @@
     content: var(--tw-content);
     --tw-duration: 300ms;
     transition-duration: 300ms;
-  }
-  .last\:justify-end:last-child {
-    justify-content: flex-end;
   }
   .last\:pb-0:last-child {
     padding-bottom: 0px;
@@ -3536,10 +3531,6 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
-  .\[\&\:\:-moz-progress-bar\]\:duration-300::-moz-progress-bar {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
-  }
   .dark\:\[\&\:\:-moz-progress-bar\]\:bg-blue-500:where(.dark, .dark *)::-moz-progress-bar {
     background-color: var(--color-blue-500);
   }
@@ -3595,10 +3586,6 @@
     transition-property: width;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-  .\[\&\:\:-webkit-progress-value\]\:duration-300::-webkit-progress-value {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
   }
   .dark\:\[\&\:\:-webkit-progress-value\]\:bg-blue-500:where(.dark, .dark *)::-webkit-progress-value {
     background-color: var(--color-blue-500);
