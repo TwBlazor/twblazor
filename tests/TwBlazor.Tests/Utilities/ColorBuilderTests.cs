@@ -158,13 +158,14 @@ public class ColorBuilderTests : TwBlazorTestBase
     }
 
     [Fact]
-    public void GetOutlinedVariantColor_ReturnsEmptyString_WhenColorIsNull()
+    public void GetOutlinedVariantColor_FallsBackToPrimary_WhenColorIsNull()
     {
         // Act
         var result = ColorBuilder.GetOutlinedVariantColor(null);
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.Equal(ColorBuilder.GetOutlinedVariantColor(Color.Primary), result);
+        Assert.NotEqual(string.Empty, result);
     }
 
     [Fact]
@@ -248,7 +249,7 @@ public class ColorBuilderTests : TwBlazorTestBase
     [Theory]
     [InlineData(Color.Primary, "bg-purple-600", "text-gray-100")]
     [InlineData(Color.Accent, "bg-fuchsia-700", "text-gray-100")]
-    [InlineData(Color.Success, "bg-green-600", "text-gray-100")]
+    [InlineData(Color.Success, "bg-green-700", "text-gray-100")]
     [InlineData(Color.Danger, "bg-red-700", "text-gray-100")]
     [InlineData(Color.Warning, "bg-yellow-600", "text-gray-950")]
     [InlineData(Color.Info, "bg-blue-600", "text-gray-100")]
