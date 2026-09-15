@@ -10,6 +10,7 @@
 
     <select id="@Id"
             class="@classes"
+            multiple="@Multiple"
             required="@Required"
             @onchange="@HandleChange"
             @attributes="@Attributes"
@@ -19,13 +20,13 @@
             aria-describedby="@errorId"
             aria-label="@AriaLabel"
             aria-labelledby="@AriaLabelledBy">
-        @if (!Required)
+        @if (!Required && !Multiple)
         {
             <option value="0" class="@theme.SelectOption">@Placeholder</option>
         }
         @foreach (var (key, value) in parsedValues)
         {
-            <option value="@key" selected="@(key == selectedValueId)" class="@theme.SelectOption">
+            <option value="@key" selected="@(Multiple ? selectedValueIds.Contains(key) : key == selectedValueId)" class="@theme.SelectOption">
                 @GetDisplayText(value)
             </option>
         }

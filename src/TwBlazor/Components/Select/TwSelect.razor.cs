@@ -32,6 +32,9 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
     /// <summary>
     /// Gets or sets the currently selected value.
     /// </summary>
+    /// <remarks>
+    /// Not used when <see cref="Multiple"/> is <see langword="true"/> - bind <see cref="SelectedValues"/> instead.
+    /// </remarks>
     [Parameter] public T SelectedValue { get; set; } = default!;
 
     /// <summary>
@@ -40,8 +43,33 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
     [Parameter] public EventCallback<T> SelectedValueChanged { get; set; } = default!;
 
     /// <summary>
+    /// Gets or sets whether more than one option can be selected at once.
+    /// </summary>
+    /// <remarks>
+    /// Renders the underlying element as a native <c>&lt;select multiple&gt;</c> rather than a bespoke
+    /// listbox, so mobile/touch browsers still get their own platform multi-select UI. Bind
+    /// <see cref="SelectedValues"/>/<see cref="SelectedValuesChanged"/> rather than
+    /// <see cref="SelectedValue"/>/<see cref="SelectedValueChanged"/> when this is <see langword="true"/>.
+    /// </remarks>
+    [Parameter] public bool Multiple { get; set; }
+
+    /// <summary>
+    /// Gets or sets the currently selected values when <see cref="Multiple"/> is <see langword="true"/>.
+    /// </summary>
+    [Parameter] public IEnumerable<T> SelectedValues { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the callback that is invoked when the selection changes while <see cref="Multiple"/> is <see langword="true"/>.
+    /// </summary>
+    [Parameter] public EventCallback<IEnumerable<T>> SelectedValuesChanged { get; set; }
+
+    /// <summary>
     /// Gets or sets the placeholder text displayed when no value is selected.
     /// </summary>
+    /// <remarks>
+    /// Not shown when <see cref="Multiple"/> is <see langword="true"/> - a multi-select doesn't need a
+    /// dedicated "nothing selected" option, since simply selecting nothing already represents that.
+    /// </remarks>
     [Parameter] public string Placeholder { get; set; } = "Select an option...";
 
     /// <summary>
@@ -62,6 +90,8 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
 
     private int selectedValueId;
 
+    private HashSet<int> selectedValueIds { get; set; } = [];
+
     /// <summary>
     /// Gets the CSS classes applied to the select element.
     /// </summary>
@@ -78,7 +108,10 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
         // The Filled variant already sets a real background, so it's left alone here.
         .AddClass(theme.SelectNativeBackground, effectiveVariant != InputVariant.Filled)
         .AddClass(Disabled ? $"{options.Theme.Interaction.DisabledOpacity} {options.Theme.Interaction.DisabledCursor}" : string.Empty)
-        .AddClass(ReadOnly ? theme.SelectReadOnlyBackground : string.Empty)
+        // Multiple reuses the same "no dropdown arrow" override as ReadOnly - a multi-select renders
+        // as an inline scrollable listbox rather than a closed popup, so the arrow (which implies a
+        // collapsed dropdown you click open) doesn't apply to it either.
+        .AddClass(ReadOnly || Multiple ? theme.SelectReadOnlyBackground : string.Empty)
         .AddClass(ReadOnly && !Disabled ? options.Theme.Interaction.PointerEventsNone : string.Empty)
         .AddClass(Class)
         .Build();
@@ -120,16 +153,31 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
         parsedValues = [];
         var valueId = 1;
 
+        var selectedSet = Multiple ? new HashSet<T>(SelectedValues, EqualityComparer<T>.Default) : null;
+        var newSelectedIds = Multiple ? new HashSet<int>() : null;
+
         foreach (var value in Values)
         {
             parsedValues.Add(valueId, value);
 
-            if (EqualityComparer<T>.Default.Equals(SelectedValue, value))
+            if (Multiple)
+            {
+                if (selectedSet!.Contains(value))
+                {
+                    newSelectedIds!.Add(valueId);
+                }
+            }
+            else if (EqualityComparer<T>.Default.Equals(SelectedValue, value))
             {
                 selectedValueId = valueId;
             }
 
             valueId++;
+        }
+
+        if (Multiple)
+        {
+            selectedValueIds = newSelectedIds!;
         }
     }
 
@@ -157,6 +205,37 @@ public partial class TwSelect<T> : TwBlazorTextInputComponentBase
     {
         if (ReadOnly || Disabled)
             return;
+
+        if (Multiple)
+        {
+            // ChangeEventArgs.Value for a native <select multiple> is the array of selected option
+            // values (see the @onchange "Multiple option selection" binding support in Blazor docs),
+            // not a single scalar - so it's read as a string[] here rather than parsed as one int.
+            if (e.Value is not string[] selectedIdStrings)
+                return;
+
+            var newIds = new HashSet<int>();
+            var newValues = new List<T>();
+
+            foreach (var idString in selectedIdStrings)
+            {
+                if (int.TryParse(idString, out var id) && parsedValues.TryGetValue(id, out var value))
+                {
+                    newIds.Add(id);
+                    newValues.Add(value);
+                }
+            }
+
+            selectedValueIds = newIds;
+            SelectedValues = newValues;
+
+            if (SelectedValuesChanged.HasDelegate)
+            {
+                await SelectedValuesChanged.InvokeAsync(SelectedValues);
+            }
+
+            return;
+        }
 
         if (int.TryParse(e.Value?.ToString(), out var newValueId))
         {

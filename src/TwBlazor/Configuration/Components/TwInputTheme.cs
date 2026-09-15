@@ -54,7 +54,9 @@ public class TwInputTheme
 
     /// <summary>
     /// Gets or sets the background override applied to a read-only select, suppressing its dropdown
-    /// arrow background image so it doesn't imply the value can still be changed.
+    /// arrow background image so it doesn't imply the value can still be changed. Also applied to a
+    /// multi-select (<see cref="TwBlazor.Components.TwSelect{T}.Multiple"/>), since that renders as
+    /// an inline scrollable listbox rather than a closed dropdown, so the same "no arrow" treatment applies.
     /// </summary>
     public required string SelectReadOnlyBackground { get; set; }
 

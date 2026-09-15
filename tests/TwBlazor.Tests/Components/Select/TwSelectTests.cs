@@ -844,4 +844,195 @@ public class TwSelectTests : TwBlazorTestBase
         // Assert
         Assert.False(callbackInvoked);
     }
+
+    [Fact]
+    public void TwSelect_Multiple_RendersMultipleAttribute()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.True(select.HasAttribute("multiple"));
+    }
+
+    [Fact]
+    public void TwSelect_NotMultiple_DoesNotRenderMultipleAttribute()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.False(select.HasAttribute("multiple"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_DoesNotRenderPlaceholder()
+    {
+        // Arrange & Act - a multi-select has no need for a "nothing selected" placeholder option,
+        // since simply selecting nothing already represents that.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var options = cut.FindAll("option");
+        Assert.Equal(3, options.Count);
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("option[value='0']"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_SelectsInitialValues()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, new[] { "Option1", "Option3" }));
+
+        // Assert
+        var options = cut.FindAll("option");
+        var selected = options.Where(o => o.HasAttribute("selected")).Select(o => o.TextContent).ToList();
+        Assert.Equal(["Option1", "Option3"], selected);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_InvokesSelectedValuesChanged_OnChange()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+
+        // Act - selects Option1 (id 1) and Option3 (id 3)
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = new[] { "1", "3" } });
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Equal(["Option1", "Option3"], selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_InvokesSelectedValuesChanged_WithEmptyCollection_WhenDeselectingAll()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, new[] { "Option1" })
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = Array.Empty<string>() });
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Empty(selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_DoesNotInvokeCallback_WhenReadonly()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.ReadOnly, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = new[] { "1" } });
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_DoesNotInvokeCallback_WhenDisabled()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Disabled, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = new[] { "1" } });
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_IgnoresNonArrayEventValue()
+    {
+        // Arrange - defensive: a plain scalar change value should never crash the multi-select handler.
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change("1");
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_RemovesDropdownArrow()
+    {
+        // Arrange & Act - a multi-select renders as an inline listbox, not a closed dropdown, so the
+        // arrow background (implying a collapsed popup you click open) is suppressed just like ReadOnly.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, _twoStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.Contains("!bg-none", select.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_WithComplexObjects_SelectsAndChangesCorrectly()
+    {
+        // Arrange
+        var values = new[]
+        {
+            new TestModel { Id = 1, Name = "First" },
+            new TestModel { Id = 2, Name = "Second" },
+            new TestModel { Id = 3, Name = "Third" }
+        };
+        IEnumerable<TestModel>? selectedModels = null;
+
+        var cut = TestContext.Render<TwSelect<TestModel>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.Values, values)
+            .Add(p => p.PropertyName, "Name")
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<TestModel>>(this, v => selectedModels = v)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = new[] { "1", "2" } });
+
+        // Assert
+        Assert.NotNull(selectedModels);
+        Assert.Equal(["First", "Second"], selectedModels.Select(m => m.Name));
+    }
 }
