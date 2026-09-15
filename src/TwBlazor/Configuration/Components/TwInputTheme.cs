@@ -59,6 +59,69 @@ public class TwInputTheme
     public required string SelectReadOnlyBackground { get; set; }
 
     /// <summary>
+    /// Gets or sets the layout classes applied to a multi-select's closed trigger
+    /// (<see cref="TwBlazor.Components.TwSelect{T}.Multiple"/>), on top of <see cref="SelectBase"/>.
+    /// </summary>
+    /// <remarks>
+    /// The trigger holds a wrapping row of <see cref="TwBlazor.Components.TwChip"/> chips (one per
+    /// selected option, or the placeholder text while none are selected) rather than a single line of
+    /// text the way a real &lt;select&gt; would, so it needs its own flex-wrap layout.
+    /// </remarks>
+    public required string SelectMultiTriggerLayout { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the real, invisible <c>&lt;select multiple&gt;</c> layered on
+    /// top of a multi-select's decorative closed trigger when the native picker is in use.
+    /// </summary>
+    /// <remarks>
+    /// A native <c>&lt;select multiple&gt;</c> can't render as a closed, single-row trigger the way a
+    /// single <c>&lt;select&gt;</c> can - it's always an expanded listbox. So the decorative trigger
+    /// (styled like <see cref="SelectBase"/>) is what's actually seen, and this real control sits over
+    /// it, fully transparent, so a tap/click still lands on genuine native form control and opens the
+    /// platform's own multi-select UI (e.g. the full-screen sheet iOS/Android show for it).
+    /// </remarks>
+    public required string SelectNativeMultiOverlay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the real, focusable &lt;button&gt; at the end of a multi-select's
+    /// custom-popover trigger that actually opens the popover.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately a plain &lt;button&gt; sibling after the selected-option chips (not a wrapping
+    /// element around them) - an ARIA "button" role wrapping other focusable controls (each chip's own
+    /// close button) is a nested-interactive-controls violation, since assistive tech can't reliably
+    /// represent one interactive control inside another. It fills any remaining row width so most of the
+    /// closed trigger's empty space is still clickable, and shows <see cref="TwBlazor.Components.TwSelect{T}.Placeholder"/>
+    /// when nothing is selected.
+    /// </remarks>
+    public required string SelectMultiOpenButton { get; set; }
+
+    /// <summary>
+    /// Gets or sets the positioning classes for a multi-select's custom checkbox-list popover panel.
+    /// </summary>
+    public required string SelectPanelPosition { get; set; }
+
+    /// <summary>
+    /// Gets or sets the padding/scroll classes appended to a multi-select popover panel's surface
+    /// (background/border/rounded/shadow come from <c>PopoverBuilder.GetSurfaceClasses</c> instead).
+    /// </summary>
+    public required string SelectPanelSurface { get; set; }
+
+    /// <summary>
+    /// Gets or sets a forced text color override for the checkbox labels inside a multi-select popover
+    /// panel.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="TwCheckboxTheme.LabelBase"/> uses a muted caption-style color, appropriate for a label
+    /// sitting next to a single checkbox but too low-contrast against <see cref="TwOverlayTheme.PopoverBackground"/>
+    /// in dark mode once it's the primary, repeated content of a whole option list - so this uses an
+    /// arbitrary descendant selector (targeting the label elements <see cref="TwBlazor.Components.TwCheckboxGroup{TValue}"/>
+    /// renders) with <c>!important</c> to win over that shared style, scoped to just this popover rather
+    /// than changing every standalone checkbox's label color.
+    /// </remarks>
+    public required string SelectPanelItemText { get; set; }
+
+    /// <summary>
     /// Gets or sets the base classes for input labels.
     /// </summary>
     public required string LabelBase { get; set; }

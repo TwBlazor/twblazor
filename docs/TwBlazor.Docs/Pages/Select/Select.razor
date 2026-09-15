@@ -2,7 +2,7 @@
 
 <PageTitle>TwSelect | twblazor</PageTitle>
 <HeadContent>
-    <meta name="description" content="TwSelect is a Blazor select component that supports complex objects, numbers, required validation and disabled or readonly states." />
+    <meta name="description" content="TwSelect is a Blazor select component that supports complex objects, numbers, multi-select, required validation and disabled or readonly states." />
     <link rel="canonical" href="https://twblazor.com/select" />
 </HeadContent>
 
@@ -127,6 +127,27 @@
             }
         </CodeExample>
     </PageCard>
+
+    <PageCard Title="Multi-select">
+        <Description>
+            Set <code>Multiple</code> and bind <code>SelectedValues</code> (instead of <code>SelectedValue</code>) to let more than
+            one option be selected at once. It renders as a native <code>&lt;select multiple&gt;</code>, so mobile/touch browsers
+            still get their own platform multi-select UI rather than a bespoke one.
+        </Description>
+        <CodeExample Name="SelectMultiple">
+            <TwSelect T="string"
+                      Label="Skills"
+                      Values="@skills"
+                      Multiple
+                      @bind-SelectedValues="@selectedSkills"
+                      AriaLabel="Skills select" />
+
+            @if (selectedSkills.Any())
+            {
+                <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Selected Skills: <strong>@string.Join(", ", selectedSkills)</strong></p>
+            }
+        </CodeExample>
+    </PageCard>
 </PageContainer>
 
 @code {
@@ -162,4 +183,10 @@
 
     private int selectedQuantity = 0;
     private readonly int[] quantities = [1, 2, 3, 4, 5, 10, 15, 20, 25, 50];
+
+    private IEnumerable<string> selectedSkills = ["C#"];
+    private readonly string[] skills =
+    [
+        "C#", "JavaScript", "TypeScript", "Python", "Go", "Rust", "SQL", "HTML", "CSS", "Docker"
+    ];
 }
