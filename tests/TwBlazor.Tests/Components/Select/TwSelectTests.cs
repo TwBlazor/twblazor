@@ -950,6 +950,26 @@ public class TwSelectTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TwSelect_Multiple_Custom_OpensPanel_OnTriggerClick_WhenAlreadyHasSelectedValues()
+    {
+        // Arrange - regression test: once at least one option is selected the open button has no text
+        // content of its own (the chips take its place), so it needs an explicit minimum height (see
+        // TwInputTheme.SelectMultiOpenButton) or it collapses to zero height and stops being clickable.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, new[] { "Option1" }));
+
+        // Act
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert
+        var panel = cut.Find("div[role='dialog']");
+        Assert.Equal(3, panel.QuerySelectorAll("input[type='checkbox']").Length);
+    }
+
+    [Fact]
     public void TwSelect_Multiple_Custom_PanelForcesReadableLabelTextColor()
     {
         // Arrange & Act - TwCheckboxTheme.LabelBase uses a muted caption color that's too low-contrast
