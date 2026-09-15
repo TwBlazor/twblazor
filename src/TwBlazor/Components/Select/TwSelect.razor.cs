@@ -378,46 +378,62 @@ public partial class TwSelect<T> : TwPopoverPickerComponentBase
 
         if (Multiple)
         {
-            // ChangeEventArgs.Value for a native <select multiple> is the array of selected option
-            // values (see the @onchange "Multiple option selection" binding support in Blazor docs),
-            // not a single scalar - so it's read as a string[] here rather than parsed as one int.
-            if (e.Value is not string[] selectedIdStrings)
-                return;
+            await HandleMultipleChangeAsync(e);
+        }
+        else
+        {
+            await HandleSingleChangeAsync(e);
+        }
+    }
 
-            var newIds = new HashSet<int>();
-            var newValues = new List<T>();
-
-            foreach (var idString in selectedIdStrings)
-            {
-                if (int.TryParse(idString, out var id) && parsedValues.TryGetValue(id, out var value))
-                {
-                    newIds.Add(id);
-                    newValues.Add(value);
-                }
-            }
-
-            selectedValueIds = newIds;
-            SelectedValues = newValues;
-
-            if (SelectedValuesChanged.HasDelegate)
-            {
-                await SelectedValuesChanged.InvokeAsync(SelectedValues);
-            }
-
+    /// <summary>
+    /// Handles a change event from the native, invisible <c>&lt;select multiple&gt;</c> overlay.
+    /// </summary>
+    private async Task HandleMultipleChangeAsync(ChangeEventArgs e)
+    {
+        // ChangeEventArgs.Value for a native <select multiple> is the array of selected option
+        // values (see the @onchange "Multiple option selection" binding support in Blazor docs),
+        // not a single scalar - so it's read as a string[] here rather than parsed as one int.
+        if (e.Value is not string[] selectedIdStrings)
             return;
+
+        var newIds = new HashSet<int>();
+        var newValues = new List<T>();
+
+        foreach (var idString in selectedIdStrings)
+        {
+            if (int.TryParse(idString, out var id) && parsedValues.TryGetValue(id, out var value))
+            {
+                newIds.Add(id);
+                newValues.Add(value);
+            }
         }
 
-        if (int.TryParse(e.Value?.ToString(), out var newValueId))
+        selectedValueIds = newIds;
+        SelectedValues = newValues;
+
+        if (SelectedValuesChanged.HasDelegate)
         {
-            selectedValueId = newValueId;
-            if (parsedValues.TryGetValue(selectedValueId, out var selectedItem))
-            {
-                SelectedValue = selectedItem;
-                if (SelectedValueChanged.HasDelegate)
-                {
-                    await SelectedValueChanged.InvokeAsync(SelectedValue);
-                }
-            }
+            await SelectedValuesChanged.InvokeAsync(SelectedValues);
+        }
+    }
+
+    /// <summary>
+    /// Handles a change event from the single-select <c>&lt;select&gt;</c> element.
+    /// </summary>
+    private async Task HandleSingleChangeAsync(ChangeEventArgs e)
+    {
+        if (!int.TryParse(e.Value?.ToString(), out var newValueId))
+            return;
+
+        selectedValueId = newValueId;
+        if (!parsedValues.TryGetValue(selectedValueId, out var selectedItem))
+            return;
+
+        SelectedValue = selectedItem;
+        if (SelectedValueChanged.HasDelegate)
+        {
+            await SelectedValueChanged.InvokeAsync(SelectedValue);
         }
     }
 }

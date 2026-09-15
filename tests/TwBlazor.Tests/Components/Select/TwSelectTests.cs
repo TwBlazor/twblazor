@@ -18,6 +18,11 @@ public class TwSelectTests : TwBlazorTestBase
     private static readonly string[] _singleStringOption = ["Option1"];
     private static readonly int[] _intOptions = [1, 2, 3];
     private static readonly int[] _zeroOneTwoIntOptions = [0, 1, 2];
+    private static readonly string[] _option1AndOption3Selected = ["Option1", "Option3"];
+    private static readonly string[] _option1Selected = ["Option1"];
+    private static readonly string[] _selectedIds1And3 = ["1", "3"];
+    private static readonly string[] _selectedId1 = ["1"];
+    private static readonly string[] _selectedIds1And2 = ["1", "2"];
     private class TestModel
     {
         public int Id { get; set; }
@@ -900,7 +905,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1", "Option3" }));
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
 
         // Assert
         var button = cut.Find("button[aria-haspopup='listbox']");
@@ -920,7 +925,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1" }));
+            .Add(p => p.SelectedValues, _option1Selected));
 
         // Assert - TwChipTheme.Lg is the only size that sets h-8. The chip itself is the inner <span>,
         // nested inside the @onclick:stopPropagation wrapper <span> that keeps chip removal from also
@@ -959,7 +964,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1" }));
+            .Add(p => p.SelectedValues, _option1Selected));
 
         // Act
         cut.Find("button[aria-haspopup='listbox']").Click();
@@ -1051,7 +1056,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1", "Option3" })
+            .Add(p => p.SelectedValues, _option1AndOption3Selected)
             .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
 
         // Act - removes the Option1 chip via its close button, without opening the popover
@@ -1130,7 +1135,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, true)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1", "Option3" }));
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
 
         // Assert
         var options = cut.FindAll("option");
@@ -1165,7 +1170,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, true)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1", "Option3" }));
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
 
         // Assert
         var decorative = cut.Find("div[aria-hidden='true']");
@@ -1186,7 +1191,7 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Act - selects Option1 (id 1) and Option3 (id 3)
         var select = cut.Find("select");
-        select.Change(new ChangeEventArgs { Value = new[] { "1", "3" } });
+        select.Change(new ChangeEventArgs { Value = _selectedIds1And3 });
 
         // Assert
         Assert.NotNull(selectedValues);
@@ -1202,7 +1207,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, true)
             .Add(p => p.Values, _threeStringOptions)
-            .Add(p => p.SelectedValues, new[] { "Option1" })
+            .Add(p => p.SelectedValues, _option1Selected)
             .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
 
         // Act
@@ -1228,7 +1233,7 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Act
         var select = cut.Find("select");
-        select.Change(new ChangeEventArgs { Value = new[] { "1" } });
+        select.Change(new ChangeEventArgs { Value = _selectedId1 });
 
         // Assert
         Assert.False(callbackInvoked);
@@ -1248,7 +1253,7 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Act
         var select = cut.Find("select");
-        select.Change(new ChangeEventArgs { Value = new[] { "1" } });
+        select.Change(new ChangeEventArgs { Value = _selectedId1 });
 
         // Assert
         Assert.False(callbackInvoked);
@@ -1294,7 +1299,7 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Act
         var select = cut.Find("select");
-        select.Change(new ChangeEventArgs { Value = new[] { "1", "2" } });
+        select.Change(new ChangeEventArgs { Value = _selectedIds1And2 });
 
         // Assert
         Assert.NotNull(selectedModels);
