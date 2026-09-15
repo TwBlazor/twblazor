@@ -14,7 +14,7 @@ namespace TwBlazor.A11yTests;
 /// known accessibility violations" smoke test, not a page-content/copy review of the Docs site.
 /// </summary>
 [Collection(A11yCollection.Name)]
-public class AccessibilityScanTests(A11yFixture fixture)
+public partial class AccessibilityScanTests(A11yFixture fixture)
 {
     private static readonly string[] _wcagTags = ["wcag2a", "wcag2aa", "wcag21aa"];
 
@@ -100,13 +100,14 @@ public class AccessibilityScanTests(A11yFixture fixture)
     // color contrast of 2.85 (foreground color: #9810fa, background color: #1d232a, font size:
     // 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1". Reusing that instead of
     // recomputing it independently keeps this suggestion talking about the exact colors axe measured.
-    private static readonly Regex _contrastMessagePattern = new(
+    [GeneratedRegex(
         @"foreground color:\s*(#[0-9a-fA-F]{3,8}).*?background color:\s*(#[0-9a-fA-F]{3,8}).*?[Ee]xpected contrast ratio of\s*([\d.]+):1",
-        RegexOptions.Singleline);
+        RegexOptions.Singleline)]
+    private static partial Regex ContrastMessagePattern();
 
     private static void AppendContrastSuggestion(StringBuilder sb, string message)
     {
-        var match = _contrastMessagePattern.Match(message);
+        var match = ContrastMessagePattern().Match(message);
         if (!match.Success) return;
 
         var foreground = match.Groups[1].Value;

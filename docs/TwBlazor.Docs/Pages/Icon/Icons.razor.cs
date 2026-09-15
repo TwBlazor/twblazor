@@ -7,6 +7,8 @@ namespace TwBlazor.Docs.Pages.Icon;
 
 public partial class Icons
 {
+    private const string toastTitle = "Welcome to TwBlazor";
+
     [Inject] private IJSRuntime jSRuntime { get; set; } = null!;
     [Inject] private ITwToastService toastService { get; set; } = null!;
 
@@ -32,22 +34,22 @@ public partial class Icons
 
     private void LikeIconClicked()
     {
-        toastService.Show("Clicked like icon!", "Welcome to TwBlazor", Color.Danger, Enums.Icon.Heart);
+        toastService.Show("Clicked like icon!", toastTitle, Color.Danger, Enums.Icon.Heart);
     }
 
     private void DeleteIconClicked()
     {
-        toastService.Show("Clicked delete icon!", "Welcome to TwBlazor", Color.Danger, Enums.Icon.Trash);
+        toastService.Show("Clicked delete icon!", toastTitle, Color.Danger, Enums.Icon.Trash);
     }
 
     private void GithubIconClicked()
     {
-        toastService.Show("Clicked GitHub icon!", "Welcome to TwBlazor", Color.Primary, Enums.Icon.Github);
+        toastService.Show("Clicked GitHub icon!", toastTitle, Color.Primary, Enums.Icon.Github);
     }
 
     private void ShareIconClicked()
     {
-        toastService.Show("Clicked share icon!", "Welcome to TwBlazor", Color.Info, Enums.Icon.Share);
+        toastService.Show("Clicked share icon!", toastTitle, Color.Info, Enums.Icon.Share);
     }
 
     private const int displayCountIncrement = 40;
