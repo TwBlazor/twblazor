@@ -18,6 +18,16 @@
     <a href="https://twblazor.github.io/twblazor/" target="_blank">API Documentation (docfx)</a> &bullet; <a href="https://twblazor.com/" target="_blank">Component Documentation (twblazor.com)</a> &bullet; <a href="https://twblazor.com/get-started" target="_blank">Get Started</a>
 </p>
 
+## Why twblazor?
+
+After years of working with Blazor, I have used many component frameworks, but never one that let me truly customise it to my liking without fighting the library to do so. That's why I built twblazor: instead of hiding styling behind opaque CSS or a confusing theming API, every component is styled with plain Tailwind CSS classes, so customising it is as straightforward as customising your own markup.
+
+Combined with Tailwind's hot reload, this means you can fine-tune any button, switch, checkbox, or dropdown to match your brand, right down to the exact color, spacing, and radius, instantly seeing the results, all from a single typed theme file rather than hunting through component internals.
+
+twblazor is, and always will be, fully open source under the MIT license. It's free to use in personal and commercial projects alike, and contributions, issues, and feedback from the community are always welcome.
+
+This project is actively maintained, with new components, accessibility improvements, and documentation added on an ongoing basis.
+
 ## Setup
 
 1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
