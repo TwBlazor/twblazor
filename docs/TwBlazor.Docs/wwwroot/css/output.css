@@ -723,6 +723,9 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-64 {
+    max-height: calc(var(--spacing) * 64);
+  }
   .max-h-96 {
     max-height: calc(var(--spacing) * 96);
   }
@@ -3539,6 +3542,12 @@
   }
   .dark\:focus\:text-white:where(.dark, .dark *):focus {
     color: var(--color-white);
+  }
+  .\[\&_label\]\:\!text-\[oklch\(21\%_0\.006_285\.885\)\] label {
+    color: oklch(21% 0.006 285.885) !important;
+  }
+  .dark\:\[\&_label\]\:\!text-\[oklch\(97\.807\%_0\.029_256\.847\)\]:where(.dark, .dark *) label {
+    color: oklch(97.807% 0.029 256.847) !important;
   }
   .\[\&\.active\]\:bg-purple-950\/40.active {
     background-color: color-mix(in srgb, oklch(29.1% 0.149 302.717) 40%, transparent);

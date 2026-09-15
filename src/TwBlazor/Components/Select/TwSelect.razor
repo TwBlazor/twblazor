@@ -1,34 +1,116 @@
-﻿@typeparam T
-@inherits TwBlazorTextInputComponentBase
+@typeparam T
+@inherits TwPopoverPickerComponentBase
 @namespace TwBlazor.Components
+@using TwBlazor.Enums
 
-<TwInputRoot RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
+<TwInputRoot @ref="@InputRoot" RootId="@RootId" RootClass="@RootClass" RootAttributes="@RootAttributes" RootStyle="@Style" RootAriaLabel="@AriaLabel" RootAriaLabelledBy="@AriaLabelledBy" RootErrorMessage="@ErrorMessage" RootErrorId="@errorId">
     @if (!string.IsNullOrWhiteSpace(Label))
     {
         <TwInputLabel Id="@LabelId" For="@Id" Label="@Label" Class="@LabelClasses" @attributes="@LabelAttributes" />
     }
 
-    <select id="@Id"
-            class="@classes"
-            multiple="@Multiple"
-            required="@Required"
-            @onchange="@HandleChange"
-            @attributes="@Attributes"
-            aria-required="@(Required ? "true" : null)"
-            aria-readonly="@(ReadOnly ? "true" : null)"
-            aria-invalid="@(Invalid ? "true" : null)"
-            aria-describedby="@errorId"
-            aria-label="@AriaLabel"
-            aria-labelledby="@AriaLabelledBy">
-        @if (!Required && !Multiple)
-        {
-            <option value="0" class="@theme.SelectOption">@Placeholder</option>
-        }
-        @foreach (var (key, value) in parsedValues)
-        {
-            <option value="@key" selected="@(Multiple ? selectedValueIds.Contains(key) : key == selectedValueId)" class="@theme.SelectOption">
-                @GetDisplayText(value)
-            </option>
-        }
-    </select>
+    @if (!Multiple)
+    {
+        <select id="@Id"
+                class="@classes"
+                required="@Required"
+                @onchange="@HandleChange"
+                @attributes="@Attributes"
+                aria-required="@(Required ? "true" : null)"
+                aria-readonly="@(ReadOnly ? "true" : null)"
+                aria-invalid="@(Invalid ? "true" : null)"
+                aria-describedby="@errorId"
+                aria-label="@AriaLabel"
+                aria-labelledby="@AriaLabelledBy">
+            @if (!Required)
+            {
+                <option value="0" class="@theme.SelectOption">@Placeholder</option>
+            }
+            @foreach (var (key, value) in parsedValues)
+            {
+                <option value="@key" selected="@(key == selectedValueId)" class="@theme.SelectOption">
+                    @GetDisplayText(value)
+                </option>
+            }
+        </select>
+    }
+    else if (UseNativePicker)
+    {
+        <div class="@options.Theme.Position.Relative">
+            <div class="@triggerClasses" aria-hidden="true">
+                @if (selectedValueIds.Count == 0)
+                {
+                    @Placeholder
+                }
+                else
+                {
+                    @foreach (var id in orderedSelectedValueIds)
+                    {
+                        <TwChip Label="@GetDisplayText(parsedValues[id])" Size="ChipSize.Large" Variant="ButtonVariant.Outlined" />
+                    }
+                }
+            </div>
+
+            <select id="@Id"
+                    multiple
+                    class="@nativeOverlayClasses"
+                    required="@Required"
+                    @onchange="@HandleChange"
+                    @attributes="@Attributes"
+                    aria-required="@(Required ? "true" : null)"
+                    aria-readonly="@(ReadOnly ? "true" : null)"
+                    aria-invalid="@(Invalid ? "true" : null)"
+                    aria-describedby="@errorId"
+                    aria-label="@AriaLabel"
+                    aria-labelledby="@AriaLabelledBy">
+                @foreach (var (key, value) in parsedValues)
+                {
+                    <option value="@key" selected="@(selectedValueIds.Contains(key))">
+                        @GetDisplayText(value)
+                    </option>
+                }
+            </select>
+        </div>
+    }
+    else
+    {
+        <div class="@options.Theme.Position.Relative">
+            <div id="@Id"
+                 class="@triggerClasses"
+                 role="button"
+                 tabindex="@(Disabled ? "-1" : "0")"
+                 aria-haspopup="listbox"
+                 aria-expanded="@(isFocused ? "true" : "false")"
+                 aria-disabled="@(Disabled ? "true" : null)"
+                 aria-readonly="@(ReadOnly ? "true" : null)"
+                 aria-label="@AriaLabel"
+                 aria-labelledby="@AriaLabelledBy"
+                 @attributes="@Attributes"
+                 @onclick="@ToggleOrOpenPanelAsync"
+                 @onkeydown="@OnTriggerKeyDownAsync">
+                @if (selectedValueIds.Count == 0)
+                {
+                    @Placeholder
+                }
+                else
+                {
+                    @foreach (var id in orderedSelectedValueIds)
+                    {
+                        <span @onclick:stopPropagation="true">
+                            <TwChip Label="@GetDisplayText(parsedValues[id])" Size="ChipSize.Large" Variant="ButtonVariant.Outlined" Closable="@(!Disabled && !ReadOnly)" OnClose="@(() => RemoveSelectionAsync(id))" />
+                        </span>
+                    }
+                }
+            </div>
+
+            @if (isFocused)
+            {
+                <div class="@panelPositionClasses" role="dialog" aria-label="@(string.IsNullOrWhiteSpace(Label) ? "Select options" : Label)" tabindex="-1" @ref="PanelRef" @onkeydown="@OnPanelKeyDownAsync">
+                    <div class="@panelSurfaceClasses">
+                        <TwCheckboxGroup TValue="T" Items="@checkboxItems" SelectedValues="@SelectedValues" SelectedValuesChanged="@HandleCheckboxGroupChanged" />
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </TwInputRoot>

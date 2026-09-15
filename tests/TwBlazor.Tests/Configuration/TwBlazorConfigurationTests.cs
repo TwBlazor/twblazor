@@ -320,6 +320,11 @@ public class TwInputThemeTests
         SelectNativeBackground = "select-native-bg",
         SelectDefaultPadding = "select-default-padding",
         SelectReadOnlyBackground = "select-readonly-bg",
+        SelectMultiTriggerLayout = "select-multi-trigger-layout",
+        SelectNativeMultiOverlay = "select-native-multi-overlay",
+        SelectPanelPosition = "select-panel-position",
+        SelectPanelSurface = "select-panel-surface",
+        SelectPanelItemText = "select-panel-item-text",
     };
 
     [Fact]
