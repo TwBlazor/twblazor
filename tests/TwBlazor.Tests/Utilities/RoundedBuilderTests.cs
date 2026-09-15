@@ -31,7 +31,7 @@ public class RoundedBuilderTests : TwBlazorTestBase
     }
 
     [Fact]
-    public void GetRounded_ReturnsDefaultRounded_ForUnknownValue()
+    public void GetRounded_ReturnsThemeDefaultRounded_ForUnknownValue()
     {
         // Arrange - Cast an invalid enum value
         var unknownRounded = (Rounded)999;
@@ -39,8 +39,9 @@ public class RoundedBuilderTests : TwBlazorTestBase
         // Act
         var result = RoundedBuilder.GetRounded(unknownRounded);
 
-        // Assert
-        Assert.Equal("rounded-lg", result); // default to lg for unknown values
+        // Assert - unknown values fall back to whatever Theme.Rounded.DefaultRounded resolves to,
+        // not a hardcoded level, so this stays correct if the theme's default ever changes.
+        Assert.Equal(RoundedBuilder.GetRounded(Theme.Rounded.DefaultRounded), result);
     }
 
     [Fact]

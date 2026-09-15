@@ -55,7 +55,7 @@ public class ColorBuilder(TwBlazorOptions options)
             Color.Info => $"{options.Theme.Colors.TextColors.Medium.Info} {options.Theme.Colors.DarkTextColors.Light.Info}",
             Color.Light => $"{options.Theme.Colors.TextColors.Medium.Light} {options.Theme.Colors.DarkTextColors.Medium.Light}",
             Color.Dark => $"{options.Theme.Colors.TextColors.Medium.Dark} {options.Theme.Colors.DarkTextColors.Medium.Dark}",
-            _ => string.Empty,
+            _ => string.Empty
         };
     }
 
@@ -111,9 +111,9 @@ public class ColorBuilder(TwBlazorOptions options)
     /// </summary>
     /// <remarks>This method uses a switch expression to map predefined colors to their corresponding outlined
     /// variant colors in the theme.</remarks>
-    /// <param name="color">The color for which to retrieve the outlined variant. If null or an unsupported color, an empty string is returned.</param>
-    /// <returns>A string representing the outlined variant color corresponding to the specified color. Returns an empty string if
-    /// the color is not recognized.</returns>
+    /// <param name="color">The color for which to retrieve the outlined variant. If null or an unsupported color, the default (primary) outlined variant is returned.</param>
+    /// <returns>A string representing the outlined variant color corresponding to the specified color. Falls back to the
+    /// primary outlined variant if the color is null or not recognized.</returns>
     public string GetOutlinedVariantColor(Color? color)
     {
         return color switch
@@ -126,7 +126,7 @@ public class ColorBuilder(TwBlazorOptions options)
             Color.Info => options.Theme.Colors.SurfaceColors.Outlined.Info,
             Color.Light => options.Theme.Colors.SurfaceColors.Outlined.Light,
             Color.Dark => options.Theme.Colors.SurfaceColors.Outlined.Dark,
-            _ => string.Empty
+            _ => options.Theme.Colors.SurfaceColors.Outlined.Primary
         };
     }
 

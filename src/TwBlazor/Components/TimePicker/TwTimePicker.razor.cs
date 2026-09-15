@@ -208,5 +208,7 @@ public partial class TwTimePicker : TwPopoverPickerComponentBase
         .AddClass(theme.NativeInputAppearance, UseNativePicker).Build();
 
     private string bodyClasses => new ClassBuilder("time")
-        .AddClass(theme.BodySurface).Build();
+        .AddClass(theme.BodySurface)
+        .AddClass(popoverBuilder.GetSurfaceClasses(Rounded, Shadow))
+        .Build();
 }

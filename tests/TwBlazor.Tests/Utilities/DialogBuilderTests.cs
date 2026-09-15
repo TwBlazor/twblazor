@@ -11,6 +11,8 @@ public class DialogBuilderTests : TwBlazorTestBase
 
     private TwDialogTheme dialogTheme => Theme.Components.Require<TwDialogTheme>();
 
+    private TwOverlayTheme overlayTheme => Theme.Components.Require<TwOverlayTheme>();
+
     #region GetPositionClasses
 
     [Theory]
@@ -216,7 +218,7 @@ public class DialogBuilderTests : TwBlazorTestBase
     public void GetSurfaceClasses_UsesThemeDialogRounded_WhenComponentRoundedNotProvided()
     {
         // Arrange
-        dialogTheme.DialogRounded = Rounded.Md;
+        overlayTheme.DialogRounded = Rounded.Md;
 
         // Act
         var result = dialogBuilder.GetSurfaceClasses(DialogMaxWidth.Small, false, false, null, null);
@@ -229,7 +231,7 @@ public class DialogBuilderTests : TwBlazorTestBase
     public void GetSurfaceClasses_FallsBackToGlobalDefaultRounded_WhenNoOverridesSet()
     {
         // Arrange
-        dialogTheme.DialogRounded = null;
+        overlayTheme.DialogRounded = null;
         Theme.Rounded.DefaultRounded = Rounded.Sm;
 
         // Act
@@ -253,7 +255,7 @@ public class DialogBuilderTests : TwBlazorTestBase
     public void GetSurfaceClasses_UsesThemeDialogShadow_WhenComponentShadowNotProvided()
     {
         // Arrange
-        dialogTheme.DialogShadow = Shadow.Md;
+        overlayTheme.DialogShadow = Shadow.Md;
 
         // Act
         var result = dialogBuilder.GetSurfaceClasses(DialogMaxWidth.Small, false, false, null, null);

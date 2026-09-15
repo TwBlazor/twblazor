@@ -30,7 +30,7 @@ public class RoundedBuilder(TwBlazorOptions options)
         Rounded.Lg => options.Theme.Rounded.Lg,
         Rounded.Full => options.Theme.Rounded.Full,
         null => string.Empty,
-        _ => options.Theme.Rounded.Lg
+        _ => GetRounded(options.Theme.Rounded.DefaultRounded)
     };
 
     /// <summary>

@@ -236,6 +236,44 @@ public class TwChipTests : TwBlazorTestBase
         Assert.Contains("AB", chip.TextContent);
     }
 
+    [Theory]
+    [InlineData(ButtonVariant.Outlined)]
+    [InlineData(ButtonVariant.Text)]
+    public void TwChip_AvatarBackground_UsesCurrentColorTint_ForOutlinedAndTextVariants(ButtonVariant variant)
+    {
+        // Arrange & Act - Outlined/Text chips render currentColor as saturated text on a light chip
+        // background, so the avatar circle uses a matching light currentColor tint instead of the
+        // dark overlay Filled/Elevated chips need (see GetAvatarClasses' own remarks).
+        var cut = TestContext.Render<TwChip>(parameters => parameters
+            .Add(p => p.Label, "Avatar Chip")
+            .Add(p => p.Avatar, "AB")
+            .Add(p => p.Variant, variant));
+
+        // Assert
+        var avatar = cut.FindAll("span").First(s => s.TextContent == "AB");
+        Assert.Contains("bg-current/10", avatar.GetAttribute("class"));
+        Assert.DoesNotContain("bg-black/20", avatar.GetAttribute("class"));
+    }
+
+    [Theory]
+    [InlineData(ButtonVariant.Filled)]
+    [InlineData(ButtonVariant.Elevated)]
+    public void TwChip_AvatarBackground_UsesDarkOverlay_ForFilledAndElevatedVariants(ButtonVariant variant)
+    {
+        // Arrange & Act - Filled/Elevated chips render currentColor as light text on a saturated
+        // background, where the same currentColor tint would produce near-invisible initials, so a
+        // dark overlay is used instead.
+        var cut = TestContext.Render<TwChip>(parameters => parameters
+            .Add(p => p.Label, "Avatar Chip")
+            .Add(p => p.Avatar, "AB")
+            .Add(p => p.Variant, variant));
+
+        // Assert
+        var avatar = cut.FindAll("span").First(s => s.TextContent == "AB");
+        Assert.Contains("bg-black/20", avatar.GetAttribute("class"));
+        Assert.DoesNotContain("bg-current/10", avatar.GetAttribute("class"));
+    }
+
     [Fact]
     public void TwChip_Renders_WithStartIcon_ForUndefinedSize()
     {

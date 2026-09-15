@@ -165,8 +165,7 @@ public partial class TwDatePicker : TwPopoverPickerComponentBase
     // more detailed remarks on TwDateRangePicker.datepickerContainerClasses, where its much taller
     // two-month panel makes this matter more).
     private string datepickerContainerClasses => new ClassBuilder(theme.PanelMaxHeight)
-        .AddClass(shadowBuilder.GetShadow(effectiveShadow))
-        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
+        .AddClass(popoverBuilder.GetSurfaceClasses(Rounded, Shadow))
         .AddClass(theme.Base)
         .Build();
 

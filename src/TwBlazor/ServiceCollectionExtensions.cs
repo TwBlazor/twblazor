@@ -77,6 +77,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ChipBuilder>();
         services.AddScoped<ToastBuilder>();
         services.AddScoped<DialogBuilder>();
+        services.AddScoped<PopoverBuilder>();
         return services;
     }
 }

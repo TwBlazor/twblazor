@@ -80,7 +80,7 @@ public partial class TwFileUpload : TwBlazorInputComponentBase
         .AddClass(buttonBuilder.GetVariantClasses(Variant, Color, Disabled))
         .AddClass(shadowBuilder.GetButtonShadow(theme))
         .AddClass(ToPeerFocusVisible(colorBuilder.GetFocusRing(Color)))
-        .AddClass(options.Theme.Spacing.Padding.Standard).Build();
+        .AddClass(options.Theme.Spacing.Padding.Lg).Build();
 
     private string inputClasses =>
         new ClassBuilder(options.Theme.Display.ScreenReaderOnly)

@@ -46,7 +46,7 @@ public class InputVariantBuilderTests : TwBlazorTestBase
         var result = InputVariantBuilder.GetClasses(InputVariant.Outlined, inputTheme);
 
         // Assert
-        Assert.Contains("border-1", result);
+        Assert.Contains("border-2", result);
         Assert.Contains(inputTheme.OutlinedBorder, result);
         Assert.Contains(inputTheme.FocusBorder, result);
         Assert.Contains("bg-transparent", result);
@@ -61,7 +61,7 @@ public class InputVariantBuilderTests : TwBlazorTestBase
         var result = InputVariantBuilder.GetClasses(InputVariant.Outlined, inputTheme);
 
         // Assert
-        Assert.Contains("border-1", result);
+        Assert.Contains("border-2", result);
         Assert.DoesNotContain("border-b-2", result);
     }
 

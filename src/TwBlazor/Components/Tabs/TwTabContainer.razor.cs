@@ -101,7 +101,7 @@ public partial class TwTabContainer : TwBlazorComponentBase, IAsyncDisposable
         .AddClass(ContainerClass ?? string.Empty).Build();
 
     /// <summary>
-    /// Gets the id of the (single, shared) tabpanel element, derived from the tab container's own stable
+    /// Gets the id of the (single, shared) tab panel element, derived from the tab container's own stable
     /// <see cref="TwBlazorComponentBase.Id"/> - deliberately NOT from whichever tab happens to be active.
     /// Every tab's <c>aria-controls</c> attribute references this same id, and it is also used as the
     /// panel's own <c>id</c>. Because there is only one physical panel element whose content swaps when

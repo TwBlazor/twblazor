@@ -18,11 +18,19 @@
     <a href="https://twblazor.github.io/twblazor/" target="_blank">API Documentation (docfx)</a> &bullet; <a href="https://twblazor.com/" target="_blank">Component Documentation (twblazor.com)</a> &bullet; <a href="https://twblazor.com/get-started" target="_blank">Get Started</a>
 </p>
 
+## Why twblazor?
+
+With years of working with Blazor, I've come accross and used a lot of component frameworks, but never one that has ever let me customise it my way without fighting against the library and its built in CSS. That's why I decided to build twblazor; every component is styled with Tailwind CSS classes instead of it's own theming layer, so customising it feels the same as customising your own markup.
+
+Combined with Tailwind's hot reload, you can fine-tune a button, switch, checkbox, or dropdown down to the exact color, spacing, and radius, and see the change immediately. It all lives in one typed theme file, so there's no hunting through component internals to find what to change.
+
+twblazor is, and always will be, open source under the MIT license, free for personal and commercial projects alike. I welcome contributions, issues, and feedback from anyone using it. The project is actively maintained. New components, accessibility fixes, and documentation land regularly. I have lots of components I plan to add.
+
 ## Setup
 
 1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
 ```pwsh
-$ dotnet add package TwBlazor --version 1.9.0
+$ dotnet add package TwBlazor --version 1.9.1
 ```
 2. Head to the [Get Started guide](https://twblazor.com/get-started) for the rest of the setup - stylesheets, imports, providers, theming and dependency injection - covering both Interactive Server and WebAssembly Blazor Web Apps step by step.
 
