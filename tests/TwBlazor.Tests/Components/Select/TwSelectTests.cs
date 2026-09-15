@@ -18,6 +18,11 @@ public class TwSelectTests : TwBlazorTestBase
     private static readonly string[] _singleStringOption = ["Option1"];
     private static readonly int[] _intOptions = [1, 2, 3];
     private static readonly int[] _zeroOneTwoIntOptions = [0, 1, 2];
+    private static readonly string[] _option1AndOption3Selected = ["Option1", "Option3"];
+    private static readonly string[] _option1Selected = ["Option1"];
+    private static readonly string[] _selectedIds1And3 = ["1", "3"];
+    private static readonly string[] _selectedId1 = ["1"];
+    private static readonly string[] _selectedIds1And2 = ["1", "2"];
     private class TestModel
     {
         public int Id { get; set; }
@@ -843,5 +848,461 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Assert
         Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_NotMultiple_DoesNotRenderMultipleAttribute()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.False(select.HasAttribute("multiple"));
+    }
+
+    // --- Multiple: custom popover trigger (PreferNativePicker=false, e.g. desktop) ---
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_RendersTriggerMatchingSingleSelectStyle()
+    {
+        // Arrange & Act - the closed trigger should look like a normal TwSelect (same base classes,
+        // including the dropdown arrow), not a plain always-expanded native multi-select listbox.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("select"));
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
+        Assert.Contains(inputTheme.SelectBase, trigger.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_ShowsPlaceholder_WhenNothingSelected()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Placeholder, "Pick some options...")
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
+        Assert.Contains("Pick some options...", trigger.TextContent);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_ShowsChip_PerSelectedValue()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
+
+        // Assert
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
+        Assert.Contains("Option1", trigger.TextContent);
+        Assert.Contains("Option3", trigger.TextContent);
+        Assert.DoesNotContain("Option2", trigger.TextContent);
+        Assert.DoesNotContain("Pick", trigger.TextContent);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_ChipsUseLargeSize()
+    {
+        // Arrange & Act - larger than TwChip's Small/Medium defaults so selected-option chips stay
+        // legible without growing the trigger box itself.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1Selected));
+
+        // Assert - TwChipTheme.Lg is the only size that sets h-8. The chip itself is the inner <span>,
+        // nested inside the @onclick:stopPropagation wrapper <span> that keeps chip removal from also
+        // toggling the popover.
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
+        var chip = trigger.QuerySelector("span span");
+        Assert.NotNull(chip);
+        Assert.Contains("h-8", chip.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_OpensPanel_OnTriggerClick()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Act
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert - one checkbox per option, inside a dialog-role popover panel
+        var panel = cut.Find("div[role='dialog']");
+        Assert.Equal(3, panel.QuerySelectorAll("input[type='checkbox']").Length);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_OpensPanel_OnTriggerClick_WhenAlreadyHasSelectedValues()
+    {
+        // Arrange - regression test: once at least one option is selected the open button has no text
+        // content of its own (the chips take its place), so it needs an explicit minimum height (see
+        // TwInputTheme.SelectMultiOpenButton) or it collapses to zero height and stops being clickable.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1Selected));
+
+        // Act
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert
+        var panel = cut.Find("div[role='dialog']");
+        Assert.Equal(3, panel.QuerySelectorAll("input[type='checkbox']").Length);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_PanelForcesReadableLabelTextColor()
+    {
+        // Arrange & Act - TwCheckboxTheme.LabelBase uses a muted caption color that's too low-contrast
+        // in dark mode once it's a whole option list's primary text, so the panel surface forces it via
+        // SelectPanelItemText (see TwInputTheme.SelectPanelItemText for why).
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions));
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert
+        var panel = cut.Find("div[role='dialog']");
+        var surface = panel.QuerySelector("div");
+        Assert.NotNull(surface);
+        Assert.Contains(inputTheme.SelectPanelItemText, surface.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_DoesNotOpenPanel_WhenDisabled()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Disabled, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Act
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("div[role='dialog']"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_DoesNotOpenPanel_WhenReadOnly()
+    {
+        // Arrange
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.ReadOnly, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Act
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Assert
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("div[role='dialog']"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_TogglingCheckbox_InvokesSelectedValuesChanged()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Act - checks the first checkbox (Option1)
+        cut.FindAll("input[type='checkbox']")[0].Change(true);
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Equal(["Option1"], selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_RemovingChip_InvokesSelectedValuesChanged()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1AndOption3Selected)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+
+        // Act - removes the Option1 chip via its close button, without opening the popover
+        cut.Find("button[aria-label='Remove Option1']").Click();
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Equal(["Option3"], selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Custom_WithComplexObjects_TogglingCheckbox_InvokesSelectedValuesChanged()
+    {
+        // Arrange
+        var values = new[]
+        {
+            new TestModel { Id = 1, Name = "First" },
+            new TestModel { Id = 2, Name = "Second" },
+            new TestModel { Id = 3, Name = "Third" }
+        };
+        IEnumerable<TestModel>? selectedModels = null;
+
+        var cut = TestContext.Render<TwSelect<TestModel>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, false)
+            .Add(p => p.Values, values)
+            .Add(p => p.PropertyName, "Name")
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<TestModel>>(this, v => selectedModels = v)));
+        cut.Find("button[aria-haspopup='listbox']").Click();
+
+        // Act
+        cut.FindAll("input[type='checkbox']")[1].Change(true);
+
+        // Assert
+        Assert.NotNull(selectedModels);
+        Assert.Equal(["Second"], selectedModels.Select(m => m.Name));
+    }
+
+    // --- Multiple: native overlay <select multiple> (PreferNativePicker=true, e.g. mobile) ---
+
+    [Fact]
+    public void TwSelect_Multiple_Native_RendersMultipleAttribute()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.True(select.HasAttribute("multiple"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_DoesNotRenderPlaceholderOption()
+    {
+        // Arrange & Act - a multi-select has no need for a "nothing selected" placeholder option,
+        // since simply selecting nothing already represents that.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var options = cut.FindAll("option");
+        Assert.Equal(3, options.Count);
+        Assert.Throws<ElementNotFoundException>(() => cut.Find("option[value='0']"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_SelectsInitialValues()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
+
+        // Assert
+        var options = cut.FindAll("option");
+        var selected = options.Where(o => o.HasAttribute("selected")).Select(o => o.TextContent.Trim()).ToList();
+        Assert.Equal(["Option1", "Option3"], selected);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_ReadOnly_BlocksPointerInteraction()
+    {
+        // Arrange & Act - ReadOnly can't use the native "readonly" attribute (invalid on <select>), so
+        // it's conveyed via aria-readonly plus disabling pointer interaction, same as the single-select.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.ReadOnly, true)
+            .Add(p => p.Values, _threeStringOptions));
+
+        // Assert
+        var select = cut.Find("select");
+        Assert.False(select.HasAttribute("disabled"));
+        Assert.Equal("true", select.GetAttribute("aria-readonly"));
+        Assert.Contains(Theme.Interaction.PointerEventsNone, select.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_ShowsChip_PerSelectedValue()
+    {
+        // Arrange & Act - the decorative trigger behind the invisible native select shows the same
+        // chip-per-selection look as the custom trigger.
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1AndOption3Selected));
+
+        // Assert
+        var decorative = cut.Find("div[aria-hidden='true']");
+        Assert.Contains("Option1", decorative.TextContent);
+        Assert.Contains("Option3", decorative.TextContent);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_InvokesSelectedValuesChanged_OnChange()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+
+        // Act - selects Option1 (id 1) and Option3 (id 3)
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = _selectedIds1And3 });
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Equal(["Option1", "Option3"], selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_InvokesSelectedValuesChanged_WithEmptyCollection_WhenDeselectingAll()
+    {
+        // Arrange
+        IEnumerable<string>? selectedValues = null;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValues, _option1Selected)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = Array.Empty<string>() });
+
+        // Assert
+        Assert.NotNull(selectedValues);
+        Assert.Empty(selectedValues);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_DoesNotInvokeCallback_WhenReadonly()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.ReadOnly, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = _selectedId1 });
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_DoesNotInvokeCallback_WhenDisabled()
+    {
+        // Arrange
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Disabled, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = _selectedId1 });
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_IgnoresNonArrayEventValue()
+    {
+        // Arrange - defensive: a plain scalar change value should never crash the multi-select handler.
+        var callbackInvoked = false;
+        var cut = TestContext.Render<TwSelect<string>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, _threeStringOptions)
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, _ => callbackInvoked = true)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change("1");
+
+        // Assert
+        Assert.False(callbackInvoked);
+    }
+
+    [Fact]
+    public void TwSelect_Multiple_Native_WithComplexObjects_SelectsAndChangesCorrectly()
+    {
+        // Arrange
+        var values = new[]
+        {
+            new TestModel { Id = 1, Name = "First" },
+            new TestModel { Id = 2, Name = "Second" },
+            new TestModel { Id = 3, Name = "Third" }
+        };
+        IEnumerable<TestModel>? selectedModels = null;
+
+        var cut = TestContext.Render<TwSelect<TestModel>>(parameters => parameters
+            .Add(p => p.Multiple, true)
+            .Add(p => p.PreferNativePicker, true)
+            .Add(p => p.Values, values)
+            .Add(p => p.PropertyName, "Name")
+            .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<TestModel>>(this, v => selectedModels = v)));
+
+        // Act
+        var select = cut.Find("select");
+        select.Change(new ChangeEventArgs { Value = _selectedIds1And2 });
+
+        // Assert
+        Assert.NotNull(selectedModels);
+        Assert.Equal(["First", "Second"], selectedModels.Select(m => m.Name));
     }
 }
