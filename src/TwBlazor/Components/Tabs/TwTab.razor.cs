@@ -80,7 +80,7 @@ public partial class TwTab : TwBlazorComponentBase
         get
         {
             var color = colorBuilder.GetTextColor(Color);
-            return string.IsNullOrEmpty(color) ? options.Theme.Colors.NeutralText.Heading : color;
+            return string.IsNullOrEmpty(color) ? options.Theme.Colors.TextColors.Medium.Primary : color;
         }
     }
 
