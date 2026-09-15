@@ -20,13 +20,11 @@
 
 ## Why twblazor?
 
-After years of working with Blazor, I have used many component frameworks, but never one that let me truly customise it to my liking without fighting the library to do so. That's why I built twblazor: instead of hiding styling behind opaque CSS or a confusing theming API, every component is styled with plain Tailwind CSS classes, so customising it is as straightforward as customising your own markup.
+With years of working with Blazor, I've come accross and used a lot of component frameworks, but never one that has ever let me customise it my way without fighting against the library and its built in CSS. That's why I decided to build twblazor; every component is styled with Tailwind CSS classes instead of it's own theming layer, so customising it feels the same as customising your own markup.
 
-Combined with Tailwind's hot reload, this means you can fine-tune any button, switch, checkbox, or dropdown to match your brand, right down to the exact color, spacing, and radius, instantly seeing the results, all from a single typed theme file rather than hunting through component internals.
+Combined with Tailwind's hot reload, you can fine-tune a button, switch, checkbox, or dropdown down to the exact color, spacing, and radius, and see the change immediately. It all lives in one typed theme file, so there's no hunting through component internals to find what to change.
 
-twblazor is, and always will be, fully open source under the MIT license. It's free to use in personal and commercial projects alike, and contributions, issues, and feedback from the community are always welcome.
-
-This project is actively maintained, with new components, accessibility improvements, and documentation added on an ongoing basis.
+twblazor is, and always will be, open source under the MIT license, free for personal and commercial projects alike. I welcome contributions, issues, and feedback from anyone using it. The project is actively maintained. New components, accessibility fixes, and documentation land regularly. I have lots of components I plan to add.
 
 ## Setup
 
