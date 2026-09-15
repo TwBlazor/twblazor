@@ -722,6 +722,11 @@ public class TwBlazorSizing
     public TwBlazorIconSize Icon { get; set; } = new();
 }
 
+/// <summary>
+/// A reusable three-step height scale, used by component themes that need a small/medium/large
+/// fixed-height preset (e.g. a size variant that isn't just icon-driven).
+/// </summary>
+[ExcludeFromCodeCoverage]
 public class TwBlazorHeight
 {
     /// <summary>
@@ -735,9 +740,14 @@ public class TwBlazorHeight
     /// <summary>
     /// Gets or sets the "lg" height class.
     /// </summary>
-    public string Lg{ get; set; } = string.Empty;
+    public string Lg { get; set; } = string.Empty;
 }
 
+/// <summary>
+/// A reusable three-step width scale, used by component themes that need a small/medium/large
+/// fixed-width preset.
+/// </summary>
+[ExcludeFromCodeCoverage]
 public class TwBlazorWidth
 {
     /// <summary>
@@ -751,7 +761,7 @@ public class TwBlazorWidth
     /// <summary>
     /// Gets or sets the "lg" width class.
     /// </summary>
-    public string Lg{ get; set; } = string.Empty;
+    public string Lg { get; set; } = string.Empty;
 }
 
 /// <summary>

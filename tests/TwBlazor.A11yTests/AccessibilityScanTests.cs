@@ -4,7 +4,6 @@ using Microsoft.Playwright;
 using System.Text;
 using System.Text.RegularExpressions;
 using TwBlazor.A11yTests.Infrastructure;
-using TwBlazor.Utilities;
 
 namespace TwBlazor.A11yTests;
 
@@ -114,7 +113,7 @@ public class AccessibilityScanTests(A11yFixture fixture)
         var background = match.Groups[2].Value;
         if (!double.TryParse(match.Groups[3].Value, out var requiredRatio)) return;
 
-        var suggestion = ColorConverter.FindMinimumPassingColor(foreground, background, requiredRatio);
+        var suggestion = ContrastCalculator.FindMinimumPassingColor(foreground, background, requiredRatio);
         sb.AppendLine(suggestion is { } s
             ? $"        -> {foreground} needs at least {s.LightnessPercent}% lightness (e.g. {s.Hex}) against {background} to reach {requiredRatio}:1"
             : $"        -> no lightness change to {foreground} reaches {requiredRatio}:1 against {background} - this hue/saturation needs to change, not just get lighter/darker");
