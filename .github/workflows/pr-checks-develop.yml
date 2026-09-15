@@ -33,7 +33,7 @@ jobs:
 
   sonarcloud-scan:
     name: SonarCloud Scan
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
 
@@ -49,10 +49,15 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.x'
+
       - name: Cache NuGet packages
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          path: ~\.nuget\packages
+          path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
@@ -60,7 +65,7 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          path: ~\sonar\cache
+          path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
@@ -68,16 +73,16 @@ jobs:
         id: cache-sonar-scanner
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
-          path: ${{ runner.temp }}\scanner
+          path: ${{ runner.temp }}/scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
+        shell: pwsh
         run: |
-          New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+          New-Item -Path ${{ runner.temp }}/scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}/scanner
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -86,23 +91,24 @@ jobs:
           cache: 'npm'
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run JS tests with coverage
         run: npm test
 
       - name: Normalize lcov paths
-        shell: powershell
+        shell: pwsh
         run: |
-          $lcov = "coverage\lcov.info"
+          $lcov = "coverage/lcov.info"
           (Get-Content $lcov) -replace '\\', '/' -replace 'SF:src/TwBlazor/', 'SF:' | Set-Content $lcov
 
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+        shell: pwsh
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
+          chmod +x ${{ runner.temp }}/scanner/dotnet-sonarscanner
+          ${{ runner.temp }}/scanner/dotnet-sonarscanner begin `
             /k:"TwBlazor_twblazor" `
             /o:"twblazor" `
             /d:sonar.host.url="https://sonarcloud.io" `
@@ -111,10 +117,10 @@ jobs:
             /d:sonar.cpd.exclusions="**/wwwroot/404.html" `
             /d:sonar.javascript.lcov.reportPaths="${{ github.workspace }}/coverage/lcov.info" `
             /d:sonar.coverage.exclusions="docs/TwBlazor.Docs/**,docs/TwBlazor.Server/**,docs/TwBlazor.WASM/**,docs/TwBlazor.WasmHost/**,build/TwBlazor.BuildTools/**,src/TwBlazor.Theme/**,build/TwBlazor.Docs.Compiler/**,**/Program.cs,src/TwBlazor/Components/ColorPicker/TwColorPicker.razor,src/TwBlazor/Components/TimePicker/TwTimePicker.razor" `
-            /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}\coverage\**\coverage.opencover*.xml"
+            /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}/coverage/**/coverage.opencover*.xml"
           dotnet build --configuration Release
-          dotnet test tests/TwBlazor.Tests/TwBlazor.Tests.csproj --no-build --configuration Release --results-directory "${{ github.workspace }}\coverage" -- --coverlet --coverlet-output-format opencover
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
+          dotnet test tests/TwBlazor.Tests/TwBlazor.Tests.csproj --no-build --configuration Release --results-directory "${{ github.workspace }}/coverage" -- --coverlet --coverlet-output-format opencover
+          ${{ runner.temp }}/scanner/dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
 
   vulnerability-scan:
     name: Vulnerability Scan
