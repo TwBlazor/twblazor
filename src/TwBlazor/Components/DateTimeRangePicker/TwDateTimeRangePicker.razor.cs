@@ -200,8 +200,7 @@ public partial class TwDateTimeRangePicker : TwPopoverPickerComponentBase
     private string stageTabsClasses => new ClassBuilder(theme.RangeStageTabsContainer).Build();
 
     private string datepickerContainerClasses => new ClassBuilder(theme.PanelMaxHeight)
-        .AddClass(shadowBuilder.GetShadow(effectiveShadow))
-        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
+        .AddClass(popoverBuilder.GetSurfaceClasses(Rounded, Shadow))
         .AddClass(theme.Base)
         .Build();
 

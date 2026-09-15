@@ -291,6 +291,29 @@ public class TwDateTimePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void PanelNumberInputs_UseGlobalDefaultVariant_WhenNotSet()
+    {
+        // Arrange - the embedded TwTimePickerBody's hour/minute inputs used to be styled with a
+        // hardcoded transparent-background look regardless of TwInputTheme.DefaultInputVariant, so
+        // they never looked "Filled" even when that was the configured global default.
+        inputTheme.DefaultInputVariant = InputVariant.Filled;
+
+        var cut = TestContext.Render<TwDateTimePicker>(p => p
+            .Add(x => x.SelectedDateTime, new DateTime(2025, 11, 24, 11, 30, 0))
+        );
+
+        // Act
+        cut.Find("input").Focus();
+
+        // Assert - date input, hour input, minute input
+        var hourInput = cut.FindAll("input")[1];
+        var minuteInput = cut.FindAll("input")[2];
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
+        Assert.Contains(expectedClasses, hourInput.GetAttribute("class"));
+        Assert.Contains(expectedClasses, minuteInput.GetAttribute("class"));
+    }
+
+    [Fact]
     public void UnsetFormat_UsesThemeDefault24HourFormat()
     {
         // Arrange

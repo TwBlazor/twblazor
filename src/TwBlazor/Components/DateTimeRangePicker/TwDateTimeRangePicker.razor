@@ -46,7 +46,7 @@
                 @if (view == DatePickerCalendarView.Day)
                 {
                     <TwDatePickerBody Class="time">
-                        <TwTimePickerBody Id="@Id" Is12HourFormat="@Is12HourFormat" SelectedTime="@pendingTime" SelectedTimeChanged="@OnPendingTimeChanged" />
+                        <TwTimePickerBody Id="@Id" Variant="@effectiveVariant" Is12HourFormat="@Is12HourFormat" SelectedTime="@pendingTime" SelectedTimeChanged="@OnPendingTimeChanged" />
                     </TwDatePickerBody>
                 }
             </div>

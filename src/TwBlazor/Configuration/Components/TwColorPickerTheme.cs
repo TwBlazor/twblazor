@@ -39,11 +39,6 @@ public class TwColorPickerTheme
     public required string DialogPosition { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes for the dialog's surface (background, border radius, shadow, padding).
-    /// </summary>
-    public required string DialogSurface { get; set; }
-
-    /// <summary>
     /// Gets or sets the classes for the large color preview swatch shown at the top of the dialog.
     /// </summary>
     public required string PreviewSwatch { get; set; }

@@ -26,6 +26,8 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
 {
     private TwTimePickerTheme theme => options.Theme.Components.Require<TwTimePickerTheme>();
 
+    private TwOverlayTheme overlayTheme => options.Theme.Components.Require<TwOverlayTheme>();
+
     /// <summary>
     /// Reference to the trigger <see cref="TwTextfield{T}"/> instance, used to focus its actual
     /// &lt;input&gt; element directly - see <see cref="TwPopoverPickerComponentBase.triggerInputRef"/>.
@@ -118,10 +120,8 @@ public partial class TwTimeRangePicker : TwPopoverPickerComponentBase
 
     private string panelPositionClasses => new ClassBuilder(theme.PanelWrapper).Build();
 
-    private string panelSurfaceClasses => new ClassBuilder(theme.RangePanelSurface)
-        .AddClass(shadowBuilder.GetShadow(effectiveShadow))
-        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
-        .Build();
+    private string panelSurfaceClasses =>
+        popoverBuilder.GetSurfaceClasses(Rounded, Shadow, overlayTheme.TimeRangePopoverSize);
 
     private string stageTabsClasses => new ClassBuilder(theme.RangeStageTabsContainer).Build();
 
