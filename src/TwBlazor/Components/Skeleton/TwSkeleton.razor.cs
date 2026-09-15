@@ -1,9 +1,6 @@
 // Copyright (c) 2025 Jack Shuter @ TwBlazor - twblazor.com
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
-// Design and API shape inspired by MudBlazor's MudSkeleton
-// (https://github.com/MudBlazor/MudBlazor/tree/dev/src/MudBlazor/Components/Skeleton), MIT License.
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
@@ -16,8 +13,8 @@ namespace TwBlazor.Components;
 
 /// <summary>
 /// Renders a loading placeholder. With no <see cref="ChildContent"/> it renders a single static shape
-/// (<see cref="SkeletonType"/>/<see cref="Width"/>/<see cref="Height"/>), matching MudBlazor's
-/// <c>MudSkeleton</c>. With <see cref="ChildContent"/> supplied, it instead measures the real rendered
+/// (<see cref="SkeletonType"/>/<see cref="Width"/>/<see cref="Height"/>). 
+/// With <see cref="ChildContent"/> supplied, it instead measures the real rendered
 /// layout of that content (via the <c>twSkeleton.observe</c> JS interop call) and generates matching
 /// placeholder blocks automatically, so wrapping any markup in <c>&lt;TwSkeleton Loading="..."&gt;</c>
 /// produces a skeleton shaped like the content it hides.

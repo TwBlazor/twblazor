@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using System.Diagnostics.CodeAnalysis;
-using TwBlazor.Enums;
 using TwBlazor.Models;
 
 namespace TwBlazor.Configuration.Components;
@@ -13,36 +12,22 @@ namespace TwBlazor.Configuration.Components;
 /// </summary>
 /// <remarks>
 /// The styling categories exposed here (backdrop, surface, header, width breakpoints) mirror the container
-/// customization points found in MudBlazor's MudDialogProvider/MudDialogContainer (MIT licensed).
+/// customization points found in MudBlazor's MudDialogProvider/MudDialogContainer (MIT licensed). The
+/// dialog surface's background/rounded-corner/shadow defaults live on <see cref="TwOverlayTheme"/>
+/// instead (shared with every popover panel) - see <see cref="TwOverlayTheme.DialogBackground"/>,
+/// <see cref="TwOverlayTheme.DialogRounded"/>, <see cref="TwOverlayTheme.DialogShadow"/>.
 /// </remarks>
 [ExcludeFromCodeCoverage]
 public class TwDialogTheme
 {
-    /// <summary>
-    /// Gets or sets the default border radius for dialogs.
-    /// </summary>
-    /// <remarks>
-    /// If not set, falls back to global <see cref="TwBlazorRounded.DefaultRounded"/>.
-    /// Individual dialogs can override this via <see cref="TwDialogOptions.Rounded"/>.
-    /// </remarks>
-    public Rounded? DialogRounded { get; set; }
-
-    /// <summary>
-    /// Gets or sets the default shadow level for dialogs.
-    /// </summary>
-    /// <remarks>
-    /// If not set, falls back to global <see cref="TwBlazorShadow.DefaultShadow"/>.
-    /// Individual dialogs can override this via <see cref="TwDialogOptions.Shadow"/>.
-    /// </remarks>
-    public Shadow? DialogShadow { get; set; }
-
     /// <summary>
     /// Gets or sets the classes for the fixed overlay that darkens the page and positions the dialog.
     /// </summary>
     public required string Backdrop { get; set; }
 
     /// <summary>
-    /// Gets or sets the base classes for the visible dialog surface (the card containing the dialog content).
+    /// Gets or sets the base classes for the visible dialog surface (the card containing the dialog
+    /// content) - layout and sizing only; background comes from <see cref="TwOverlayTheme.DialogBackground"/>.
     /// </summary>
     public required string Surface { get; set; }
 

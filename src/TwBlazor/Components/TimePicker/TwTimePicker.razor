@@ -32,9 +32,10 @@
 
         @if (isFocused)
         {
-            <div class="@theme.PanelPosition" role="dialog" aria-label="Choose time" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
+            <div class="@theme.PanelWrapper" role="dialog" aria-label="Choose time" tabindex="-1" @ref="PanelRef" @onkeydown="OnPanelKeyDownAsync">
                 <TwTimePickerBody Class="@bodyClasses"
                                     Id="@Id"
+                                    Variant="@effectiveVariant"
                                     Is12HourFormat="@Is12HourFormat"
                                     SelectedTime="@SelectedTime"
                                     SelectedTimeChanged="@OnTimePickerChanged" />

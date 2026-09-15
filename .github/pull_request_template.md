@@ -8,5 +8,6 @@
 
 ## Checklist
 
+- [ ] I have read the [Contributing Guidelines](https://github.com/TwBlazor/twblazor/blob/develop/CONTRIBUTING.md) and [Code of Conduct](https://github.com/TwBlazor/twblazor/blob/develop/CODE_OF_CONDUCT.md).
 - [ ] Unit tests updated?
 - [ ] Documentation updated?

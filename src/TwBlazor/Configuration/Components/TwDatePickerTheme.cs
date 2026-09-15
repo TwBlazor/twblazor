@@ -15,7 +15,8 @@ namespace TwBlazor.Configuration.Components;
 public class TwDatePickerTheme
 {
     /// <summary>
-    /// Gets or sets the classes for the header that displays navigation between days, months, and decades.
+    /// Gets or sets the classes for the header that displays navigation between days, months, and
+    /// decades. Its background comes from the shared <see cref="TwOverlayTheme.PopoverBackground"/>.
     /// </summary>
     public required string Header { get; set; }
 
@@ -25,7 +26,9 @@ public class TwDatePickerTheme
     public required string WeekdaysHeader { get; set; }
 
     /// <summary>
-    /// Gets or sets the base classes for the picker dialog.
+    /// Gets or sets the positioning/layout/typography classes for the picker panel - background,
+    /// border, rounded corners, and shadow come from the shared <see cref="TwOverlayTheme"/> via
+    /// <see cref="Builders.PopoverBuilder"/> instead of being baked in here.
     /// </summary>
     public required string Base { get; set; }
 

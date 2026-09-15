@@ -1,11 +1,16 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Builders;
 using TwBlazor.Components;
+using TwBlazor.Configuration.Components;
+using TwBlazor.Enums;
 
 namespace TwBlazor.Tests.Components.TimeRangePicker;
 
 public class TwTimeRangePickerTests : TwBlazorTestBase
 {
+    private TwInputTheme inputTheme => Theme.Components.Require<TwInputTheme>();
+
     public TwTimeRangePickerTests()
     {
         TestContext.JSInterop.Mode = JSRuntimeMode.Loose;
@@ -41,6 +46,29 @@ public class TwTimeRangePickerTests : TwBlazorTestBase
         // Assert
         Assert.True(IsStageActive(cut, "Start"));
         Assert.Contains("role=\"dialog\"", cut.Markup);
+    }
+
+    [Fact]
+    public void PanelNumberInputs_UseGlobalDefaultVariant_WhenNotSet()
+    {
+        // Arrange - the embedded TwTimePickerBody's hour/minute inputs used to be styled with a
+        // hardcoded transparent-background look regardless of TwInputTheme.DefaultInputVariant, so
+        // they never looked "Filled" even when that was the configured global default.
+        inputTheme.DefaultInputVariant = InputVariant.Filled;
+
+        var cut = TestContext.Render<TwTimeRangePicker>();
+
+        // Act
+        cut.Find("input").Focus();
+
+        // Assert
+        var numberInputs = cut.FindAll("input").Skip(1).ToList(); // merged trigger, then hour/minute
+        Assert.Equal(2, numberInputs.Count);
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
+        foreach (var input in numberInputs)
+        {
+            Assert.Contains(expectedClasses, input.GetAttribute("class"));
+        }
     }
 
     [Fact]

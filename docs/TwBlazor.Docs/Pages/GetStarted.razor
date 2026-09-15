@@ -12,8 +12,8 @@
     </p>
 
     <TwTabContainer>
-        <TwTab Label="Blazor Web App (Server)">
-            <PageCard Title="1. Create the project">
+        <TwTab Label="Blazor Server">
+            <PageCard Title="1. Create the project" NoMarginTop>
                 <p Class="mb-3">
                     Scaffold a new Blazor Web App using the default Interactive Server render mode. This creates a single project. Replace <code>{YourProjectName}</code> with your own project's name.
                 </p>
@@ -96,8 +96,8 @@
             </PageCard>
         </TwTab>
 
-        <TwTab Label="Blazor Web App (WebAssembly)">
-            <PageCard Title="1. Create the project">
+        <TwTab Label="Blazor WebAssembly">
+            <PageCard Title="1. Create the project" NoMarginTop>
                 <p Class="mb-3">
                     Scaffold a new Blazor Web App with WebAssembly interactivity. Unlike the Server model, this creates <strong>two</strong> projects side by side. Replace <code>{YourProjectName}</code> with your own project's name.
                 </p>
@@ -320,7 +320,7 @@
         @source "../../**/*.razor";
         @source "../../Theme.cs";
 
-        /* Powers TwSkeleton's Wave variant - a shimmer sweep Tailwind has no utility for. */
+        /* Powers TwSkeleton's wave animation. */
         @keyframes tw-skeleton-wave {
             0% {
                 transform: translateX(-100%);
@@ -343,6 +343,31 @@
 
         .dark .tw-skeleton-wave::after {
             background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+        }
+
+        /* Powers TwIcons's pulse animation */
+        .tw-icon-pulse::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background-color: currentColor;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 500ms ease-out, opacity 450ms ease-out;
+            pointer-events: none;
+        }
+
+        .tw-icon-pulse:active::after {
+            opacity: 0.25;
+            transform: scale(1);
+            transition: transform 120ms ease-out, opacity 80ms ease-out;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tw-icon-pulse::after {
+                transition: none;
+            }
         }
         """;
 
@@ -362,7 +387,7 @@
         @source "../../../{YourProjectName}.Client/**/*.razor";
         @source "../../../{YourProjectName}.Client/Theme.cs";
 
-        /* Powers TwSkeleton's Wave variant - a shimmer sweep Tailwind has no utility for. */
+        /* Powers TwSkeleton's wave animation. */
         @keyframes tw-skeleton-wave {
             0% {
                 transform: translateX(-100%);
@@ -385,6 +410,31 @@
 
         .dark .tw-skeleton-wave::after {
             background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+        }
+
+        /* Powers TwIcons's pulse animation */
+        .tw-icon-pulse::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background-color: currentColor;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 500ms ease-out, opacity 450ms ease-out;
+            pointer-events: none;
+        }
+
+        .tw-icon-pulse:active::after {
+            opacity: 0.25;
+            transform: scale(1);
+            transition: transform 120ms ease-out, opacity 80ms ease-out;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tw-icon-pulse::after {
+                transition: none;
+            }
         }
         """;
 

@@ -317,10 +317,11 @@ Opening a PR prefills the description from
 
 - **Changes**, what does this PR change?
 - **Testing**, how was it verified?
-- **Checklist**, tick at least one box
+- **Checklist**, the "I have read the Contributing Guidelines and Code of
+  Conduct" item must be ticked
 
-An unedited template, or a section left as just the placeholder comment, will
-**fail** the check.
+An unedited template, a section left as just the placeholder comment, or an
+unticked contributing-guidelines item will **fail** the check.
 
 ---
 

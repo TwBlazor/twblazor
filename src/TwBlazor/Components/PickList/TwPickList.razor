@@ -15,11 +15,11 @@
             @if (AllowReorder)
             {
                 <div class="@theme.ReorderButtons">
-                    <TwIcon Icon="Icon.Chevron_Up" ButtonVariant="ButtonVariant.Text"
+                    <TwIcon Icon="Icon.Chevron_Up"
                             Disabled="@(Disabled || selectedSource.Count == 0)"
                             OnClick="@(() => MoveSelectionAsync(true, true))"
                             AriaLabel="@($"Move selected {SourceLabel} item up")" />
-                    <TwIcon Icon="Icon.Chevron_Down" ButtonVariant="ButtonVariant.Text"
+                    <TwIcon Icon="Icon.Chevron_Down"
                             Disabled="@(Disabled || selectedSource.Count == 0)"
                             OnClick="@(() => MoveSelectionAsync(true, false))"
                             AriaLabel="@($"Move selected {SourceLabel} item down")" />
@@ -47,24 +47,24 @@
     </div>
 
     <div class="@theme.TransferButtonColumn">
-        <TwIcon Icon="Icon.Chevron_Right" ButtonVariant="ButtonVariant.Outlined"
+        <TwIcon Icon="Icon.Chevron_Right"
                 Disabled="@(Disabled || selectedSource.Count == 0)"
                 OnClick="@(() => TransferSelectedAsync(true))"
                 AriaLabel="@($"Move selected items to {TargetLabel}")" />
         @if (ShowMoveAllButtons)
         {
-            <TwIcon Icon="Icon.Chevron_Double_Right" ButtonVariant="ButtonVariant.Outlined"
+            <TwIcon Icon="Icon.Chevron_Double_Right" 
                     Disabled="@(Disabled || !SourceItems.Any())"
                     OnClick="@(() => TransferAllAsync(true))"
                     AriaLabel="@($"Move all items to {TargetLabel}")" />
         }
-        <TwIcon Icon="Icon.Chevron_Left" ButtonVariant="ButtonVariant.Outlined"
+        <TwIcon Icon="Icon.Chevron_Left"
                 Disabled="@(Disabled || selectedTarget.Count == 0)"
                 OnClick="@(() => TransferSelectedAsync(false))"
                 AriaLabel="@($"Move selected items to {SourceLabel}")" />
         @if (ShowMoveAllButtons)
         {
-            <TwIcon Icon="Icon.Chevron_Double_Left" ButtonVariant="ButtonVariant.Outlined"
+            <TwIcon Icon="Icon.Chevron_Double_Left"
                     Disabled="@(Disabled || !TargetItems.Any())"
                     OnClick="@(() => TransferAllAsync(false))"
                     AriaLabel="@($"Move all items to {SourceLabel}")" />
@@ -77,11 +77,11 @@
             @if (AllowReorder)
             {
                 <div class="@theme.ReorderButtons">
-                    <TwIcon Icon="Icon.Chevron_Up" ButtonVariant="ButtonVariant.Text"
+                    <TwIcon Icon="Icon.Chevron_Up"
                             Disabled="@(Disabled || selectedTarget.Count == 0)"
                             OnClick="@(() => MoveSelectionAsync(false, true))"
                             AriaLabel="@($"Move selected {TargetLabel} item up")" />
-                    <TwIcon Icon="Icon.Chevron_Down" ButtonVariant="ButtonVariant.Text"
+                    <TwIcon Icon="Icon.Chevron_Down"
                             Disabled="@(Disabled || selectedTarget.Count == 0)"
                             OnClick="@(() => MoveSelectionAsync(false, false))"
                             AriaLabel="@($"Move selected {TargetLabel} item down")" />

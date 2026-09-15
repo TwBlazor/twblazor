@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using System.Linq;
+using TwBlazor.Configuration.Components;
 using TwBlazor.Enums;
 using TwBlazor.Extensions;
 using TwBlazor.Utilities;
@@ -17,6 +19,8 @@ namespace TwBlazor.Components;
 /// </remarks>
 public partial class TwIcon : TwBlazorComponentBase
 {
+    private TwIconTheme iconTheme => options.Theme.Components.Require<TwIconTheme>();
+
     /// <summary>
     /// Gets or sets the callback that is invoked when the icon is clicked.
     /// </summary>
@@ -91,6 +95,34 @@ public partial class TwIcon : TwBlazorComponentBase
     /// </summary>
     private bool hasAccessibleName => !string.IsNullOrEmpty(AriaLabel) || !string.IsNullOrEmpty(AriaLabelledBy);
 
+    private static readonly char[] _classSeparator = [' '];
+    private static readonly string[] _positionUtilities = ["absolute", "fixed", "sticky", "relative"];
+
+    /// <summary>
+    /// Gets whether <see cref="RootClass"/> already establishes its own CSS positioning context (e.g.
+    /// TwCodeBlock's copy button passes <c>absolute right-3 mt-2</c> to overlay the code block).
+    /// </summary>
+    /// <remarks>
+    /// <see cref="TwIconTheme.Pulse"/>'s own <c>relative</c> utility is dropped when this is true - see
+    /// <see cref="pulseClasses"/> - because Tailwind's <c>.relative</c> and <c>.absolute</c> rules have
+    /// identical specificity, so whichever is later in the generated stylesheet wins regardless of class
+    /// order in the HTML; keeping <c>relative</c> here would silently override the caller's <c>absolute</c>
+    /// and break its positioning.
+    /// </remarks>
+    private bool rootClassHasOwnPosition => RootClass
+        .Split(_classSeparator, StringSplitOptions.RemoveEmptyEntries)
+        .Any(_positionUtilities.Contains);
+
+    /// <summary>
+    /// Gets <see cref="TwIconTheme.Pulse"/> with its <c>relative</c> utility stripped when
+    /// <see cref="RootClass"/> already positions the button itself - <c>absolute</c> (or any other
+    /// non-static position) already gives the pulse's <c>::after</c> pseudo-element a valid containing
+    /// block, so <c>relative</c> would be redundant even if it didn't conflict.
+    /// </summary>
+    private string pulseClasses => rootClassHasOwnPosition
+        ? string.Join(' ', iconTheme.Pulse.Split(_classSeparator, StringSplitOptions.RemoveEmptyEntries).Where(c => c != "relative"))
+        : iconTheme.Pulse;
+
     /// <summary>
     /// Gets the classes applied to the rendered <see cref="TwButton"/> when <see cref="OnClick"/> is set.
     /// </summary>
@@ -98,8 +130,13 @@ public partial class TwIcon : TwBlazorComponentBase
     /// <see cref="TwBlazorComponentBase.Class"/> is treated as styling for the interactive element (padding, hover, focus, etc.),
     /// not the icon glyph itself, so it is combined here with <see cref="RootClass"/> rather than applied
     /// to the inner &lt;i&gt; - otherwise the button's clickable/focusable area wouldn't match its visual size.
+    /// The hover state-layer and press pulse are skipped for <see cref="Plain"/> icon buttons - Plain hands the
+    /// caller full control of appearance (e.g. a chip's close button already themes its own hover), and for
+    /// <see cref="Disabled"/> ones, which shouldn't hint at interactivity they don't have.
     /// </remarks>
     private string buttonClasses => new ClassBuilder(RootClass)
+        .AddClass(iconTheme.HoverBackground, !Plain && !Disabled)
+        .AddClass(pulseClasses, !Plain && !Disabled)
         .AddClass(Class)
         .Build();
 

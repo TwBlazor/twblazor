@@ -9,6 +9,7 @@ namespace TwBlazor.Tests.Components.Icon;
 public class TwIconTests : TwBlazorTestBase
 {
     private TwButtonTheme buttonTheme => Theme.Components.Require<TwButtonTheme>();
+    private TwIconTheme iconTheme => Theme.Components.Require<TwIconTheme>();
 
     [Fact]
     public void TwIcon_Renders_WithDefaultValues()
@@ -346,6 +347,77 @@ public class TwIconTests : TwBlazorTestBase
         var icon = cut.Find("i");
         var iconClasses = icon.GetAttribute("class");
         Assert.DoesNotContain("text-", iconClasses);
+    }
+
+    [Fact]
+    public void TwIcon_RendersButton_WithHoverAndPulseClasses()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwIcon>(parameters => parameters
+            .Add(p => p.Icon, Icons.Trash)
+            .Add(p => p.OnClick, () => { }));
+
+        // Assert - default (non-Plain, non-Disabled) icon buttons get the circular
+        // hover state-layer and press pulse, even with no Color set (where the button's own
+        // variant/color classes are empty).
+        var button = cut.Find("button");
+        var classes = button.GetAttribute("class");
+        Assert.Contains(iconTheme.HoverBackground, classes);
+        Assert.Contains(iconTheme.Pulse, classes);
+    }
+
+    [Fact]
+    public void TwIcon_RendersButton_WithAbsoluteRootClass_OmitsConflictingRelative()
+    {
+        // Arrange & Act - RootClass positioning callers (e.g. TwCodeBlock's copy button, which passes
+        // "absolute right-3 mt-2") must keep their own "absolute": Tailwind's ".relative" and
+        // ".absolute" rules have equal specificity, so if the pulse's own "relative" were kept
+        // alongside it, whichever rule is later in the generated stylesheet would silently win and
+        // could break the caller's intended overlay positioning.
+        var cut = TestContext.Render<TwIcon>(parameters => parameters
+            .Add(p => p.Icon, Icons.Copy)
+            .Add(p => p.RootClass, "absolute right-3 mt-2")
+            .Add(p => p.OnClick, () => { }));
+
+        // Assert
+        var button = cut.Find("button");
+        var classes = button.GetAttribute("class");
+        Assert.Contains("absolute", classes);
+        Assert.Contains("tw-icon-pulse", classes);
+        Assert.DoesNotContain("relative", classes);
+    }
+
+    [Fact]
+    public void TwIcon_RendersButton_Plain_OmitsHoverAndPulseClasses()
+    {
+        // Arrange & Act - Plain hands full control of appearance to the caller (e.g. a chip's close
+        // button, which already themes its own hover), so it shouldn't also get the icon-button pulse.
+        var cut = TestContext.Render<TwIcon>(parameters => parameters
+            .Add(p => p.Icon, Icons.X)
+            .Add(p => p.Plain, true)
+            .Add(p => p.OnClick, () => { }));
+
+        // Assert
+        var button = cut.Find("button");
+        var classes = button.GetAttribute("class");
+        Assert.DoesNotContain(iconTheme.HoverBackground, classes);
+        Assert.DoesNotContain(iconTheme.Pulse, classes);
+    }
+
+    [Fact]
+    public void TwIcon_RendersButton_Disabled_OmitsHoverAndPulseClasses()
+    {
+        // Arrange & Act - a disabled icon button shouldn't hint at interactivity it doesn't have.
+        var cut = TestContext.Render<TwIcon>(parameters => parameters
+            .Add(p => p.Icon, Icons.Trash)
+            .Add(p => p.Disabled, true)
+            .Add(p => p.OnClick, () => { }));
+
+        // Assert
+        var button = cut.Find("button");
+        var classes = button.GetAttribute("class");
+        Assert.DoesNotContain(iconTheme.HoverBackground, classes);
+        Assert.DoesNotContain(iconTheme.Pulse, classes);
     }
 
     [Fact]
