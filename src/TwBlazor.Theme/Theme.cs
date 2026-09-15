@@ -308,7 +308,7 @@ public static class Theme
             Border = "border-[oklch(95%_0_0)] dark:border-[oklch(21.15%_0.012_254.09)]",
             BorderSubtle = "border-[oklch(98%_0_0)] dark:border-[oklch(23.26%_0.014_253.1)]",
             Hover = "hover:bg-[oklch(98%_0_0)] dark:hover:bg-[oklch(23.26%_0.014_253.1)]",
-            Elevated = "bg-[oklch(95%_0_0)] dark:bg-[oklch(34%_0.018_253)]",
+            Elevated = "bg-[oklch(97%_0_0)] dark:bg-[oklch(34%_0.018_253)]",
             Overlay = "bg-[oklch(100%_0_0)] dark:bg-[oklch(40%_0.016_253)]",
             BorderStrong = "border-[oklch(21%_0.006_285.885)]/25 dark:border-[oklch(97.807%_0.029_256.847)]/20"
         };
@@ -321,10 +321,6 @@ public static class Theme
             Subtle = "text-[oklch(55%_0.006_285.885)] dark:text-[oklch(68%_0.02_256.847)]"
         };
 
-        // The text treatment every input-family label uses (size, weight, tracking, color) - shared
-        // so TwCheckbox/TwRadioButton/TwSwitch's own flex-laid-out labels read the same as a standalone
-        // TwTextfield/TwSelect label, even though their surrounding layout (inline flex + gap, rather
-        // than block + margin-bottom) is necessarily different.
         var inputLabelText = $"text-xs font-normal tracking-wide {neutralText.Muted}";
 
         var display = new TwBlazorDisplay
@@ -441,8 +437,6 @@ public static class Theme
             Hidden = "overflow-hidden"
         };
 
-        // Property/duration/easing primitives plus the common pre-combined pairs, so "transition-colors
-        // duration-200" (the majority case across interactive components) has exactly one home.
         var transition = new TwBlazorTransition
         {
             Colors = "transition-colors",
