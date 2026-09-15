@@ -75,32 +75,25 @@
     else
     {
         <div class="@options.Theme.Position.Relative">
-            <div id="@Id"
-                 class="@triggerClasses"
-                 role="button"
-                 tabindex="@(Disabled ? "-1" : "0")"
-                 aria-haspopup="listbox"
-                 aria-expanded="@(isFocused ? "true" : "false")"
-                 aria-disabled="@(Disabled ? "true" : null)"
-                 aria-readonly="@(ReadOnly ? "true" : null)"
-                 aria-label="@AriaLabel"
-                 aria-labelledby="@AriaLabelledBy"
-                 @attributes="@Attributes"
-                 @onclick="@ToggleOrOpenPanelAsync"
-                 @onkeydown="@OnTriggerKeyDownAsync">
-                @if (selectedValueIds.Count == 0)
+            <div class="@triggerClasses">
+                @foreach (var id in orderedSelectedValueIds)
                 {
-                    @Placeholder
+                    <span @onclick:stopPropagation="true">
+                        <TwChip Label="@GetDisplayText(parsedValues[id])" Size="ChipSize.Large" Variant="ButtonVariant.Outlined" Closable="@(!Disabled && !ReadOnly)" OnClose="@(() => RemoveSelectionAsync(id))" />
+                    </span>
                 }
-                else
-                {
-                    @foreach (var id in orderedSelectedValueIds)
-                    {
-                        <span @onclick:stopPropagation="true">
-                            <TwChip Label="@GetDisplayText(parsedValues[id])" Size="ChipSize.Large" Variant="ButtonVariant.Outlined" Closable="@(!Disabled && !ReadOnly)" OnClose="@(() => RemoveSelectionAsync(id))" />
-                        </span>
-                    }
-                }
+                <button type="button"
+                        id="@Id"
+                        class="@theme.SelectMultiOpenButton"
+                        aria-haspopup="listbox"
+                        aria-expanded="@(isFocused ? "true" : "false")"
+                        aria-readonly="@(ReadOnly ? "true" : null)"
+                        aria-label="@AriaLabel"
+                        aria-labelledby="@AriaLabelledBy"
+                        @attributes="@Attributes"
+                        @onclick="@ToggleOrOpenPanelAsync">
+                    @(selectedValueIds.Count == 0 ? Placeholder : null)
+                </button>
             </div>
 
             @if (isFocused)

@@ -840,6 +840,9 @@
   .min-w-12 {
     min-width: calc(var(--spacing) * 12);
   }
+  .min-w-\[2rem\] {
+    min-width: 2rem;
+  }
   .flex-1 {
     flex: 1;
   }

@@ -871,7 +871,8 @@ public class TwSelectTests : TwBlazorTestBase
 
         // Assert
         Assert.Throws<ElementNotFoundException>(() => cut.Find("select"));
-        var trigger = cut.Find("div[role='button']");
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
         Assert.Contains(inputTheme.SelectBase, trigger.GetAttribute("class"));
     }
 
@@ -886,7 +887,8 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Values, _threeStringOptions));
 
         // Assert
-        var trigger = cut.Find("div[role='button']");
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
         Assert.Contains("Pick some options...", trigger.TextContent);
     }
 
@@ -901,7 +903,8 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.SelectedValues, new[] { "Option1", "Option3" }));
 
         // Assert
-        var trigger = cut.Find("div[role='button']");
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
         Assert.Contains("Option1", trigger.TextContent);
         Assert.Contains("Option3", trigger.TextContent);
         Assert.DoesNotContain("Option2", trigger.TextContent);
@@ -922,7 +925,8 @@ public class TwSelectTests : TwBlazorTestBase
         // Assert - TwChipTheme.Lg is the only size that sets h-8. The chip itself is the inner <span>,
         // nested inside the @onclick:stopPropagation wrapper <span> that keeps chip removal from also
         // toggling the popover.
-        var trigger = cut.Find("div[role='button']");
+        var button = cut.Find("button[aria-haspopup='listbox']");
+        var trigger = button.ParentElement!;
         var chip = trigger.QuerySelector("span span");
         Assert.NotNull(chip);
         Assert.Contains("h-8", chip.GetAttribute("class"));
@@ -938,7 +942,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Values, _threeStringOptions));
 
         // Act
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Assert - one checkbox per option, inside a dialog-role popover panel
         var panel = cut.Find("div[role='dialog']");
@@ -955,7 +959,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions));
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Assert
         var panel = cut.Find("div[role='dialog']");
@@ -975,7 +979,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Values, _threeStringOptions));
 
         // Act
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Assert
         Assert.Throws<ElementNotFoundException>(() => cut.Find("div[role='dialog']"));
@@ -992,7 +996,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Values, _threeStringOptions));
 
         // Act
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Assert
         Assert.Throws<ElementNotFoundException>(() => cut.Find("div[role='dialog']"));
@@ -1008,7 +1012,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Values, _threeStringOptions)
             .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<string>>(this, v => selectedValues = v)));
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Act - checks the first checkbox (Option1)
         cut.FindAll("input[type='checkbox']")[0].Change(true);
@@ -1056,7 +1060,7 @@ public class TwSelectTests : TwBlazorTestBase
             .Add(p => p.Values, values)
             .Add(p => p.PropertyName, "Name")
             .Add(p => p.SelectedValuesChanged, EventCallback.Factory.Create<IEnumerable<TestModel>>(this, v => selectedModels = v)));
-        cut.Find("div[role='button']").Click();
+        cut.Find("button[aria-haspopup='listbox']").Click();
 
         // Act
         cut.FindAll("input[type='checkbox']")[1].Change(true);

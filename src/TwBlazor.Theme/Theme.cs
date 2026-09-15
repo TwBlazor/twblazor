@@ -864,6 +864,7 @@ public static class Theme
                     SelectReadOnlyBackground = "!bg-none",
                     SelectMultiTriggerLayout = $"{display.Flex} {flexbox.Wrap} {flexbox.Align.Center} {spacing.Gap.Sm}",
                     SelectNativeMultiOverlay = $"{positioning.Absolute} inset-0 {sizing.Full} m-0 opacity-0 {interaction.PointerCursor} {interaction.FocusOutlineNone} touch-manipulation",
+                    SelectMultiOpenButton = $"{flexbox.Flex1} min-w-[2rem] truncate text-left bg-transparent border-0 {interaction.FocusOutlineNone}",
                     SelectPanelPosition = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Sm} {sizing.FullWidth}",
                     SelectPanelSurface = $"overflow-y-auto max-h-64 {spacing.Padding.Sm}",
                     SelectPanelItemText = "[&_label]:!text-[oklch(21%_0.006_285.885)] dark:[&_label]:!text-[oklch(97.807%_0.029_256.847)]",

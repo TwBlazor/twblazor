@@ -322,6 +322,7 @@ public class TwInputThemeTests
         SelectReadOnlyBackground = "select-readonly-bg",
         SelectMultiTriggerLayout = "select-multi-trigger-layout",
         SelectNativeMultiOverlay = "select-native-multi-overlay",
+        SelectMultiOpenButton = "select-multi-open-button",
         SelectPanelPosition = "select-panel-position",
         SelectPanelSurface = "select-panel-surface",
         SelectPanelItemText = "select-panel-item-text",

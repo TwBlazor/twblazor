@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using TwBlazor.Builders;
 using TwBlazor.Configuration.Components;
@@ -100,14 +99,12 @@ public partial class TwSelect<T> : TwPopoverPickerComponentBase
     private HashSet<int> selectedValueIds { get; set; } = [];
 
     /// <summary>
-    /// Gets the CSS classes applied to the select element (and, in <see cref="Multiple"/> mode, its
-    /// decorative closed trigger).
+    /// Gets the shared box classes (background, border, padding, disabled/readonly treatment) behind
+    /// both <see cref="classes"/> and <see cref="triggerClasses"/>, parameterized on which "focus" variant
+    /// shows the border - the two differ only in that.
     /// </summary>
-    private string classes => new ClassBuilder(theme.SelectBase)
-        // A native <select> focuses on mouse click same as keyboard, so theme.FocusBorder's plain
-        // "focus:" variant (shared with text inputs, where showing the border on click is fine)
-        // is rewritten to "focus-visible:" here so the border only appears on keyboard focus.
-        .AddClass(inputVariantBuilder.GetClasses(effectiveVariant, theme).Replace("focus:", "focus-visible:", StringComparison.Ordinal))
+    private string GetBoxClasses(string focusVariant) => new ClassBuilder(theme.SelectBase)
+        .AddClass(inputVariantBuilder.GetClasses(effectiveVariant, theme).Replace("focus:", focusVariant, StringComparison.Ordinal))
         .AddClass(theme.SelectDefaultPadding, effectiveVariant == InputVariant.Default)
         // Default/Outlined variants make the field's own background bg-transparent so it blends
         // with the surrounding page - fine for <input>, but a native <select> popup renders using
@@ -118,17 +115,33 @@ public partial class TwSelect<T> : TwPopoverPickerComponentBase
         .AddClass(Disabled ? $"{options.Theme.Interaction.DisabledOpacity} {options.Theme.Interaction.DisabledCursor}" : string.Empty)
         .AddClass(ReadOnly ? theme.SelectReadOnlyBackground : string.Empty)
         .AddClass(ReadOnly && !Disabled ? options.Theme.Interaction.PointerEventsNone : string.Empty)
+        .Build();
+
+    /// <summary>
+    /// Gets the CSS classes applied to the select element.
+    /// </summary>
+    private string classes => new ClassBuilder(GetBoxClasses("focus-visible:"))
+        // A native <select> focuses on mouse click same as keyboard, so theme.FocusBorder's plain
+        // "focus:" variant (shared with text inputs, where showing the border on click is fine)
+        // is rewritten to "focus-visible:" here so the border only appears on keyboard focus.
         .AddClass(Class)
         .Build();
 
     /// <summary>
     /// Gets the classes for <see cref="Multiple"/>'s decorative closed trigger (the div shown behind the
-    /// invisible native overlay select, or the clickable custom-popover trigger) - <see cref="classes"/>
-    /// plus the flex-wrap layout needed to hold a row of selected-option chips.
+    /// invisible native overlay select, or holding the custom-popover's chips/open button) - the same box
+    /// look as <see cref="classes"/>, plus the flex-wrap layout needed for a row of chips.
     /// </summary>
-    private string triggerClasses => new ClassBuilder(classes)
+    /// <remarks>
+    /// The box itself is never the focusable/interactive element here (its content is - see
+    /// <see cref="TwInputTheme.SelectMultiOpenButton"/> and each chip's own close button), so its
+    /// focus-ring border uses <c>focus-within:</c> rather than <c>focus:</c>/<c>focus-visible:</c> - it
+    /// shows whenever a descendant has focus, the same way a real &lt;select&gt;'s border shows when it
+    /// itself is focused.
+    /// </remarks>
+    private string triggerClasses => new ClassBuilder(GetBoxClasses("focus-within:"))
         .AddClass(theme.SelectMultiTriggerLayout)
-        .AddClass(options.Theme.Interaction.PointerCursor, !Disabled && !ReadOnly)
+        .AddClass(Class)
         .Build();
 
     /// <summary>
@@ -308,19 +321,6 @@ public partial class TwSelect<T> : TwPopoverPickerComponentBase
         isFocused = true;
         PendingOpenFocus = true;
         await RegisterOutsideClickAsync();
-    }
-
-    /// <summary>
-    /// Handles Enter/Space on the custom-popover trigger (a &lt;div role="button"&gt; rather than a real
-    /// &lt;button&gt;, since it also hosts each selected chip's own focusable remove button - nesting a
-    /// real &lt;button&gt; inside another isn't valid HTML), matching native button keyboard activation.
-    /// </summary>
-    private async Task OnTriggerKeyDownAsync(KeyboardEventArgs e)
-    {
-        if (e.Key is "Enter" or " ")
-        {
-            await ToggleOrOpenPanelAsync();
-        }
     }
 
     /// <summary>

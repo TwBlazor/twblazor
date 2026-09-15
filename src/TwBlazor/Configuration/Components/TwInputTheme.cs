@@ -83,6 +83,20 @@ public class TwInputTheme
     public required string SelectNativeMultiOverlay { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes for the real, focusable &lt;button&gt; at the end of a multi-select's
+    /// custom-popover trigger that actually opens the popover.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately a plain &lt;button&gt; sibling after the selected-option chips (not a wrapping
+    /// element around them) - an ARIA "button" role wrapping other focusable controls (each chip's own
+    /// close button) is a nested-interactive-controls violation, since assistive tech can't reliably
+    /// represent one interactive control inside another. It fills any remaining row width so most of the
+    /// closed trigger's empty space is still clickable, and shows <see cref="TwBlazor.Components.TwSelect{T}.Placeholder"/>
+    /// when nothing is selected.
+    /// </remarks>
+    public required string SelectMultiOpenButton { get; set; }
+
+    /// <summary>
     /// Gets or sets the positioning classes for a multi-select's custom checkbox-list popover panel.
     /// </summary>
     public required string SelectPanelPosition { get; set; }
