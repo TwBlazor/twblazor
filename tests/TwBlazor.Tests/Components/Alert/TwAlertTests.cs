@@ -233,7 +233,7 @@ public class TwAlertTests : TwBlazorTestBase
         // Assert
         var alert = cut.Find("div[role='alert']");
         Assert.Contains("py-2", alert.GetAttribute("class"));
-        Assert.Contains("px-4", alert.GetAttribute("class"));
+        Assert.Contains("px-3", alert.GetAttribute("class"));
         Assert.DoesNotContain("py-4", alert.GetAttribute("class"));
     }
 

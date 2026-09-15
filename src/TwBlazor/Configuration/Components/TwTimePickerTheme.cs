@@ -41,24 +41,14 @@ public class TwTimePickerTheme
     public required string NativeInputAppearance { get; set; }
 
     /// <summary>
-    /// Gets or sets the positioning classes for the popover panel's wrapper, anchoring it beneath the trigger,
-    /// including its own rounded/shadow chrome.
-    /// </summary>
-    public required string PanelPosition { get; set; }
-
-    /// <summary>
-    /// Gets or sets just the positioning classes for the popover panel's wrapper (no rounded/shadow chrome),
-    /// reused as-is by <see cref="TwBlazor.Components.TwTimeRangePicker"/>, whose panel surface (background,
-    /// border, rounded corners, padding) is applied by a separate inner element (<see cref="RangePanelSurface"/>)
-    /// instead of being folded into this one, the way <see cref="PanelPosition"/> does for the single picker.
+    /// Gets or sets the positioning classes for the popover panel's wrapper, anchoring it beneath the
+    /// trigger. Background/border/rounded/shadow/sizing are no longer baked in here - they come from
+    /// the shared <see cref="TwOverlayTheme"/> via <see cref="Builders.PopoverBuilder"/>, applied to
+    /// the panel's own surface element (<see cref="BodySurface"/> for the single picker,
+    /// <see cref="TwOverlayTheme.TimeRangePopoverSize"/> for <see cref="TwBlazor.Components.TwTimeRangePicker"/>)
+    /// instead of this wrapper.
     /// </summary>
     public required string PanelWrapper { get; set; }
-
-    /// <summary>
-    /// Gets or sets the classes for <see cref="TwBlazor.Components.TwTimeRangePicker"/>'s popover surface -
-    /// its background, border and sizing.
-    /// </summary>
-    public required string RangePanelSurface { get; set; }
 
     /// <summary>
     /// Gets or sets the classes for the Start/End step tab row shown in <see cref="TwBlazor.Components.TwTimeRangePicker"/>'s popover.
@@ -76,7 +66,9 @@ public class TwTimePickerTheme
     public required string StageTabBase { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes for the popover panel's surface (background, border, shadow, padding).
+    /// Gets or sets the padding/typography classes for the popover panel's surface, used by the single
+    /// <see cref="TwBlazor.Components.TwTimePicker"/> - background/border/rounded/shadow come from the
+    /// shared <see cref="TwOverlayTheme"/>.
     /// </summary>
     public required string BodySurface { get; set; }
 
@@ -111,8 +103,11 @@ public class TwTimePickerTheme
     public required string NumberWrapper { get; set; }
 
     /// <summary>
-    /// Gets or sets the base classes for the hour/minute number inputs, excluding hover/focus border and
-    /// ring colors - those are resolved dynamically from the shared theme color tokens.
+    /// Gets or sets the structural/typography classes for the hour/minute number inputs (sizing,
+    /// alignment, font weight, text color, transitions). Excludes border, background, and rounding -
+    /// those come from <see cref="Builders.InputVariantBuilder"/> so the inputs follow the same
+    /// Default/Outlined/Filled variant as every other text input - and excludes hover/focus border and
+    /// ring colors, which are resolved dynamically from the shared theme color tokens.
     /// </summary>
     public required string NumberInput { get; set; }
 

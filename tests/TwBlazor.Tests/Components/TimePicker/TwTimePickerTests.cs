@@ -84,6 +84,31 @@ public class TwTimePickerTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void PanelNumberInputs_UseGlobalDefaultVariant_WhenNotSet()
+    {
+        // Arrange - the hour/minute number inputs inside the popover used to be styled with a
+        // hardcoded transparent-background look regardless of TwInputTheme.DefaultInputVariant,
+        // so they never looked "Filled" even when that was the configured global default.
+        inputTheme.DefaultInputVariant = InputVariant.Filled;
+
+        var cut = TestContext.Render<TwTimePicker>(p => p
+            .Add(x => x.SelectedTime, new TimeOnly(10, 15))
+        );
+
+        // Act
+        cut.Find("input[type='text']").Focus();
+
+        // Assert
+        var numberInputs = cut.FindAll("input[type='text']").Skip(1).ToList();
+        Assert.Equal(2, numberInputs.Count); // hour, minute
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
+        foreach (var input in numberInputs)
+        {
+            Assert.Contains(expectedClasses, input.GetAttribute("class"));
+        }
+    }
+
+    [Fact]
     public void TwTimePicker_RendersLabel_WhenProvided()
     {
         // Act

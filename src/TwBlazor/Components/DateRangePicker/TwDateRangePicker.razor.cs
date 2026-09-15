@@ -159,8 +159,7 @@ public partial class TwDateRangePicker : TwPopoverPickerComponentBase
     // not aware of a narrower positioned/overflow ancestor) - capping the width and letting it
     // scroll horizontally keeps it fully reachable instead of silently clipping off-screen.
     private string datepickerContainerClasses => new ClassBuilder($"{theme.PanelMaxWidth} {theme.PanelMaxHeight}")
-        .AddClass(shadowBuilder.GetShadow(effectiveShadow))
-        .AddClass(roundedBuilder.GetRounded(effectiveRounded))
+        .AddClass(popoverBuilder.GetSurfaceClasses(Rounded, Shadow))
         .AddClass(theme.Base)
         .Build();
 

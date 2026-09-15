@@ -72,15 +72,16 @@ public partial class TwTab : TwBlazorComponentBase
     /// The tab's text color classes. Unlike <see cref="ColorBuilder.GetTextColor"/>'s other consumer
     /// (<see cref="TwIcon"/>, which should inherit its surrounding element's color via
     /// <c>currentColor</c> when no explicit <see cref="Color"/> is set), a tab button has no useful
-    /// color to inherit, so it falls back to the theme's neutral heading color instead of an empty
-    /// string.
+    /// color to inherit, so it falls back to the same brand-purple pairing an explicit
+    /// <see cref="Enums.Color.Primary"/> would produce (<c>text-purple-600 dark:text-purple-200</c>)
+    /// instead of an empty string.
     /// </summary>
     private string tabTextColor
     {
         get
         {
             var color = colorBuilder.GetTextColor(Color);
-            return string.IsNullOrEmpty(color) ? options.Theme.Colors.NeutralText.Heading : color;
+            return string.IsNullOrEmpty(color) ? colorBuilder.GetTextColor(Enums.Color.Primary) : color;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿<TwCard Id="@Id" Class="my-6">
+﻿@using TwBlazor.Utilities
+<TwCard Id="@Id" Class="@classes">
     <h3 class="mb-4 text-xl font-semibold">@Title</h3>
     @ChildContent
 </TwCard>
@@ -7,4 +8,12 @@
     [Parameter] public string? Id { get; set; }
     [Parameter] public string? Title { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool NoMarginTop { get; set; }
+    [Parameter] public bool NoMarginBottom { get; set; }
+
+    private string classes => new ClassBuilder()
+        .AddClass("my-6", !NoMarginBottom && !NoMarginTop)
+        .AddClass("mt-6", NoMarginBottom)
+        .AddClass("mb-6", NoMarginTop).Build();
 }

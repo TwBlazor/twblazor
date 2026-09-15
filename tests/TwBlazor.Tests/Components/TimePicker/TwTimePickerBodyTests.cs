@@ -1,11 +1,76 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Builders;
 using TwBlazor.Components.TimePicker;
+using TwBlazor.Configuration.Components;
+using TwBlazor.Enums;
 
 namespace TwBlazor.Tests.Components.TimePicker;
 
 public class TwTimePickerBodyTests : TwBlazorTestBase
 {
+    private TwInputTheme inputTheme => Theme.Components.Require<TwInputTheme>();
+
+    [Fact]
+    public void NumberInputs_UseGlobalDefaultVariant_WhenNotSet()
+    {
+        // Arrange - the hour/minute number inputs used to be styled with a hardcoded
+        // transparent-background/bottom-border look, completely independent of
+        // TwInputTheme.DefaultInputVariant, so they never looked "Filled" even when that was
+        // the configured global default. They must now follow it like every other text input.
+        inputTheme.DefaultInputVariant = InputVariant.Filled;
+
+        // Act
+        var cut = TestContext.Render<TwTimePickerBody>();
+
+        // Assert
+        var hourInput = cut.FindAll("input[type='text']")[0];
+        var minuteInput = cut.FindAll("input[type='text']")[1];
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
+        Assert.Contains(expectedClasses, hourInput.GetAttribute("class"));
+        Assert.Contains(expectedClasses, minuteInput.GetAttribute("class"));
+
+        // A conflicting "bg-transparent" baked into TwTimePickerTheme.NumberInput regressed once
+        // before without any test catching it, because asserting the Filled classes were merely
+        // *present* doesn't notice an extra class silently fighting them for the background - assert
+        // it's actually absent too.
+        Assert.DoesNotContain("bg-transparent", hourInput.GetAttribute("class"));
+        Assert.DoesNotContain("bg-transparent", minuteInput.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void NumberInputs_UseGlobalDefaultVariant_WhenNotSet_Outlined()
+    {
+        // Arrange - same as above, but for a non-Filled global default, proving the inputs track
+        // whatever TwInputTheme.DefaultInputVariant is configured to rather than one hardcoded look.
+        inputTheme.DefaultInputVariant = InputVariant.Outlined;
+
+        // Act
+        var cut = TestContext.Render<TwTimePickerBody>();
+
+        // Assert
+        var hourInput = cut.FindAll("input[type='text']")[0];
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Outlined, inputTheme);
+        Assert.Contains(expectedClasses, hourInput.GetAttribute("class"));
+    }
+
+    [Fact]
+    public void NumberInputs_ExplicitVariant_OverridesGlobalDefault()
+    {
+        // Arrange - the global default is Outlined, but this instance explicitly asks for Filled.
+        inputTheme.DefaultInputVariant = InputVariant.Outlined;
+
+        // Act
+        var cut = TestContext.Render<TwTimePickerBody>(p => p
+            .Add(x => x.Variant, InputVariant.Filled)
+        );
+
+        // Assert
+        var hourInput = cut.FindAll("input[type='text']")[0];
+        var expectedClasses = InputVariantBuilder.GetClasses(InputVariant.Filled, inputTheme);
+        Assert.Contains(expectedClasses, hourInput.GetAttribute("class"));
+    }
+
     [Fact]
     public void TwTimePickerBody_RendersWithDefaultTime()
     {

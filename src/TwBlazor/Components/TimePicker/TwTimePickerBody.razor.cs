@@ -2,16 +2,37 @@
 // Licensed under the MIT License. See LICENSE.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Components;
+using TwBlazor.Builders;
 using TwBlazor.Configuration.Components;
+using TwBlazor.Enums;
 using TwBlazor.Utilities;
 
 namespace TwBlazor.Components.TimePicker;
 
 public partial class TwTimePickerBody
 {
+    [Inject] private InputVariantBuilder inputVariantBuilder { get; set; } = null!;
+
     private TwTimePickerTheme theme => options.Theme.Components.Require<TwTimePickerTheme>();
 
     private TwInputTheme inputTheme => options.Theme.Components.Require<TwInputTheme>();
+
+    /// <summary>
+    /// Gets or sets the visual variant (Default, Outlined, Filled) of the hour/minute number inputs.
+    /// Callers (<see cref="TwBlazor.Components.TwTimePicker"/> and friends) pass their own resolved
+    /// <c>effectiveVariant</c> down explicitly. Left <see langword="null"/> (e.g. if this component is
+    /// ever used standalone), <see cref="effectiveVariant"/> falls back to the global
+    /// <see cref="TwInputTheme.DefaultInputVariant"/> instead of silently rendering as an unstyled
+    /// <see cref="InputVariant.Default"/> - a non-nullable <c>Variant</c> parameter caused exactly that
+    /// bug once before on <see cref="TwBlazor.Components.TwDateTimePicker"/>.
+    /// </summary>
+    [Parameter] public InputVariant? Variant { get; set; }
+
+    /// <summary>
+    /// Gets the effective input variant to use: <see cref="Variant"/> when explicitly set by the
+    /// caller, otherwise the global default configured via <see cref="TwInputTheme.DefaultInputVariant"/>.
+    /// </summary>
+    private InputVariant effectiveVariant => Variant ?? inputTheme.DefaultInputVariant;
 
     /// <summary>
     /// Gets or sets a value indicating whether the time should be displayed in 12-hour format.
@@ -63,15 +84,17 @@ public partial class TwTimePickerBody
     private string classes => new ClassBuilder(Class).AddClass(theme.BodyInner).Build();
 
     /// <summary>
-    /// Gets the classes for the hour/minute number inputs. The base structural classes come from
-    /// <see cref="TwTimePickerTheme.NumberInput"/>; the hover/focus border and focus ring colors are
-    /// resolved dynamically from the shared theme color tokens (<see cref="TwInputTheme.FocusBorder"/>
-    /// and <see cref="TwBlazor.Builders.ColorBuilder.GetFocusRing"/>) so the inputs track the app's
-    /// primary color.
+    /// Gets the classes for the hour/minute number inputs. Structural/typography classes come from
+    /// <see cref="TwTimePickerTheme.NumberInput"/>; border, background, and rounding come from
+    /// <see cref="InputVariantBuilder"/> via <see cref="Variant"/> so these inputs render the same
+    /// Default/Outlined/Filled look as every other text input instead of a look hardcoded independent
+    /// of the configured variant. The hover border and focus ring colors are resolved dynamically from
+    /// the shared theme color tokens (<see cref="TwBlazor.Builders.ColorBuilder.GetFocusRing"/>) so the
+    /// inputs track the app's primary color.
     /// </summary>
     private string numberInputClasses => new ClassBuilder(theme.NumberInput)
+        .AddClass(inputVariantBuilder.GetClasses(effectiveVariant, inputTheme))
         .AddClass(ToHoverVariant(options.Theme.Border.Colors.Primary))
-        .AddClass(inputTheme.FocusBorder)
         .AddClass(colorBuilder.GetFocusRing(Enums.Color.Primary))
         .Build();
 
