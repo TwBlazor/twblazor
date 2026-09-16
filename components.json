@@ -17,6 +17,14 @@
         "theme": "TwCardTheme"
       },
       {
+        "id": "carousel-navitem",
+        "display": "Carousel",
+        "name": "TwCarousel",
+        "url": "/carousel",
+        "isNew": true,
+        "theme": "TwCarouselTheme"
+      },
+      {
         "id": "collapse-navitem",
         "display": "Collapse",
         "name": "TwCollapse",
