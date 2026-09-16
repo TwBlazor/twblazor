@@ -149,29 +149,36 @@ jobs:
           # unlike GITHUB_TOKEN's. Without it this re-triggers this workflow on
           # a commit with no pull request behind it, so "Determine version
           # bump" would fail and redden every release.
-          #
-          # The Contents API commits one file per call, so each changed file
-          # gets its own commit, chained on the branch in turn - $NEW ends up
-          # holding whichever ran last, which is all that matters since the
-          # git reset below only needs a HEAD that has both in its ancestry.
-          commit_file() {
-            local path="$1" changed="$2"
-            if [ "$changed" != "true" ]; then
-              return
-            fi
-            local blob
-            blob="$(gh api "repos/$REPO/contents/$path?ref=$BRANCH" --jq .sha)"
-            NEW="$(gh api -X PUT "repos/$REPO/contents/$path" \
-              -f message="docs: point $path install command at $VERSION [skip ci]" \
-              -f content="$(base64 -w0 "$path")" \
-              -f sha="$blob" \
-              -f branch="$BRANCH" \
-              --jq .commit.sha)"
-            echo "Created signed commit $NEW on $BRANCH for $path."
+          additions="[]"
+          add_file() {
+            local path="$1"
+            additions="$(jq -c --arg path "$path" --arg content "$(base64 -w0 "$path")" \
+              '. + [{path: $path, contents: $content}]' <<<"$additions")"
           }
 
-          commit_file "README.md" "${{ steps.readme.outputs.changed }}"
-          commit_file "docs/TwBlazor.Docs/Pages/GetStarted.razor" "${{ steps.getstarted.outputs.changed }}"
+          [ "${{ steps.readme.outputs.changed }}" = "true" ] && add_file "README.md"
+          [ "${{ steps.getstarted.outputs.changed }}" = "true" ] && add_file "docs/TwBlazor.Docs/Pages/GetStarted.razor"
+
+          HEAD_OID="$(git rev-parse HEAD)"
+          QUERY='mutation($repo:String!,$branch:String!,$oid:GitObjectID!,$message:String!,$additions:[FileAddition!]!){
+            createCommitOnBranch(input:{
+              branch:{repositoryNameWithOwner:$repo,branchName:$branch}
+              expectedHeadOid:$oid
+              message:{headline:$message}
+              fileChanges:{additions:$additions}
+            }){commit{oid}}
+          }'
+          PAYLOAD="$(jq -n \
+            --arg query "$QUERY" \
+            --arg repo "$REPO" \
+            --arg branch "$BRANCH" \
+            --arg oid "$HEAD_OID" \
+            --arg message "docs: point install command at $VERSION [skip ci]" \
+            --argjson additions "$additions" \
+            '{query:$query, variables:{repo:$repo,branch:$branch,oid:$oid,message:$message,additions:$additions}}')"
+
+          NEW="$(echo "$PAYLOAD" | gh api graphql --input - --jq .data.createCommitOnBranch.commit.oid)"
+          echo "Created signed commit $NEW on $BRANCH."
 
           # That commit only exists on the server, so HEAD is still the merge
           # commit. The tag below has to land on the new commit, and MinVer
