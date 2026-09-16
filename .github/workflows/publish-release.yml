@@ -1,10 +1,11 @@
 name: Publish Release Package
 
-# Cuts a stable release of main. The version is decided by the release:minor /
-# release:major label on the pull request that was merged (enforced before merge
-# by pr-release-label.yml), turned into a Git tag here. That tag is the only
-# record of the version: MinVer reads it at build time, so nothing in the
-# repository needs to be edited or committed in order to release.
+# Cuts a stable release of main. The version is decided by the release:major /
+# release:minor / release:patch label on the pull request that was merged
+# (enforced before merge by pr-release-label.yml), turned into a Git tag here.
+# That tag is the only record of the version: MinVer reads it at build time, so
+# nothing in the repository needs to be edited or committed in order to
+# release. release:none skips the release job entirely.
 
 on:
   push:
@@ -26,8 +27,65 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  determine-bump:
+    name: Determine Version Bump
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read   # read the merged PR's release: label
+    outputs:
+      skip: ${{ steps.bump.outputs.skip }}
+      bump: ${{ steps.bump.outputs.bump }}
+
+    steps:
+      - name: Determine version bump
+        id: bump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_BUMP: ${{ inputs.bump }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual dispatch requested a '$INPUT_BUMP' bump."
+            echo "bump=$INPUT_BUMP" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          LABELS="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[].labels[].name' || true)"
+          echo "Labels on the pull request for $SHA: ${LABELS:-(none)}"
+
+          # release:none is checked before the bump labels and short-circuits: a
+          # PR merged with it never reaches the release job at all, so an
+          # unwanted release shows as a clean skip rather than a failure.
+          if echo "$LABELS" | grep -qx 'release:none'; then
+            echo "The merged pull request is labelled 'release:none'; skipping the release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Matched generically and required to be unique. pr-release-label.yml
+          # already blocks a PR carrying two bump labels, but this runs after the
+          # merge and must not silently pick one if that gate was bypassed.
+          BUMPS="$(echo "$LABELS" | grep -E '^release:(major|minor|patch)$' | sort -u | xargs || true)"
+          COUNT="$(echo "$BUMPS" | wc -w)"
+
+          if [ "$COUNT" -eq 1 ]; then
+            echo "bump=${BUMPS#release:}" >> "$GITHUB_OUTPUT"
+          elif [ "$COUNT" -gt 1 ]; then
+            echo "::error::The pull request for $SHA carries more than one release bump label ($BUMPS), so the version is ambiguous and nothing was published."
+            exit 1
+          else
+            echo "::error::No release:major, release:minor or release:patch label found on the pull request for $SHA, so nothing was published. To release this commit, run this workflow manually (Actions -> Publish Release Package -> Run workflow) and choose a bump."
+            exit 1
+          fi
+
   release:
     name: Tag, Build and Publish Release
+    needs: determine-bump
+    if: needs.determine-bump.outputs.skip != 'true'
     runs-on: ubuntu-latest
 
     # The app credentials live on this environment, not on the repository, and
@@ -38,7 +96,6 @@ jobs:
       contents: write       # push the release tag, create the GitHub Release
       packages: write       # push the NuGet package
       id-token: write       # OIDC trusted publishing to NuGet.org
-      pull-requests: read   # read the merged PR's release: label
     outputs:
       tag: ${{ steps.version.outputs.tag }}
       version: ${{ steps.version.outputs.version }}
@@ -62,42 +119,6 @@ jobs:
           fetch-depth: 0    # MinVer needs full history to measure commit height
           fetch-tags: true  # ...and every release tag to find the base version
 
-      - name: Determine version bump
-        id: bump
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_BUMP: ${{ inputs.bump }}
-          REPO: ${{ github.repository }}
-          SHA: ${{ github.sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            echo "Manual dispatch requested a '$INPUT_BUMP' bump."
-            echo "bump=$INPUT_BUMP" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          LABELS="$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[].labels[].name' || true)"
-          echo "Labels on the pull request for $SHA: ${LABELS:-(none)}"
-
-          # Matched generically and required to be unique. pr-release-label.yml
-          # already blocks a PR carrying two bump labels, but this runs after the
-          # merge and must not silently pick one if that gate was bypassed.
-          BUMPS="$(echo "$LABELS" | grep -E '^release:(major|minor|patch)$' | sort -u | xargs || true)"
-          COUNT="$(echo "$BUMPS" | wc -w)"
-
-          if [ "$COUNT" -eq 1 ]; then
-            echo "bump=${BUMPS#release:}" >> "$GITHUB_OUTPUT"
-          elif [ "$COUNT" -gt 1 ]; then
-            echo "::error::The pull request for $SHA carries more than one release bump label ($BUMPS), so the version is ambiguous and nothing was published."
-            exit 1
-          else
-            echo "::error::No release:major, release:minor or release:patch label found on the pull request for $SHA, so nothing was published. To release this commit, run this workflow manually (Actions -> Publish Release Package -> Run workflow) and choose a bump."
-            exit 1
-          fi
-
       - name: Compute release version
         id: version
         shell: pwsh
@@ -111,7 +132,7 @@ jobs:
               "version=$($tag.Substring(1))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
               "tag=$tag"                     | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           } else {
-              ./scripts/next-release-version.ps1 -Bump '${{ steps.bump.outputs.bump }}'
+              ./scripts/next-release-version.ps1 -Bump '${{ needs.determine-bump.outputs.bump }}'
           }
 
       # Deliberately ahead of the tag: the README commit has to be part of what
