@@ -19,8 +19,8 @@ public class TwCarouselTheme
     public required string Container { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes for the viewport that holds the currently visible slide and the
-    /// overlaid arrow/pause controls.
+    /// Gets or sets the classes for the viewport that holds the currently visible slide and the overlaid
+    /// arrow/pause/indicator controls.
     /// </summary>
     public required string Viewport { get; set; }
 
@@ -38,7 +38,11 @@ public class TwCarouselTheme
     public required string SlideContent { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes shared by both the previous and next arrow buttons.
+    /// Gets or sets the classes shared by both the previous and next arrow buttons - just positioning, icon
+    /// size, and shadow. Background, text color, rounding, focus ring, cursor, transition, and disabled
+    /// styling all come for free from the underlying <see cref="TwBlazor.Components.TwButton"/> icon button
+    /// (see <see cref="TwBlazor.Components.TwIcon"/>'s non-<c>Plain</c> mode), driven by
+    /// <see cref="TwBlazor.Components.TwCarousel.ButtonColor"/>.
     /// </summary>
     public required string ArrowButton { get; set; }
 
@@ -53,19 +57,15 @@ public class TwCarouselTheme
     public required string ArrowButtonEnd { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes applied to an arrow button when it can no longer navigate (only reachable
-    /// when <see cref="TwBlazor.Components.TwCarousel.Loop"/> is disabled and the boundary slide is active).
-    /// </summary>
-    public required string ArrowButtonDisabled { get; set; }
-
-    /// <summary>
     /// Gets or sets the classes for the automatic-playback pause/play toggle button, shown whenever
-    /// <see cref="TwBlazor.Components.TwCarousel.AutoPlay"/> is enabled.
+    /// <see cref="TwBlazor.Components.TwCarousel.AutoPlay"/> is enabled. Like <see cref="ArrowButton"/>, this
+    /// is just positioning, icon size, and shadow.
     /// </summary>
     public required string PlayPauseButton { get; set; }
 
     /// <summary>
-    /// Gets or sets the classes for the row of slide-picker indicator dots.
+    /// Gets or sets the classes for the row of slide-picker indicator dots, overlaid near the bottom of the
+    /// viewport.
     /// </summary>
     public required string IndicatorContainer { get; set; }
 

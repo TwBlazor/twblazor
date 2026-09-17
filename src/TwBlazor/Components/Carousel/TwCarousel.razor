@@ -13,27 +13,49 @@
             }
         </div>
 
-        @if (ShowArrows && _items.Count > 1)
+        @if (_items.Count > 1)
         {
-            <TwIcon Id="@($"{Id}-previous")" Icon="Icon.Chevron_Left" Plain Class="@previousArrowClasses" AriaLabel="Previous slide" OnClick="PreviousSlide" Disabled="@(!Loop && IsFirstSlide)" />
-            <TwIcon Id="@($"{Id}-next")" Icon="Icon.Chevron_Right" Plain Class="@nextArrowClasses" AriaLabel="Next slide" OnClick="NextSlide" Disabled="@(!Loop && IsLastSlide)" />
+            if (LeftNavigation != null)
+            {
+                @LeftNavigation(this)
+            }
+            else if (ShowArrows)
+            {
+                <TwIcon Id="@($"{Id}-previous")" Icon="Icon.Chevron_Left" ButtonVariant="ButtonVariant.Filled" Color="ButtonColor" RootClass="@previousArrowClasses" AriaLabel="Previous slide" OnClick="PreviousSlide" Disabled="@(!Loop && IsFirstSlide)" />
+            }
+
+            if (RightNavigation != null)
+            {
+                @RightNavigation(this)
+            }
+            else if (ShowArrows)
+            {
+                <TwIcon Id="@($"{Id}-next")" Icon="Icon.Chevron_Right" ButtonVariant="ButtonVariant.Filled" Color="ButtonColor" RootClass="@nextArrowClasses" AriaLabel="Next slide" OnClick="NextSlide" Disabled="@(!Loop && IsLastSlide)" />
+            }
         }
 
         @if (AutoPlay)
         {
-            <TwIcon Id="@($"{Id}-playpause")" Icon="@(isAutoPlayPaused ? Icon.Play_Fill : Icon.Pause_Fill)" Plain Class="@theme.PlayPauseButton" AriaLabel="@(isAutoPlayPaused ? "Play automatic slideshow" : "Pause automatic slideshow")" OnClick="ToggleAutoPlayPaused" />
+            <TwIcon Id="@($"{Id}-playpause")" Icon="@(IsAutoPlayPaused ? Icon.Play_Fill : Icon.Pause_Fill)" ButtonVariant="ButtonVariant.Filled" Color="ButtonColor" RootClass="@theme.PlayPauseButton" AriaLabel="@(IsAutoPlayPaused ? "Play automatic slideshow" : "Pause automatic slideshow")" OnClick="ToggleAutoPlayPaused" />
+        }
+
+        @if (_items.Count > 1)
+        {
+            if (Indicators != null)
+            {
+                @Indicators(this)
+            }
+            else if (ShowIndicators)
+            {
+                <div class="@theme.IndicatorContainer" role="group" aria-label="Choose slide to display">
+                    @foreach (var index in Enumerable.Range(0, _items.Count))
+                    {
+                        <button type="button" class="@GetIndicatorClasses(index)" aria-label="@($"Slide {index + 1} of {_items.Count}")" aria-current="@(index == SelectedIndex ? "true" : "false")" @onclick="@(() => GoToSlide(index))"></button>
+                    }
+                </div>
+            }
         }
     </div>
-
-    @if (ShowIndicators && _items.Count > 1)
-    {
-        <div class="@theme.IndicatorContainer" role="group" aria-label="Choose slide to display">
-            @foreach (var index in Enumerable.Range(0, _items.Count))
-            {
-                <button type="button" class="@GetIndicatorClasses(index)" aria-label="@($"Slide {index + 1} of {_items.Count}")" aria-current="@(index == SelectedIndex ? "true" : "false")" @onclick="@(() => GoToSlide(index))"></button>
-            }
-        </div>
-    }
 </div>
 
 <CascadingValue Value="this">

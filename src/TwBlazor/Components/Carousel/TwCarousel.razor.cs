@@ -93,9 +93,42 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
     [Parameter] public Color? Color { get; set; }
 
     /// <summary>
+    /// Gets or sets the color used for the previous/next arrow buttons and the play/pause toggle. Passed
+    /// straight through to the underlying <see cref="TwButton"/> (via <see cref="TwIcon"/>) as a filled
+    /// variant, so it needs no bespoke background classes of its own. Default is
+    /// <see cref="TwBlazor.Enums.Color.Light"/>.
+    /// </summary>
+    [Parameter] public Color ButtonColor { get; set; } = Enums.Color.Light;
+
+    /// <summary>
     /// Gets or sets the <see cref="TwCarouselItem"/> children that make up the carousel's slides.
     /// </summary>
     [Parameter] public required RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom content to render in place of the default previous-slide arrow button. The
+    /// render fragment's context is this <see cref="TwCarousel"/> instance, giving access to its public API
+    /// (e.g. <see cref="PreviousSlide"/>, <see cref="NextSlide"/>, <see cref="GoToSlide"/>,
+    /// <see cref="ToggleAutoPlayPaused"/>, <see cref="IsAutoPlayPaused"/>) so custom controls can drive the
+    /// carousel. When <see langword="null"/> (default), the built-in previous arrow is rendered instead,
+    /// subject to <see cref="ShowArrows"/>.
+    /// </summary>
+    [Parameter] public RenderFragment<TwCarousel>? LeftNavigation { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom content to render in place of the default next-slide arrow button. See
+    /// <see cref="LeftNavigation"/> for details on the render fragment's context and fallback behavior.
+    /// </summary>
+    [Parameter] public RenderFragment<TwCarousel>? RightNavigation { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom content to render in place of the default slide-picker indicator dots. The render
+    /// fragment's context is this <see cref="TwCarousel"/> instance, giving access to its public API (e.g.
+    /// <see cref="GoToSlide"/>, <see cref="SelectedIndex"/>) so custom indicators can drive the carousel. When
+    /// <see langword="null"/> (default), the built-in indicator dots are rendered instead, subject to
+    /// <see cref="ShowIndicators"/>.
+    /// </summary>
+    [Parameter] public RenderFragment<TwCarousel>? Indicators { get; set; }
 
     /// <summary>
     /// Gets the currently selected slide, or <see langword="null"/> if <see cref="SelectedIndex"/> is out of
@@ -117,7 +150,7 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
     /// Gets whether automatic playback is currently paused, either because the user toggled the pause
     /// control, or because the pointer or keyboard focus is currently within the carousel.
     /// </summary>
-    private bool isAutoPlayPaused => isManuallyPaused || isPointerActive;
+    public bool IsAutoPlayPaused => isManuallyPaused || isPointerActive;
 
     private string effectiveAriaLabel => string.IsNullOrEmpty(AriaLabel) && string.IsNullOrEmpty(AriaLabelledBy) ? "Carousel" : AriaLabel ?? string.Empty;
 
@@ -126,12 +159,10 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
         .AddClass(Class).Build();
 
     private string previousArrowClasses => new ClassBuilder(theme.ArrowButton)
-        .AddClass(theme.ArrowButtonStart)
-        .AddClass(theme.ArrowButtonDisabled, !Loop && IsFirstSlide).Build();
+        .AddClass(theme.ArrowButtonStart).Build();
 
     private string nextArrowClasses => new ClassBuilder(theme.ArrowButton)
-        .AddClass(theme.ArrowButtonEnd)
-        .AddClass(theme.ArrowButtonDisabled, !Loop && IsLastSlide).Build();
+        .AddClass(theme.ArrowButtonEnd).Build();
 
     /// <summary>
     /// Registers a slide with the carousel. Slides register themselves, in markup order, from
@@ -222,7 +253,12 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
             : builder.AddClass(theme.IndicatorActive).Build();
     }
 
-    private void ToggleAutoPlayPaused() => isManuallyPaused = !isManuallyPaused;
+    /// <summary>
+    /// Toggles automatic playback between paused and playing. Exposed publicly so custom
+    /// <see cref="LeftNavigation"/>, <see cref="RightNavigation"/>, or <see cref="Indicators"/> content can
+    /// include their own play/pause control.
+    /// </summary>
+    public void ToggleAutoPlayPaused() => isManuallyPaused = !isManuallyPaused;
 
     private void HandlePointerEnter() => isPointerActive = true;
 
@@ -265,7 +301,7 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
 
     /// <summary>
     /// Starts the automatic-playback timer once, after the first render, when <see cref="AutoPlay"/> is
-    /// enabled. The timer's own callback re-checks <see cref="AutoPlay"/> and <see cref="isAutoPlayPaused"/>
+    /// enabled. The timer's own callback re-checks <see cref="AutoPlay"/> and <see cref="IsAutoPlayPaused"/>
     /// on every tick, so toggling <see cref="AutoPlay"/> off later simply stops it from advancing rather
     /// than needing to be recreated.
     /// </summary>
@@ -279,7 +315,7 @@ public partial class TwCarousel : TwBlazorComponentBase, IAsyncDisposable
 
     private void OnAutoPlayTick(object? state)
     {
-        if (!AutoPlay || isAutoPlayPaused)
+        if (!AutoPlay || IsAutoPlayPaused)
         {
             return;
         }

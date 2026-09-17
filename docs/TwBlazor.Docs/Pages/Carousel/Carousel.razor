@@ -132,6 +132,65 @@
             </TwCarousel>
         </CodeExample>
     </PageCard>
+
+    <PageCard Title="Custom Previous/Next Controls">
+        <Description>Set <code>LeftNavigation</code> and <code>RightNavigation</code> to render your own previous/next controls instead of the default arrow buttons. Each is a <code>RenderFragment&lt;TwCarousel&gt;</code>, so its <code>context</code> exposes the carousel's public API (<code>PreviousSlide</code>, <code>NextSlide</code>, <code>GoToSlide</code>, <code>ToggleAutoPlayPaused</code>, and more) for your own markup to call.</Description>
+        <CodeExample Name="CarouselCustomNavigation">
+            <TwCarousel Style="height:240px;">
+                <LeftNavigation>
+                    <TwButton Plain Class="absolute bottom-3 start-3 z-10 px-3 py-1.5 rounded-md bg-white text-purple-700 text-xs font-bold uppercase tracking-wide shadow-lg hover:bg-purple-50 transition-colors" AriaLabel="Previous slide" OnClick="context.PreviousSlide">
+                        Prev
+                    </TwButton>
+                </LeftNavigation>
+                <RightNavigation>
+                    <TwButton Plain Class="absolute bottom-3 end-3 z-10 px-3 py-1.5 rounded-md bg-white text-purple-700 text-xs font-bold uppercase tracking-wide shadow-lg hover:bg-purple-50 transition-colors" AriaLabel="Next slide" OnClick="context.NextSlide">
+                        Next
+                    </TwButton>
+                </RightNavigation>
+                <ChildContent>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-purple-600 text-white text-xl font-semibold">Slide 1</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-fuchsia-600 text-white text-xl font-semibold">Slide 2</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-blue-600 text-white text-xl font-semibold">Slide 3</div>
+                    </TwCarouselItem>
+                </ChildContent>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Indicators">
+        <Description>Set <code>Indicators</code> to render your own slide-picker controls instead of the default dots. Its <code>context</code> exposes <code>SelectedIndex</code> and <code>GoToSlide</code> so your markup can both reflect and drive the active slide.</Description>
+        <CodeExample Name="CarouselCustomIndicators">
+            <TwCarousel Style="height:240px;">
+                <Indicators>
+                    <div class="absolute bottom-2 inset-x-0 z-10 w-fit mx-auto flex justify-center gap-2">
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            var index = i;
+                            <TwButton Plain Class="@(index == context.SelectedIndex ? "size-7 rounded-md bg-purple-600 text-white text-xs font-bold" : "size-7 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold hover:bg-gray-300 dark:hover:bg-gray-600")" AriaLabel="@($"Slide {index + 1} of 3")" aria-current="@(index == context.SelectedIndex ? "true" : "false")" OnClick="@(() => context.GoToSlide(index))">
+                                @(index + 1)
+                            </TwButton>
+                        }
+                    </div>
+                </Indicators>
+                <ChildContent>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-orange-600 text-white text-xl font-semibold">Slide 1</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-pink-600 text-white text-xl font-semibold">Slide 2</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-cyan-600 text-white text-xl font-semibold">Slide 3</div>
+                    </TwCarouselItem>
+                </ChildContent>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
 </PageContainer>
 
 @code {

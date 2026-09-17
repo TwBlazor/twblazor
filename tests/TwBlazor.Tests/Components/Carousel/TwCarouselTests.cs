@@ -100,6 +100,23 @@ public class TwCarouselTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TwCarousel_IndicatorContainer_IsOverlaidInsideTheViewport()
+    {
+        // Arrange & Act - indicators are overlaid on top of the slide (like the arrow/pause buttons), not
+        // rendered as a separate row below it.
+        var cut = TestContext.Render<TwCarousel>(p => p.Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert
+        var region = cut.Find("div[role='region']");
+        var viewport = region.Children[0];
+        var indicatorContainer = cut.Find("div[role='group'][aria-label='Choose slide to display']");
+
+        Assert.Contains("overflow-hidden", region.GetAttribute("class"));
+        Assert.Equal(viewport, indicatorContainer.ParentElement);
+        Assert.Contains("absolute", indicatorContainer.GetAttribute("class"));
+    }
+
+    [Fact]
     public void TwCarousel_ShowArrowsFalse_HidesArrowButtons()
     {
         // Arrange & Act
@@ -464,6 +481,51 @@ public class TwCarouselTests : TwBlazorTestBase
 
     #endregion
 
+    #region button color
+
+    [Fact]
+    public void ArrowButtons_DefaultToLightColor()
+    {
+        // Arrange & Act - the arrow/play-pause buttons get their appearance from TwButton's filled-variant
+        // color classes (via ButtonColor), not from bespoke background classes in the theme.
+        var cut = TestContext.Render<TwCarousel>(p => p.Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert
+        var expected = ColorBuilder.GetFilledVariantColor(Color.Light).Split(' ')[0];
+        Assert.Contains(expected, cut.Find("button[aria-label='Previous slide']").GetAttribute("class"));
+        Assert.Contains(expected, cut.Find("button[aria-label='Next slide']").GetAttribute("class"));
+    }
+
+    [Fact]
+    public void ArrowButtons_UseSpecifiedButtonColor()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.ButtonColor, Color.Primary)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert
+        var expected = ColorBuilder.GetFilledVariantColor(Color.Primary).Split(' ')[0];
+        Assert.Contains(expected, cut.Find("button[aria-label='Previous slide']").GetAttribute("class"));
+        Assert.Contains(expected, cut.Find("button[aria-label='Next slide']").GetAttribute("class"));
+    }
+
+    [Fact]
+    public void PlayPauseButton_UsesSpecifiedButtonColor()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.AutoPlay, true)
+            .Add(x => x.ButtonColor, Color.Danger)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert
+        var expected = ColorBuilder.GetFilledVariantColor(Color.Danger).Split(' ')[0];
+        Assert.Contains(expected, cut.Find("button[aria-label='Pause automatic slideshow']").GetAttribute("class"));
+    }
+
+    #endregion
+
     #region autoplay
 
     [Fact]
@@ -530,6 +592,119 @@ public class TwCarouselTests : TwBlazorTestBase
 
         // Assert - no exception from the timer continuing to fire against a disposed component
         Assert.NotNull(cut.Instance);
+    }
+
+    #endregion
+
+    #region custom navigation and indicators
+
+    [Fact]
+    public async Task TwCarousel_LeftNavigation_ReplacesDefaultArrow_AndCanDriveTheCarouselViaItsContext()
+    {
+        // Arrange
+        RenderFragment<TwCarousel> customLeft = context => builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "custom-prev");
+            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => context.PreviousSlide()));
+            builder.AddContent(3, "Custom Prev");
+            builder.CloseElement();
+        };
+
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.SelectedIndex, 1)
+            .Add(x => x.LeftNavigation, customLeft)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert - the default previous arrow is gone, replaced by the custom content
+        Assert.Empty(cut.FindAll("button[aria-label='Previous slide']"));
+        var customButton = cut.Find("button.custom-prev");
+
+        // Act - the context passed to the render fragment exposes the carousel's public API
+        await cut.InvokeAsync(() => customButton.Click());
+
+        // Assert
+        Assert.Equal(0, cut.Instance.SelectedIndex);
+    }
+
+    [Fact]
+    public async Task TwCarousel_RightNavigation_ReplacesDefaultArrow_AndCanDriveTheCarouselViaItsContext()
+    {
+        // Arrange
+        RenderFragment<TwCarousel> customRight = context => builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "custom-next");
+            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => context.NextSlide()));
+            builder.AddContent(3, "Custom Next");
+            builder.CloseElement();
+        };
+
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.RightNavigation, customRight)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert - the default next arrow is gone, replaced by the custom content
+        Assert.Empty(cut.FindAll("button[aria-label='Next slide']"));
+        var customButton = cut.Find("button.custom-next");
+
+        // Act
+        await cut.InvokeAsync(() => customButton.Click());
+
+        // Assert
+        Assert.Equal(1, cut.Instance.SelectedIndex);
+    }
+
+    [Fact]
+    public void TwCarousel_LeftNavigation_Renders_EvenWhenShowArrowsIsFalse()
+    {
+        // Arrange & Act - explicit custom navigation is shown regardless of ShowArrows, which only
+        // governs the built-in default arrows
+        RenderFragment<TwCarousel> customLeft = context => builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "custom-prev");
+            builder.CloseElement();
+        };
+
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.ShowArrows, false)
+            .Add(x => x.LeftNavigation, customLeft)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert
+        Assert.NotEmpty(cut.FindAll("button.custom-prev"));
+    }
+
+    [Fact]
+    public async Task TwCarousel_Indicators_ReplacesDefaultDots_AndCanDriveTheCarouselViaItsContext()
+    {
+        // Arrange
+        RenderFragment<TwCarousel> customIndicators = context => builder =>
+        {
+            foreach (var i in Enumerable.Range(0, 3))
+            {
+                var sequence = i * 3;
+                builder.OpenElement(sequence, "button");
+                builder.AddAttribute(sequence + 1, "class", $"custom-indicator-{i}");
+                builder.AddAttribute(sequence + 2, "onclick", EventCallback.Factory.Create(this, () => context.GoToSlide(i)));
+                builder.CloseElement();
+            }
+        };
+
+        var cut = TestContext.Render<TwCarousel>(p => p
+            .Add(x => x.Indicators, customIndicators)
+            .Add(x => x.ChildContent, ThreeSlides()));
+
+        // Assert - the default indicator dots are gone, replaced by the custom content
+        Assert.Empty(cut.FindAll("button[aria-label^='Slide']"));
+        var customIndicator = cut.Find("button.custom-indicator-2");
+
+        // Act
+        await cut.InvokeAsync(() => customIndicator.Click());
+
+        // Assert
+        Assert.Equal(2, cut.Instance.SelectedIndex);
     }
 
     #endregion
