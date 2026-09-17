@@ -49,6 +49,21 @@ public class TwCarouselTests : TwBlazorTestBase
     }
 
     [Fact]
+    public void TwCarousel_SlideGroup_HasFullHeightAndWidthClasses_SoContentCanFillTheSlide()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<TwCarousel>(p => p.Add(x => x.ChildContent, ThreeSlides()));
+        var theme = Theme.Components.Require<TwBlazor.Configuration.Components.TwCarouselTheme>();
+
+        // Assert
+        var slide = cut.Find("div[role='group']");
+        foreach (var themeClass in theme.SlideContent.Split(' '))
+        {
+            Assert.Contains(themeClass, slide.GetAttribute("class"));
+        }
+    }
+
+    [Fact]
     public void TwCarousel_WithAriaLabel_UsesIt_OverDefault()
     {
         // Arrange & Act

@@ -24,6 +24,32 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Images: Object Fit">
+        <Description>When a slide's content (e.g. an <code>&lt;img&gt;</code>) doesn't match the carousel's aspect ratio, use Tailwind's <code>object-fit</code> utilities to control how it fills the slide's <code>h-full w-full</code> space.</Description>
+        <CodeExample Name="CarouselObjectFit" CSharpName="CarouselObjectFitCode">
+            <div class="flex flex-wrap gap-2 mb-4">
+                @foreach (var fit in objectFitOptions)
+                {
+                    <TwButton Label="@fit.Label" Color="Color.Primary" Variant="@(selectedObjectFit == fit.Class ? ButtonVariant.Filled : ButtonVariant.Outlined)" OnClick="@(() => selectedObjectFit = fit.Class)" />
+                }
+            </div>
+            <TwCarousel Style="height:500px;">
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-1.webp" alt="Placeholder 1" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-2.webp" alt="Placeholder 2" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-3.webp" alt="Placeholder 3" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-4.webp" alt="Placeholder 4" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Autoplay">
         <Description>Set <code>AutoPlay</code> to automatically advance slides. A pause/play control is always shown so playback can be stopped, and it also pauses automatically while hovered or focused.</Description>
         <CodeExample Name="CarouselAutoPlay">
@@ -110,4 +136,17 @@
 
 @code {
     private int selectedIndex;
+
+    #region CodeExample CarouselObjectFitCode
+    private static readonly (string Label, string Class)[] objectFitOptions =
+    [
+        ("Cover", "object-cover"),
+        ("Contain", "object-contain"),
+        ("Fill", "object-fill"),
+        ("None", "object-none"),
+        ("Scale Down", "object-scale-down"),
+    ];
+
+    private string selectedObjectFit = "object-cover";
+    #endregion
 }

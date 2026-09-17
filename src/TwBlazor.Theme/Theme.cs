@@ -719,6 +719,7 @@ public static class Theme
                     Container = $"{positioning.Relative} {overflow.Hidden} {sizing.FullWidth}",
                     Viewport = $"{positioning.Relative} {sizing.Full}",
                     Slide = sizing.Full,
+                    SlideContent = sizing.Full,
                     ArrowButton = $"{positioning.Absolute} top-1/2 -translate-y-1/2 z-10 p-2 text-lg leading-none {rounded.Full} bg-white/80 dark:bg-black/60 {neutralText.Heading} {shadows.Md} hover:bg-white dark:hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast}",
                     ArrowButtonStart = "start-2",
                     ArrowButtonEnd = "end-2",

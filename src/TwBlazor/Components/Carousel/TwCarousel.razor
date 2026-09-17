@@ -7,7 +7,7 @@
         <div class="@theme.Slide" aria-live="@(AutoPlay ? "off" : "polite")">
             @if (ActiveItem != null)
             {
-                <div role="group" aria-roledescription="slide" aria-label="@($"{SelectedIndex + 1} of {_items.Count}")">
+                <div class="@theme.SlideContent" role="group" aria-roledescription="slide" aria-label="@($"{SelectedIndex + 1} of {_items.Count}")">
                     @ActiveItem.ChildContent
                 </div>
             }

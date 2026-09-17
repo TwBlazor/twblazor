@@ -30,6 +30,14 @@ public class TwCarouselTheme
     public required string Slide { get; set; }
 
     /// <summary>
+    /// Gets or sets the classes for the slide's <c>role="group"</c> wrapper, the direct parent of each
+    /// <see cref="TwBlazor.Components.TwCarouselItem.ChildContent"/>. Stretching this to the full size of
+    /// <see cref="Slide"/> lets slide content (e.g. an <c>&lt;img&gt;</c>) fill the carousel with
+    /// <c>h-full</c>/<c>w-full</c>.
+    /// </summary>
+    public required string SlideContent { get; set; }
+
+    /// <summary>
     /// Gets or sets the classes shared by both the previous and next arrow buttons.
     /// </summary>
     public required string ArrowButton { get; set; }
