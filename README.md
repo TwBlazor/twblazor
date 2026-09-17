@@ -22,9 +22,11 @@
 
 With years of working with Blazor, I've come accross and used a lot of component frameworks, but never one that has ever let me customise it my way without fighting against the library and its built in CSS. That's why I decided to build twblazor; every component is styled with Tailwind CSS classes instead of it's own theming layer, so customising it feels the same as customising your own markup.
 
-Combined with Tailwind's hot reload, you can fine-tune a button, switch, checkbox, or dropdown down to the exact color, spacing, and radius, and see the change immediately. It all lives in one typed theme file, so there's no hunting through component internals to find what to change.
+Combined with Tailwind's using hot reload, you can fine-tune a button, switch, checkbox, or dropdown down to the exact color, spacing, and radius, and see the change immediately. It all lives in one typed theme file, so there's no hunting through component internals to find what to change.
 
 twblazor is, and always will be, open source under the MIT license, free for personal and commercial projects alike. I welcome contributions, issues, and feedback from anyone using it. The project is actively maintained. New components, accessibility fixes, and documentation land regularly. I have lots of components I plan to add.
+
+Are you using twblazor in your own project? Share it on the [here](https://github.com/TwBlazor/twblazor/discussions/81) - we would love to see what you're building!
 
 ## Setup
 
