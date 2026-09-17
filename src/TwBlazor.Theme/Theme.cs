@@ -714,6 +714,21 @@ public static class Theme
                     Bordered = $"{borderWidth.Thin} {neutralSurface.Border}",
                     Title = $"{typography.Size.Lg} {typography.Weight.Semibold} {typography.WrapBreakWord} {neutralText.Heading}"
                 },
+                new TwCarouselTheme
+                {
+                    Container = $"{positioning.Relative} {overflow.Hidden} {sizing.FullWidth}",
+                    Viewport = $"{positioning.Relative} {sizing.Full}",
+                    Slide = sizing.Full,
+                    SlideContent = sizing.Full,
+                    ArrowButton = $"{positioning.Absolute} top-1/2 -translate-y-1/2 z-10 text-lg {shadows.Md}",
+                    ArrowButtonStart = "start-2",
+                    ArrowButtonEnd = "end-2",
+                    PlayPauseButton = $"{positioning.Absolute} top-2 end-2 z-10 text-sm {shadows.Md}",
+                    IndicatorContainer = $"{positioning.Absolute} bottom-2 inset-x-0 z-10 w-fit mx-auto {display.Flex} {flexbox.Justify.Center} {flexbox.Align.Center} {spacing.Gap.Sm} px-3 py-1.5 {rounded.Full} bg-white/45 dark:bg-black/60 {shadows.Md}",
+                    Indicator = $"size-2.5 {rounded.Full} {interaction.PointerCursor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 {transition.ColorsFast}",
+                    IndicatorActive = "bg-purple-600 dark:bg-purple-500",
+                    IndicatorInactive = "bg-[oklch(21%_0.006_285.885)]/20 dark:bg-[oklch(97.807%_0.029_256.847)]/25 hover:bg-[oklch(21%_0.006_285.885)]/40 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/40"
+                },
                 new TwCheckboxTheme
                 {
                     Colors = checkBoxRadioButtonColors,

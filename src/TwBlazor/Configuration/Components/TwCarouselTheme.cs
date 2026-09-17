@@ -1,0 +1,87 @@
+// Copyright (c) 2025 Jack Shuter @ TwBlazor - twblazor.com
+// Licensed under the MIT License. See LICENSE.txt in the project root for license information.
+
+using System.Diagnostics.CodeAnalysis;
+
+namespace TwBlazor.Configuration.Components;
+
+/// <summary>
+/// Theme configuration for the carousel components (<see cref="TwBlazor.Components.TwCarousel"/>,
+/// <see cref="TwBlazor.Components.TwCarouselItem"/>).
+/// Override any property to customize carousel styles globally.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class TwCarouselTheme
+{
+    /// <summary>
+    /// Gets or sets the classes for the root container element.
+    /// </summary>
+    public required string Container { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the viewport that holds the currently visible slide and the overlaid
+    /// arrow/pause/indicator controls.
+    /// </summary>
+    public required string Viewport { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the wrapper rendered around each slide's content.
+    /// </summary>
+    public required string Slide { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the slide's <c>role="group"</c> wrapper, the direct parent of each
+    /// <see cref="TwBlazor.Components.TwCarouselItem.ChildContent"/>. Stretching this to the full size of
+    /// <see cref="Slide"/> lets slide content (e.g. an <c>&lt;img&gt;</c>) fill the carousel with
+    /// <c>h-full</c>/<c>w-full</c>.
+    /// </summary>
+    public required string SlideContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes shared by both the previous and next arrow buttons - just positioning, icon
+    /// size, and shadow. Background, text color, rounding, focus ring, cursor, transition, and disabled
+    /// styling all come for free from the underlying <see cref="TwBlazor.Components.TwButton"/> icon button
+    /// (see <see cref="TwBlazor.Components.TwIcon"/>'s non-<c>Plain</c> mode), driven by
+    /// <see cref="TwBlazor.Components.TwCarousel.ButtonColor"/>.
+    /// </summary>
+    public required string ArrowButton { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes that position the previous arrow button at the start edge of the viewport.
+    /// </summary>
+    public required string ArrowButtonStart { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes that position the next arrow button at the end edge of the viewport.
+    /// </summary>
+    public required string ArrowButtonEnd { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the automatic-playback pause/play toggle button, shown whenever
+    /// <see cref="TwBlazor.Components.TwCarousel.AutoPlay"/> is enabled. Like <see cref="ArrowButton"/>, this
+    /// is just positioning, icon size, and shadow.
+    /// </summary>
+    public required string PlayPauseButton { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes for the row of slide-picker indicator dots, overlaid near the bottom of the
+    /// viewport.
+    /// </summary>
+    public required string IndicatorContainer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the base classes applied to every indicator dot, regardless of state.
+    /// </summary>
+    public required string Indicator { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to the indicator dot for the currently selected slide, when no
+    /// explicit <see cref="TwBlazor.Components.TwCarousel.Color"/> is set.
+    /// </summary>
+    public required string IndicatorActive { get; set; }
+
+    /// <summary>
+    /// Gets or sets the classes applied to indicator dots for slides that are not currently selected.
+    /// </summary>
+    public required string IndicatorInactive { get; set; }
+}

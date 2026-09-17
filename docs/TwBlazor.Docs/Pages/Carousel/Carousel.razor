@@ -1,0 +1,211 @@
+@page "/carousel"
+
+<PageTitle>TwCarousel | twblazor</PageTitle>
+<HeadContent>
+    <meta name="description" content="TwCarousel is a Blazor carousel component for cycling through slides, with arrow navigation, indicator dots, swipe gestures, and optional autoplay." />
+    <link rel="canonical" href="https://twblazor.com/carousel" />
+</HeadContent>
+
+<PageContainer Title="TwCarousel" ThemeType="typeof(TwCarouselTheme)">
+    <PageCard Title="Basic Carousel">
+        <Description>Use <code>TwCarousel</code> and <code>TwCarouselItem</code> to cycle through a set of slides. Only the active slide is rendered.</Description>
+        <CodeExample Name="CarouselBasic">
+            <TwCarousel Style="height:240px;">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-fuchsia-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-blue-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Images: Object Fit">
+        <Description>When a slide's content (e.g. an <code>&lt;img&gt;</code>) doesn't match the carousel's aspect ratio, use Tailwind's <code>object-fit</code> utilities to control how it fills the slide's <code>h-full w-full</code> space.</Description>
+        <CodeExample Name="CarouselObjectFit" CSharpName="CarouselObjectFitCode">
+            <div class="flex flex-wrap gap-2 mb-4">
+                @foreach (var fit in objectFitOptions)
+                {
+                    <TwButton Label="@fit.Label" Color="Color.Primary" Variant="@(selectedObjectFit == fit.Class ? ButtonVariant.Filled : ButtonVariant.Outlined)" OnClick="@(() => selectedObjectFit = fit.Class)" />
+                }
+            </div>
+            <TwCarousel Style="height:500px;">
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-1.webp" alt="Placeholder 1" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-2.webp" alt="Placeholder 2" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-3.webp" alt="Placeholder 3" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <img src="_content/TwBlazor.Docs/images/placeholder-4.webp" alt="Placeholder 4" class="@($"h-full w-full {selectedObjectFit}")" />
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Autoplay">
+        <Description>Set <code>AutoPlay</code> to automatically advance slides. A pause/play control is always shown so playback can be stopped, and it also pauses automatically while hovered or focused.</Description>
+        <CodeExample Name="CarouselAutoPlay">
+            <TwCarousel Style="height:240px;" AutoPlay AutoPlayInterval="TimeSpan.FromSeconds(3)">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-green-800 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-yellow-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-red-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Indicator Color">
+        <Description>Set <code>Color</code> to customize the active slide indicator's color.</Description>
+        <CodeExample Name="CarouselColor">
+            <TwCarousel Style="height:240px;" Color="Color.Success">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-700 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-800 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-gray-900 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Without Arrows or Indicators">
+        <Description>Set <code>ShowArrows</code> and <code>ShowIndicators</code> to <code>false</code> to rely on swipe gestures or programmatic navigation only.</Description>
+        <CodeExample Name="CarouselNoControls">
+            <TwCarousel Style="height:240px;" ShowArrows="false" ShowIndicators="false">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-indigo-600 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-teal-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Non-Looping">
+        <Description>Set <code>Loop</code> to <code>false</code> to disable the arrow buttons at the first and last slide instead of wrapping around.</Description>
+        <CodeExample Name="CarouselNoLoop">
+            <TwCarousel Style="height:240px;" Loop="false">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-orange-800 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-pink-600 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-cyan-600 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Bound Selected Index">
+        <Description>Bind <code>SelectedIndex</code> to control or observe the active slide from outside the carousel.</Description>
+        <CodeExample Name="CarouselBoundIndex">
+            <p class="mb-2">Selected slide: @(selectedIndex + 1)</p>
+            <TwCarousel Style="height:240px;" @bind-SelectedIndex="selectedIndex">
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-700 text-white text-xl font-semibold">Slide 1</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-800 text-white text-xl font-semibold">Slide 2</div>
+                </TwCarouselItem>
+                <TwCarouselItem>
+                    <div class="flex h-full items-center justify-center bg-purple-900 text-white text-xl font-semibold">Slide 3</div>
+                </TwCarouselItem>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Previous/Next Controls">
+        <Description>Set <code>LeftNavigation</code> and <code>RightNavigation</code> to render your own previous/next controls instead of the default arrow buttons. Each is a <code>RenderFragment&lt;TwCarousel&gt;</code>, so its <code>context</code> exposes the carousel's public API (<code>PreviousSlide</code>, <code>NextSlide</code>, <code>GoToSlide</code>, <code>ToggleAutoPlayPaused</code>, and more) for your own markup to call.</Description>
+        <CodeExample Name="CarouselCustomNavigation">
+            <TwCarousel Style="height:240px;">
+                <LeftNavigation>
+                    <TwButton Plain Class="absolute bottom-3 start-3 z-10 px-3 py-1.5 rounded-md bg-white text-purple-700 text-xs font-bold uppercase tracking-wide shadow-lg hover:bg-purple-50 transition-colors" AriaLabel="Previous slide" OnClick="context.PreviousSlide">
+                        Prev
+                    </TwButton>
+                </LeftNavigation>
+                <RightNavigation>
+                    <TwButton Plain Class="absolute bottom-3 end-3 z-10 px-3 py-1.5 rounded-md bg-white text-purple-700 text-xs font-bold uppercase tracking-wide shadow-lg hover:bg-purple-50 transition-colors" AriaLabel="Next slide" OnClick="context.NextSlide">
+                        Next
+                    </TwButton>
+                </RightNavigation>
+                <ChildContent>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-purple-600 text-white text-xl font-semibold">Slide 1</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-fuchsia-600 text-white text-xl font-semibold">Slide 2</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-blue-600 text-white text-xl font-semibold">Slide 3</div>
+                    </TwCarouselItem>
+                </ChildContent>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+
+    <PageCard Title="Custom Indicators">
+        <Description>Set <code>Indicators</code> to render your own slide-picker controls instead of the default dots. Its <code>context</code> exposes <code>SelectedIndex</code> and <code>GoToSlide</code> so your markup can both reflect and drive the active slide.</Description>
+        <CodeExample Name="CarouselCustomIndicators">
+            <TwCarousel Style="height:240px;">
+                <Indicators>
+                    <div class="absolute bottom-2 inset-x-0 z-10 w-fit mx-auto flex justify-center gap-2">
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            var index = i;
+                            <TwButton Plain Class="@(index == context.SelectedIndex ? "size-7 rounded-md bg-purple-600 text-white text-xs font-bold" : "size-7 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold hover:bg-gray-300 dark:hover:bg-gray-600")" AriaLabel="@($"Slide {index + 1} of 3")" aria-current="@(index == context.SelectedIndex ? "true" : "false")" OnClick="@(() => context.GoToSlide(index))">
+                                @(index + 1)
+                            </TwButton>
+                        }
+                    </div>
+                </Indicators>
+                <ChildContent>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-orange-800 text-white text-xl font-semibold">Slide 1</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-pink-600 text-white text-xl font-semibold">Slide 2</div>
+                    </TwCarouselItem>
+                    <TwCarouselItem>
+                        <div class="flex h-full items-center justify-center bg-cyan-600 text-white text-xl font-semibold">Slide 3</div>
+                    </TwCarouselItem>
+                </ChildContent>
+            </TwCarousel>
+        </CodeExample>
+    </PageCard>
+</PageContainer>
+
+@code {
+    private int selectedIndex;
+
+    #region CodeExample CarouselObjectFitCode
+    private static readonly (string Label, string Class)[] objectFitOptions =
+    [
+        ("Cover", "object-cover"),
+        ("Contain", "object-contain"),
+        ("Fill", "object-fill"),
+        ("None", "object-none"),
+        ("Scale Down", "object-scale-down"),
+    ];
+
+    private string selectedObjectFit = "object-cover";
+    #endregion
+}
