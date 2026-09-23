@@ -7,6 +7,14 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     <!-- Routes.razor, not the SDK's default "App", is the root component. -->
     <BlazorWasmPrerenderingRootComponentType>TwBlazor.Wasm.Routes</BlazorWasmPrerenderingRootComponentType>
+    <!-- Every href, canonical tag and sitemap entry in this app uses the
+         extension-less, no-trailing-slash form (e.g. "/card"). The default
+         "foo/index.html" output only resolves for that form via a 308 to
+         "/card/" first (a directory needs the slash to resolve relative
+         URLs correctly), which is exactly what turns every canonical tag
+         into a "canonical points to a redirect" error. A flat "card.html"
+         has no such ambiguity, so Cloudflare serves it for "/card" directly. -->
+    <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle>
   </PropertyGroup>
 
   <ItemGroup>
