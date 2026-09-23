@@ -36,6 +36,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://twblazor.com/carousel</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://twblazor.com/checkbox</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -66,7 +71,17 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://twblazor.com/date-range-picker</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://twblazor.com/datetime-picker</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://twblazor.com/datetime-range-picker</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -86,7 +101,17 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://twblazor.com/navbar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://twblazor.com/pagination</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://twblazor.com/pick-list</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -111,12 +136,22 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://twblazor.com/skeleton</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://twblazor.com/slider</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://twblazor.com/spinner</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://twblazor.com/stepper</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -146,7 +181,17 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://twblazor.com/time-range-picker</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://twblazor.com/toast</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://twblazor.com/tree-list</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>

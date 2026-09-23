@@ -73,7 +73,7 @@
             {
                 <div class="mt-3 p-3 rounded border border-gray-200 dark:border-gray-600">
                     <p class="text-sm text-gray-600 dark:text-gray-400">Name: <strong>@selectedPerson.Name</strong></p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Email: <strong>@selectedPerson.Email</strong></p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">City: <strong>@selectedPerson.City</strong></p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Age: <strong>@selectedPerson.Age</strong></p>
                 </div>
             }
@@ -171,17 +171,17 @@
 
     private readonly Person[] people =
     [
-        new Person { Id = 1, Name = "John Doe", Email = "john@example.com", Age = 30 },
-        new Person { Id = 2, Name = "Jane Smith", Email = "jane@example.com", Age = 25 },
-        new Person { Id = 3, Name = "Bob Johnson", Email = "bob@example.com", Age = 35 },
-        new Person { Id = 4, Name = "Alice Williams", Email = "alice@example.com", Age = 28 }
+        new Person { Id = 1, Name = "John Doe", City = "London", Age = 30 },
+        new Person { Id = 2, Name = "Jane Smith", City = "Toronto", Age = 25 },
+        new Person { Id = 3, Name = "Bob Johnson", City = "Sydney", Age = 35 },
+        new Person { Id = 4, Name = "Alice Williams", City = "Dublin", Age = 28 }
     ];
 
     private sealed class Person
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
         public int Age { get; set; }
     }
     #endregion

@@ -51,7 +51,7 @@
         <CodeExample Name="StepperValidation" CSharpName="StepperValidationCode">
             <TwStepper @ref="validatedStepper" @bind-ActiveStepIndex="validatedActiveStep" Linear AriaLabel="Signup progress">
                 <TwStep Label="Email">
-                    <TwTextfield Label="Email address" @bind-Value="signupEmail" Placeholder="user@example.com" AriaLabel="Email address" Invalid="@emailInvalid" ErrorMessage="Please enter a valid email address." />
+                    <TwTextfield Label="Email address" @bind-Value="signupEmail" Placeholder="Enter your email address" AriaLabel="Email address" Invalid="@emailInvalid" ErrorMessage="Please enter a valid email address." />
                 </TwStep>
                 <TwStep Label="Done">
                     <p>Thanks, @signupEmail is confirmed!</p>
