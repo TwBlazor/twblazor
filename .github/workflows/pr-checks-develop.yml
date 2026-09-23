@@ -34,6 +34,8 @@ jobs:
   sonarcloud-scan:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
+    # Dependabot-triggered runs read secrets from the Dependabot store, where SONAR_TOKEN is not set.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
 
