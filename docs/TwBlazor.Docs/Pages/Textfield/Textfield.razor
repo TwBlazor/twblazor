@@ -97,7 +97,7 @@
     #region CodeExample TextfieldValidatorCode
     public string Username { get; set; } = string.Empty;
 
-    private Task<string?> ValidateUsername(string value)
+    private static Task<string?> ValidateUsername(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
