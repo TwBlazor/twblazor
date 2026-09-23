@@ -4,23 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>twblazor | Tailwind CSS components for Blazor</title>
-    <meta name="description" content="Professional-grade Tailwind CSS components for Blazor. Accessible, themeable, free and open-source components to help you ship polished .NET UIs faster." />
-    <!-- No canonical here. Every route is served this same file, so a canonical
-         in the shell tells Google that /button, /dialog and the rest are all
-         duplicates of the home page, and they get dropped from the index as
-         "Alternate page with proper canonical tag". Each page declares its own
-         canonical through HeadContent instead. -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="twblazor" />
-    <meta property="og:title" content="twblazor - Tailwind CSS components for Blazor" />
-    <meta property="og:description" content="Professional-grade Tailwind CSS components for Blazor. Accessible, themeable, free and open-source components to help you ship polished .NET UIs faster." />
-    <meta property="og:url" content="https://twblazor.com/" />
-    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="twblazor - Tailwind CSS components for Blazor" />
-    <meta name="twitter:description" content="Professional-grade Tailwind CSS components for Blazor. Accessible, themeable, free and open-source components to help you ship polished .NET UIs faster." />
-    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
+    <!-- No title, meta description, canonical, or og:*/twitter:* tags here.
+         Every route now supplies its own complete set via HeadContent, and
+         prerendering bakes that into the static output directly - a default
+         here would just sit alongside the real one as a duplicate tag. -->
     <base href="/" />
     <link rel="icon" type="image/svg+xml" href="_content/TwBlazor.Docs/images/logo.svg" />
     <link rel="stylesheet" href="_content/TwBlazor/icons/bootstrap-icons.min.css">

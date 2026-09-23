@@ -4,6 +4,16 @@
 <HeadContent>
     <meta name="description" content="TwSlider is a Blazor slider component for choosing a number from a range, with colours, precision, custom ranges and readonly support." />
     <link rel="canonical" href="https://twblazor.com/slider" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="twblazor" />
+    <meta property="og:title" content="TwSlider | twblazor" />
+    <meta property="og:description" content="TwSlider is a Blazor slider component for choosing a number from a range, with colours, precision, custom ranges and readonly support." />
+    <meta property="og:url" content="https://twblazor.com/slider" />
+    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="TwSlider | twblazor" />
+    <meta name="twitter:description" content="TwSlider is a Blazor slider component for choosing a number from a range, with colours, precision, custom ranges and readonly support." />
+    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
 </HeadContent>
 
 <PageContainer Title="TwSlider" ThemeType="typeof(TwSliderTheme)">
@@ -46,7 +56,7 @@
             <div class="space-y-6">
                 <div>
                     <TwSlider T="decimal" Id="price-slider" Min="0m" Max="100m" Step="0.5m" Label="Price" @bind-Value="priceValue" AriaLabel="Price slider" />
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Selected Price: <strong>$@priceValue.ToString("F2")</strong></p>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Selected Price: <strong>@($"${priceValue:F2}")</strong></p>
                 </div>
 
                 <div>

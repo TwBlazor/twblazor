@@ -3,8 +3,18 @@
 
 <PageTitle>TwStepper | twblazor</PageTitle>
 <HeadContent>
-    <meta name="description" content="TwStepper is a Blazor step-by-step progress indicator for multi-step flows, with horizontal and vertical orientations, linear and non-linear navigation, and a mobile-friendly responsive collapse." />
+    <meta name="description" content="TwStepper is a Blazor step-by-step progress indicator for multi-step flows, with horizontal/vertical orientations and linear or non-linear navigation." />
     <link rel="canonical" href="https://twblazor.com/stepper" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="twblazor" />
+    <meta property="og:title" content="TwStepper | twblazor" />
+    <meta property="og:description" content="TwStepper is a Blazor step-by-step progress indicator for multi-step flows, with horizontal/vertical orientations and linear or non-linear navigation." />
+    <meta property="og:url" content="https://twblazor.com/stepper" />
+    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="TwStepper | twblazor" />
+    <meta name="twitter:description" content="TwStepper is a Blazor step-by-step progress indicator for multi-step flows, with horizontal/vertical orientations and linear or non-linear navigation." />
+    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
 </HeadContent>
 
 <PageContainer Title="TwStepper" ThemeType="typeof(TwStepperTheme)">
@@ -41,7 +51,7 @@
         <CodeExample Name="StepperValidation" CSharpName="StepperValidationCode">
             <TwStepper @ref="validatedStepper" @bind-ActiveStepIndex="validatedActiveStep" Linear AriaLabel="Signup progress">
                 <TwStep Label="Email">
-                    <TwTextfield Label="Email address" @bind-Value="signupEmail" Placeholder="user@example.com" AriaLabel="Email address" Invalid="@emailInvalid" ErrorMessage="Please enter a valid email address." />
+                    <TwTextfield Label="Email address" @bind-Value="signupEmail" Placeholder="Enter your email address" AriaLabel="Email address" Invalid="@emailInvalid" ErrorMessage="Please enter a valid email address." />
                 </TwStep>
                 <TwStep Label="Done">
                     <p>Thanks, @signupEmail is confirmed!</p>
