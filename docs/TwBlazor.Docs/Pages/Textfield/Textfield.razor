@@ -5,6 +5,16 @@
 <HeadContent>
     <meta name="description" content="TwTextfield is a Blazor text input component with outlined and filled variants, several input types, disabled or readonly states, and sync or async validation." />
     <link rel="canonical" href="https://twblazor.com/textfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="twblazor" />
+    <meta property="og:title" content="TwTextfield | twblazor" />
+    <meta property="og:description" content="TwTextfield is a Blazor text input component with outlined and filled variants, several input types, disabled or readonly states, and sync or async validation." />
+    <meta property="og:url" content="https://twblazor.com/textfield" />
+    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="TwTextfield | twblazor" />
+    <meta name="twitter:description" content="TwTextfield is a Blazor text input component with outlined and filled variants, several input types, disabled or readonly states, and sync or async validation." />
+    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
 </HeadContent>
 
 <PageContainer Title="TwTextfield" ThemeType="typeof(TwInputTheme)">
@@ -26,7 +36,7 @@
     <PageCard Title="Readonly Textfield">
         <Description>Use the <code>ReadOnly</code> property to display a value that can't be edited.</Description>
         <CodeExample Name="TextfieldReadonly">
-            <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" ReadOnly />
+            <TwTextfield Label="Account ID" @bind-Value="AccountId" Placeholder="Account ID" AriaLabel="Account ID textfield" ReadOnly />
         </CodeExample>
     </PageCard>
     <PageCard Title="Outlined Variant">
@@ -51,7 +61,7 @@
         <Description>Use <code>InputType</code> to render native input types such as <code>email</code> and <code>password</code>.</Description>
         <CodeExample Name="TextfieldTypes">
             <div class="md:flex-col flex-row flex gap-2">
-                <TwTextfield Label="Email" @bind-Value="Email" Placeholder="user@example.com" AriaLabel="Email textfield" InputType="email" />
+                <TwTextfield Label="Email" @bind-Value="Email" Placeholder="Enter your email address" AriaLabel="Email textfield" InputType="email" />
                 <TwTextfield Label="Password" @bind-Value="Password" Placeholder="Enter password" AriaLabel="Password textfield" InputType="password" />
             </div>
         </CodeExample>
@@ -59,7 +69,7 @@
     <PageCard Title="Invalid Textfield">
         <Description>Set <code>Invalid</code> and <code>ErrorMessage</code> to mark the textfield as failing validation. The message is rendered below the input and associated with it via <code>aria-describedby</code> so assistive technology announces it alongside the field.</Description>
         <CodeExample Name="TextfieldInvalid">
-            <TwTextfield Label="Email" @bind-Value="InvalidEmail" Placeholder="user@example.com" AriaLabel="Email textfield" Invalid ErrorMessage="Please enter a valid email address." />
+            <TwTextfield Label="Email" @bind-Value="InvalidEmail" Placeholder="Enter your email address" AriaLabel="Email textfield" Invalid ErrorMessage="Please enter a valid email address." />
         </CodeExample>
     </PageCard>
     <PageCard Title="Validation on Change">
@@ -79,14 +89,15 @@
 @code {
     public string Forename { get; set; } = string.Empty;
     public string Surname { get; set; } = string.Empty;
-    public string Email { get; set; } = "readonly@example.com";
+    public string Email { get; set; } = string.Empty;
+    public string AccountId { get; set; } = "ACC-2049-7731";
     public string Password { get; set; } = string.Empty;
     public string InvalidEmail { get; set; } = "not-an-email";
 
     #region CodeExample TextfieldValidatorCode
     public string Username { get; set; } = string.Empty;
 
-    private Task<string?> ValidateUsername(string value)
+    private static Task<string?> ValidateUsername(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
