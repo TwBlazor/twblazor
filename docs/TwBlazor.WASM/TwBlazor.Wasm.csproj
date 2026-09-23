@@ -5,10 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <!-- Routes.razor, not the SDK's default "App", is the root component. -->
+    <BlazorWasmPrerenderingRootComponentType>TwBlazor.Wasm.Routes</BlazorWasmPrerenderingRootComponentType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.12" />
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
