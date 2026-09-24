@@ -2,26 +2,11 @@
 @using TwBlazor.Models
 @using TwBlazor.Services
 
-<PageTitle>TwDialog | twblazor</PageTitle>
-<HeadContent>
-    <meta name="description" content="TwDialog is a Blazor dialog component for modal windows. Supports returning data, positioning, sizing, behaviour options and theming." />
-    <link rel="canonical" href="https://twblazor.com/dialog" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="twblazor" />
-    <meta property="og:title" content="TwDialog | twblazor" />
-    <meta property="og:description" content="TwDialog is a Blazor dialog component for modal windows. Supports returning data, positioning, sizing, behaviour options and theming." />
-    <meta property="og:url" content="https://twblazor.com/dialog" />
-    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="TwDialog | twblazor" />
-    <meta name="twitter:description" content="TwDialog is a Blazor dialog component for modal windows. Supports returning data, positioning, sizing, behaviour options and theming." />
-    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-</HeadContent>
 @* #region CodeExample DialogInject *@
 @inject ITwDialogService DialogService
 @* #endregion *@
 
-<PageContainer Title="TwDialogProvider" ThemeType="typeof(TwDialogTheme)">
+<PageContainer Title="TwDialogProvider" Path="/dialog" Description="TwDialog is a Blazor dialog service for modal windows. Open any component with ITwDialogService.ShowAsync, return data, and set position, size and behaviour." SeoTitle="TwDialog | twblazor - Blazor Dialog Component" ThemeType="typeof(TwDialogTheme)">
     <ThemeContent>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
             For example, to darken the backdrop further and use fully rounded dialogs by default:

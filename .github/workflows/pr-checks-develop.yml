@@ -34,6 +34,8 @@ jobs:
   sonarcloud-scan:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
+    # Dependabot-triggered runs read secrets from the Dependabot store, where SONAR_TOKEN is not set.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
 
@@ -120,6 +122,7 @@ jobs:
             /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}/coverage/**/coverage.opencover*.xml"
           dotnet build --configuration Release
           dotnet test tests/TwBlazor.Tests/TwBlazor.Tests.csproj --no-build --configuration Release --results-directory "${{ github.workspace }}/coverage" -- --coverlet --coverlet-output-format opencover
+          dotnet test tests/TwBlazor.Docs.Tests/TwBlazor.Docs.Tests.csproj --no-build --configuration Release --results-directory "${{ github.workspace }}/coverage/docs-tests" -- --coverlet --coverlet-output-format opencover
           ${{ runner.temp }}/scanner/dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
 
   vulnerability-scan:
