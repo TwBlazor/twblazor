@@ -397,3 +397,6 @@ docfx.log
 # never has to touch them.
 /docs/TwBlazor.Docs/Generated/PageLastModified.cs
 /docs/TwBlazor.WASM/wwwroot/sitemap.xml
+
+# Cloudflare Wrangler local state and cache
+.wrangler/
