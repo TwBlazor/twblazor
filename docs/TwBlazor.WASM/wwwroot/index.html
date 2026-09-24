@@ -4,18 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- No title, meta description, canonical, or og:*/twitter:* tags here.
-         Every route now supplies its own complete set via HeadContent, and
-         prerendering bakes that into the static output directly - a default
-         here would just sit alongside the real one as a duplicate tag. -->
     <base href="/" />
     <link rel="icon" href="_content/TwBlazor.Docs/images/logo.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="_content/TwBlazor.Docs/images/logo.svg" />
     <link rel="stylesheet" href="_content/TwBlazor/icons/bootstrap-icons.min.css">
     <link rel="stylesheet" href="_content/TwBlazor.Docs/css/output.css" />
-    <!-- The loading text is generated content rather than a text node: this shell is baked into every
-         prerendered page, and crawlers that don't run JavaScript would otherwise read
-         "Loading twblazor docs..." as the first line of each one. -->
     <style>.docs-loading-text::after { content: "Loading twblazor docs..."; }</style>
 </head>
 
