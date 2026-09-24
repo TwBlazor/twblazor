@@ -88,7 +88,8 @@ TwBlazor/
 │       └── Theme.cs
 └── tests/                        # Automated tests
     ├── vitest.config.js          # JS unit test config (see TwBlazor.Tests/js)
-    ├── TwBlazor.Tests/           # Unit tests (bUnit + xunit + JS/vitest)
+    ├── TwBlazor.Tests/           # Component library unit tests (bUnit + xunit + JS/vitest)
+    ├── TwBlazor.Docs.Tests/      # Docs site and build tooling tests (pages, search, sitemap, XML docs)
     └── TwBlazor.A11yTests/       # Accessibility (axe-core/Playwright) tests
 ```
 
@@ -103,7 +104,7 @@ TwBlazor/
 - `/src` → the published component library (`TwBlazor`, `TwBlazor.Theme`)
 - `/build` → build-time tooling (`TwBlazor.BuildTools`, `TwBlazor.Docs.Compiler`)
 - `/docs` → documentation content, site hosts, and docfx config (`TwBlazor.Docs`, `TwBlazor.Server`, `TwBlazor.WASM`, `TwBlazor.WasmHost`, `templates/`, `toc.yml`)
-- `/tests` → automated tests (`TwBlazor.Tests`, `TwBlazor.A11yTests`, `vitest.config.js`)
+- `/tests` → automated tests (`TwBlazor.Tests`, `TwBlazor.Docs.Tests`, `TwBlazor.A11yTests`, `vitest.config.js`)
 
 See [Project Structure](#project-structure) above for the full tree.
 
@@ -133,6 +134,7 @@ This serves the compiled `TwBlazor.Wasm` app via the `TwBlazor.WasmHost` host pr
 
 ```
 dotnet test tests/TwBlazor.Tests
+dotnet test tests/TwBlazor.Docs.Tests
 ```
 
 ### Rebuild the doc examples

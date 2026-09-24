@@ -829,6 +829,17 @@ public static class Theme
                 },
                 new TwIconTheme
                 {
+                    Colors = new()
+                    {
+                        Primary = "text-purple-600 dark:text-purple-400",
+                        Accent = "text-fuchsia-600 dark:text-fuchsia-400",
+                        Success = "text-green-600 dark:text-green-400",
+                        Danger = "text-red-600 dark:text-red-400",
+                        Warning = "text-[oklch(65%_0.15_80)] dark:text-yellow-400",
+                        Info = "text-blue-600 dark:text-blue-400",
+                        Light = "text-gray-100 dark:text-white",
+                        Dark = "text-gray-950 dark:text-gray-950",
+                    },
                     HoverBackground = "hover:bg-current/10 dark:hover:bg-current/15",
                     Pulse = "relative tw-icon-pulse"
                 },
@@ -1068,8 +1079,8 @@ public static class Theme
                         Light = "peer-checked:bg-white dark:peer-checked:bg-gray-300",
                         Dark = "peer-checked:bg-gray-900 dark:peer-checked:bg-gray-800",
                     },
-                    Switch = $"{positioning.Absolute} top-1/2 start-0.5 {sizing.Icon.Md} bg-gray-100 {rounded.Full} -translate-y-1/2 {shadows.Lg} peer-checked:translate-x-full peer-checked:shadow-lg {transition.TransformSlow} {transition.EaseInOut}",
-                    Track = $"{positioning.Absolute} inset-0 bg-[oklch(95%_0_0)] dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} shadow-inner peer-disabled:{interaction.DisabledOpacity} transition-[background-color,opacity] {transition.DurationSlow} {transition.EaseInOut} peer-disabled:pointer-events-none",
+                    Switch = $"{positioning.Absolute} top-1/2 start-0.5 {sizing.Icon.Md} bg-white {rounded.Full} -translate-y-1/2 {shadows.Md} ring-1 ring-black/15 peer-checked:translate-x-full {transition.TransformSlow} {transition.EaseInOut}",
+                    Track = $"{positioning.Absolute} inset-0 bg-gray-300 dark:bg-[oklch(21.15%_0.012_254.09)] {rounded.Full} shadow-inner ring-1 ring-inset ring-black/10 dark:ring-white/10 peer-disabled:{interaction.DisabledOpacity} transition-[background-color,opacity] {transition.DurationSlow} {transition.EaseInOut} peer-disabled:pointer-events-none",
                     WrapperSize = "w-10 h-6",
                     Base = "peer sr-only",
                     LabelBase = $"{display.InlineFlex} {flexbox.Align.Center} {spacing.Gap.Md} {inputLabelText} select-none",

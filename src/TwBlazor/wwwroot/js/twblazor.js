@@ -373,6 +373,12 @@ globalThis.twSidebar = {
             console.error('twSidebar.isMobileViewport error', err);
             return true;
         }
+    },
+
+    scrollToTop: function (el) {
+        if (el) {
+            el.scrollTop = 0;
+        }
     }
 };
 

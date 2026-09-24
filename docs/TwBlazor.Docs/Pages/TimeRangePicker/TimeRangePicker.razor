@@ -1,22 +1,6 @@
 @page "/time-range-picker"
 
-<PageTitle>TwTimeRangePicker | twblazor</PageTitle>
-<HeadContent>
-    <meta name="description" content="TwTimeRangePicker is a Blazor component for picking a start and end time-of-day pair from a single popover, switching between them with a Start/End tab." />
-    <link rel="canonical" href="https://twblazor.com/time-range-picker" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="twblazor" />
-    <meta property="og:title" content="TwTimeRangePicker | twblazor" />
-    <meta property="og:description" content="TwTimeRangePicker is a Blazor component for picking a start and end time-of-day pair from a single popover, switching between them with a Start/End tab." />
-    <meta property="og:url" content="https://twblazor.com/time-range-picker" />
-    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="TwTimeRangePicker | twblazor" />
-    <meta name="twitter:description" content="TwTimeRangePicker is a Blazor component for picking a start and end time-of-day pair from a single popover, switching between them with a Start/End tab." />
-    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-</HeadContent>
-
-<PageContainer Title="TwTimeRangePicker">
+<PageContainer Title="TwTimeRangePicker" Path="/time-range-picker" Description="TwTimeRangePicker is a Blazor component for choosing a start and end time from one popover. Bind Value or SelectedRange and set Format and Placeholder.">
     <PageCard Title="Basic Time Range Picker">
         <Description>Bind <code>SelectedRange</code> for a <code>KeyValuePair&lt;TimeOnly?, TimeOnly?&gt;</code> value (<code>Key</code> = start, <code>Value</code> = end). The popover reuses the same hour/minute editor as <a href="/time-picker" class="underline">TwTimePicker</a>, switching between the start and end with the Start/End tab at the top. Unlike the date-based range pickers, an end time earlier than the start is left as-is rather than swapped - it just represents a range that crosses midnight (e.g. an overnight shift).</Description>
         <CodeExample Name="TimeRangePickerBasic" CSharpName="TimeRangePickerBasicCode">
