@@ -20,7 +20,9 @@ public static class SitemapGenerator
     /// The public origin of the docs site. Must match the docs project's <c>SiteMetadata.BaseUrl</c>,
     /// which builds the canonical URLs the sitemap entries have to agree with.
     /// </summary>
+#pragma warning disable S1075 // The site's fixed public origin, not environment-specific
     public const string DefaultBaseUrl = "https://twblazor.com";
+#pragma warning restore S1075
 
     /// <summary>
     /// Builds a sitemap document listing every page, with a <c>lastmod</c> only for pages whose date is known.

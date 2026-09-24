@@ -29,7 +29,7 @@ public class SitemapGeneratorTests
         var xml = SitemapGenerator.GenerateSitemap(entries);
 
         // Assert
-        Assert.Single(System.Text.RegularExpressions.Regex.Matches(xml, "<lastmod>"));
+        Assert.Equal(1, xml.Split("<lastmod>").Length - 1);
         Assert.Contains("<lastmod>2026-09-04</lastmod>", xml);
     }
 

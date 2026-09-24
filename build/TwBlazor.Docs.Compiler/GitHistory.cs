@@ -20,7 +20,13 @@ public static class GitHistory
     /// <returns>The commit's calendar date, or <see langword="null"/>.</returns>
     public static DateOnly? GetLastModified(string repositoryRoot, string filePath)
     {
-        var startInfo = new ProcessStartInfo("git")
+        var git = ResolveGitExecutable();
+        if (git is null)
+        {
+            return null;
+        }
+
+        var startInfo = new ProcessStartInfo(git)
         {
             WorkingDirectory = repositoryRoot,
             RedirectStandardOutput = true,
@@ -51,6 +57,23 @@ public static class GitHistory
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Finds git on the <c>PATH</c> and returns its absolute path, so the process that runs is always a
+    /// specific executable rather than whatever a bare command name happens to resolve to.
+    /// </summary>
+    /// <returns>The full path to the git executable, or <see langword="null"/> when git isn't installed.</returns>
+    private static string? ResolveGitExecutable()
+    {
+        var fileName = OperatingSystem.IsWindows() ? "git.exe" : "git";
+        var path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+
+        return path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
+            .Select(directory => directory.Trim('"'))
+            .Where(Path.IsPathRooted)
+            .Select(directory => Path.Combine(directory, fileName))
+            .FirstOrDefault(File.Exists);
     }
 
     /// <summary>

@@ -13,7 +13,9 @@ internal static partial class SiteMetadata
     /// The public origin of the docs site. Must match <c>SitemapGenerator.DefaultBaseUrl</c> in the build
     /// tools, which writes the sitemap entries the canonical URLs have to agree with.
     /// </summary>
+#pragma warning disable S1075 // The site's fixed public origin, not environment-specific
     public const string BaseUrl = "https://twblazor.com";
+#pragma warning restore S1075
 
     public const string SiteName = "twblazor";
 

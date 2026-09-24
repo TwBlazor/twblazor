@@ -43,5 +43,5 @@
     [Parameter, EditorRequired] public string Path { get; set; } = string.Empty;
 
     private string url => SiteMetadata.AbsoluteUrl(Path);
-    private string image => SiteMetadata.AbsoluteUrl(SiteMetadata.ImagePath);
+    private static string image => SiteMetadata.AbsoluteUrl(SiteMetadata.ImagePath);
 }
