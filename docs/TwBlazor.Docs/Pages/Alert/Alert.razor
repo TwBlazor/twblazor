@@ -2,23 +2,7 @@
 @using TwBlazor.Services
 @inject ITwToastService ToastService
 
-<PageTitle>TwAlert | twblazor</PageTitle>
-<HeadContent>
-    <meta name="description" content="TwAlert is a Blazor alert component for status messages. Supports colours, dense layout, icons and dismissible alerts." />
-    <link rel="canonical" href="https://twblazor.com/alert" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="twblazor" />
-    <meta property="og:title" content="TwAlert | twblazor" />
-    <meta property="og:description" content="TwAlert is a Blazor alert component for status messages. Supports colours, dense layout, icons and dismissible alerts." />
-    <meta property="og:url" content="https://twblazor.com/alert" />
-    <meta property="og:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="TwAlert | twblazor" />
-    <meta name="twitter:description" content="TwAlert is a Blazor alert component for status messages. Supports colours, dense layout, icons and dismissible alerts." />
-    <meta name="twitter:image" content="https://twblazor.com/_content/TwBlazor.Docs/images/logo.svg" />
-</HeadContent>
-
-<PageContainer Title="TwAlert" ThemeType="typeof(TwAlertTheme)">
+<PageContainer Title="TwAlert" Path="/alert" Description="TwAlert is a Blazor alert component for status messages. Set Color, Dense, StartIcon and EndIcon, and make it Dismissible with a bindable Dismissed value." ThemeType="typeof(TwAlertTheme)">
     <PageCard Title="Alert">
         <Description>Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.</Description>
         <CodeExample Name="AlertBasic">

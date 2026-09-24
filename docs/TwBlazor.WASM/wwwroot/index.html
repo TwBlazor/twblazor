@@ -9,17 +9,22 @@
          prerendering bakes that into the static output directly - a default
          here would just sit alongside the real one as a duplicate tag. -->
     <base href="/" />
+    <link rel="icon" href="_content/TwBlazor.Docs/images/logo.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="_content/TwBlazor.Docs/images/logo.svg" />
     <link rel="stylesheet" href="_content/TwBlazor/icons/bootstrap-icons.min.css">
     <link rel="stylesheet" href="_content/TwBlazor.Docs/css/output.css" />
+    <!-- The loading text is generated content rather than a text node: this shell is baked into every
+         prerendered page, and crawlers that don't run JavaScript would otherwise read
+         "Loading twblazor docs..." as the first line of each one. -->
+    <style>.docs-loading-text::after { content: "Loading twblazor docs..."; }</style>
 </head>
 
 <body>
     <div id="app" class="overflow-none">
         <div class="flex items-center justify-center h-screen dark:bg-gray-900">
-            <output class="inline-flex flex-col items-center gap-3" aria-label="Loading">
+            <output class="inline-flex flex-col items-center gap-3" aria-label="Loading twblazor docs">
                 <span class="inline-block rounded-full animate-spin size-10 border-5 border-gray-200 dark:border-gray-700 border-t-purple-600 dark:border-t-purple-500" aria-hidden="true"></span>
-                <p class="text-gray-700 dark:text-gray-100">Loading twblazor docs...</p>
+                <p class="docs-loading-text text-gray-700 dark:text-gray-100" aria-hidden="true"></p>
             </output>
         </div>
     </div>
