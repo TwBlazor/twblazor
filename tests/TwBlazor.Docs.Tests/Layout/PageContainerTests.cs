@@ -1,6 +1,7 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using TwBlazor.Docs.Layout;
+using TwBlazor.Docs.Services;
 
 namespace TwBlazor.Docs.Tests.Layout;
 
@@ -72,6 +73,90 @@ public class PageContainerTests : DocsTestBase
 
         // Assert
         Assert.Equal("Body", cut.Find("#body").TextContent);
+    }
+
+    [Fact]
+    public void Render_ShowsTheComponentCategoryAboveTheHeading()
+    {
+        // Arrange
+        var (category, entry) = ComponentCatalog.LoadLeafEntries().First();
+
+        // Act
+        var cut = Render(entry.Url);
+
+        // Assert
+        Assert.Equal(category, cut.Find("h1").PreviousElementSibling!.TextContent);
+    }
+
+    [Fact]
+    public void Render_ShowsTheCategoryInNormalCase()
+    {
+        // Arrange
+        var (_, entry) = ComponentCatalog.LoadLeafEntries().First();
+
+        // Act
+        var cut = Render(entry.Url);
+
+        // Assert
+        Assert.DoesNotContain("uppercase", cut.Find("h1").PreviousElementSibling!.ClassList);
+    }
+
+    [Fact]
+    public void Render_UsesTheGivenCategory_OverTheCatalogOne()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<PageContainer>(parameters => parameters
+            .Add(p => p.Title, "Get Started")
+            .Add(p => p.Path, "/get-started")
+            .Add(p => p.Description, "Install it.")
+            .Add(p => p.Category, "Introduction"));
+
+        // Assert
+        Assert.Equal("Introduction", cut.Find("h1").PreviousElementSibling!.TextContent);
+    }
+
+    [Fact]
+    public void Render_ShowsNoCategory_WhenThePageIsNotInTheCatalog()
+    {
+        // Arrange & Act
+        var cut = Render("/no-such-page");
+
+        // Assert
+        Assert.Null(cut.Find("h1").PreviousElementSibling);
+    }
+
+    [Fact]
+    public void Render_ListsEachPageCardInTheOnThisPageNavigation()
+    {
+        // Arrange & Act
+        var cut = TestContext.Render<PageContainer>(parameters => parameters
+            .Add(p => p.Title, "TwCard")
+            .Add(p => p.Path, "/card")
+            .Add(p => p.Description, "TwCard is a Blazor card component.")
+            .Add(p => p.ChildContent, (RenderFragment)(builder =>
+            {
+                foreach (var title in new[] { "Basic", "Colors" })
+                {
+                    builder.OpenComponent<PageCard>(0);
+                    builder.AddAttribute(1, nameof(PageCard.Title), title);
+                    builder.CloseComponent();
+                }
+            })));
+
+        // Assert
+        var links = cut.FindAll("nav a");
+        Assert.Equal(["Basic", "Colors"], links.Select(link => link.TextContent));
+        Assert.All(links, link => Assert.NotNull(cut.Find("#" + link.GetAttribute("href")!.Split('#')[1])));
+    }
+
+    [Fact]
+    public void Render_ShowsNoOutline_WhenThePageHasNoCards()
+    {
+        // Arrange & Act
+        var cut = Render();
+
+        // Assert
+        Assert.Empty(cut.FindAll("nav"));
     }
 
     [Fact]
