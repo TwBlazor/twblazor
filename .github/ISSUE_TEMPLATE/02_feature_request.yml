@@ -1,6 +1,9 @@
 name: Feature Request
 description: Suggest a new feature for TwBlazor.
 title: "feat: "
+type: Feature
+projects:
+  - TwBlazor/2
 labels:
   - feat
 body:
