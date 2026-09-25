@@ -361,7 +361,7 @@ A release is just a pull request from `develop` into `main`:
 Merging automatically:
 - Tags the merge commit with the new version (e.g. `v1.2.0`)
 - Publishes the **stable** package to both GitHub Packages and
-  [NuGet.org](https://www.nuget.org/packages/TwBlazor)
+  [NuGet.org](https://www.nuget.org/packages/twblazor)
 - Creates a GitHub Release with the packed `.nupkg` attached
 
 There is nothing further to do on `develop` afterwards. Its next build picks

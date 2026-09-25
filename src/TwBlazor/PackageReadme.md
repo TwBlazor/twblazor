@@ -13,9 +13,9 @@
 
 ## Setup
 
-1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
+1. Install the [twblazor NuGet package](https://www.nuget.org/packages/twblazor) in your Blazor project.
 ```pwsh
-$ dotnet add package TwBlazor --version 1.7.1
+$ dotnet add package twblazor --version 1.7.1
 ```
 2. Head to the [Get Started guide](https://twblazor.com/get-started) for the rest of the setup - stylesheets, imports, providers, theming and dependency injection - covering both Interactive Server and WebAssembly Blazor Web Apps step by step.
 

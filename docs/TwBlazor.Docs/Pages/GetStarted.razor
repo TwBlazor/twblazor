@@ -7,7 +7,7 @@
 
     <TwTabContainer ContainerClass="p-0! border-0!">
         <TwTab Label="Blazor Server">
-            <PageCard Title="1. Create the project">
+            <PageCard Title="1. Create the project" NoMarginTop>
                 <p Class="mb-3">
                     Scaffold a new Blazor Web App using the default Interactive Server render mode. This creates a single project. Replace <code>{YourProjectName}</code> with your own project's name.
                 </p>
@@ -18,9 +18,9 @@
                 <TwCodeBlock Content="@_serverCreateSolution" Language="bash" />
             </PageCard>
 
-            <PageCard Title="2. Install the TwBlazor NuGet package">
+            <PageCard Title="2. Install the twblazor NuGet package">
                 <p Class="mb-3">
-                    Install the <a href="https://www.nuget.org/packages/TwBlazor" target="_blank">TwBlazor NuGet package</a> in the <code>{YourProjectName}</code> project.
+                    Install the <a href="https://www.nuget.org/packages/twblazor" target="_blank">twblazor NuGet package</a> in the <code>{YourProjectName}</code> project.
                 </p>
                 <TwCodeBlock Content="@_serverInstallPackage" Language="bash" />
             </PageCard>
@@ -91,7 +91,7 @@
         </TwTab>
 
         <TwTab Label="Blazor WebAssembly">
-            <PageCard Title="1. Create the project">
+            <PageCard Title="1. Create the project" NoMarginTop>
                 <p Class="mb-3">
                     Scaffold a new Blazor Web App with WebAssembly interactivity. Unlike the Server model, this creates <strong>two</strong> projects side by side. Replace <code>{YourProjectName}</code> with your own project's name.
                 </p>
@@ -102,9 +102,9 @@
                 </p>
             </PageCard>
 
-            <PageCard Title="2. Install the TwBlazor NuGet package">
+            <PageCard Title="2. Install the twblazor NuGet package">
                 <p Class="mb-3">
-                    Install the <a href="https://www.nuget.org/packages/TwBlazor" target="_blank">TwBlazor NuGet package</a> in <strong>both</strong> projects. <code>{YourProjectName}.Client</code> needs it because the interactive layout and providers are compiled into it; <code>{YourProjectName}</code> needs it too because it references <code>{YourProjectName}.Client</code>'s <code>Theme</code> class and still renders those components on the server before the WebAssembly bundle takes over.
+                    Install the <a href="https://www.nuget.org/packages/twblazor" target="_blank">twblazor NuGet package</a> in <strong>both</strong> projects. <code>{YourProjectName}.Client</code> needs it because the interactive layout and providers are compiled into it; <code>{YourProjectName}</code> needs it too because it references <code>{YourProjectName}.Client</code>'s <code>Theme</code> class and still renders those components on the server before the WebAssembly bundle takes over.
                 </p>
                 <TwCodeBlock Content="@_wasmInstallPackage" Language="bash" />
             </PageCard>
@@ -197,7 +197,7 @@
         """;
 
     private const string _serverInstallPackage = """
-        dotnet add package TwBlazor --version 1.11.3
+        dotnet add package twblazor --version 1.11.3
         """;
 
     private const string _wasmCreateProject = """
@@ -218,10 +218,10 @@
 
     private const string _wasmInstallPackage = """
         cd {YourProjectName}
-        dotnet add package TwBlazor --version 1.11.3
+        dotnet add package twblazor --version 1.11.3
 
         cd ../{YourProjectName}.Client
-        dotnet add package TwBlazor --version 1.11.3
+        dotnet add package twblazor --version 1.11.3
         """;
 
     private const string _appHeadExample = """
@@ -230,7 +230,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <!-- ... -->
             <!-- Bootstrap Icons -->
-            <link rel="stylesheet" href="@Assets["_content/TwBlazor/icons/bootstrap-icons.min.css"]">
+            <link rel="stylesheet" href="@Assets["_content/twblazor/icons/bootstrap-icons.min.css"]">
             <link rel="stylesheet" href="@Assets["css/output.css"]" />
             <!-- ... -->
         </head>
@@ -242,7 +242,7 @@
             <ReconnectModal />
             <!-- ... -->
             <!-- TwBlazor Scripts -->
-            <script src="@Assets["_content/TwBlazor/js/twblazor.js"]"></script>
+            <script src="@Assets["_content/twblazor/js/twblazor.js"]"></script>
             <!-- ... -->
             <script src="@Assets["_framework/blazor.web.js"]"></script>
         </body>
@@ -253,7 +253,7 @@
             <Routes @rendermode="InteractiveWebAssembly" />
             <!-- ... -->
             <!-- TwBlazor Scripts -->
-            <script src="@Assets["_content/TwBlazor/js/twblazor.js"]"></script>
+            <script src="@Assets["_content/twblazor/js/twblazor.js"]"></script>
             <!-- ... -->
             <script src="@Assets["_framework/blazor.webassembly.js"]"></script>
         </body>
