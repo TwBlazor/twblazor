@@ -11,9 +11,11 @@ namespace TwBlazor.Tests.Components;
 /// </summary>
 public class DenseInputTests : TwBlazorTestBase
 {
+    private static readonly string[] _values = ["A", "B"];
+
     private TwInputTheme inputTheme => Theme.Components.Require<TwInputTheme>();
 
-    private string InputClass(IRenderedComponent<IComponent> cut) => cut.Find("input").GetAttribute("class")!;
+    private static string InputClass(IRenderedComponent<IComponent> cut) => cut.Find("input").GetAttribute("class")!;
 
     [Fact]
     public void TwTextfield_UsesInputSize_ByDefault()
@@ -41,7 +43,7 @@ public class DenseInputTests : TwBlazorTestBase
             .Add(p => p.Multiple, true)
             .Add(p => p.PreferNativePicker, false)
             .Add(p => p.Dense, true)
-            .Add(p => p.Values, new[] { "A", "B" }));
+            .Add(p => p.Values, _values));
 
         var trigger = cut.Find("button[aria-haspopup='listbox']").ParentElement!.GetAttribute("class");
         Assert.DoesNotContain(inputTheme.DenseSize, trigger);

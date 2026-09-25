@@ -125,6 +125,8 @@ public class PageContainerTests : DocsTestBase
         Assert.Null(cut.Find("h1").PreviousElementSibling);
     }
 
+    private static readonly string[] _cardTitles = ["Basic", "Colors"];
+
     [Fact]
     public void Render_ListsEachPageCardInTheOnThisPageNavigation()
     {
@@ -135,7 +137,7 @@ public class PageContainerTests : DocsTestBase
             .Add(p => p.Description, "TwCard is a Blazor card component.")
             .Add(p => p.ChildContent, (RenderFragment)(builder =>
             {
-                foreach (var title in new[] { "Basic", "Colors" })
+                foreach (var title in _cardTitles)
                 {
                     builder.OpenComponent<PageCard>(0);
                     builder.AddAttribute(1, nameof(PageCard.Title), title);

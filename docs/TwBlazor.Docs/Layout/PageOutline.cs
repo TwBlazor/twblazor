@@ -38,9 +38,11 @@ public sealed class PageOutline
         var baseId = string.IsNullOrWhiteSpace(id) ? Slugify(title) : id;
         var uniqueId = baseId;
 
-        for (var suffix = 2; items.Exists(item => item.Id == uniqueId); suffix++)
+        var suffix = 2;
+
+        while (items.Exists(item => item.Id == uniqueId))
         {
-            uniqueId = $"{baseId}-{suffix}";
+            uniqueId = $"{baseId}-{suffix++}";
         }
 
         items.Add(new PageOutlineItem(uniqueId, title));
