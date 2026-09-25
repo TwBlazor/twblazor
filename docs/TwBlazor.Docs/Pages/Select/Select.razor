@@ -122,6 +122,18 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Dense Select">
+        <Description>Set <code>Dense</code> for a more compact select with a smaller height and text size, matching the other dense inputs. Multi-select is not affected, as its height follows its selected chips.</Description>
+        <CodeExample Name="SelectDense" CSharpName="SelectDenseCode">
+            <TwSelect T="string"
+                      Label="Country"
+                      Values="@countries"
+                      Dense
+                      @bind-SelectedValue="@denseCountry"
+                      AriaLabel="Dense country select" />
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Multi-select">
         <Description>
             Set <code>Multiple</code> and bind <code>SelectedValues</code> (instead of <code>SelectedValue</code>) to let more than
@@ -148,6 +160,10 @@
     #region CodeExample SelectBasicCode
     private string selectedCountry = string.Empty;
     private readonly string[] countries = ["USA", "Canada", "UK", "Germany", "France", "Japan", "Australia"];
+    #endregion
+
+    #region CodeExample SelectDenseCode
+    private string denseCountry = string.Empty;
     #endregion
 
     #region CodeExample SelectComplexObjectsCode

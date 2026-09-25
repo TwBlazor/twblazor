@@ -25,11 +25,31 @@ public static class SitemapGenerator
 #pragma warning restore S1075
 
     /// <summary>
-    /// Builds a sitemap document listing every page, with a <c>lastmod</c> only for pages whose date is known.
+    /// The <c>priority</c> of the home page.
+    /// </summary>
+    public const string HomePriority = "1.0";
+
+    /// <summary>
+    /// The <c>priority</c> of the get started page.
+    /// </summary>
+    public const string GetStartedPriority = "0.8";
+
+    /// <summary>
+    /// The <c>priority</c> shared by every other page, so all components carry equal weight.
+    /// </summary>
+    public const string DefaultPriority = "0.5";
+
+    private const string homeRoute = "/";
+    private const string getStartedRoute = "/get-started";
+
+    /// <summary>
+    /// Builds a sitemap document listing every page with a <c>priority</c>, and a <c>lastmod</c> only for
+    /// pages whose date is known.
     /// </summary>
     /// <remarks>
-    /// <c>changefreq</c> and <c>priority</c> are deliberately omitted: search engines ignore both, and an
-    /// inaccurate <c>lastmod</c> is worse than none, so it is only written when git supplied a real date.
+    /// The home and get started pages rank above every other page, which all share one priority.
+    /// <c>changefreq</c> is deliberately omitted, and an inaccurate <c>lastmod</c> is worse than none, so
+    /// it is only written when git supplied a real date.
     /// </remarks>
     /// <param name="entries">The pages to list.</param>
     /// <param name="baseUrl">The site origin without a trailing slash.</param>
@@ -52,12 +72,20 @@ public static class SitemapGenerator
                 sb.Append("    <lastmod>").Append(date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).Append("</lastmod>\n");
             }
 
+            sb.Append("    <priority>").Append(GetPriority(entry.Route)).Append("</priority>\n");
             sb.Append("  </url>\n");
         }
 
         sb.Append("</urlset>\n");
         return sb.ToString();
     }
+
+    private static string GetPriority(string route) => route switch
+    {
+        homeRoute => HomePriority,
+        getStartedRoute => GetStartedPriority,
+        _ => DefaultPriority
+    };
 
     /// <summary>
     /// Generates the <c>PageLastModified</c> class the docs pages read to show a "last updated" date.

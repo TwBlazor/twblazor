@@ -56,6 +56,13 @@
             <TwTextfield Label="Email" @bind-Value="InvalidEmail" Placeholder="Enter your email address" AriaLabel="Email textfield" Invalid ErrorMessage="Please enter a valid email address." />
         </CodeExample>
     </PageCard>
+    <PageCard Title="Dense Textfield">
+        <Description>Set <code>Dense</code> for a more compact input with a smaller height and text size. Every single-line input shares the same dense height, so they line up when used side by side.</Description>
+        <CodeExample Name="TextfieldDense">
+            <TwTextfield Label="Forename" @bind-Value="Forename" Placeholder="Please enter your forename" AriaLabel="Dense forename textfield" Dense />
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Validation on Change">
         <Description>Pass a <code>Validator</code> function to have the textfield validate itself whenever its value changes. Return <code>null</code> (or an empty string) when the value is valid, or an error message to automatically mark the field <code>Invalid</code> and display the returned message - no need to manage <code>Invalid</code> or <code>ErrorMessage</code> yourself.</Description>
         <CodeExample Name="TextfieldValidator" CSharpName="TextfieldValidatorCode">
