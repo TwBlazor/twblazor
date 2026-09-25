@@ -215,7 +215,7 @@ public class TwCodeBlockTests : TwBlazorTestBase
     }
 
     [Theory]
-    [InlineData("html", "HTML")]
+    [InlineData("html", "Razor")]
     [InlineData("csharp", "C#")]
     [InlineData("bash", "Terminal")]
     [InlineData("css", "CSS")]
