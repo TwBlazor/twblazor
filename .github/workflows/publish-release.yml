@@ -260,12 +260,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -f "./artifacts/TwBlazor.$VERSION.nupkg" ]; then
-            echo "::error::Expected ./artifacts/TwBlazor.$VERSION.nupkg but MinVer produced something else:"
+          if [ ! -f "./artifacts/twblazor.$VERSION.nupkg" ]; then
+            echo "::error::Expected ./artifacts/twblazor.$VERSION.nupkg but MinVer produced something else:"
             ls -1 ./artifacts
             exit 1
           fi
-          echo "Packed TwBlazor $VERSION"
+          echo "Packed twblazor $VERSION"
 
       - name: Publish to GitHub Packages
         env:
