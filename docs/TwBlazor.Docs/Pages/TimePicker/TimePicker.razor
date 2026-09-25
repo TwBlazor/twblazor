@@ -33,6 +33,13 @@
         </CodeExample>
     </PageCard>
 
+    <PageCard Title="Dense Time Picker">
+        <Description>Set <code>Dense</code> for a more compact input with a smaller height and text size. Every single-line input shares the same dense height, so they line up when used side by side.</Description>
+        <CodeExample Name="TimePickerDense">
+            <TwTimePicker Id="dense-timepicker" @bind-SelectedTime="SelectedTime" Label="Dense Time Picker" Dense />
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Disabled and Readonly Time Picker">
         <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the time picker.</Description>
         <CodeExample Name="TimePickerReadonlyDisabled">

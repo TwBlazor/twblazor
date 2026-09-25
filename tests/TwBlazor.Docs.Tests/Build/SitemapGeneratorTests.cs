@@ -34,14 +34,35 @@ public class SitemapGeneratorTests
     }
 
     [Fact]
-    public void GenerateSitemap_OmitsChangefreqAndPriority()
+    public void GenerateSitemap_OmitsChangefreq()
     {
         // Arrange & Act
         var xml = SitemapGenerator.GenerateSitemap([new PageEntry("/card", null)]);
 
-        // Assert - search engines ignore both, so they'd only be noise.
+        // Assert
         Assert.DoesNotContain("changefreq", xml);
-        Assert.DoesNotContain("priority", xml);
+    }
+
+    [Fact]
+    public void GenerateSitemap_RanksHomeAboveGetStartedAboveEveryOtherPage()
+    {
+        // Arrange
+        PageEntry[] entries = [new("/", null), new("/get-started", null), new("/card", null), new("/alert", null)];
+
+        // Act
+        var priorities = System.Xml.Linq.XDocument.Parse(SitemapGenerator.GenerateSitemap(entries))
+            .Descendants()
+            .Where(e => e.Name.LocalName == "url")
+            .ToDictionary(
+                url => url.Elements().Single(e => e.Name.LocalName == "loc").Value,
+                url => double.Parse(url.Elements().Single(e => e.Name.LocalName == "priority").Value, System.Globalization.CultureInfo.InvariantCulture));
+
+        // Assert
+        var home = priorities["https://twblazor.com/"];
+        var getStarted = priorities["https://twblazor.com/get-started"];
+        Assert.True(home > getStarted);
+        Assert.True(getStarted > priorities["https://twblazor.com/card"]);
+        Assert.Equal(priorities["https://twblazor.com/card"], priorities["https://twblazor.com/alert"]);
     }
 
     [Fact]

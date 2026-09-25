@@ -23,6 +23,13 @@
             </div>
         </CodeExample>
     </PageCard>
+    <PageCard Title="Dense DateTime Picker">
+        <Description>Set <code>Dense</code> for a more compact input with a smaller height and text size. Every single-line input shares the same dense height, so they line up when used side by side.</Description>
+        <CodeExample Name="DateTimePickerDense" CSharpName="DateTimePickerBasicCode">
+            <TwDateTimePicker @bind-SelectedDateTime="SelectedDateTime" @bind-Value="SelectedDateTimeTextValue" Label="Dense DateTime Picker" Dense />
+        </CodeExample>
+    </PageCard>
+
     <PageCard Title="Disabled and Readonly DateTime Picker">
         <Description>Use the <code>Disabled</code> and <code>ReadOnly</code> properties to restrict interaction with the datetime picker.</Description>
         <CodeExample Name="DateTimePickerReadonlyDisabled" CSharpName="DateTimePickerBasicCode">
