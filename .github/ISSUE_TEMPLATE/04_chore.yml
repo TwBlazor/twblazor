@@ -3,7 +3,7 @@ description: Maintenance work that doesn't change behaviour, such as refactoring
 title: "chore: "
 type: Task
 projects:
-  - TwBlazor/2
+  - twblazor/2
 labels:
   - chore
 body:

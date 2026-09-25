@@ -15,8 +15,8 @@
 [![Stars](https://img.shields.io/github/stars/TwBlazor/twblazor?style=flat&color=9810fa)](https://github.com/TwBlazor/twblazor/stargazers)
 [![Contributors](https://img.shields.io/github/contributors/TwBlazor/twblazor?color=9810fa)](https://github.com/TwBlazor/twblazor/graphs/contributors)
 [![Discussions](https://img.shields.io/github/discussions/TwBlazor/twblazor?color=9810fa)](https://github.com/TwBlazor/twblazor/discussions)
-[![NuGet Version](https://img.shields.io/nuget/v/TwBlazor?color=ec4899)](https://www.nuget.org/packages/TwBlazor)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/TwBlazor?color=ec4899)](https://www.nuget.org/packages/TwBlazor)
+[![NuGet Version](https://img.shields.io/nuget/v/twblazor?color=ec4899)](https://www.nuget.org/packages/twblazor)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/twblazor?color=ec4899)](https://www.nuget.org/packages/twblazor)
 
 </p>
 
@@ -38,9 +38,9 @@ Are you using twblazor in your own project? Share it on the [here](https://githu
 
 ## Setup
 
-1. Install the [TwBlazor NuGet package](https://www.nuget.org/packages/TwBlazor) in your Blazor project.
+1. Install the [twblazor NuGet package](https://www.nuget.org/packages/twblazor) in your Blazor project.
 ```pwsh
-$ dotnet add package TwBlazor --version 1.11.3
+$ dotnet add package twblazor --version 1.11.3
 ```
 2. Head to the [Get Started guide](https://twblazor.com/get-started) for the rest of the setup - stylesheets, imports, providers, theming and dependency injection - covering both Interactive Server and WebAssembly Blazor Web Apps step by step.
 
