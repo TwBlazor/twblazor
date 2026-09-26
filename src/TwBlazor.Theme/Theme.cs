@@ -809,7 +809,7 @@ public static class Theme
                     IconTriggerWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} {display.Flex} {flexbox.Align.Center} {spacing.PaddingStart.Lg} {interaction.PointerCursor}",
                     IconGlyph = $"{sizing.Icon.Md} {neutralText.Subtle}",
                     TextfieldPadding = "pl-10 pr-3",
-                    NativeInputAppearance = "appearance-none",
+                    NativeInputAppearance = "appearance-none !flex items-center [&::-webkit-date-and-time-value]:min-h-0 [&::-webkit-date-and-time-value]:text-left [&::-webkit-datetime-edit]:p-0",
                     PanelWidth = "w-67",
                     HeaderControls = $"{display.Flex} {flexbox.Justify.Between} {flexbox.Align.Center} h-9",
                     Body = display.Flex,
@@ -1128,7 +1128,7 @@ public static class Theme
                     IconWrapper = $"{positioning.Absolute} {inset.Top} {inset.Start} {display.Flex} {anchor.Center} w-10 ps-2 {interaction.PointerCursor}",
                     IconGlyph = $"{sizing.Icon.Md} {neutralText.Subtle}",
                     TextfieldPadding = "pl-10 pr-3",
-                    NativeInputAppearance = "appearance-none",
+                    NativeInputAppearance = "appearance-none !flex items-center [&::-webkit-date-and-time-value]:min-h-0 [&::-webkit-date-and-time-value]:text-left [&::-webkit-datetime-edit]:p-0",
                     PanelWrapper = $"{positioning.Absolute} top-full left-0 z-120 {spacing.MarginTop.Md}",
                     RangeStageTabsContainer =$"{display.Flex} {spacing.Gap.Sm} {spacing.MarginBottom.Md}",
                     RangeStageTabInactive = neutralText.Subtle,
@@ -1182,7 +1182,7 @@ public static class Theme
                     Message = $"{typography.Size.Sm} {typography.WrapBreakWord}",
                     Container = $"{positioning.Fixed} bottom-0 right-4 z-50 {display.Flex} {flexbox.Col} {spacing.Gap.Md} max-w-md {spacing.Padding.Xl}",
                     Toast = $"{display.Flex} {flexbox.Align.Start} {spacing.Gap.Md} {spacing.Padding.Xl} {shadows.Sm} {transition.ColorsFast} {transition.EaseInOut}",
-                    ToastWidth = "max-w-[300px]",
+                    ToastWidth = "w-[300px] max-w-full",
                     Timestamp = $"{typography.Size.Xs} opacity-70",
                     CloseButton = $"{flexbox.ShrinkNone} {spacing.Padding.Sm} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {rounded.Full} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40 {transition.Colors} {interaction.FocusOutlineNone}"
                 }
