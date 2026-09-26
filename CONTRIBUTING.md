@@ -139,7 +139,7 @@ dotnet test tests/TwBlazor.Docs.Tests
 
 ### Rebuild the doc examples
 
-Code snippets shown on the documentation site are extracted from real source (docs pages and a few production files) by `TwBlazor.BuildTools`. See [CODE_SNIPPETS.md](CODE_SNIPPETS.md) for how this works. This runs automatically before `TwBlazor.Docs` builds, but you can trigger it manually if generated snippets look stale:
+Code snippets shown on the documentation site are extracted from real source (docs pages and a few production files) by `TwBlazor.BuildTools`. See [CODE_SNIPPETS.md](docs/CODE_SNIPPETS.md) for how this works. This runs automatically before `TwBlazor.Docs` builds, but you can trigger it manually if generated snippets look stale:
 
 ```
 dotnet run --project build/TwBlazor.BuildTools
