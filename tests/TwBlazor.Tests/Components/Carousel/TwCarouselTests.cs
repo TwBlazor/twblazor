@@ -629,6 +629,7 @@ public class TwCarouselTests : TwBlazorTestBase
 
         // Assert
         cut.WaitForState(() => cut.Instance.SelectedIndex != resumedAt, TimeSpan.FromSeconds(2));
+        Assert.NotEqual(resumedAt, cut.Instance.SelectedIndex);
     }
 
     [Fact]
