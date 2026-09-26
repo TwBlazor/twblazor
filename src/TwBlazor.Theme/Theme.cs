@@ -1182,7 +1182,7 @@ public static class Theme
                     Message = $"{typography.Size.Sm} {typography.WrapBreakWord}",
                     Container = $"{positioning.Fixed} bottom-0 right-4 z-50 {display.Flex} {flexbox.Col} {spacing.Gap.Md} max-w-md {spacing.Padding.Xl}",
                     Toast = $"{display.Flex} {flexbox.Align.Start} {spacing.Gap.Md} {spacing.Padding.Xl} {shadows.Sm} {transition.ColorsFast} {transition.EaseInOut}",
-                    ToastWidth = "max-w-[300px]",
+                    ToastWidth = "w-[300px] max-w-full",
                     Timestamp = $"{typography.Size.Xs} opacity-70",
                     CloseButton = $"{flexbox.ShrinkNone} {spacing.Padding.Sm} hover:bg-[oklch(21%_0.006_285.885)]/10 dark:hover:bg-[oklch(97.807%_0.029_256.847)]/10 {rounded.Full} focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent focus:ring-current/40 {transition.Colors} {interaction.FocusOutlineNone}"
                 }
