@@ -3,14 +3,14 @@
 </p>
 <p align="center">
 
-[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TwBlazor_twblazor&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=TwBlazor_twblazor)
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=bugs)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=coverage)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=twblazor_twblazor&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=twblazor_twblazor)
 [![License: MIT](https://img.shields.io/badge/license-MIT-9810fa)](https://github.com/TwBlazor/twblazor/blob/develop/LICENSE.txt)
 [![Stars](https://img.shields.io/github/stars/TwBlazor/twblazor?style=flat&color=9810fa)](https://github.com/TwBlazor/twblazor/stargazers)
 [![Contributors](https://img.shields.io/github/contributors/TwBlazor/twblazor?color=9810fa)](https://github.com/TwBlazor/twblazor/graphs/contributors)
