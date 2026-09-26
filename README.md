@@ -34,7 +34,7 @@ Combined with Tailwind's using hot reload, you can fine-tune a button, switch, c
 
 twblazor is, and always will be, open source under the MIT license, free for personal and commercial projects alike. I welcome contributions, issues, and feedback from anyone using it. The project is actively maintained. New components, accessibility fixes, and documentation land regularly. I have lots of components I plan to add.
 
-Are you using twblazor in your own project? Share it on the [here](https://github.com/TwBlazor/twblazor/discussions/81) - we would love to see what you're building!
+Are you using twblazor in your own project? Share it [here](https://github.com/TwBlazor/twblazor/discussions/81) - we would love to see what you're building!
 
 ## Setup
 
