@@ -3,11 +3,12 @@
 #
 #   dotnet add package twblazor --version 1.3.2
 #
-# Every release moves it, patches included, so neither the README nor the
-# Get Started docs page ever names a version older than what is on NuGet.
-# README.md carries exactly one such line; GetStarted.razor carries two (one
-# per hosting-model tab), so the match count is only required to be at least
-# one, not exactly one - either way, every match in the file is rewritten.
+# Every release moves it, patches included, so neither the README, the NuGet
+# package readme nor the Get Started docs page ever names a version older than
+# what is on NuGet. README.md and src/TwBlazor/PackageReadme.md carry exactly
+# one such line; GetStarted.razor carries two (one per hosting-model tab), so
+# the match count is only required to be at least one, not exactly one -
+# either way, every match in the file is rewritten.
 #
 # Versions live only in Git tags, so the release line comes from the newest
 # stable tag through the shared helper - the same lookup the publish workflows
@@ -19,7 +20,8 @@
 #
 # Writes "version" and "changed" to $GITHUB_OUTPUT when running under Actions.
 # Call it once per file when more than one needs updating (see
-# publish-release.yml, which runs it for both README.md and GetStarted.razor).
+# publish-release.yml, which runs it for README.md, PackageReadme.md and
+# GetStarted.razor).
 #
 # Usage:
 #   pwsh ./scripts/update-readme-version.ps1 [-Path README.md] [-TagPrefix v]
